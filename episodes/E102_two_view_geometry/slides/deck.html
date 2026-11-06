@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>双视图几何基石：对极约束、本质与基础矩阵</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">双视图 · 原书第 703 页</div>
+  <h2>两台相机，能恢复什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两台相机拍同一场景，只靠像素能恢复什么？</li><li>双视图 SFM：从对应点同时恢复三维结构和位姿。</li><li>视差里有一条硬约束：三维点与两个相机中心共面。</li><li>把共面写成代数，就是 E 和 F。</li></ul>
+      <div class="src">依据：原书第 703 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三个对象</div><div class="kline">对极约束</div><div class="kline">本质矩阵 E</div><div class="kline">基础矩阵 F</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>01 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">对极几何 · 原书第 704 页</div>
+  <h2>对极平面、极线和极点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三维点 P 和两个相机中心确定一个平面。</li><li>平面与两张图的交线，就是极线。</li><li>左图的点 x0，在右图只能落在 l1 上。</li><li>所有极线都穿过极点，极点是另一相机中心的投影。</li></ul>
+      <div class="src">依据：原书第 704 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e102_epipolar.png" style="max-height:500px" alt="对极几何：共面→极线→极点；x1^T E x0=0｜程序生成，未用教材或论文原图"><figcaption>对极几何：共面→极线→极点；x1^T E x0=0｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>02 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">本质矩阵 · 原书第 704 页</div>
+  <h2>E = [t]×R 与对极约束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>归一化坐标 x0 = K^-1 x。</li><li>约束：x1^T E x0 = 0。</li><li>E 有 9 个元素，尺度任意，自由度 5。</li><li>单目双视图只恢复平移方向，不恢复绝对尺度。</li></ul>
+      <div class="src">依据：原书第 704 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">x1^T E x0 = 0</div><div class="mnote">E = [t]×R；9 个元素、尺度任意；自由度 5（旋转 3 + 平移方向 2）；x0、x1 为归一化坐标</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>03 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">点变线 · 原书第 705 页</div>
+  <h2>E 把点映射成极线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>l1 = E x0，因为 x1^T l1 = 0。</li><li>极点 e1 是左零空间：E^T e1 = 0。</li><li>l0 = E^T x1，e0 是右零空间：E e0 = 0。</li><li>E 秩为 2，零空间方向就是平移 t 的方向。</li></ul>
+      <div class="src">依据：原书第 705 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个对象</div><div class="kline">点 x0、x1</div><div class="kline">极线 l0、l1</div><div class="kline">极点 e0、e1</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>04 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">SVD · 原书第 708 页</div>
+  <h2>四组解，用 cheirality 选</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E 和 t 只能确定到符号。</li><li>SVD 拆出 UΣVᵀ，U 的第三列是平移方向。</li><li>两个旋转候选乘正负平移，得到四组。</li><li>只有一组让所有三维点在两个相机前方。</li></ul>
+      <div class="src">依据：原书第 708 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">cheirality</div><div class="kline">点在相机前方</div><div class="kline">其他解把点翻到背后</div><div class="kline">没有它，相机可能看后脑勺</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>05 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">基础矩阵 · 原书第 710 页</div>
+  <h2>F：不用内参的像素版约束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>内参未知时，不能用 x0 = K^-1 x。</li><li>把 E 的约束换到像素坐标，得到 F。</li><li>F = K1^-T E K0^-1，不需要内参。</li><li>代价：F 分解是投影重建，不是直接 R/t。</li></ul>
+      <div class="src">依据：原书第 710–711 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">F = K1^-T E K0^-1</div><div class="mnote">E 是标定版，F 是像素版；两者都秩二，极点都是零空间向量</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>06 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">F 的性质 · 原书第 711 页</div>
+  <h2>F 里藏着极点和平面映射</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>F 的秩为 2。</li><li>最小左奇异向量是 e1，最小右奇异向量是 e0。</li><li>F 可分解为 [e]× 乘一个单应 H。</li><li>秩二给 7 个自由度，7 对点就够估。</li></ul>
+      <div class="src">依据：原书第 711 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e102_ef.png" style="max-height:500px" alt="本质矩阵 E 与基础矩阵 F：内参已知/未知两套坐标｜程序生成，未用教材或论文原图"><figcaption>本质矩阵 E 与基础矩阵 F：内参已知/未知两套坐标｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>07 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">退化 · 原书第 710 页</div>
+  <h2>纯旋转和主导平面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>纯旋转没有视差，E 和 t 方向退化。</li><li>x0≈x1，方程秩不足，深度不可求。</li><li>主导平面：F 不唯一，先用单应解释平面。</li><li>工程上先检测退化，再估模型。</li></ul>
+      <div class="src">依据：原书第 710 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种退化</div><div class="kline">纯旋转 / 低视差</div><div class="kline">主导平面</div><div class="kline">先用单应，再用平面外点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>08 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">数值 · 原书第 706 页</div>
+  <h2>先归一化，再解八点方程</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>直接用像素坐标，乘积项会放大数值误差。</li><li>先平移到质心在原点，方差缩放到单位。</li><li>解完 E，再用 T 矩阵变回像素坐标。</li><li>流程：归一化→堆 A→SVD→秩二→反归一化。</li></ul>
+      <div class="src">依据：原书第 705–706 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">Hartley 归一化</div><div class="kline">质心移到原点</div><div class="kline">方差缩放到 1</div><div class="kline">几何对，数值不对，结果照样错</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>09 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三角化 · 原书第 708 页</div>
+  <h2>三角化要检查三件事</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>有了 R/t 和对应点，两条视线相交就是三维点。</li><li>交点要在两个相机前方，深度不能为负。</li><li>视差不能太小，否则深度对噪声极敏感。</li><li>单目双视图没有绝对尺度。</li></ul>
+      <div class="src">依据：原书第 708 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">尺度从哪来</div><div class="kline">已知物体</div><div class="kline">IMU</div><div class="kline">第二传感器</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>10 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实战 · RANSAC</div>
+  <h2>真实数据里先对付外点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>真实对应点里，常有成百上千个外点。</li><li>RANSAC 反复采样最小点集，估 E 或 F。</li><li>用极线距离和 cheirality 打分。</li><li>最后用全部内点做非线性精化。</li></ul>
+      <div class="src">依据：原书第 705–708 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">有内参用 E，没有用 F</div><div class="kline">EXIF / 标定：用 E</div><div class="kline">没有内参：用 F</div><div class="kline">阈值按像素噪声设</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>11 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 60 个合成三维点</div>
+  <h2>机器精度与 cheirality 选解</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>极线残差 8.33e-17，E 的行列式 9.78e-19。</li><li>极线到对应点距离 1.08e-16。</li><li>R 误差 0.0000°，t 方向余弦 1.000000。</li><li>四组解前方点数 0、60、0、0，选中第 2 组。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e102_cheirality.png" style="max-height:500px" alt="cheirality 选解：四组前方点数 0/60/0/0｜程序生成，未用教材或论文原图"><figcaption>cheirality 选解：四组前方点数 0/60/0/0｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>12 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失败边界 · 诊断清单</div>
+  <h2>先看数据，再调参数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>纯旋转或低视差：E 退化，深度不可求。</li><li>主导平面：F 不唯一，先用单应。</li><li>内参错、外点太多、符号选错，都会失败。</li><li>诊断看极线、内点率、cheirality、三角化深度。</li></ul>
+      <div class="src">依据：原书第 705–711 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">异常先回退</div><div class="kline">极线挤在一侧：极点太近或基线太小</div><div class="kline">内点率突降：查重复纹理、反光、动态物体</div><div class="kline">先看数据质量，再调算法参数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>13 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集八点法</div>
+  <h2>双视图几何收束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对极约束把两相机位姿和三维结构绑在一起。</li><li>E 是标定版，F 是像素版，二者都秩二。</li><li>SVD 给四组解，cheirality 选唯一。</li><li>下一集：把 x1^T F x0 = 0 堆成线性方程。</li></ul>
+      <div class="src">依据：原书第 703–711 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">对极约束绑住两视图</div><div class="kline">E 标定，F 像素</div><div class="kline">四解用 cheirality 选</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十四集</span><span>14 / 14</span></div>
+</section>
+<div id="subbar"></div></body></html>

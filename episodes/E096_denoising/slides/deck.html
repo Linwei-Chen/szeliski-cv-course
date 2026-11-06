@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>去噪进化史：高斯、BM3D 与神经网络的接力</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 去噪与保边</div>
+  <h2>去噪不是把图磨平</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>去噪是图像处理和视觉的经典问题。</li><li>四十多年里出现了几百种算法。</li><li>最近的主流基于深度神经网络。</li><li>目标是去掉噪声，留下边缘和纹理。</li></ul>
+      <div class="src">依据：原书第 644 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">单帧：靠先验或学习</div><div class="kline">多帧：对齐后平均</div><div class="kline">常和去模糊一起出现</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>01 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">真实噪声 · SIDD</div>
+  <h2>真实噪声要看 SIDD</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>NTIRE 2020 / SIDD 是真实去噪基准。</li><li>真值由 150 张含噪图平均得到。</li><li>真实噪声带信号相关、去马赛克、压缩。</li><li>噪声还随 ISO 和温度变化。</li></ul>
+      <div class="src">依据：原书第 644 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么不用合成噪声</div><div class="kline">合成噪声好做实验</div><div class="kline">只在高斯噪声上刷分会失真</div><div class="kline">先看论文用什么噪声模型</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>02 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 平滑与保边</div>
+  <h2>看图：五种去噪结果并排</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>高斯滤波最平滑，边缘也一起糊。</li><li>中值滤波更擅长去椒盐。</li><li>双边和非局部均值保边更好。</li><li>同一张含噪图，五种结果对比。</li></ul>
+      <div class="src">依据：本集实验；原书第 644 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e096_denoise.png" style="max-height:440px" alt="去噪对比：真值/含噪 20.4 dB/高斯 23.1/中值 23.6/双边 23.0/NLM 23.6｜程序生成，未用教材或论文原图"><figcaption>去噪对比：真值/含噪 20.4 dB/高斯 23.1/中值 23.6/双边 23.0/NLM 23.6｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>03 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">深度去噪 · 残差学习</div>
+  <h2>DnCNN 学的是噪声残差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>DnCNN 是深度去噪的常用基线。</li><li>网络输入含噪图，输出噪声。</li><li>原图减掉噪声，得到干净图。</li><li>FFDNet、CBDNet 先估噪声再去噪。</li></ul>
+      <div class="src">依据：原书第 645 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">学习式的代价</div><div class="kline">要成对的数据</div><div class="kline">要算力和训练时间</div><div class="kline">训练分布之外容易失效</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>04 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">低光 · ISO 与噪声</div>
+  <h2>低光下噪声随亮度变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>传感器多数时候已经比较干净。</li><li>低光要拉高 ISO，噪声变大。</li><li>亮处信噪比高，暗处信噪比低。</li><li>去噪强度应该随亮度调整。</li></ul>
+      <div class="src">依据：原书第 645 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种噪声</div><div class="kline">光子噪声服从泊松分布</div><div class="kline">读出噪声近似高斯</div><div class="kline">混合后暗部噪声不是常数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>05 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">低光 · 连拍</div>
+  <h2>连拍：先对齐，再平均</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>低 ISO 快速连拍，多帧合成一张。</li><li>HDR+ 把这套做法推广到低光。</li><li>Night Sight 对齐并合并运动区域。</li><li>运动测光决定帧数和曝光时间。</li></ul>
+      <div class="src">依据：原书第 645 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">平均的边界</div><div class="kline">噪声按根号帧数下降</div><div class="kline">对齐错就出重影</div><div class="kline">帧数不是越多越好</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>06 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">去模糊 · 反卷积</div>
+  <h2>去模糊是反卷积，D 等于 1</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>去模糊和超分密切相关。</li><li>模糊核通常更大，而且未知。</li><li>下采样因子 D 等于 1。</li><li>核估错，结果会振铃、出鬼影。</li></ul>
+      <div class="src">依据：原书第 645 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么难</div><div class="kline">反卷积是病态问题</div><div class="kline">核的频域零点放大噪声</div><div class="kline">需要正则或先验</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>07 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">去模糊 · 多源信息</div>
+  <h2>多源信息：用退化换信息</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>清晰但含噪的图，配模糊但干净的图。</li><li>拍很多短曝光，再合成。</li><li>编码光圈同时估深度、减模糊。</li><li>短曝光少模糊多噪声，长曝光相反。</li></ul>
+      <div class="src">依据：原书第 645 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">取舍</div><div class="kline">把两种退化的优点拼起来</div><div class="kline">比单张硬解更稳</div><div class="kline">代价是进光量和后期处理</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>08 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">去模糊 · 硬件线索</div>
+  <h2>IMU 和双像素帮估核</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>IMU 记录三轴运动，帮定模糊核。</li><li>双像素辅助失焦图像的去模糊。</li><li>传感器时间戳要和 IMU 对齐。</li><li>IMU 只测相机运动，拍人还要靠图像。</li></ul>
+      <div class="src">依据：原书第 645 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个硬件线索</div><div class="kline">IMU：相机怎么抖</div><div class="kline">双像素：左右视差</div><div class="kline">比从图里盲猜核可靠</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>09 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">学习式去模糊 · 感知损失</div>
+  <h2>感知损失追求看起来像真图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>过去十年出现大量学习式去模糊。</li><li>有的工作故意把纹理加回去。</li><li>感知损失不追求像素最接近。</li><li>它可能编出原图没有的纹理。</li></ul>
+      <div class="src">依据：原书第 646 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">指标要匹配任务</div><div class="kline">视觉更锐，PSNR 可能更低</div><div class="kline">常用 VGG 特征，不是像素差</div><div class="kline">取证和医学影像要谨慎</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>10 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 噪声类型</div>
+  <h2>看图：没有万能去噪器</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>高斯噪声下，中值和 NLM 略好。</li><li>椒盐噪声下，中值明显赢。</li><li>边缘相关高，不代表视觉一定好。</li><li>参数没逐图调优，排名会变。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e096_tradeoff.png" style="max-height:440px" alt="噪声类型决定算子：高斯噪声四法对比；椒盐噪声高斯 22.4 vs 中值 26.8 dB｜程序生成，未用教材或论文原图"><figcaption>噪声类型决定算子：高斯噪声四法对比；椒盐噪声高斯 22.4 vs 中值 26.8 dB｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>11 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 对齐与核</div>
+  <h2>看图：核对不对，结果差很多</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>八帧平均把噪声降 63.7%。</li><li>平均后 PSNR 到 29.4 dB。</li><li>不对齐直接平均，掉到 20.6 dB。</li><li>Wiener 正确核 21.6，错误核 12.9。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e096_deblur.png" style="max-height:440px" alt="去模糊与连拍：模糊 19.0 dB/正确核 21.6/错误核 12.9/八帧 29.4｜程序生成，未用教材或论文原图"><figcaption>去模糊与连拍：模糊 19.0 dB/正确核 21.6/错误核 12.9/八帧 29.4｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>12 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程选型</div>
+  <h2>怎么选：先看噪声类型</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>椒盐噪声先用中值滤波。</li><li>高斯噪声可选双边、NLM 或 BM3D。</li><li>低光连拍先对齐，再平均。</li><li>核不可信时，不要硬做去模糊。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">交付前检查</div><div class="kline">PSNR 只是门槛</div><div class="kline">放大看振铃、重影、纹理</div><div class="kline">先做基线，再上学习式</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>13 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>这一集的三件事</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>去噪是在降噪和保边之间取舍。</li><li>连拍靠对齐和平均，单帧靠先验或学习。</li><li>去模糊靠核，核错会反噬。</li><li>下一集：去雾和暗通道先验。</li></ul>
+      <div class="src">依据：原书第 644–646 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">雾是大气散射造成的对比度下降</div><div class="kline">无雾图至少一个颜色通道很暗</div><div class="kline">下一集见</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十八集</span><span>14 / 14</span></div>
+</section>
+<div id="subbar"></div></body></html>

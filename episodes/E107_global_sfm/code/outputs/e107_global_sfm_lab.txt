@@ -1,0 +1,20 @@
+[lab] E107 global SFM 开始 2026-11-03T03:29:57
+[lab] 源码 sha256=e775b55b25e254445cd41c6cfd5d9acd26c3a7bac712adcb9f6c4467bcb16d10
+[PASS] 链式初始化覆盖全图　| 12/12
+[PASS] 普通旋转平均怕外点　| 中位 13.93°
+[PASS] 鲁棒旋转平均可用　| 中位 0.84°
+[PASS] 鲁棒最大误差小　| 最大 1.39°
+[PASS] 鲁棒显著优于普通　| 13.93°→0.84°
+[PASS] 中心求解可用　| 0.162/0.238
+[PASS] 共线退化更差　| 2.61 vs 0.162
+[PASS] 共线条件数更大　| 114→615
+[PASS] 中心求解满秩　| rank 63
+[PASS] 三图在盘　| pipeline/rotation/centers
+[lab] PNG sha256(e107_centers.png)=0bdc3aa64784eb0849045e797e952531270adb4220e60a6e2697cd27c26c45f4
+[lab] PNG sha256(e107_pipeline.png)=8c508c0b7896e025aabbf10a93ba8c5466d996c1303846caed0cc8fe31d5c97d
+[lab] PNG sha256(e107_rotation.png)=057113a72de1c4fc5abaf2a724996f1f29eefd5d611426b8904d1d1771467c7b
+[lab] readings → e107_global_sfm_readings.json
+[lab] readings sha256=06a65f17304e8dbf32629c8b9fe7dc3fe6b090e09a42198d8c4d8fe403a0b6d9
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T03:29:57

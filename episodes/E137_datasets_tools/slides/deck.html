@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>数据集、开源工具与你下一步的路线</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">最后一集 · 资源索引</div>
+  <h2>学完之后，去哪找东西</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>这一集不教新公式。</li><li>只给三样：数据集、工具、下一步路线。</li><li>把它当索引，不必一次记住。</li><li>先看目录，再决定跳哪一段。</li></ul>
+      <div class="src">依据：原书附录 C，p.954 起</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三样东西</div><div class="kline">数据集：去哪找</div><div class="kline">工具：用什么跑</div><div class="kline">路线：下一步怎么走</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 954 页 · 选数据集</div>
+  <h2>数据集选错，后面调参都白费</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>任务像不像：不像就没有意义。</li><li>标注够不够：不够就没法算分。</li><li>有没有排行榜：有榜单才知道位置。</li><li>许可证和隐私：商用前看清条款。</li></ul>
+      <div class="src">依据：原书 p.954</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三看一查</div><div class="kline">看任务</div><div class="kline">看标注</div><div class="kline">看榜单</div><div class="kline">查许可证/隐私</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 954 页 · 常用数据集</div>
+  <h2>先按任务找，不要一个数据集打天下</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>识别：ImageNet、COCO。</li><li>光流：Middlebury、Sintel、KITTI。</li><li>立体：Middlebury、ETH3D。</li><li>三维：ScanNet、DiLiGenT；分割：ADE20K、Cityscapes。</li></ul>
+      <div class="src">依据：原书 p.954</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">按任务索引</div><div class="kline">识别/分割</div><div class="kline">光流/立体</div><div class="kline">三维/自动驾驶</div><div class="kline">旧数据集：附录 C.1/VisionBib</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 960 页 · 泛化</div>
+  <h2>训练集=测试集，分数要打折</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>很多算法在 KITTI 上训练又在 KITTI 上测试。</li><li>换一个数据集就掉点。</li><li>先看训练集/测试集是不是同一个。</li><li>更要看跨数据集、跨场景的表现。</li></ul>
+      <div class="src">依据：原书 p.960</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">看论文先问</div><div class="kline">训练/测试是否同源？</div><div class="kline">换数据集掉多少？</div><div class="kline">domain adaptation 是正经方向</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图1 · 工具速度</div>
+  <h2>同一操作，差两个数量级</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>128–1024 合成图，9×9 高斯核。</li><li>1024²：OpenCV 0.006s，SciPy 0.042s，NumPy 0.61s。</li><li>相对 NumPy：OpenCV 快约 105 倍，SciPy 约 15 倍。</li><li>单机、单操作、合成图；只看趋势，不是通用 benchmark。</li></ul>
+      <div class="src">依据：程序生成实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e137_runtime.png" style="max-height:520px" alt="三种实现的高斯模糊耗时 vs 像素数｜程序生成，未用教材原图"><figcaption>三种实现的高斯模糊耗时 vs 像素数｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 961–962 页 · 工具</div>
+  <h2>经典看 OpenCV，新论文看 Papers with Code</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>OpenCV：2500 多个优化算法，C++/Python/Java/MATLAB。</li><li>Papers with Code：汇总最新论文和实现。</li><li>原型用 Python，部署再换 C++/GPU。</li><li>OpenCV 的 Python 接口底层是 C++，别逐像素循环。</li></ul>
+      <div class="src">依据：原书 pp.961–962</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">工具选择</div><div class="kline">经典算法：OpenCV</div><div class="kline">新论文：Papers with Code</div><div class="kline">原型：Python；部署：C++/GPU</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图2 · 数值一致性</div>
+  <h2>结果几乎一样，差的是速度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同一行亮度剖面，三条线完全重合。</li><li>PSNR 约 120 分贝。</li><li>PSNR 120 说明逐像素几乎一样，与画质无关。</li><li>选库先确认数值一致，再比速度。</li></ul>
+      <div class="src">依据：程序生成实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e137_agreement.png" style="max-height:520px" alt="同一行亮度剖面：三条线重合（PSNR 120dB）｜程序生成，未用教材原图"><figcaption>同一行亮度剖面：三条线重合（PSNR 120dB）｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 962–964 页 · 数组与框架</div>
+  <h2>先把 NumPy 用顺，再上框架</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>NumPy：多维数组、广播、索引、矩阵乘法。</li><li>PyTorch/TensorFlow：GPU 数值计算 + 自动求导。</li><li>先学 NumPy，再学框架，顺序别反。</li><li>GPU 不是万能，小图/小模型传输开销可能更大。</li></ul>
+      <div class="src">依据：原书 pp.962–964</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">学习顺序</div><div class="kline">NumPy：数组思维</div><div class="kline">框架：自动求导 + GPU</div><div class="kline">别把框架只当加速库</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图3 · 任务→数据集→工具</div>
+  <h2>八条路线，一张索引</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>识别：ImageNet/COCO + PyTorch。</li><li>检测分割：COCO + Detectron2。</li><li>特征：HPatches + OpenCV；SfM：1DSfM/ETH3D + COLMAP。</li><li>三维：ScanNet/DiLiGenT + Open3D。</li></ul>
+      <div class="src">依据：本集索引；原书 pp.954–964</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e137_route_map.png" style="max-height:520px" alt="八条航线：任务→数据集→工具｜程序生成，未用教材原图"><figcaption>八条航线：任务→数据集→工具｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 964 页 · 免费算力</div>
+  <h2>没有显卡，先用 Colab 跑通</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Colab：免费 GPU + Jupyter，适合课程作业。</li><li>Kaggle：在流行数据集上比拼模型。</li><li>想复现论文，先看 Papers with Code 有没有代码。</li><li>免费额度有限，长期训练要准备本地或云 GPU。</li></ul>
+      <div class="src">依据：原书 p.964</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">按阶段选</div><div class="kline">学习：Colab</div><div class="kline">练手：Kaggle</div><div class="kline">复现：Papers with Code</div><div class="kline">长期：本地/云 GPU</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 970 页 · 下一步</div>
+  <h2>三条线：补基础、追前沿、做项目</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>补基础：跟一门大学课程。</li><li>追前沿：看会议和 Papers with Code。</li><li>做项目：选一个数据集从头跑到尾。</li><li>先复现基线，再改一个模块，不要一上来造新算法。</li></ul>
+      <div class="src">依据：原书 p.970</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条线交替</div><div class="kline">课程：系统补基础</div><div class="kline">论文：追前沿</div><div class="kline">项目：练手</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全课回顾 · 最后一个问题</div>
+  <h2>下一步，从你的问题开始</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从像素、成像、处理，到学习、识别、运动、三维、渲染。</li><li>算法会过时，工具会换，思路不会过时。</li><li>选一个你真关心的问题，从一张图/一个数据集/一个基线开始。</li><li>你想用视觉解决什么？</li></ul>
+      <div class="src">依据：全课回顾</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">六层结构</div><div class="kline">基础</div><div class="kline">建模</div><div class="kline">识别</div><div class="kline">运动</div><div class="kline">三维</div><div class="kline">渲染</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十九集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

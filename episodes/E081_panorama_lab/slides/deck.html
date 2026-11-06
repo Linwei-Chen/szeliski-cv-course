@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>实验课：两图到全景——柱面、对齐、混合三步亲手做</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章上机 · 程序生成场景</div>
+  <h2>三步，把两图变成全景</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三步：柱面投影、平移对齐、混合。</li><li>透视不同、亮度不同，接缝也对不齐。</li><li>本集不新增书页，数字来自程序生成场景。</li><li>焦距、转角和增益已知，才能量误差。</li></ul>
+      <div class="src">依据：原书第 523–545 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三条线</div><div class="kline">柱面：先把透视卷平</div><div class="kline">对齐：只搜水平位移</div><div class="kline">混合：先估增益再过渡</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验场景 · 真值已知</div>
+  <h2>先有真值，再谈误差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>焦距六百，左右相机各偏十八度。</li><li>右图整体乘一点一八。</li><li>再加轻微渐晕和一块局部阴影。</li><li>参数写在代码顶部，改一行可复现。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么用程序生成</div><div class="kline">可复现、可量误差</div><div class="kline">纹理比真实世界干净</div><div class="kline">结论只验证骨架</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第一步 · 柱面投影</div>
+  <h2>柱面投影：角度均匀铺开</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>横坐标等于焦距乘角度。</li><li>纵坐标等于焦距乘归一化高度。</li><li>高度是三维射线竖直方向的分量。</li><li>反变换：横坐标取正切，纵坐标除以余弦。</li></ul>
+      <div class="src">依据：原书第 523–524 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">x = F·θ，y = F·h</div><div class="mnote">F：焦距；θ：水平角；h：射线的竖直分量</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第一步 · 看投影结果</div>
+  <h2>投影：把透视卷到柱面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上排是透视视图，下排是柱面图。</li><li>同一世界方向落在相同高度。</li><li>横向透视拉伸被拉直，右图内容左移。</li><li>重叠区还在，后面靠它找位移。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e081_cylindrical.png" style="max-height:500px" alt="两幅透视视图投回柱面：横向拉直，右图内容左移｜程序生成，未用教材或论文原图"><figcaption>两幅透视视图投回柱面：横向拉直，右图内容左移｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第二步 · 纯水平平移</div>
+  <h2>只转竖轴，就只剩水平位移</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相机水平、只绕竖轴转。</li><li>柱面上只差纯水平平移。</li><li>相隔三十六度，理论位移约三百七十七像素。</li><li>纵向固定为零，搜索只做水平方向。</li></ul>
+      <div class="src">依据：原书第 525 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">Δx = F · Δθ</div><div class="mnote">F：焦距；Δθ：两相机转角差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第二步 · 对齐</div>
+  <h2>对齐：先粗后细</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一维列剖面粗搜到三百七十五像素。</li><li>二维归一化相关细化到三百七十六。</li><li>相关系数零点九八一。</li><li>差一像素来自离散采样，生产要亚像素。</li></ul>
+      <div class="src">依据：原书第 504 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么先粗后细</div><div class="kline">全分辨率硬搜太慢</div><div class="kline">缩小图先定大位置</div><div class="kline">原图附近再微调</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第二步 · 画布与接缝</div>
+  <h2>画布：重叠区是工作面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>右图放到画布上，重叠区约三百九十六像素。</li><li>接缝取在重叠区中点。</li><li>重叠太长浪费视角，太短难藏缝。</li><li>生产只用中间一段，避开黑边和畸变。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e081_align.png" style="max-height:500px" alt="对齐后的画布：重叠区约 396 像素，接缝取在中点｜程序生成，未用教材或论文原图"><figcaption>对齐后的画布：重叠区约 396 像素，接缝取在中点｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第三步 · 曝光增益</div>
+  <h2>曝光：一个数不够</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>混合要补偿曝光差和错位。</li><li>在重叠区做最小二乘，估全局增益。</li><li>估到一点一零七，名义增益一点一八。</li><li>重叠区落在较暗一侧，单个数只代表局部。</li></ul>
+      <div class="src">依据：原书第 544 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个增益</div><div class="kline">估计 1.107：重叠区残差最小</div><div class="kline">期望 1.111：重叠区均值</div><div class="kline">名义 1.18：整张右图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第三步 · 硬拼对照</div>
+  <h2>硬拼：残差变成一条线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>接缝左边用左图，右边用右图。</li><li>全频跳变约零点零一七，是周围起伏的五倍多。</li><li>亮差、噪声、插值误差挤在一条竖线上。</li><li>保真不糊细节，但只适合完全对齐。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">硬拼读数</div><div class="kline">全频跳变：0.017</div><div class="kline">周围基线：0.003</div><div class="kline">倍数：五倍多</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第三步 · 羽化</div>
+  <h2>羽化：把硬缝摊成宽带</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>羽化给重叠区一条线性权重。</li><li>从左图慢慢过渡到右图。</li><li>跳变降到零点零零三，约为硬拼的六分之一。</li><li>代价是细节只剩硬拼的零点八三。</li></ul>
+      <div class="src">依据：原书第 544 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">羽化的两难</div><div class="kline">低频台阶被摊平</div><div class="kline">高频被平均变软</div><div class="kline">过渡越宽，细节越糊</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第三步 · 拉普拉斯金字塔</div>
+  <h2>金字塔：按频段分工</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>拉普拉斯金字塔把图分成五个频段。</li><li>低频用宽过渡，高频用窄过渡。</li><li>跳变也降到零点零零三。</li><li>高频强度保持硬拼的百分之一百。</li></ul>
+      <div class="src">依据：原书第 545 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五层分工</div><div class="kline">粗层管大色调</div><div class="kline">细层管边缘</div><div class="kline">没对齐时粗层抹成重影</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三种混合 · 对照</div>
+  <h2>三种混合：接缝与细节</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上排是接缝裁剪，下排是单行亮度剖面。</li><li>硬拼有竖台阶，羽化和金字塔抹平。</li><li>羽化过渡更软，金字塔细节更接近硬拼。</li><li>全频跳变看缝，高频强度看细节。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e081_blend.png" style="max-height:500px" alt="三种混合的接缝裁剪与单行剖面：硬拼有台阶，羽化与金字塔平滑｜程序生成，未用教材或论文原图"><figcaption>三种混合的接缝裁剪与单行剖面：硬拼有台阶，羽化与金字塔平滑｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">排错 · 三类翻车</div>
+  <h2>翻车：先查是哪一步</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>重叠不够，相关峰变平，位移估错。</li><li>焦距或投影选错，柱面里直线还弯。</li><li>近处物体运动，接缝出现鬼影。</li><li>先看相关系数和残差，再看接缝。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">排查顺序</div><div class="kline">相关低：查对齐</div><div class="kline">相关高但有缝：查曝光和混合</div><div class="kline">先体检数据，再调参数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程习惯 · 留证据</div>
+  <h2>调试：每一步都留证据</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>存柱面图、位移、增益。</li><li>再存掩膜和三种混合结果。</li><li>出错能定位到哪一步，不做黑箱。</li><li>换场景再跑，看数字稳不稳定。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">证据链</div><div class="kline">参数和指标写进小表</div><div class="kline">换数据直接对比</div><div class="kline">中间图也能当教学材料</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">生产差距 · 还缺什么</div>
+  <h2>差距：实验不是产品</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>颜色和伽马没处理。</li><li>镜头畸变没标定。</li><li>多图要做捆扎调整。</li><li>大曝光差要回辐照度域。</li></ul>
+      <div class="src">依据：原书第 545–547 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">补模块的顺序</div><div class="kline">先保证几何正确</div><div class="kline">再谈色彩和观感</div><div class="kline">骨架没通，调色会藏错</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章上机 · 收束</div>
+  <h2>第 8 章上机收束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>柱面把旋转变成平移。</li><li>重叠区是对齐证据，也是混合工作面。</li><li>羽化抹平接缝，金字塔按频段分工。</li><li>下一集进第 9 章：运动估计。</li></ul>
+      <div class="src">依据：原书第 523–545 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">往后走</div><div class="kline">从静态全景到运动估计</div><div class="kline">两帧位移是最简单的特例</div><div class="kline">再往后是光流和特征跟踪</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十三集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

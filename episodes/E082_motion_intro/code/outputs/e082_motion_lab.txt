@@ -1,0 +1,20 @@
+[lab] E082 运动估计开篇 开始 2026-11-02T17:15:38
+[lab] 源码 sha256=407284d4a5222b38c8947e1657c39f6f0258421f569ff1c2e6e44bb95532d04a
+[PASS] 角点位移唯一命中　| best=(7, -5)/真值 (7, -5)
+[PASS] 角点次优明显更大　| 次优/最优=791.43
+[PASS] 边缘法向位移正确　| dx=5/真值 5
+[PASS] 边缘存在平台　| 平台 29 个位移
+[PASS] 平坦区无位移信息　| SSD 标准差=0.00e+00
+[PASS] 平坦区误差近零　| 最小 SSD=0.00e+00
+[PASS] 前景局部运动正确　| best=(-6,3)
+[PASS] 背景局部运动正确　| best=(4,0)
+[PASS] 全局估计明显更差　| 全局 0.0060/局部 max 0.0000
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e082_ambiguity.png)=f99a6172b63ca9e1a64c0dc87c72000a41ed4e6da0f3cac715bc17efa582756a
+[lab] PNG sha256(e082_aperture.png)=aaaabe5a5f156fc3709a6d5328bef8767432ba2ed68d66d4a5f39cc9d487c602
+[lab] PNG sha256(e082_layers.png)=c3d6e000ffb1640ddb13a82d9f79c0b01a0e0993ad691baf44c8662230ff7e0c
+[lab] readings → e082_motion_readings.json
+[lab] readings sha256=5412358ec777c4f541899a9cc37242786c586ab48acf08960d33096c7fa816fb
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T17:15:38

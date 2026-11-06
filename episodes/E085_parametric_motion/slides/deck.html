@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>一般化运动模型：从仿射到样条</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 参数运动</div>
+  <h2>从一个向量到一组参数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集把平移对齐做到亚像素。</li><li>手持拍摄会转、会缩放、会斜扫。</li><li>未知量从一个向量换成参数向量。</li><li>这一集：运动场、雅可比、样条。</li></ul>
+      <div class="src">依据：原书第 570–573、575–578 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条线</div><div class="kline">运动场 x′(x;p)</div><div class="kline">雅可比链式相乘</div><div class="kline">样条补中间地带</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">问题 · 全搜索不可行</div>
+  <h2>八个参数不能靠全搜索</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>拼接需要比平移更复杂的模型。</li><li>仿射的参数比纯平移多。</li><li>六到八个参数一起试是指数爆炸。</li><li>改为在初值附近增量线性化。</li></ul>
+      <div class="src">依据：原书第 570 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么做</div><div class="kline">当前参数附近展开</div><div class="kline">解一个线性最小二乘</div><div class="kline">再迭代修正</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">参数运动族 · 程序生成</div>
+  <h2>三种模型：自由度递增</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平移只改位置，两个参数。</li><li>仿射可拉伸、旋转、斜切，六个参数。</li><li>投射再加近大远小，八个参数。</li><li>参数越多越自由，也越容易过拟合。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e085_models.png" style="max-height:500px" alt="同一个网格：平移、仿射、投射｜程序生成，未用教材或论文原图"><figcaption>同一个网格：平移、仿射、投射｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">运动场</div>
+  <h2>运动场：p 控制采样位置</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不再用一个常数平移向量。</li><li>写成 x′(x;p)，由低维 p 控制。</li><li>x′ 可以是第 2 章任一运动模型。</li><li>p 等于零时正好是单位变换。</li></ul>
+      <div class="src">依据：原书第 571 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">含义</div><div class="kline">p 是旋钮</div><div class="kline">x′ 是采样去处</div><div class="kline">初值从零开始</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">雅可比 · 链式法则</div>
+  <h2>雅可比：梯度乘运动雅可比</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>J1 等于图像梯度乘 ∂x′/∂p。</li><li>梯度管亮度往哪变。</li><li>运动雅可比管采样点往哪动。</li><li>平移时它退化成两列常数。</li></ul>
+      <div class="src">依据：原书第 571 页式 9.45</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">J₁ = ∇I₁ · ∂x′/∂p</div><div class="mnote">∇I₁：图像梯度；∂x′/∂p：运动场雅可比</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">分块 Hessian · 程序生成</div>
+  <h2>分块：省外积，不省像素</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>参数运动的 Hessian 比平移贵。</li><li>块内只累加 2×2 梯度外积。</li><li>块中心再乘一次运动雅可比。</li><li>块边长 24：误差 0.067，成本一成。</li></ul>
+      <div class="src">依据：原书第 571–572 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e085_jacobian.png" style="max-height:500px" alt="分块近似：每块一个运动雅可比，块大小影响误差与成本｜程序生成，未用教材或论文原图"><figcaption>分块近似：每块一个运动雅可比，块大小影响误差与成本｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">法方程</div>
+  <h2>法方程：形状没变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>A 夹着运动雅可比和梯度外积。</li><li>b 是负残差乘梯度。</li><li>方括号里与平移情形同形。</li><li>A 从 2×2 变成 6×6、8×8。</li></ul>
+      <div class="src">依据：原书第 571 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实测</div><div class="kline">雅可比误差约 10⁻¹⁰</div><div class="kline">Hessian 最小特征值 3.788</div><div class="kline">正定，小步稳定</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复合与逆向复合</div>
+  <h2>复合：把贵活挪出循环</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>单应雅可比复杂，还可能每像素除法。</li><li>先把目标图 warp 到模板坐标。</li><li>逆向复合改为 warp 模板。</li><li>逆 Hessian 和最速下降图可预算。</li></ul>
+      <div class="src">依据：原书第 572–573 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">区别在谁动</div><div class="kline">正向复合每步 warp 目标图</div><div class="kline">逆向复合预先固定模板</div><div class="kline">代价是假设光照变化小</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">学习运动基</div>
+  <h2>学习基：用统计先验</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从训练视频算一堆稠密运动场。</li><li>堆起来做奇异值分解 SVD。</li><li>取前几个奇异向量当基。</li><li>新视频只估几个系数。</li></ul>
+      <div class="src">依据：原书第 573 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">边界</div><div class="kline">几何先验之外的另一条路</div><div class="kline">走路、跑步各有各的基</div><div class="kline">换场景不一定灵</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">低维模型的边界</div>
+  <h2>低维模型装不下复杂运动</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>防抖、平面贴图里参数模型好用。</li><li>大多数图像运动太复杂。</li><li>光流每像素一个位移，未知数翻倍。</li><li>问题欠约束，需要中间地带。</li></ul>
+      <div class="src">依据：原书第 575 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两端</div><div class="kline">低维：全局一个规矩</div><div class="kline">光流：每像素各管各</div><div class="kline">样条：少量顶点管一片</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">样条运动 · 程序生成</div>
+  <h2>样条：少量顶点管一片</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>运动场写成控制顶点的线性组合。</li><li>每个像素受周围几个顶点影响。</li><li>运动不连续处基本样条吃力。</li><li>四叉树：大格平滑区，小格断裂区。</li></ul>
+      <div class="src">依据：原书第 575、577 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e085_spline.png" style="max-height:500px" alt="样条：控制顶点、四叉树细分与正则化权衡｜程序生成，未用教材或论文原图"><figcaption>样条：控制顶点、四叉树细分与正则化权衡｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">稀疏线性系统</div>
+  <h2>稀疏系统：每像素只连几个顶点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>样条代进 SSD，雅可比变稀疏项。</li><li>线性系统稀疏、规则。</li><li>中等规模可直接 Cholesky 分解。</li><li>太大再用预处理共轭梯度。</li></ul>
+      <div class="src">依据：原书第 576 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">提醒</div><div class="kline">大片无纹理要正则</div><div class="kline">长边缘跨块也病态</div><div class="kline">多分辨率要缩放正则</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">四叉树与医学配准</div>
+  <h2>四叉树细化与医学配准</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>低分辨率规则样条先估初值。</li><li>残差超阈值的块再细分。</li><li>父子约束防止裂缝。</li><li>医学配准用互信息做相似度。</li></ul>
+      <div class="src">依据：原书第 577–578 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">分工</div><div class="kline">样条管怎么变形</div><div class="kline">互信息管像不像</div><div class="kline">CT 看骨密度，MRI 看软组织</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">参数运动实验 · 由粗到细</div>
+  <h2>实验：粗估给初值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>合成纹理图，真值是仿射。</li><li>平移 2.3 与 −1.7，约 6% 拉伸。</li><li>零初值直接解六参数会跑偏。</li><li>半分辨率粗估后误差小于 0.001。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读数</div><div class="kline">粗层残差降 9.2 倍</div><div class="kline">粗层参数误差 0.00424</div><div class="kline">全分辨率误差 0.00015</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">分块与样条实验</div>
+  <h2>实验：近似与正则的账</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>分块把六乘六外积成本降到约一成。</li><li>块边长 24，Hessian 误差 0.067。</li><li>用近似解，参数误差小于 0.001。</li><li>5×5 控制顶点重建到机器精度。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读数</div><div class="kline">粗糙度比 0.005</div><div class="kline">数据误差比 1.10</div><div class="kline">误差与成本一起报</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集特征跟踪</div>
+  <h2>参数、雅可比、样条</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>未知量从向量换成参数向量。</li><li>雅可比把梯度和运动场接起来。</li><li>低维不够时，样条补中间地带。</li><li>下一集：特征跟踪 KLT。</li></ul>
+      <div class="src">依据：原书第 570–578 页；下一集原书第 452 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">第 7 章特征跟踪</div><div class="kline">每个特征点周围小窗口</div><div class="kline">孔径与漂移成主角</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十七集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

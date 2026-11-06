@@ -1,0 +1,110 @@
+== 引文断词惯例说明（门A r3 红线扫描补注；r4 N4-P2-1 处方 a 落实）==
+   留档：production/evidence/e027_book_pp142_148.txt  md5=df6f7b786b0e2fcdd4e0e3f713a66cf9
+   原文行尾断词（如 Trans-/form、but-/terfly、fre-/quencies）在引文侧按本集惯例
+   可拼合为整词。含省略号引文走「分段全序列」：按省略号分段、每段全序列逐词
+   机核、段序在原文单调——若断词被省略号裁去（如 f023），两段均可逐词机核；
+   若断词拼合入引文（如 f017/f020/f021，不含省略号），全序列必失配、退回首尾
+   5 词回退路径（中段不机核，由注记申报+人工抽查兜底）；短引文走子串+歧义检测。
+== 页眉行自动定位（真实锚点，仅接受 142–148）==
+   印刷 p.142 页眉在 L1
+   印刷 p.143 页眉在 L35
+   印刷 p.144 页眉在 L67
+   印刷 p.145 页眉在 L107
+   印刷 p.146 页眉在 L174
+   印刷 p.147 页眉在 L210
+   印刷 p.148 页眉在 L271
+
+== refs 行号全量枚举验证（主组严格 head==lo/tail==hi；每个 L 引用都有输出）==
+   [PASS·首尾] f001 L8–9 head=L8 tail=L9（全序列，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·首尾] f002 L9–12 head=L9 tail=L12（全序列，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·首尾] f003 L11–12 head=L11 tail=L12（全序列，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·首尾] f003 L12–14 head=L12 tail=L14（全序列，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·首尾] f004 L15–17 head=L15 tail=L17（全序列，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·首尾] f005 L17–19 head=L17 tail=L19（全序列，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·首尾] f006 L20–26 head=L20 tail=L26（分段全序列×2，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·注记·括号外] f006 L22–25（注记·括号外，落页 [142] ✓）
+   [PASS·注记·括号外] f006 L12–14（注记·括号外，落页 [142] ✓）
+   [PASS·首尾] f007 L28–30 head=L28 tail=L30（全序列，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·首尾] f008 L31–33 head=L31 tail=L33（全序列，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·首尾] f008 L34–34 head=L34 tail=L34（全序列，严格 head==lo/tail==hi）落页 [142] ✓
+   [PASS·首尾] f008 L64–66 head=L64 tail=L66（分段全序列×2，严格 head==lo/tail==hi）落页 [143] ✓
+   [PASS·首尾] f009 L45–46 head=L45 tail=L46（全序列，严格 head==lo/tail==hi）落页 [143] ✓
+   [PASS·首尾] f009 L43–44 head=L43 tail=L44（全序列，严格 head==lo/tail==hi）落页 [143] ✓
+   [PASS·首尾] f010 L47–48 head=L47 tail=L48（全序列，严格 head==lo/tail==hi）落页 [143] ✓
+   [PASS·首尾] f011 L49–50 head=L49 tail=L50（全序列，严格 head==lo/tail==hi）落页 [143] ✓
+   [PASS·短引文] f012 L47–47 子串命中于区间行，落页 [143] ✓
+   [PASS·首尾] f013 L51–53 head=L51 tail=L53（全序列，严格 head==lo/tail==hi）落页 [143] ✓
+   [PASS·注记·tag内] f014 L54–54（tag 内注记）（注记·tag内，落页 [143] ✓）
+   [PASS·注记·tag内] f014 L55–55（tag 内注记）（注记·tag内，落页 [143] ✓）
+   [PASS·注记·tag内] f014 L56–56（tag 内注记）（注记·tag内，落页 [143] ✓）
+   [PASS·注记·tag内] f014 L57–57（tag 内注记）（注记·tag内，落页 [143] ✓）
+   [PASS·乱序] f014 L54–57 （token 命中 14 个：response@[54] complex@[54] sinusoid@[54] frequency@[54] passed@[54] through@[54] filter@[54] fourier@[55] transform@[55] pair@[55] also@[55] often@[55] written@[55] (3.55)@[57]），紧致 ✓，落页 [143] ✓
+   [PASS·注记·tag内] f015 L58–60（tag 内注记）（注记·tag内，落页 [143] ✓）
+   [PASS·首尾] f015 L58–61 head=L58 tail=L61（全序列，严格 head==lo/tail==hi）落页 [143] ✓
+   [PASS·注记·括号外] f016 L61–63（注记·括号外，落页 [143] ✓）
+   [PASS·注记·式号单行] f016 L62–62（注记·式号单行，落页 [143] ✓）
+   [PASS·注记·tag内] f016 L71–74（tag 内注记）（注记·tag内，落页 [144] ✓）
+   [PASS·注记·tag内] f016 L75–75（tag 内注记）（注记·tag内，落页 [144] ✓）
+   [PASS·注记·式号单行] f016 L73–73（注记·式号单行，落页 [144] ✓）
+   [PASS·首尾] f016 L70–76 head=L70 tail=L76（分段全序列×2，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·注记·括号外] f016 L75–76（注记·括号外，落页 [144] ✓）
+   [PASS·注记·括号外] f016 L70–70（注记·括号外，落页 [144] ✓）
+   [PASS·注记·括号外] f016 L75–76（注记·括号外，落页 [144] ✓）
+   [PASS·首尾] f016 L75–76 head=L75 tail=L76（全序列，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·首尾] f017 L77–81 head=L77 tail=L81（回退首尾5词，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·首尾] f019 L82–84 head=L82 tail=L84（全序列，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·首尾] f019 L85–87 head=L85 tail=L87（全序列，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·首尾] f020 L87–90 head=L87 tail=L90（回退首尾5词，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·注记·tag内] f021 L94–94（tag 内注记）（注记·tag内，落页 [144] ✓）
+   [PASS·首尾] f021 L91–93 head=L91 tail=L93（全序列，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·首尾] f021 L94–96 head=L94 tail=L96（回退首尾5词，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·注记·tag内] f022 L100–100（tag 内注记）（注记·tag内，落页 [144] ✓）
+   [PASS·首尾] f022 L99–99 head=L99 tail=L99（全序列，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·注记·tag内] f022 L172–173（tag 内注记）（注记·tag内，落页 [145] ✓）
+   [PASS·首尾] f022 L171–171 head=L171 tail=L171（全序列，严格 head==lo/tail==hi）落页 [145] ✓
+   [PASS·首尾] f023 L100–101 head=L100 tail=L101（全序列，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·注记·tag内] f023 L104–104（tag 内注记）（注记·tag内，落页 [144] ✓）
+   [PASS·注记·tag内] f023 L105–105（tag 内注记）（注记·tag内，落页 [144] ✓）
+   [PASS·注记·tag内] f023 L106–106（tag 内注记）（注记·tag内，落页 [144] ✓）
+   [PASS·首尾] f023 L104–106 head=L104 tail=L106（分段全序列×2，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·注记·括号外] f023 L105–105（注记·括号外，落页 [144] ✓）
+   [PASS·注记·括号外] f023 L106–106（注记·括号外，落页 [144] ✓）
+   [PASS·注记·括号外] f023 L177–177（注记·括号外，落页 [146] ✓）
+   [PASS·注记·括号外] f023 L107–107（注记·括号外，落页 [145] ✓）
+   [PASS·注记·括号外] f023 L106–106（注记·括号外，落页 [144] ✓）
+   [PASS·注记·括号外] f023 L104–106（注记·括号外，落页 [144] ✓）
+   [PASS·首尾] f024 L101–104 head=L101 tail=L104（全序列，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·注记·tag内] f025 L92–93（tag 内注记）（注记·tag内，落页 [144] ✓）
+   [PASS·短引文] f025 L92–92 子串命中于区间行，落页 [144] ✓
+   [PASS·注记·括号外] f025 L92–92（注记·括号外，落页 [144] ✓）
+   [PASS·注记·tag内] f026 L44–44（tag 内注记）（注记·tag内，落页 [143] ✓）
+   [PASS·注记·tag内] f026 L44–44（tag 内注记）（注记·tag内，落页 [143] ✓）
+   [PASS·首尾] f026 L49–50 head=L49 tail=L50（全序列，严格 head==lo/tail==hi）落页 [143] ✓
+   [PASS·注记·括号外] f026 L82–84（注记·括号外，落页 [144] ✓）
+   [PASS·注记·括号外] f027 L100–101（注记·括号外，落页 [144] ✓）
+   [PASS·首尾] f027 L100–101 head=L100 tail=L101（全序列，严格 head==lo/tail==hi）落页 [144] ✓
+   [PASS·注记·括号外] f029 L179–179（注记·括号外，落页 [146] ✓）
+   [PASS·注记·括号外] f029 L184–193（注记·括号外，落页 [146] ✓）
+   [PASS·注记·括号外] f029 L205–206（注记·括号外，落页 [146] ✓）
+   [PASS·注记·括号外] f029 L235–237（注记·括号外，落页 [147] ✓）
+   [PASS·注记·括号外] f029 L250–250（注记·括号外，落页 [147] ✓）
+   [PASS·注记·括号外] f029 L258–281（注记·括号外，落页 [147, 148] ✓）
+   [PASS·注记·括号外] f029 L298–298（注记·括号外，落页 [148] ✓）
+   [PASS·首尾] f029 L177–178 head=L177 tail=L178（全序列，严格 head==lo/tail==hi）落页 [146] ✓
+   [PASS·首尾] f029 L288–289 head=L288 tail=L289（全序列，严格 head==lo/tail==hi）落页 [148] ✓
+
+== 区分力自检（注入假组必须全部 FAIL；声明页取自真实 refs）==
+   [FAIL ✓] 注入tail 少标 1 L8–8 → f001 L8–8 head=L8 tail=L9（全序列）声明页=[142]（ tail 应 L8 实 L9）
+   [FAIL ✓] 注入head 偏 1 L14–17 → f004 L14–17 head=L15 tail=L17（全序列）声明页=[142]（head 应 L14 实 L15）
+   [FAIL ✓] 注入tail 外扩 1 L43–46 → f009 L43–46 head=L43 tail=L44（全序列）声明页=[143]（ tail 应 L46 实 L44）
+   [FAIL ✓] 注入tail 外扩 1 L51–54 → f013 L51–54 head=L51 tail=L53（全序列）声明页=[143]（ tail 应 L54 实 L53）
+   [FAIL ✓] 注入tail 少标 1 L75–75 → f016 L75–75 head=L75 tail=L76（全序列）声明页=[144]（ tail 应 L75 实 L76）
+   [FAIL ✓] 注入head 偏 1 L76–81 → f017 L76–81 head=L77 tail=L81（回退首尾5词）声明页=[144]（head 应 L76 实 L77）
+   [FAIL ✓] 注入乱序 hi 外扩越行（token 命中顶到 L106） L101–108 乱序 → f024 L101–108（落页不符；命中：binomial@[101] filter@[101] gomes@[101] velho@[102] 1997@[102] used@[102] gaussian@[102] burt@[102] adelson's@[102] 1983a@[102] laplacian@[102] pyramid@[102] section@[103] does@[103] decent@[103] separating@[103] high@[103] frequencies@[101, 103, 105] still@[103] leaves@[103] fair@[104] amount@[104] high-frequency@[104] detail@[104] which@[104] lead@[101, 104] aliasing@[104] after@[104] downsampling@[104]）
+   [FAIL ✓] 注入乱序 lo 内缩越界（response 等在 L54） L56–57 乱序 → f014 L56–57（token 未全命中：response complex sinusoid frequency passed through filter fourier transform pair also often written；命中：(3.55)@[57]）
+   [FAIL ✓] 注入跨度护栏（20>15 非白名单） L100–120 乱序 → f023 L100–120（落页不符；命中：notice@[100] moving@[100] average@[100] filters@[100] uniformly@[100] dampen@[100] higher@[101, 105] frequencies@[101, 103, 105] hence@[101, 106] lead@[101, 104] ringing@[101] artifacts@[101]）
+   [FAIL ✓] 注入短引文重复子串歧义（式 3.53 公式串 L44 图注同现） L50–50 → f026 L50–50 子串命中于区间行；重复子串歧义：区间外另有 1 处命中（锚不唯一——扩引文或改注记，门A r1 P2-2），落页 [143] ✓
+   [FAIL ✓] 注入注记 L72–72(3.57) → f016 L72–72(3.57)（注记·式号单行，落页=[144] 声明页=[144, 146]）
+
+汇总：refs 行号引用 77 处全量枚举 → PASS 77 / FAIL 0（主组·首尾 34P/0F、主组·短引文 2P/0F、主组·乱序 1P/0F、注记·tag内 16P/0F、注记·括号外 22P/0F、注记·式号单行 2P/0F）；纯落页级 38 项（豁免白名单 0 组+落页注记 38 项）；内容级 39 项（全序列/分段全序列/首尾回退/短引文子串/式号单行/token 全命中+紧致组）；区分力自检 11/11 FAIL
+无静默跳过（全量枚举平账 + 区分力全 FAIL + 0 FAIL）

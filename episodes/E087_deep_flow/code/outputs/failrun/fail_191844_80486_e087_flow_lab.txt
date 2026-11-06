@@ -1,0 +1,20 @@
+[lab] E087 相关体/迭代细化 开始 2026-11-02T19:18:43
+[lab] 源码 sha256=d34b4fa0224ba2dcf20b79c63215768435c6d72a51442de0dacf5f904146e2c5
+[PASS] 全相关体尺寸　| 16777216 元素
+[PASS] 全相关体内存　| 67.1 MB
+[PASS] 稀疏化省百倍以上　| 819×
+[PASS] 整数峰在真值附近　| peak=(5.39,-3.20)
+[PASS] 亚像素峰误差小　| err=0.009px
+[PASS] 亮度变化下 NCC 稳　| err=0.007px
+[PASS] 重复纹理峰值比低　| ratio=1.010
+[PASS] 唯一纹理峰值比高　| ratio=2.52
+[PASS] 迭代误差单调下降　| 29.57→29.23
+[FAIL] 迭代最终误差小　| err=29.225px
+[lab] PNG sha256(e087_iter.png)=1c8d2338f13258e2e8a3a695faf9a0b6f3eb346f19a660dd0462f8b962b6100c
+[lab] PNG sha256(e087_timeline.png)=e10d86ccfdf709a3aada17c3490247700b4e9a7a5995bb20cfc2da592f13560a
+[lab] PNG sha256(e087_volume.png)=5b90a36333729adf05a9cb73d670995339eb192ea14958862108bc4d7239a54b
+[lab] readings → e087_flow_readings.json
+[lab] readings sha256=ef92c2b568d330daffa5250432b7a3c8f2b9c3750be7eab98e24401e0ab7fa3b
+[lab] LEDGER：断言 10 条，PASS 9
+[lab] 汇总 PASS 9 / FAIL 1 / 共 10
+[lab] 结束 2026-11-02T19:18:44

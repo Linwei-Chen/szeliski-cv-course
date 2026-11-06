@@ -1,0 +1,20 @@
+[lab] E091 计算摄影 开始 2026-11-06T03:09:08
+[lab] 源码 sha256=04bfe292d8bfbb09f636286be75fcaa5319186513877e05373c08bda8aa01d8b
+[PASS] 场景动态范围>1000　| 1594:1
+[PASS] 短曝光暗部信噪比低　| SNR=0.69
+[PASS] 长曝光高光饱和多　| 饱和 72.0%
+[PASS] 三曝光覆盖全部像素　| 覆盖 100.0%
+[PASS] 合并辐亮度相关>0.99　| r=1.000
+[PASS] 合并相对误差<2%　| 0.50%
+[PASS] 合并优于单张中曝光　| 0.50% vs 0.82%
+[PASS] 色调映射压缩动态范围　| 1594→59
+[PASS] gamma 编解码往返　| 1.1e-16
+[PASS] 多帧去噪提升>5dB　| 24.9→33.5dB
+[lab] PNG sha256(e091_exposure.png)=a96c3657b81cddbe889b8ecc147498debd43fb2fdff9e51129f44c041f509a35
+[lab] PNG sha256(e091_pipeline.png)=cbc705a27707e4b56433724392f37f264382577324c9ff583b24e4046d65c5ca
+[lab] PNG sha256(e091_topics.png)=d5b3c44622930c041b834fe264761bb2190e8078aed76df1e5ecdc51bd0a0684
+[lab] readings → e091_photography_readings.json
+[lab] readings sha256=29354423a04a5125053d2b60b0e775b8a21825b4d91bf929dc1619d3e80dbf2a
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-06T03:09:08

@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>光场：先拍照、后对焦的魔法光学</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 光场是什么</div>
+  <h2>拍完了，还能改对焦吗</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>普通相机每个像素只记亮度和颜色。</li><li>光场多记两个方向，信息多一大截。</li><li>先记录光线，再在电脑上重排。</li><li>本集用 9×9 合成相机阵列演示。</li></ul>
+      <div class="src">依据：原书第 875–883 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种相机</div><div class="kline">普通相机：一个像素一束光</div><div class="kline">光场：记下光线的方向</div><div class="kline">合成实验，不是 Lytro 实拍</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全光函数 · 5D 到 4D</div>
+  <h2>从 5D 砍到 4D，砍哪一维</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个相机位置拍一张二维球面图。</li><li>三维位置加二维方向，就是 5D。</li><li>无烟无雾时，共线光线颜色相同。</li><li>去掉沿光线距离，5D 降到 4D。</li></ul>
+      <div class="src">依据：原书第 875–876 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">维度的账</div><div class="kline">5D：位置 3 + 方向 2</div><div class="kline">4D：光线穿过两个平面</div><div class="kline">砍掉的是“走多远”</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">两平面参数化</div>
+  <h2>两块平面，给光线编号</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>光线穿过 st 平面的 (s,t)。</li><li>也穿过 uv 平面的 (u,v)。</li><li>四个数 (s,t,u,v) 定住一条光线。</li><li>有限光板生成有限视口内的视角。</li></ul>
+      <div class="src">依据：原书第 876–877 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">(s, t, u, v)</div><div class="mnote">st：相机阵列所在平面；uv：每台相机的成像面；绕物体一圈要多个光板或立方体面</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">极线平面图 · EPI</div>
+  <h2>把相机排成行，切出 EPI</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>固定 t，相机沿 s 移动，图像按 u 堆叠。</li><li>横切一刀，就是极线平面图 EPI。</li><li>同一深度的像素，排成一条直线。</li><li>近处轨迹平，远处轨迹陡。</li></ul>
+      <div class="src">依据：原书第 877 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">斜率与深度</div><div class="kline">轨迹斜率随深度变化</div><div class="kline">一条 EPI 切片就能测深</div><div class="kline">不用先做两幅图匹配</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · EPI 斜率测深</div>
+  <h2>看图：三条轨迹，三种深度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左：9×9 阵列里的 3×3 子孔径图。</li><li>右：中心行按 s 堆成的 EPI。</li><li>实测斜率 0.4453、0.6684、0.8247。</li><li>理论 1−1/Z，最大误差 0.0086。</li></ul>
+      <div class="src">依据：原书第 877 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e130_epi.png" style="max-height:500px" alt="9×9 子孔径图 + 中心行 EPI：三条轨迹对应近中远｜程序生成，未用教材或论文原图"><figcaption>9×9 子孔径图 + 中心行 EPI：三条轨迹对应近中远｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Lumigraph · 深度补偿</div>
+  <h2>知道表面在哪，重采样更准</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Lumigraph 把表面点的三维位置纳入。</li><li>重采样按离面深度 z 改 u 参数。</li><li>再从相邻样本做线性混合。</li><li>前提是要有比较靠谱的深度或模型。</li></ul>
+      <div class="src">依据：原书第 877–878 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种插值</div><div class="kline">普通光场：四维网格找邻居</div><div class="kline">Lumigraph：先问打在哪个点</div><div class="kline">知道几何，少鬼影、少重影</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 重聚焦</div>
+  <h2>看图：换平移量，换焦平面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左：焦平面放在近处、中景、远处。</li><li>右：对焦视差 0.08 到 0.70 的锐度曲线。</li><li>峰值 0.535、0.335、0.165。</li><li>真实视差 0.556、0.333、0.167，误差 0.021。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e130_refocus.png" style="max-height:500px" alt="对焦近处 / 中景 / 远处 + 三条锐度曲线｜程序生成，未用教材或论文原图"><figcaption>对焦近处 / 中景 / 远处 + 三条锐度曲线｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合成孔径 · 大光圈</div>
+  <h2>相机多了，等效光圈变大</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>混合更多邻近样本，模拟大光圈。</li><li>聚焦背景，前景糊成半透明。</li><li>能看见被挡住的东西。</li><li>被挡像素靠别的视角补进来。</li></ul>
+      <div class="src">依据：原书第 878–879 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">边界</div><div class="kline">不是消除遮挡，是把遮挡平均掉</div><div class="kline">适合看见大概</div><div class="kline">不适合精确测量</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 合成孔径</div>
+  <h2>看图：背景被大光圈糊掉</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左 9 台相机，右 81 台，都对焦近处。</li><li>背景锐度 0.1954 降到 0.0005。</li><li>前景保留 0.2391，前景/背景比 42.5。</li><li>前景也掉一点，因为平移本身会糊。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e130_aperture.png" style="max-height:500px" alt="9 台 vs 81 台相机 + 前景/背景锐度曲线｜程序生成，未用教材或论文原图"><figcaption>9 台 vs 81 台相机 + 前景/背景锐度曲线｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">采集与存储 · ULR</div>
+  <h2>光线很多，冗余更多</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>轨道、相机阵列或手持都能采。</li><li>手持照片靠标定或 SfM 求位姿。</li><li>本集 9×9×128×128 有 1,327,104 条光线。</li><li>RGB 约 3.98 MB；一条 EPI 只有 1,152 像素。</li></ul>
+      <div class="src">依据：原书第 879–880 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">ULR 五条准则</div><div class="kline">极线一致性、角度偏差</div><div class="kline">分辨率、连续性</div><div class="kline">沿光线一致性</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">14.3.2–14.3.4 · 更省方向</div>
+  <h2>表面、全景、景深</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>完全漫反射，四维光场塌缩成纹理图。</li><li>表面光场存每个点的所有出射方向，叫 Lumisphere。</li><li>同心拼图把像素列对应到同心圆半径。</li><li>微透镜阵列平移叠加，就是 Lytro 类合成孔径。</li></ul>
+      <div class="src">依据：原书第 880–883 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个极端</div><div class="kline">完全漫反射：二维贴图</div><div class="kline">完全镜面：环境贴图</div><div class="kline">真实物体在两者之间</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>4D、EPI、重聚焦</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>无烟无雾，5D 降到 4D。</li><li>两平面 (s,t,u,v) 给光线编号。</li><li>EPI 斜率等于 1−1/Z，斜率就是深度。</li><li>知道深度做 Lumigraph，不知道也能平移重聚焦。</li></ul>
+      <div class="src">依据：原书第 875–883 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">从光场回到照片本身</div><div class="kline">Photo Tourism：海量照片变可漫游场景</div><div class="kline">先拍照、后对焦，靠的是提前存方向</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十二集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

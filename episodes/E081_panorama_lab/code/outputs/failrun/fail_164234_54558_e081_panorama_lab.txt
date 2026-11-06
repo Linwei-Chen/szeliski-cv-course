@@ -1,0 +1,20 @@
+[lab] E081 两图到全景 开始 2026-11-02T16:42:34
+[lab] 源码 sha256=ad93cf81f8d73c18862a061d69aad8721fa54890ba1ed67fa24f7eef8398b1d3
+[FAIL] 柱面往返可逆　| rmse=2.70e-01
+[PASS] 1D 列剖面粗对齐　| dx=376/真值 377.0
+[FAIL] 2D NCC 细化位移　| dx=376/dy=-6
+[FAIL] 曝光增益可恢复　| gain=1.1071
+[FAIL] 硬拼低频台阶明显　| 跳变=0.0020/基线 0.0028
+[FAIL] 羽化压低低频台阶　| 羽化=0.0024
+[FAIL] 金字塔压低低频台阶　| 金字塔=0.0022
+[FAIL] 羽化会糊高频　| hp=3.165
+[PASS] 金字塔保住更多高频　| 金=4.630/羽=3.165
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e081_align.png)=3a35a750704dc1fcf2399aef0f565fe67ade6075a441541b5e9ec54e115f5d65
+[lab] PNG sha256(e081_blend.png)=ecf61e500fd10b6a2e74e05f081fe37f485a6feea3bb56ee5cdd0530853be356
+[lab] PNG sha256(e081_cylindrical.png)=777b55b771c88724b06dcd35138ea27ecaa8b27b7da7d1885cf7f622e195c8c7
+[lab] readings → e081_panorama_readings.json
+[lab] readings sha256=4e0741e1dfd370de5d85e664a689ccb0b2729819b459af0155d056891f7a3dda
+[lab] LEDGER：断言 10 条，PASS 3
+[lab] 汇总 PASS 3 / FAIL 7 / 共 10
+[lab] 结束 2026-11-02T16:42:34

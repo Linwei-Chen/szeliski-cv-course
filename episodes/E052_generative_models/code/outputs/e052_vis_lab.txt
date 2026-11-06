@@ -1,0 +1,34 @@
+[lab] E052 生成模型数值演示档 开始 2026-11-01T09:16:08
+[lab] 源码 sha256=ae35ec7ff6136da73f88cfe82fe9a9ea722fb6782d092db2ab955a37840deec0（哨兵版本绑定数据源——E043 r5 P2-5 口径）
+[PASS] E1 量化输出全部来自码本（替换后每向量与码本条目距离==0）　| 1024 个位置逐一替换（K=512/Dv=8）
+[PASS] E1 命中码本条目数≤512（离散值域直证）　| 实际命中 398/512 条（1024 个位置共享码本——离散化语义）
+[PASS] E1 量化位移均值为正（量化确实发生——非恒等映射）　| mean shift=1.502（max=3.408，随机 latent 位移统计）
+[PASS] E1 隐表示形状 32×32 保持（z=32×32×1 空间结构不破坏）　| (32,32,8)→展平 1024 位置→还原网格——空间逐位置替换
+[PASS] E2 512^(32·32·1) 十进制位数==2775（整数精确）　| 精确幂位数=2775 位（512**1024——Python 大整数无浮点溢出）
+[PASS] E2 位数>1000（「上千位的天文数字」口径直证）　| 2775 位（monstrously large 读数级直证——p.330）
+[PASS] E2 log 口径互证（floor(1024·log10 512)+1==精确位数）　| log 口径=2775（1024×log10(512)≈2774.3）
+[PASS] E3 真图支 log D(x)==log(0.9)　| log(0.9)=-0.1054（判别器对真图输出 0.9——教学设定申报）
+[PASS] E3 假图支 log(1−D(G(z)))==log(0.8)　| log(0.8)=-0.2231（假图判别输出 0.2→1−0.2）
+[PASS] E3 联合损失==两支之和（式 5.79 结构）　| joint=-0.3285（N=1 实例——两项相加）
+[PASS] E3 理想判别器（真→1/假→0 近似）联合损失趋 0（D 完胜方向直证）　| ideal joint=-0.000200（0.9999/0.0001 近似——数值演示避免对零取对数）
+[PASS] E3 假图被拒概率实算 1−D(G(z))==0.8（stdout 读数出处）　| 1−0.2=0.8（假图被判为假=被拒概率；「图像为真概率」是 D(G(z))=0.2 本身——两值互补，勿混）
+[PASS] E4 滑窗位置数 (256−70)//16+1==12（每维）　| (256−70)//16+1=12
+[PASS] E4 判定块总数==144（12×12）vs 整图判别 1 次　| 12×12=144 个判定块——「more training data」=144 倍判定样本直证
+[PASS] E4 块数>1（patch-by-patch 结构成立）　| 144 > 1（overlapping patches——p.333）
+[PASS] E4 相邻窗重叠率>50%（overlapping 语义直证）　| 重叠 70−16=54px/70px=77.1%（等价读法：窗口每次滑动 16px，70px 窗口中 54px 与前窗重叠）
+[PASS] E4 重叠像素与百分数实算（stdout 读数出处）　| 70−16=54px、77.1%（算术读数入档）
+[PASS] E10 作业① 能表示图像数==512^1024==2775 位（E2 互证）　| 答案 512^1024（2775 位数）（口播定性读「上千位的天文数字」）
+[PASS] E10 作业② 判定块==144（E4 互证）　| 答案 144 块（12×12——口播读「一百四十四」）
+[PASS] FG 图内文字内部记号零泄漏（FIG_MARK 零命中）　| 图内 Text 收割 153 条，命中 无
+[PASS] FG 程序生成图 3 张全落盘　| e052_fig1_autoencoder.png+e052_fig2_vqvae.png+e052_fig3_gan.png（sha 见 [lab] PNG 行）
+[PASS] FG1 程序生成图落盘　| e052_fig1_autoencoder.png 已落盘（全量 sha 自证见 [lab] PNG 行）
+[PASS] FG2 程序生成图落盘　| e052_fig2_vqvae.png 已落盘（全量 sha 自证见 [lab] PNG 行）
+[PASS] FG3 程序生成图落盘　| e052_fig3_gan.png 已落盘（全量 sha 自证见 [lab] PNG 行）
+[lab] readings → e052_vis_readings.json
+[lab] readings sha256=cbbaacc1b86b71c31602872b2fec6a688b6944b395a8d836f8f196c64f1ac2a3
+[lab] PNG sha256(e052_fig1_autoencoder.png)=4b3950c551e754de3a86fd88e7c34f8accb56bf04c14bf8e88c61dae3a17f2d5
+[lab] PNG sha256(e052_fig2_vqvae.png)=5d33ced9ecdf63ab92e1dcb73d6ba766ed8163b74c114b019f1e103da4777bff
+[lab] PNG sha256(e052_fig3_gan.png)=353a898b7545ff259c359669844102dce112b7996bee0193bd5d1d5a5bc1e9a3
+[lab] LEDGER：断言 24 条，PASS 24
+[lab] 汇总 PASS 24 / FAIL 0 / 共 24
+[lab] 结束 2026-11-01T09:16:08

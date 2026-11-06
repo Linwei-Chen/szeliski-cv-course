@@ -1,0 +1,16 @@
+[lab] E100 chapter recap 开始 2026-11-05T16:30:11
+[lab] 源码 sha256=f14b4313bec3d69ef436dc3f76d2f4a27da82363646f068b0755fd8c6e8d7211
+[PASS] 九集台账齐全　| 9 集：E091–E099
+[PASS] 六条支线都有归属　| 6 条支线
+[PASS] 三图在盘　| layers/ledger/tree
+[PASS] 三层各有节点　| 物理 3 / 算法 3 / 产品 1
+[PASS] 页码范围正确　| p.607–674
+[PASS] 边界四项非空　| 闪光/matting/纹理前半/视频
+[lab] PNG sha256(e100_layers.png)=a07f321aa52b311ecd55074cb08c6984cae973f468ca25682dbe1692cd8a17bd
+[lab] PNG sha256(e100_ledger.png)=d2f77630685827195c90281d43079a6f30b7929400540f7b6f6d83d709a801a2
+[lab] PNG sha256(e100_tree.png)=18e12a8534b28f1fe99e02a1b587a099a8232bb08f956b8f9c733f43c1ef8edc
+[lab] readings → e100_recap_readings.json
+[lab] readings sha256=1300e1e3235981653ddfb472a0cabb9908422ad1a245b448372b43547922bcb4
+[lab] LEDGER：断言 6 条，PASS 6
+[lab] 汇总 PASS 6 / FAIL 0 / 共 6
+[lab] 结束 2026-11-05T16:30:11

@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>空间计算元年：IBR 思想在 VR/AI 视频里的落地</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 空间视频</div>
+  <h2>观众能不能自己选视角</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>3D 电影十几年，观众仍坐固定位置。</li><li>自由视点视频用多台相机同时拍。</li><li>观众在相机之间选视角。</li><li>本集用 8 台合成相机做演示。</li></ul>
+      <div class="src">依据：原书第 893–895 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集边界</div><div class="kline">合成一维阵列</div><div class="kline">不采集真实视频</div><div class="kline">不是完整 VR 系统</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三个基本问题</div>
+  <h2>深度、插值、时间一致</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>立体匹配：算出每个像素有多远。</li><li>视图插值：画出新机位看到的画面。</li><li>时间一致：相邻帧的深度不能乱跳。</li><li>三件事缺一件，画面就会出错。</li></ul>
+      <div class="src">依据：原书第 893 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个必要组件</div><div class="kline">立体匹配 + 视图插值</div><div class="kline">深度或代理要时间一致</div><div class="kline">否则画面会闪烁</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">早期系统 · 全局代理</div>
+  <h2>先重建整体几何，再画新视角</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Virtualized Reality 等系统用全局几何。</li><li>代理可以是表面，也可以是体积。</li><li>scene flow 记录表面元的三维运动。</li><li>新视角可信，但每帧重建很重。</li></ul>
+      <div class="src">依据：原书第 893 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">代表系统</div><div class="kline">Virtualized Reality</div><div class="kline">Immersive Video</div><div class="kline">Image-Based Visual Hulls</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Zitnick · 两层深度</div>
+  <h2>一幅图配两层深度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>前景一层，背景一层。</li><li>边界像素是两层按比例混合。</li><li>单层深度容易把边缘切坏。</li><li>系统用 8 台同步相机采集。</li></ul>
+      <div class="src">依据：原书第 893 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两层的好处</div><div class="kline">比全局网格轻</div><div class="kline">能处理遮挡边界</div><div class="kline">两层可分开压缩传输</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 相机阵列</div>
+  <h2>相机之间插出新视角</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>8 台相机排成一维阵列。</li><li>红点是左右眼，中间是虚拟视角。</li><li>前景 Z=2、背景 Z=6，两层视差不同。</li><li>本实验只做一维平移。</li></ul>
+      <div class="src">依据：本集实验；原书第 893 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e133_rig.png" style="max-height:500px" alt="八相机一维阵列与左/虚拟/右三视角｜程序生成，未用教材或论文原图"><figcaption>八相机一维阵列与左/虚拟/右三视角｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">渲染管线</div>
+  <h2>条带、alpha、z-buffer</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>深度不连续处，背景沿前景后方延伸。</li><li>颜色从邻图没被挡住的地方估计。</li><li>边界像素用分数不透明度合成。</li><li>两幅结果按 z-buffer 合并。</li></ul>
+      <div class="src">依据：原书第 894 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四步</div><div class="kline">分层：前后景分开</div><div class="kline">抠图：估分数 alpha</div><div class="kline">合成：前景叠背景</div><div class="kline">比较：z-buffer 定前后</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 边界抠图</div>
+  <h2>硬切出锯齿，软 alpha 更顺</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>硬边界只有 0 或 1。</li><li>软边界按覆盖率混合。</li><li>PSNR：硬边界 34.64 分贝。</li><li>软边界 37.46 分贝，边缘误差降 96.8%。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e133_layers.png" style="max-height:500px" alt="硬边界 / 软边界 / 目标，PSNR 34.64 vs 37.46｜程序生成，未用教材或论文原图"><figcaption>硬边界 / 软边界 / 目标，PSNR 34.64 vs 37.46｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">VR 与自由度</div>
+  <h2>ODS 只转头，6DoF 能走动</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Jump 用 16 台 GoPro 排成 28 厘米环。</li><li>离线拼成一对全向立体 ODS 视频。</li><li>ODS 不支持头部倾斜和平移。</li><li>6DoF 可在有界体积内移动。</li></ul>
+      <div class="src">依据：原书第 895 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">自由度</div><div class="kline">ODS：原地转头</div><div class="kline">6DoF：有界体积内移动</div><div class="kline">自由度越多，采集越贵</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 时间一致</div>
+  <h2>逐帧会抖，平滑后更稳</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>24 帧前景深度逐帧估计会抖。</li><li>深度标准差 0.100，平滑后 0.030。</li><li>闪烁指标 0.00060 降到 0.00004。</li><li>平均 PSNR 36.89 升到 37.64 分贝。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e133_temporal.png" style="max-height:500px" alt="24 帧深度抖动 vs 时间平滑；闪烁 0.00060→0.00004｜程序生成，未用教材或论文原图"><figcaption>24 帧深度抖动 vs 时间平滑；闪烁 0.00060→0.00004｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">6DoF · 体积捕捉</div>
+  <h2>自由移动要付代价</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6DoF 需要离线多视图立体。</li><li>生成支撑自由移动的三维代理。</li><li>镜头朝外拍演员，叫体积表演捕捉。</li><li>有界体积、离线、多相机都是代价。</li></ul>
+      <div class="src">依据：原书第 895 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">朝内：观众在场景里</div><div class="kline">朝外：观众围着演员</div><div class="kline">都要多视角与时间一致</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">AI 视频 · 少相机</div>
+  <h2>相机越少，越靠先验</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>多数系统要定制的多相机阵列。</li><li>也可以用手持视频或一台手机。</li><li>相机少，没拍到的视角靠算法补。</li><li>深度网络可能把没拍到的东西编错。</li></ul>
+      <div class="src">依据：原书第 895 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">看系统先问</div><div class="kline">几台相机</div><div class="kline">要不要离线</div><div class="kline">能不能实时</div><div class="kline">自由度多大</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>阵列、两层、时间一致</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>立体匹配加视图插值，相机之间插视角。</li><li>两层深度、边界抠图、z-buffer 修边缘。</li><li>时间一致和 VR 自由度决定体验。</li><li>下一集：第 13–14 章收官。</li></ul>
+      <div class="src">依据：原书第 893–895 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个词</div><div class="kline">相机阵列</div><div class="kline">两层深度</div><div class="kline">时间一致</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十五集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

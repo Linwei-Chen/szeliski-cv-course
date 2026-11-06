@@ -1,0 +1,26 @@
+{
+ "generated_at": "2026-11-02T00:54:23",
+ "src_sha16": "33546246d04fa9e9",
+ "fig1": {
+  "tasks": 4,
+  "min_fs": 11.5,
+  "max_fs": 14.0
+ },
+ "fig2": {
+  "encoder_levels": 4,
+  "decoder_levels": 4,
+  "min_fs": 11.5,
+  "max_fs": 14.0
+ },
+ "fig3": {
+  "heads": 3,
+  "branches": 2,
+  "min_fs": 11.5,
+  "max_fs": 14.0
+ },
+ "texts": {
+  "collected": 36,
+  "leaked": 0
+ },
+ "pngs": 3
+}

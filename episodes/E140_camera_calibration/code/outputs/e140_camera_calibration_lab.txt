@@ -1,0 +1,25 @@
+[lab] E140 相机内参标定实验开始 2026-11-03T21:30:21
+[lab] 源码 sha256=a7d64589d223c61c40e19074bf2fc3f5dabb88bd6144e7ad89f21f7d5ce26d8a
+[lab] OpenCV 5.0.0 / NumPy 2.5.4
+[lab] 边界：合成 7×6 平面靶标、6 视角；自写 Zhang 线性 K，畸变用 OpenCV 参照；不是真实相机标定
+[PASS] 干净单应重投影 <0.01px：0.0000px
+[PASS] Zhang fx 相对误差 <0.1%：0.000000
+[PASS] Zhang fy 相对误差 <0.1%：0.000000
+[PASS] Zhang 主点误差 <0.1px：0.0000px
+[PASS] 0.5px 噪声 fx 误差 <2%：0.0080
+[PASS] 1px 噪声 fx 误差 <5%：0.0413
+[PASS] 1px 噪声主点误差 <6px：4.07px
+[PASS] 畸变下 fx 误差 <0.1%：0.000000
+[PASS] k1 绝对误差 <0.01：0.000000
+[PASS] 畸变使直线弯曲 >5px：7.15px
+[PASS] 去畸变后弯曲 <0.1px：0.0176px
+[PASS] 1px 噪声标定 RMS <2px：1.329px
+[lab] LEDGER：断言 12 条，PASS 12
+[lab] PNG sha256(e140_views.png)=54082c51879c9df324b11e66c528b141d0d77b99f9183356f33796ec5fe7c564
+[lab] PNG sha256(e140_noise.png)=9cb05d0eccb26a2eb1c391157ec3a9d5cff6ad04e570142a7ec9964629e45cfe
+[lab] PNG sha256(e140_distortion.png)=be15112ea18852d2194f357bc283537f9216f780fe81584e4ebf6c541fe51f5d
+[lab] 汇总：12/12 断言通过
+[lab] Zhang：fx 800.00/fy 780.00/cx 320.00/cy 240.00；H 误差 0.0000px
+[lab] 噪声：0/0.5/1px → fx 误差 0.00/0.80/4.13%，cx 误差 0.00/0.85/4.07px
+[lab] 畸变：k1 0.3000；fx 误差 0.000000；弯曲 7.15→0.0176px
+[lab] readings sha256=6d00da78c66385f118be04896b6fd6831bb1ec88ba768267abab107d01cc7757

@@ -1,0 +1,22 @@
+[lab] E126 评测 开始 2026-11-03T10:22:24
+[lab] 源码 sha256=c168bb2cf769ada52fc3ab89319a35c8f317f1b79fd198be936ed59e8a027054
+[lab] 边界：合成图计算 PSNR/SSIM；LPIPS 只读论文 Table 1；不是完整基准复现
+[PASS] PSNR 公式：MSE=0.01 对应 20dB | 20.0000 dB
+[PASS] 恒等图 PSNR 很高 | 120.0 dB
+[PASS] 恒等图 SSIM 等于 1 | 1.000000
+[PASS] SSIM 对称 | |Δ|=0.00e+00
+[PASS] 模糊与噪声 PSNR 对齐 | 32.2927 vs 32.2927
+[PASS] 同样 PSNR 下 SSIM 不同 | 0.9743 vs 0.9647
+[PASS] 论文表：Mip 上 PSNR 赢家不是 SSIM 赢家 | PSNR 27.69 > 27.21; SSIM 0.815 > 0.792
+[PASS] 论文表：LPIPS 偏好 Ours | 0.214 < 0.237
+[PASS] 论文表：FPS 偏好 Ours，显存偏好 M-NeRF360 | FPS 134.0 vs 0.06; Mem 0.734GB vs 0.0086GB
+[PASS] 数据集换了，PSNR 赢家可能换 | Tanks: Ours 23.14 > M-NeRF360 22.22
+[PASS] 基准协议：每 8 张取 1 张测试 | test_every=8, GPU=A6000
+[PASS] 指标清单包含 LPIPS | PSNR、SSIM、LPIPS
+[lab] LEDGER：断言 12 条，PASS 12
+[lab] PNG sha256(e126_metrics.png)=a1a46d0acf8cd2a999ef07449e9169866e76481a6fb7040efeebca463f51c818
+[lab] PNG sha256(e126_equal_psnr.png)=f02237b32b25bf07f258ac4ba8e58264539919b31df85e33361f8c16562ed5f9
+[lab] PNG sha256(e126_tradeoff.png)=d481e3a635cb3fd2d704a9ae7dbdd0b54a5ab8d18681e3512b5b3e6fcfebb796
+[lab] readings sha256=553d09dc1d62e6682c481bdbb77bbfa8e1d54fe533885978539fd47e35d28f38
+[lab] 汇总 PASS 12 / FAIL 0 / 共 12
+[lab] 结束 2026-11-03T10:22:24

@@ -1,0 +1,21 @@
+[lab] E079 混合与曝光补偿 开始 2026-11-02T14:28:37
+[lab] 源码 sha256=6463d6518e85230dfde2a06fd8a252757326576c0b88601eaae03a82b31a36e2
+[PASS] 硬拼接有明显台阶　| 最大跳变 0.208
+[PASS] 羽化压到真实台阶附近　| 羽化 0.0971 真实 0.0858
+[PASS] 曝光补偿后接近真实台阶　| 补偿 0.0843 真实 0.0858
+[PASS] 补偿后误差下降　| 羽化 0.0856 补偿 0.0033
+[PASS] 金字塔接近真实台阶　| 金字塔 0.0843 真实 0.0858
+[PASS] 金字塔整体误差小　| RMSE 0.0033
+[PASS] 梯度域接近真实台阶　| 梯度域 0.0842 真实 0.0858
+[PASS] 梯度域整体误差小　| RMSE 0.0033
+[PASS] 对数增益与线性增益一致　| 相对差 0.0044
+[PASS] 梯度域不造双边缘　| 比值 0.984
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e079_compare.png)=c8dfd5032cac9fc8fcc599cbc0440ab020c87df2c83c65a1e4b5d27707f14ffe
+[lab] PNG sha256(e079_jump.png)=0073f12a281e40c822c97e7baabfa2573816aeb71538e431f7ce1ea98a4d1f8e
+[lab] PNG sha256(e079_pipeline.png)=6ed58fc123be0b565bb15fe29d7fbf4593271e9308dea41865dc07c549702b5f
+[lab] readings → e079_blending_readings.json
+[lab] readings sha256=36b850e65cb8fb9ae4d8cf6552b52613ba48155d6915f04c6fa56058a10ad45f
+[lab] LEDGER：断言 11 条，PASS 11
+[lab] 汇总 PASS 11 / FAIL 0 / 共 11
+[lab] 结束 2026-11-02T14:28:37

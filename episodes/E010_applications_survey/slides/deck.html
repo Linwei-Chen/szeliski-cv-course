@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E010 · 计算机视觉应用大盘点</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<style>
+  /* 实验图为 3.2:1 宽图，全宽摆放会把图注压进字幕栏——限高让其居中（选择器须与 deck.css 同级） */
+  figure.shot img { max-height: 460px; }
+</style>
+<script defer src="../../../assets/shared/deck.js"></script>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="2">
+  <div class="course step" data-step="1">正课 · 02 · 第 1 章 绪论</div>
+  <h1 class="step" data-step="1">计算机视觉<span class="hl">应用大盘点</span></h1>
+  <p class="ep step" data-step="2">工业 11 类 · 消费 8 类 · 一套方法论</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>01 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">好消息 · GOOD NEWS</div>
+  <h2>这些算法，<span class="hl">早已上岗</span></h2>
+  <div class="formula step" data-step="1" style="border-left-color:var(--sand)">
+    <div style="font-family:var(--serif);font-weight:900;color:var(--ink-strong);font-size:56px">工业 11 类 ＋ 消费 8 类 = 19 个真实应用</div>
+    <div class="note">原书 §1.1（第 5–8 页）逐条列出 ｜ 计数按原书条目</div>
+  </div>
+  <p class="lead step" data-step="1">为什么开篇报菜名？熟悉的例子<b>非常能激发兴趣</b>；更重要的是——应用给开放问题<b>加上约束</b>（第 8 页）。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>02 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">工业清单 · 1/5</div>
+  <h2>认字与<span class="hl">质检</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big" style="font-size:46px">OCR</div>
+      <div class="cap">光学字符识别：手写邮编 · 车牌自动识别 ANPR<small>OCR · 正文第 5 页 · 图 1.4（第 6 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">机器检测</div>
+      <div class="cap">双目 + 专用照明测公差：机翼 · 车身零件；X 光查铸钢缺陷<small>machine inspection · 正文第 5 页 · 图 1.4（第 6 页）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">共同点：成像可控、任务清晰——讲者解读，视觉最经典的战场。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>03 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">工业清单 · 2/5</div>
+  <h2>零售与<span class="hl">仓储</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">零售</div>
+      <div class="cap">自动结账通道 · 完全无人商店<small>retail · 物体识别 · 正文第 5 页</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">仓储物流</div>
+      <div class="cap">自主配送 · 托盘搬运车 · 机械臂抓取零件<small>warehouse logistics · 正文第 5 页 · 图 1.4（第 6 页）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">共同点（讲者解读）：环境结构化、边界清楚——所以能大规模部署。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>04 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">工业清单 · 3/5</div>
+  <h2>医疗与<span class="hl">自动驾驶</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">医学影像</div>
+      <div class="cap">术前/术中图像配准 · 脑形态长期追踪研究衰老<small>medical imaging · 正文第 5 页 · 图 1.4（第 6 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">自动驾驶</div>
+      <div class="cap">点对点跨城行驶 · 自主飞行<small>self-driving vehicles · 正文第 5 页 · 图 1.4（第 6 页）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">估错的代价不是返工，是事故——讲者解读，所以这一组对不确定性最敏感。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>05 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">工业清单 · 4/5</div>
+  <h2>建模与<span class="hl">特效</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">摄影测量</div>
+      <div class="cap">航拍 / 无人机照片 → 全自动三维模型<small>photogrammetry · 正文第 5 页 · 图 1.4（第 6 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">匹配移动</div>
+      <div class="cap">CGI 合成实拍：《侏罗纪公园》即一例<small>match move · 跟踪特征点 · 精确抠像 · 第 5–7 页</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">讲者解读：match move 的本质，是从视频反推相机怎么动、场景长什么样——又是一个逆问题。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>06 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">工业清单 · 5/5</div>
+  <h2>动捕 · 监控 · <span class="hl">生物识别</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big" style="font-size:40px">动作捕捉</div><div class="cap">反光标记点 · 多机位围拍<small>motion capture (mocap) · 原书第 7 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:40px">监控</div><div class="cap">入侵者 · 高速路车流 · 泳池防溺水<small>surveillance · 原书第 7 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:40px">生物识别</div><div class="cap">指纹 · 访问认证 · 司法鉴定<small>biometrics · 原书第 7 页</small></div></div>
+  </div>
+  <p class="lead dim step" data-step="1">原书还推荐 David Lowe 的工业应用网站——清单不止这十一个（第 7 页）。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>07 / 19</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="kicker">转折 · SPECIALIZED → CONSUMER</div>
+  <div class="qmark step" data-step="1">“</div>
+  <blockquote class="step" data-step="1">这些应用都极其重要，但大多属于相当专用的图像与狭窄领域。</blockquote>
+  <p class="attrib step" data-step="1">然后笔锋一转：除此之外，还有大量消费级应用——就在你自己的照片和视频里 —— 原书第 7 页</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>08 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">消费清单 · 1/3</div>
+  <h2>照片三连：<span class="hl">拼接 · 曝光 · 渐变</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big" style="font-size:40px">全景拼接</div><div class="cap">重叠照片 → 无缝全景<small>stitching · §8.2 · 图 1.5（第 9 页）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:40px">包围曝光</div><div class="cap">强光与阴影 → 一张完美曝光<small>exposure bracketing · §10.2 · 图 1.5（第 9 页）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:40px">形变</div><div class="cap">朋友 A 平滑变朋友 B<small>morphing · 图 1.5（第 9 页）</small></div></div>
+  </div>
+  <p class="lead dim step" data-step="1">全景与多曝光合成，很多手机相机已经内置——讲者补充。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>09 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">消费清单 · 2/3</div>
+  <h2>视频与三维：<span class="hl">你家就是片场</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big" style="font-size:40px">3D 建模</div><div class="cap">快照 → 物体/人的三维模型<small>3D modeling · §13.6 · 原书第 7 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:40px">插图 · 防抖</div><div class="cap">往视频里插素材 · 去除抖动<small>match move &amp; stabilization · §11.4.4/§9.2.1 · 第 7 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:40px">照片漫游</div><div class="cap">在照片集之间三维飞行<small>photo-based walkthroughs · §14.1.2/§14.5.5 · 第 7 页</small></div></div>
+  </div>
+  <p class="lead dim step" data-step="1">讲者注：原书正文把 3D modeling 指向 Figure 1.5d，而该图注写的是手机 AR 深度遮挡——图文互指略有出入。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>10 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">消费清单 · 3/3</div>
+  <h2>两张脸：<span class="hl">检测与认证</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">人脸检测</div>
+      <div class="cap">对焦更准 · 图像搜索更相关<small>face detection · §6.3.1 · 原书第 8 页</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">视觉身份认证</div>
+      <div class="cap">坐到摄像头前，电脑自动登录<small>visual authentication · §6.2.4 · 第 8 页</small></div>
+    </div>
+  </div>
+  <p class="lead step" data-step="1">原书：这些应用学生本就熟悉——有趣且与自己相关，<b>非常能激发学习兴趣</b>（highly motivating，第 8 页）。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>11 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">方法论 · ENGINEERING</div>
+  <h2>从<span class="hl">问题</span>倒推技术</h2>
+  <p class="lead step" data-step="1">原书工程哲学（第 8 页）：从手头的问题倒推合适的技术——<b>而不是抓住听过的第一个技术就上</b>。应用，正是给开放问题划边界、加约束的东西。</p>
+  <div class="formula step" data-step="2" style="margin-top:36px">
+    <div style="font-size:40px;font-weight:800;color:var(--ink-strong)">① 问题定义与约束规格 → ② 查已知技术 → ③ 实现几个 → ④ 评估性能 → ⑤ 择优</div>
+    <div class="note">测试数据两类（第 8 页）：合成——验正确性、析噪声敏感性；真实——贴近最终使用。机器学习还要无偏、量足的训练数据</div>
+  </div>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>12 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">方法论 · SCIENCE &amp; STATISTICS</div>
+  <h2>不只菜谱，还有<span class="hl">物理与概率</span></h2>
+  <p class="lead step" data-step="1"><b>科学视角（第 8 页）：</b>为系统建最好的物理模型——场景怎么形成、光怎么与场景和大气交互、传感器怎么工作、噪声从哪来；然后反演采集过程。</p>
+  <p class="lead step" data-step="2"><b>统计视角（第 8–10 页）：</b>概率分布建模场景与采集；先验 → <b>贝叶斯建模</b>（附录 B）；估错有代价——损失函数与期望风险（§B.2）。原书例子：机器人测距，<b>低估通常比高估安全</b>。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>13 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">方法论 · ALGORITHMS</div>
+  <h2>所以全书<span class="hl">重度强调算法</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">鲁棒</div>
+      <div class="cap">噪声与模型偏差之下，不能崩<small>robust to noise &amp; deviation · 原书第 10 页</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">高效</div>
+      <div class="cap">运行时间与空间都要省<small>reasonably efficient · 原书第 10 页</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">算法多为高层步骤清单，细节靠引文与习题；某些情况下深度网络也可加速老迭代算法（脚注 4 · Chen/Xu/Koltun 2017）。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>14 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">动手 · CODE</div>
+  <h2>实验：把方法论<span class="hl">跑成代码</span></h2>
+  <div class="cards c4">
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">①</div><div class="cap">合成零件边缘<small>线性斜坡过渡，总宽 2px</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">②</div><div class="cap">50% 交叉内插<small>亚像素定位，零噪声零误差</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">③</div><div class="cap">噪声扫描<small>σ 五档 · 每档 2000 次 Monte-Carlo</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">④</div><div class="cap">不对称损失<small>讲者设定 1:4 → 最优在 0.2 分位数</small></div></div>
+  </div>
+  <p class="lead step" data-step="1">讲者设计实验：第 8 页两句话 → 演示一 7 项断言；第 10 页不对称风险 → 演示二 6 项断言。</p>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>15 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验结果 · OUTPUT</div>
+  <h2>零噪声零误差，<span class="hl">风险偏向安全</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/inspection_demo.png" alt="质检台实验三面板">
+    <figcaption>左：一次含噪仿真 ｜ 中：误差与误判率随 σ 单调上升 ｜ 右：最优 2.58m = 0.2 分位数 ｜ 讲者设计（13/13 断言）</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>16 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">收个尾 · RECAP</div>
+  <h2>带走<span class="hl">三句话</span></h2>
+  <ul class="big step" data-step="1">
+    <li>应用两大类：<b>工业 11 + 消费 8</b>——共同点是把开放问题收窄，给先验和约束留出立足点</li>
+    <li>方法论：<b>从问题倒推技术</b>——定义、约束、选型、实现、评估，配两类测试数据</li>
+    <li>工程之外是科学：<b>物理建模 + 统计反演</b>；损失不对称时，最优答案偏向安全侧</li>
+  </ul>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>17 / 19</span></div>
+</section>
+
+<section class="slide endcard" data-steps="2">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§1.1 应用清单与方法论（原书第 5–8 页），数一数：工业 11 + 消费 8</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>公差改严 0.25→0.1px；损失对调 4:1，看最优估计移到均值上方</div>
+  <div class="row step" data-step="2"><span class="tag">下一集</span>E011 计算机视觉五十年简史：从方块世界到大模型时代（§1.2）</div>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>18 / 19</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">正课 · 02 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E010 · 正课第二集</span><span>19 / 19</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

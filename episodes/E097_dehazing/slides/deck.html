@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>一键去雾的物理课：暗通道先验</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">来源 · He et al. 2011</div>
+  <h2>去雾：先估雾有多厚</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>原书是 He、Sun、Tang 的 TPAMI 2011 论文。</li><li>第 2341 页：暗通道先验，从单张图去雾。</li><li>观察：无雾图的局部块里，至少一个通道很暗。</li><li>雾让对比度下降、颜色发灰、远处细节消失。</li></ul>
+      <div class="src">依据：原书第 2341 页（He et al. 2011）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四块内容</div><div class="kline">大气散射模型</div><div class="kline">暗通道估透射率</div><div class="kline">估大气光、恢复、调参</div><div class="kline">失效边界</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">物理模型 · 大气散射</div>
+  <h2>物理模型：J·t + A(1−t)</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 2342 页：观测 I 等于 J 乘 t 加大气光 A 乘 1 减 t。</li><li>t 是未被散射、到达相机的那部分光。</li><li>t 接近 1 雾薄，t 接近 0 雾厚。</li><li>三个未知数、一个方程；论文说 3N 个方程、4N+3 个未知数。</li></ul>
+      <div class="src">依据：原书第 2342 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">符号</div><div class="kline">I：观测图</div><div class="kline">J：场景辐亮度</div><div class="kline">t：透射率</div><div class="kline">A：大气光</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">暗通道 · 先验</div>
+  <h2>看图：无雾图暗通道接近零</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 2343 页：非天空局部块里，至少一个通道接近零。</li><li>暗通道：先取三通道最小值，再在块里取最小。</li><li>阴影、深色树叶、彩色物体、暗窗户都满足，天空是例外。</li><li>块小先验易破，块大透射率常数假设变粗。</li></ul>
+      <div class="src">依据：原书第 2343 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e097_prior.png" style="max-height:500px" alt="暗通道先验：无雾/有雾暗通道分布；估计 vs 真值透射率 r=0.871｜程序生成，未用教材或论文原图"><figcaption>暗通道先验：无雾/有雾暗通道分布；估计 vs 真值透射率 r=0.871｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">透射率 · 归一化</div>
+  <h2>透射率：1 减归一化暗通道</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 2344 页：两边除以 A，再取暗通道。</li><li>无雾图的暗通道接近零，于是 t 由 1 减暗通道估出。</li><li>某块越接近大气光，雾越厚、t 越小。</li><li>乘 omega 留一点雾，避免远景太假。</li></ul>
+      <div class="src">依据：原书第 2344 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个量</div><div class="kline">A：先估出来</div><div class="kline">omega：0 到 1</div><div class="kline">t：1 减 omega 乘暗通道</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">天空 · omega</div>
+  <h2>天空与 omega</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 2345 页：可选地保留少量雾给远景。</li><li>天空颜色接近大气光，公式给出接近零的 t。</li><li>omega 等于 1 去得最狠，小于 1 保留空气感。</li><li>omega 取 0.95 是论文常用值；天空 t 接近 0 靠 t0 兜底。</li></ul>
+      <div class="src">依据：原书第 2345 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">omega 的作用</div><div class="kline">等于 1：去雾最狠</div><div class="kline">小于 1：保留空气感</div><div class="kline">天空不用单独分割</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">大气光 · 0.1%</div>
+  <h2>大气光：最雾的 0.1%</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 2347 页：取暗通道最亮的 0.1% 像素。</li><li>这些通常是最雾的区域。</li><li>再在这些像素里选输入图强度最高的，作为 A。</li><li>不直接取全图最亮：白车、白墙可能比天空还亮。</li></ul>
+      <div class="src">依据：原书第 2347 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">估 A 的步骤</div><div class="kline">暗通道最亮 0.1%</div><div class="kline">其中取输入图最亮</div><div class="kline">A 取 RGB 三个数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">细化 · 软抠图</div>
+  <h2>看图：透射率与反演</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 2345–2346 页：块内 t 常数会带来光晕和块状伪影。</li><li>把 t 当 alpha 图，用软抠图细化。</li><li>工程上常用引导滤波做 O(N) 近似。</li><li>细化只改 t，不改 A；A 错了救不回来。</li></ul>
+      <div class="src">依据：原书第 2345–2346 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e097_dehaze.png" style="max-height:500px" alt="暗通道去雾：含雾 12.05 dB→去雾 20.21 dB；透射率/深度｜程序生成，未用教材或论文原图"><figcaption>暗通道去雾：含雾 12.05 dB→去雾 20.21 dB；透射率/深度｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">恢复 · t0</div>
+  <h2>恢复：除以 max(t, t0)</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 2348 页：J 等于 I 减 A，除以 max(t, t0)，再加 A。</li><li>t0 的典型值是 0.1。</li><li>t 很小时直接除会放大噪声，所以要设下限。</li><li>恢复后通常偏暗，显示时要再提曝光。</li></ul>
+      <div class="src">依据：原书第 2348 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">t0 的取舍</div><div class="kline">太大：雾去不干净</div><div class="kline">太小：噪声爆炸</div><div class="kline">0.1：保留 10% 的雾</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">参数 · patch</div>
+  <h2>看图：参数不是通吃</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 2348 页：patch 越大，块内出现暗像素的概率越高。</li><li>patch 太大，透射率常数假设越粗。</li><li>patch 太小会过饱和，太大会混进不同深度。</li><li>omega、t0、patch 要一起调；patch 一般取 15 左右。</li></ul>
+      <div class="src">依据：原书第 2348 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e097_params.png" style="max-height:500px" alt="参数：patch=3 22.02 vs patch=15 20.21；omega=1 19.90 dB｜程序生成，未用教材或论文原图"><figcaption>参数：patch=3 22.02 vs patch=15 20.21；omega=1 19.90 dB｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失效边界 · 天空与白色物体</div>
+  <h2>失效：天空与白色物体</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 2343 页：暗通道先验对天空不是好先验。</li><li>第 2347 页：白色物体、白墙、白车也不满足先验。</li><li>t 会被估低，恢复过度。</li><li>要检测这些区域、调 A，或让学习式方法兜底。</li></ul>
+      <div class="src">依据：原书第 2343/2347 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么兜底</div><div class="kline">天空：颜色或位置检测</div><div class="kline">白物体：过曝、低饱和检测</div><div class="kline">学习式：可能编造纹理</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 合成雾</div>
+  <h2>实验：机制，不是排名</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>含雾 12.05 dB，去雾 20.21 dB；原始 t 18.91 dB。</li><li>大气光误差 1.15%，透射率相关 0.871，深度相关 0.764。</li><li>patch=3 的 22.02 比 patch=15 的 20.21 高，但过饱和，差 1.81 dB。</li><li>omega=1 降到 19.90 dB；白屋顶误差 0.162，其他区域 0.073。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读数</div><div class="kline">含雾 12.05 → 去雾 20.21 dB</div><div class="kline">t 相关 0.871 / 深度 0.764</div><div class="kline">白屋顶误差 0.162</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集修补</div>
+  <h2>总结：模型、t 与边界</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>去雾等于大气散射模型加暗通道先验。</li><li>t 估得准不准，决定去雾干不干净。</li><li>暗通道怕天空和白色物体，参数要按图调。</li><li>下一集讲图像修补：已知缺失区域怎么补。</li></ul>
+      <div class="src">依据：原书第 2341–2348 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三件事</div><div class="kline">大气散射模型</div><div class="kline">暗通道估 t</div><div class="kline">天空和白物体是边界</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十九集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

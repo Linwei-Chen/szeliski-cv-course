@@ -1,0 +1,53 @@
+{
+ "generated_at": "2026-11-02T04:28:07",
+ "src_sha16": "496bc0fd6188a88b",
+ "fig1": {
+  "tp": 18,
+  "fp": 4,
+  "fn": 2,
+  "tn": 76,
+  "tpr": 0.9,
+  "fpr": 0.05,
+  "ppv": 0.82,
+  "acc": 0.94,
+  "auc": 0.93,
+  "threshold": 0.3,
+  "min_fs": 12.0,
+  "max_fs": 13.0,
+  "fig_no": 7.22,
+  "page": 442
+ },
+ "fig2": {
+  "d1": 0.3,
+  "d2": 0.9,
+  "ratio_small": 0.33,
+  "d1p": 0.55,
+  "d2p": 0.6,
+  "ratio_large": 0.92,
+  "threshold": 0.8,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.23,
+  "page": 445
+ },
+ "fig3": {
+  "input": 500,
+  "after_ratio": 120,
+  "after_mutual": 80,
+  "inliers": 72,
+  "outliers": 8,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "page": 448
+ },
+ "scope": {
+  "page_start": 441,
+  "page_end": 448,
+  "frames": 16
+ },
+ "texts": {
+  "collected": 40,
+  "leaked": 0
+ },
+ "pngs": 3
+}

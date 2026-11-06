@@ -1,0 +1,7 @@
+[lab-stdout-regression] 开始 2026-11-01T05:00:48
+[lab-stdout-regression] 输入 lab.txt sha256=2c2da5bab40fffc3243fbabf047a501ed07dee0279354aa4ec2469f901fdb1e0 readings sha256=b7cd614930d7d728d0cda3c4a01d7b90a79da7cba7123aae9c5647ab4484ef5e（版本绑定存证头，r7 P2-3 修复 3：首行补开始时间使申报属实）
+[lab-stdout-regression] 绑定 工具 sha256 regression=049155c36952bd9ef97e9843528c299fcf5bd7cd68889fbd321d49c396fef32a make_script=556445595825d20cefb40f354348b1f12d294841405f5449367773099a239650 display_check=ce41b070c4170ad47915712f2a1e189532d359dea2968762d86356bcfbc2268a（r11 P1-2 工具版本绑定——down-sha 逐一比对盘面）
+[lab-stdout-regression] 绑定 申报层 status.json sha256=bcb5068393b358aff4216268b3c355528540e33937f4102e76d5b56efa542579 README.md sha256=df74d892000a7428a9276f337b67c03657c145a064382c53cfca7263c5563abb（r12 P2-3——申报层定稿后才跑回归，改动后必须重跑）
+[FAIL] 基线未变异即有未命中 ['25', '25', '25', '9']——正检数据异常
+[lab-stdout-regression] 0 FAIL 侧 + 0 申报侧 + 0 哨兵侧 + 0 down-sha 侧 + 0 numeric 侧 + 0 display 侧 + 0 stage 门控侧 + 0 申报层扫描侧 + 0 batch_chain 侧（行为与申报不符！）
+[lab-stdout-regression] 结束 2026-11-01T05:00:48（起 2026-11-01T05:00:48）

@@ -1,0 +1,42 @@
+{
+ "generated_at": "2026-11-05T02:47:13",
+ "src_sha16": "e1b93a3c7f40024d",
+ "n_pass": 10,
+ "n_total": 10,
+ "fig1": {
+  "octaves": 2,
+  "layers": 3,
+  "dogs": 2,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.11,
+  "page": 430
+ },
+ "fig2": {
+  "layers": 3,
+  "neighbors": 26,
+  "min_fs": 12.0,
+  "max_fs": 16.0,
+  "fig_no": 7.11,
+  "page": 431
+ },
+ "fig3": {
+  "bins": 36,
+  "peak_pct": 80,
+  "params": 2,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.12,
+  "page": 431
+ },
+ "scope": {
+  "page_start": 429,
+  "page_end": 433,
+  "frames": 16
+ },
+ "texts": {
+  "collected": 40,
+  "leaked": 0
+ },
+ "pngs": 3
+}

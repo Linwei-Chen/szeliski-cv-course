@@ -1,0 +1,20 @@
+[lab] E092 辐射标定 开始 2026-11-02T21:18:52
+[lab] 源码 sha256=491bca9fb5d8009da3525b00003e4dd98d641d8bcfe4561a10666307964ab288
+[PASS] 场景动态范围>100　| 158 倍
+[PASS] R 通道 gamma 误差<0.01　| 2.1996 vs 2.2
+[PASS] G 通道 gamma 误差<0.01　| 2.1012 vs 2.1
+[PASS] B 通道 gamma 误差<0.01　| 2.3000 vs 2.3
+[PASS] 长曝光饱和>50%　| 67.2%
+[PASS] 短曝光饱和<5%　| 2.3%
+[PASS] gamma 反演误差<2%　| 0.36%
+[PASS] 线性假设误差>10%　| 90.3%
+[PASS] EV 加倍比值≈2^(1/γ)　| 1.370 vs 1.370
+[PASS] 响应曲线单调　| 全段递增
+[lab] PNG sha256(e092_curve.png)=6cfaa2bc09cc277e2f7baa43c20acc8dfd4bb9e1e08a9f8ee9ce1fcbe562d4d7
+[lab] PNG sha256(e092_exposure.png)=f2f65cff95d772ec422ebb40a8643fa1959a0f2ca0e9d437b9a3ccb0e1e2fea3
+[lab] PNG sha256(e092_recover.png)=318a04644ae65a5fc8ce1d087201e9652d8373ef204e9384fed4a712abbb19b9
+[lab] readings → e092_radiometric_readings.json
+[lab] readings sha256=c74e88d7b37f16a074fb3ec697e7d7612f83292ed353314900fa5a3b3f8c4a3f
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T21:18:53

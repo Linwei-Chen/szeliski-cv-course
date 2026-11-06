@@ -1,0 +1,43 @@
+{
+ "generated_at": "2026-11-05T01:56:06",
+ "src_sha16": "08cc2fbb9601830e",
+ "fig1": {
+  "patches": 3,
+  "easy": 1,
+  "hard": 2,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.4,
+  "page": 422
+ },
+ "fig2": {
+  "surfaces": 3,
+  "regions": 3,
+  "eigen": 2,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.5,
+  "page": 424
+ },
+ "fig3": {
+  "panels": 2,
+  "clusters": 2,
+  "points": 60,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.9,
+  "page": 427
+ },
+ "scope": {
+  "page_start": 422,
+  "page_end": 428,
+  "frames": 16
+ },
+ "texts": {
+  "collected": 30,
+  "leaked": 0
+ },
+ "pngs": 3,
+ "n_pass": 10,
+ "n_total": 10
+}

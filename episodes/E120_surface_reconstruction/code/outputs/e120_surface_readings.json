@@ -1,0 +1,20 @@
+{
+ "mc48_faces": 14492,
+ "mc64_faces": 25964,
+ "mc96_faces": 59036,
+ "mc48_radius_err": 0.00010719375650980467,
+ "mc64_radius_err": 5.9979549840716295e-05,
+ "mc96_radius_err": 2.694534862091036e-05,
+ "mc96_volume_err": -0.0003760176434194351,
+ "mc_level_radius": 1.0999750985357817,
+ "poisson_radius": 0.9991157575966807,
+ "poisson_err": 0.0008842424033193019,
+ "noisy_radius": 1.0377310009707679,
+ "noisy_err": 0.03773100097076787,
+ "zero_contours": 0,
+ "half_contours": 0,
+ "f_center": -0.9557774261897307,
+ "f_far": 1.078460969082653,
+ "n_pass": 10,
+ "n_total": 10
+}

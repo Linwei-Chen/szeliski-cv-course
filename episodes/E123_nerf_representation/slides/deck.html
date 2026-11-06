@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>NeRF Ⅰ：把一个场景写进网络权重</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 场景表示</div>
+  <h2>场景能不能写进网络权重</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>传统表示存点、网格或体素，场景越大越占内存。</li><li>NeRF 训练一个多层感知器（MLP）。</li><li>输入一个空间坐标，输出这一点的密度和颜色。</li><li>渲染时对每条射线查很多次网络。</li></ul>
+      <div class="src">依据：原书第 833/905 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">输入与输出</div><div class="kline">输入：3 个坐标 + 2 个视角方向</div><div class="kline">输出：1 个密度 + 3 个颜色通道</div><div class="kline">不存表面纹理，只存查询规则</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 13 章 · 只有一段过渡</div>
+  <h2>第 13 章：只有一段过渡</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 833 页说，像素射线方向也作为输入。</li><li>输出连续的透明度和辐射值。</li><li>能从多张输入图渲染有光泽的三维模型。</li><li>第 13 章没有给网络结构，也没有给训练损失。</li></ul>
+      <div class="src">依据：原书第 833 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">原书用词</div><div class="kline">continuous valued opacities and radiance</div><div class="kline">强调连续，不是固定分辨率</div><div class="kline">网络结构与训练损失在第 14 章</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 输入与输出</div>
+  <h2>第 14 章正文：位置加方向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 905 页把 xyz 到隐式映射扩展为 xyz 加视角方向 θ、φ。</li><li>σ 主要看位置，c 还要看方向。</li><li>θ、φ 是球面角，合起来是一个单位方向向量。</li><li>网络一次回答一个点，整张图靠很多次查询拼出来。</li></ul>
+      <div class="src">依据：原书第 905 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">σ 与 c</div><div class="kline">密度 σ：射线在这里停不停</div><div class="kline">颜色 c：停下来看到什么</div><div class="kline">按透明度加权，得到像素颜色</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">位置编码 · 正弦倍频程</div>
+  <h2>位置编码：把坐标拆成频率</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 905 页说，xyz 先转成正弦倍频程的位置编码。</li><li>再进 256 通道的 MLP。</li><li>位置编码注入第五层，方向编码注入第九层。</li><li>没有位置编码，MLP 容易只学低频，图像会糊。</li></ul>
+      <div class="src">依据：原书第 905 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">频率基</div><div class="kline">坐标 0.37 → 六组正弦余弦</div><div class="kline">每组频率翻倍</div><div class="kline">大形状和细纹理都看得见</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 2D 图像拟合</div>
+  <h2>看图：裸坐标只能给灰块</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左图目标，中间裸坐标，右边傅里叶特征。</li><li>裸坐标对低频图像能到 2.95e-05 的 MSE。</li><li>对这个高频棋盘格只能到 0.1133，输出基本是一片灰。</li><li>加 6 个倍频程后，MSE 降到 0.0004。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e123_nerf_fit.png" style="max-height:500px" alt="目标 / 裸坐标 / 傅里叶特征：高频棋盘格拟合对比｜程序生成，未用教材或论文原图"><figcaption>目标 / 裸坐标 / 傅里叶特征：高频棋盘格拟合对比｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 损失与频谱</div>
+  <h2>看图：高频要提前放进输入</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左图训练损失，右图最终 MSE 的对数柱状图。</li><li>裸坐标的损失很快卡在高位。</li><li>傅里叶特征的损失继续往下走。</li><li>0.1133 对 0.0004，差了两个多数量级。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e123_spectral.png" style="max-height:500px" alt="训练损失 / 最终 MSE：裸坐标 vs 傅里叶特征｜程序生成，未用教材或论文原图"><figcaption>训练损失 / 最终 MSE：裸坐标 vs 傅里叶特征｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">频谱偏置 · 频率选择</div>
+  <h2>频率不是越多越好</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>网络先学平滑的大形状，再学细节。</li><li>位置编码把高频提前摆到输入里。</li><li>频率太高会振铃，太低又学不到细节。</li><li>本实验用 1π 到 32π 六个倍频程。</li></ul>
+      <div class="src">依据：原书第 905 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">六个倍频程</div><div class="kline">1、2、4、8、16、32 倍 π</div><div class="kline">Tancik：分析高频编码的作用</div><div class="kline">SIREN：把正弦放进激活函数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 一维体积渲染</div>
+  <h2>看图：沿射线把样本积成像素</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>沿射线取很多点，密度大、透明度低，权重就大。</li><li>权重 = 累计透过率 × alpha；alpha = 1 − exp(−密度 × 步长)。</li><li>近处先占权重，累计到 1 就挡住后面。</li><li>本实验 depth 0.1971、alpha 0.9413；空场景 alpha 0。</li></ul>
+      <div class="src">依据：原书第 833 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e123_volume.png" style="max-height:500px" alt="射线密度 / 采样权重：体积渲染切片｜程序生成，未用教材或论文原图"><figcaption>射线密度 / 采样权重：体积渲染切片｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视角相关 · 高光与密度</div>
+  <h2>位置管形状，方向管外观</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>方向主要改变颜色，比如塑料杯上的高光。</li><li>密度通常由位置决定，换个角度不会突然变空。</li><li>书上第 905 页说方向编码在第九层注入。</li><li>位置特征先给密度，方向主要改颜色。</li></ul>
+      <div class="src">依据：原书第 905 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种表面</div><div class="kline">漫反射：各方向颜色接近</div><div class="kline">高光：明显依赖方向</div><div class="kline">密度随方向乱变，几何会闪</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">参数量 · 存储与计算</div>
+  <h2>参数量小，不等于便宜</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>傅里叶 MLP 只有 5955 个参数。</li><li>64 立方网格乘 3 个颜色通道，共 786432 个数。</li><li>只占 0.76%。</li><li>渲染一个像素，要沿射线查很多次 MLP。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">代价</div><div class="kline">训练图必须带相机位姿</div><div class="kline">位姿通常来自 SfM 或 SLAM</div><div class="kline">参数量小只说明存储省</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">范围 · 第 13 与 14 章</div>
+  <h2>范围说明：正文在 14 章</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 13 章第 833 页只有一段过渡。</li><li>输入、位置编码和 MLP 细节在第 905 到 907 页。</li><li>书上第 906 页提到 NeRF++、NSVF 和 IDR。</li><li>第 907 页提到 NeRF in the Wild 和 pixelNeRF。</li></ul>
+      <div class="src">依据：原书第 833/905–907 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">延伸</div><div class="kline">NeRF++：1/r 的 inside-out 球</div><div class="kline">NSVF：非空八叉树单元放小网络</div><div class="kline">IDR：符号距离场；pixelNeRF：少量图预测</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 下一集</div>
+  <h2>总结：场景在权重里</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>场景由 MLP 参数表示。</li><li>输入位置和方向，输出密度和颜色。</li><li>位置编码让网络看得见细节。</li><li>体积渲染把射线上的样本积成像素。</li></ul>
+      <div class="src">依据：原书第 833/905–907 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">位置管形状</div><div class="kline">方向管外观</div><div class="kline">编码管细节</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十五集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

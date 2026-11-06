@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>视差即深度：两只眼睛的几何</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 12 章 · 立体视觉</div>
+  <h2>视差：两只眼睛的几何</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>立体匹配把两张图变成三维深度。</li><li>上一章给稀疏点，这一章给每像素深度。</li><li>人眼用左右错位判断远近。</li><li>深度是三维量，视差是二维观测。</li></ul>
+      <div class="src">依据：原书第 751 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条线</div><div class="kline">稀疏点 → 稠密深度</div><div class="kline">视差：把深度变成匹配</div><div class="kline">几何：把视差换回深度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 751 页 · 手指实验</div>
+  <h2>手指实验：跳多少是视差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>竖起手指，交替闭左右眼。</li><li>手指相对背景会左右跳。</li><li>越近跳得越大，越远跳得越小。</li><li>视差是横坐标差，不是眼睛转角。</li></ul>
+      <div class="src">依据：原书第 751 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">判断依据</div><div class="kline">同一个点的左右横坐标差</div><div class="kline">背景越远，跳动越明显</div><div class="kline">横屏拍摄，差沿水平方向</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 751 页 · 基线</div>
+  <h2>几何：视差与深度成反比</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>基线 B：左右相机的距离。</li><li>深度 Z：观察者到物体的距离。</li><li>视差 d = uL − uR。</li><li>Z 越大，d 越小；远山几乎没立体。</li></ul>
+      <div class="src">依据：原书第 751 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e111_geometry.png" style="max-height:520px" alt="视差几何：基线 B、深度 Z、左右图横坐标差 d｜程序生成，未用教材或论文原图"><figcaption>视差几何：基线 B、深度 Z、左右图横坐标差 d｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 751 页 · 反比</div>
+  <h2>公式：d=fB/Z</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>f 是焦距（像素），B 是基线，Z 是深度。</li><li>基线越宽，视差越大，远处越能测。</li><li>焦距越长，视差越大，视野越窄。</li><li>深度越远，视差越小，量化误差越大。</li></ul>
+      <div class="src">依据：原书第 751 页；公式由相似三角形整理</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e111_curve.png" style="max-height:520px" alt="d=fB/Z：近处视差大，远处视差小｜程序生成，未用教材或论文原图"><figcaption>d=fB/Z：近处视差大，远处视差小｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 751 页 · 稠密对应</div>
+  <h2>难点：弱纹理、重复、遮挡</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>弱纹理区没有可匹配的图案。</li><li>重复纹理让匹配跳到隔壁。</li><li>遮挡区在一个相机里看不到。</li><li>前景边缘的窗口会混进背景。</li></ul>
+      <div class="src">依据：原书第 751 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">还会破坏假设</div><div class="kline">镜面反光、曝光变化</div><div class="kline">运动模糊、亮度不一致</div><div class="kline">弱纹理的代价曲线很平</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 753 页 · 校正</div>
+  <h2>极线：二维搜索降成一维</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>极线给出另一张图里的可能位置。</li><li>校正后，对应极线在同一行。</li><li>只沿水平方向找，速度快很多。</li><li>线上不保证唯一，重复纹理有多个峰。</li></ul>
+      <div class="src">依据：原书第 753 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">校正做什么</div><div class="kline">预变形两张图</div><div class="kline">让对应极线重合</div><div class="kline">视差只沿 u 轴</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 753 页 · 分类</div>
+  <h2>三条路线：局部、全局、网络</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>局部窗口聚合：快，边界容易错。</li><li>全局优化：更连贯，但慢、参数敏感。</li><li>深度网络：学先验，依赖训练分布。</li><li>半全局 SGM 用多条一维路径近似。</li></ul>
+      <div class="src">依据：原书第 753 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">取舍</div><div class="kline">没有一种方法通吃</div><div class="kline">本集先用手写块匹配</div><div class="kline">下一集讲完整流水线</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合成双目 · 640×480</div>
+  <h2>实验：四层深度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>合成 4 层：1、2、4、8 场景单位。</li><li>基线 0.2，焦距 800 像素。</li><li>视差分别是 160、80、40、20 像素。</li><li>近层遮住远层，自然产生遮挡。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e111_stereo.png" style="max-height:430px" alt="合成双目：左图、右图与真值/估计视差（1/2/4/8 场景单位，视差 160/80/40/20 像素）｜程序生成，未用教材或论文原图"><figcaption>合成双目：左图、右图与真值/估计视差（1/2/4/8 场景单位，视差 160/80/40/20 像素）｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">本集实验 · 块匹配</div>
+  <h2>结果：0.182 px 与 23.65 px</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>内部平均误差 0.182 像素。</li><li>99.8% 的像素误差在 1 像素内。</li><li>四个层中心深度误差为 0。</li><li>边界和遮挡平均误差 23.65 像素。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么差这么多</div><div class="kline">边界窗口混进另一深度</div><div class="kline">遮挡区没有对应像素</div><div class="kline">真实系统用一致性检查近似</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程经验 · 失败边界</div>
+  <h2>失败边界：基线和分辨率</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>弱纹理、重复纹理、反光、模糊。</li><li>遮挡和深度不连续会系统性出错。</li><li>亚像素精度要插值或优化。</li><li>基线太短远处没视差，太长近处难。</li></ul>
+      <div class="src">依据：本集实验与工程经验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">每一步都要盯</div><div class="kline">标定、校正</div><div class="kline">匹配、后处理</div><div class="kline">结构光、ToF、单目网络各有失效</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 751、753 页 · 应用</div>
+  <h2>应用：从航片到 AR</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>摄影测量用重叠航片生成地形高程。</li><li>机器人导航、操作、视角插值。</li><li>三维建模、影视合成、增强现实。</li><li>手机人像虚化、自动驾驶测距。</li></ul>
+      <div class="src">依据：原书第 751、753 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">深度是几何信息</div><div class="kline">有了深度才能遮挡、测量</div><div class="kline">双摄和多摄原理相同</div><div class="kline">深度错了，合成会穿帮</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>收束：视差、极线、稠密匹配</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视差 d=fB/Z，越近越大。</li><li>极线把搜索从二维降到一维。</li><li>难点在弱纹理、重复、遮挡、边界。</li><li>下一集：代价、聚合、计算、优化。</li></ul>
+      <div class="src">依据：原书第 751–753 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">左右一致性</div><div class="kline">唯一性约束</div><div class="kline">亚像素优化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零三集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

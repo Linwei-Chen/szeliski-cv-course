@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>习题课 + 榜单导读：Middlebury / KITTI 立体基准怎么看</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 12 章 · 读榜先读协议</div>
+  <h2>榜单：先读规则，再看名次</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第一名不一定比第二名好。</li><li>换阈值、掩码或划分，名次会翻。</li><li>Middlebury 与 KITTI 是最早的榜单。</li><li>本集：五个基准、三个协议、习题。</li></ul>
+      <div class="src">依据：原书第 753 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读榜三步</div><div class="kline">先看规则</div><div class="kline">再看名次</div><div class="kline">最后动手做习题</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 754 页 · Table 12.1</div>
+  <h2>基准：规模差三个数量级</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>原表 9 个基准，本集选 5 个。</li><li>Middlebury：33 对高分辨率图像。</li><li>KITTI：200 对训练加 200 对测试。</li><li>DTU 124 场景，SceneFlow 39000 对。</li></ul>
+      <div class="src">依据：原书第 754 页 Table 12.1</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e118_benchmarks.png" style="max-height:420px" alt="五个代表基准（原表共 9 个）：Middlebury、KITTI、DTU、ETH3D、SceneFlow｜程序生成，未用教材或论文原图"><figcaption>五个代表基准（原表共 9 个）：Middlebury、KITTI、DTU、ETH3D、SceneFlow｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 754/781 页 · 高分辨率</div>
+  <h2>Middlebury：33 对，考细节</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>33 对高分辨率立体图像。</li><li>高分辨率才看得清小视差。</li><li>训练数据非常有限。</li><li>深度学习方法仍明显缺席。</li></ul>
+      <div class="src">依据：原书第 754/781 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">这个榜考什么</div><div class="kline">少训练数据</div><div class="kline">高分辨率细节</div><div class="kline">长期稳定协议</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 754/779/781 页 · 车载立体</div>
+  <h2>KITTI：200 加 200，开卷考试</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>200 对训练，200 对测试。</li><li>2016 年起深度学习主导。</li><li>训练集给了同分布例题。</li><li>考得好，不等于跨域好。</li></ul>
+      <div class="src">依据：原书第 754/779/781 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读 KITTI 先问</div><div class="kline">训练集多大</div><div class="kline">测试集调过参吗</div><div class="kline">换域还灵吗</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 781 页 · 泛化</div>
+  <h2>两个榜：同一网络，两种结果</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Middlebury 训练少，网络缺席。</li><li>KITTI 训练多，网络霸榜。</li><li>有训练集，监督学习能攻榜。</li><li>换一个域，泛化就变差。</li></ul>
+      <div class="src">依据：原书第 781 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">第一名的条件</div><div class="kline">同分布</div><div class="kline">同指标</div><div class="kline">同训练预算</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验沙盘 · bad-1 / bad-2</div>
+  <h2>指标：换阈值就换名次</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>A 的错多在 1.2 像素。</li><li>bad-1：A 29.4%，B 9.8%。</li><li>bad-2：A 0.0%，B 9.8%。</li><li>RMSE：A 0.672，B 1.572。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e118_metrics.png" style="max-height:430px" alt="bad-1 与 bad-2：同一预测，相反排名｜程序生成，未用教材或论文原图"><figcaption>bad-1 与 bad-2：同一预测，相反排名｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验沙盘 · 离群误差</div>
+  <h2>均方根误差：大错更贵</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先平方，再平均，再开方。</li><li>A 0.672，B 1.572，A 更稳。</li><li>怕离谱大错，就看 RMSE。</li><li>只看超阈值，就看 bad-1、bad-2。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">指标跟任务对齐</div><div class="kline">自动驾驶怕幽灵障碍</div><div class="kline">特效怕边缘毛刺</div><div class="kline">先定容忍度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验沙盘 · 边界/遮挡</div>
+  <h2>掩码：换区域，换冠军</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>全图 bad-1：B 9.8%，A 29.4%。</li><li>去边界：B 4.4%，A 23.9%。</li><li>去遮挡：B 6.3%，A 21.6%。</li><li>B 的大错集中在边界和遮挡。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">掩码要公开</div><div class="kline">去掉了什么</div><div class="kline">真值是否可靠</div><div class="kline">分母是否同口径</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验沙盘 · 覆盖率</div>
+  <h2>稀疏：有效区满分，覆盖 30%</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>C 只在 30.0% 像素有有效值。</li><li>有效区 bad-1 是 0.0%。</li><li>全图还有 70.0% 没有预测。</li><li>覆盖率和有效区指标要成对看。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">只报有效区</div><div class="kline">等于只算做过的题</div><div class="kline">分母少了 70.0%</div><div class="kline">结论会变</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 797/781 页 · closed-world</div>
+  <h2>封闭世界：背答案也能高分</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>训练和测试在同一个世界。</li><li>网络可能按地面位置猜深度。</li><li>不常见的物体不“弹出来”。</li><li>跨域泛化仍是开放问题。</li></ul>
+      <div class="src">依据：原书第 797/781 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">捷径从哪来</div><div class="kline">同源数据</div><div class="kline">场景先验</div><div class="kline">跨域要另测</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 801–803 页 · 习题 12.4–12.6</div>
+  <h2>习题课：三个台阶，别跳级</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>12.4 平面扫描：先算匹配代价。</li><li>12.5 聚合窗口，12.6 全局优化。</li><li>顺序别跳，最后在 Middlebury 评测。</li><li>评测表写清划分、覆盖、阈值、掩码。</li></ul>
+      <div class="src">依据：原书第 801–803 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个台阶</div><div class="kline">12.4 平面扫描</div><div class="kline">12.5 聚合与窗口</div><div class="kline">12.6 全局优化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 移交下一集</div>
+  <h2>读榜五问：先问协议</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>数据集与划分：训练测试分开吗？</li><li>真值覆盖：稠密、稀疏还是带洞？</li><li>指标与阈值：bad-1、bad-2 还是 RMSE？</li><li>遮挡边界怎么算？跨域还能用吗？</li></ul>
+      <div class="src">依据：原书第 753–803 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e118_reader.png" style="max-height:440px" alt="读榜五问：数据集、真值、指标、掩码、跨域｜程序生成，未用教材或论文原图"><figcaption>读榜五问：数据集、真值、指标、掩码、跨域｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

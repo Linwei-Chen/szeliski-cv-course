@@ -1,0 +1,53 @@
+{
+ "n_pass": 11,
+ "n_total": 11,
+ "image": [
+  240,
+  180
+ ],
+ "cameras": [
+  -0.4,
+  0.0,
+  0.4
+ ],
+ "n_cameras": 3,
+ "target": 0.25,
+ "single_holes": 1764,
+ "single_psnr": 30.29368454600659,
+ "multi_holes": 0,
+ "multi_psnr": 33.38759866478827,
+ "multi_gain": 7.701263507286285,
+ "naive_psnr": 25.686335157501986,
+ "diffused_psnr": 27.045163604523825,
+ "fill_gain": 1.358828447021839,
+ "protocol": {
+  "synthetic": true,
+  "images": [
+   240,
+   180
+  ],
+  "cameras": [
+   -0.4,
+   0.0,
+   0.4
+  ],
+  "target": 0.25,
+  "scene": "facade Z=5 + foreground post Z=2",
+  "fill": "classical nearest + diffusion (not a neural network)",
+  "full_neural_rendering": false
+ },
+ "fig_sizes": {
+  "taxonomy": [
+   13.2,
+   5.2
+  ],
+  "blend": [
+   13.0,
+   4.6
+  ],
+  "fill": [
+   13.4,
+   4.1
+  ]
+ }
+}

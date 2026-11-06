@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>几何复兴史：从多视几何到神经场的路上谁是主角</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 11–12 章复盘 · 18 站</div>
+  <h2>复盘：18 站，谁在承担主线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 93 集到第 110 集，共 18 站。</li><li>第 11 章 11 站，第 12 章 6 站。</li><li>另有第 13 章硬件桥 1 站。</li><li>几何 13 站，学习 2 站，其余 3 站。</li></ul>
+      <div class="src">依据：本集复盘台账</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">18 站账目</div><div class="kline">第 11 章：11 站</div><div class="kline">第 12 章：6 站</div><div class="kline">第 13 章桥：1 站</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘台账 · 章分布</div>
+  <h2>时间线：两章加一座桥</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 11 章：原书 683 到 750 页。</li><li>第 12 章：原书 751 到 807 页。</li><li>18 站排在同一条处理链上。</li><li>第 93 集总览，第 110 集评测。</li></ul>
+      <div class="src">依据：原书第 683/751 页；本集复盘台账</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e119_timeline.png" style="max-height:480px" alt="18 站时间线：第 11 章 11、第 12 章 6、第 13 章桥 1｜程序生成，未用教材或论文原图"><figcaption>18 站时间线：第 11 章 11、第 12 章 6、第 13 章桥 1｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 683–684 页 · SfM 开场</div>
+  <h2>第 11 章：先校准相机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 11 章标题：Structure from motion and SLAM。</li><li>原书 684 页：三维重建是中心问题之一。</li><li>标定给内参、外参和相机模型。</li><li>标定不准，姿态和三角化都会偏。</li></ul>
+      <div class="src">依据：原书第 683–684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">第 11 章入口</div><div class="kline">相机标定</div><div class="kline">姿态恢复</div><div class="kline">三角化与 BA</div><div class="kline">SLAM</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">两视图 · 第 94–96 集</div>
+  <h2>两视图：先定相机，再落点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 94、95 集：对极几何与八点法。</li><li>第 96 集：姿态恢复与三角化。</li><li>对极几何把搜索压到一条极线。</li><li>八点法用 8 个对应点解基础矩阵。</li></ul>
+      <div class="src">依据：本集复盘台账</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两视图三站</div><div class="kline">第 94 集：对极几何</div><div class="kline">第 95 集：八点法</div><div class="kline">第 96 集：姿态与三角化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">多视图 · 第 97–99 集</div>
+  <h2>多视图：BA、增量与全局</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 97 集：束调整，相机和点一起解。</li><li>第 98 集：增量式，边加图边解。</li><li>第 99 集：全局式，先对齐旋转。</li><li>三条路线都在压低重投影误差。</li></ul>
+      <div class="src">依据：本集复盘台账</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条路线</div><div class="kline">束调整：联合优化</div><div class="kline">增量式：顺序与漂移</div><div class="kline">全局式：旋转平均与尺度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">SLAM 与应用 · 第 100–102 集</div>
+  <h2>SLAM 与应用：离线慢，在线快</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 100 集：SLAM，边走边定位建图。</li><li>第 101 集：ORB-SLAM 用三个线程。</li><li>第 102 集：COLMAP 用 12 张图跑通。</li><li>第 109 集：深度用于自动驾驶感知。</li></ul>
+      <div class="src">依据：本集复盘台账</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">离线与在线</div><div class="kline">离线：图齐了慢慢算</div><div class="kline">在线：边走边算，控延迟</div><div class="kline">第 109 集：深度是共用表示</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 751 页 · 稀疏到稠密</div>
+  <h2>第 12 章：换对应，不换相机模型</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>原书 751 页：第 11 章给相机和稀疏点。</li><li>第 12 章要更完整的 3D，如稠密深度图。</li><li>两条链共用对应、相机模型、三角化与 BA。</li><li>换的是给每个像素找对应的办法。</li></ul>
+      <div class="src">依据：原书第 751 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e119_spine.png" style="max-height:480px" alt="共用几何脊柱：对应→相机模型→三角化/BA→3D｜程序生成，未用教材或论文原图"><figcaption>共用几何脊柱：对应→相机模型→三角化/BA→3D｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 753 页 · 三条路线</div>
+  <h2>立体匹配：三条技术路线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>原书 753 页：先选像素匹配代价。</li><li>三条路线：局部聚合、全局优化、深度网络。</li><li>局部看小窗口，边界容易糊。</li><li>全局更平滑但更慢，学习要训练数据。</li></ul>
+      <div class="src">依据：原书第 753 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">消除错误匹配</div><div class="kline">局部聚合</div><div class="kline">全局优化</div><div class="kline">深度网络</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">深度与硬件 · 第 103–108 集</div>
+  <h2>学习与硬件：两站加一座桥</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 103 集：视差即深度。</li><li>第 104–107 集：立体流水线、SGM、PSM-Net、单目深度。</li><li>学习站仍输出视差或深度，仍受几何检查。</li><li>第 108 集属第 13 章 13.2 节，是硬件桥。</li></ul>
+      <div class="src">依据：原书第 816–820 页；本集复盘台账</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">第 108 集：深度相机</div><div class="kline">结构光</div><div class="kline">ToF</div><div class="kline">LiDAR</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">评测 · 第 110 集</div>
+  <h2>评测：先读协议，再看名次</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>原书 753 页：Middlebury、KITTI 最早维护榜单。</li><li>原书 781 页：有训练集的榜单易被监督学习攻占。</li><li>同一页：跨域泛化仍然不好。</li><li>原书 797 页：closed-world 数据可能让网络学捷径。</li></ul>
+      <div class="src">依据：原书第 753/781/797 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读榜顺序</div><div class="kline">训练/测试划分</div><div class="kline">真值覆盖与指标</div><div class="kline">掩码与跨域</div><div class="kline">最后看名次</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘台账 · 谁在承担主线</div>
+  <h2>角色：13 站做几何</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>几何方法 13 站，学习组件 2 站。</li><li>硬件桥、应用、评测各 1 站。</li><li>13 站都在把 2D 对应变成 3D。</li><li>学习改进对应和代价，几何步骤仍在。</li></ul>
+      <div class="src">依据：本集复盘台账</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e119_layers.png" style="max-height:480px" alt="18 站分层：几何骨架 13、学习 2、硬件桥 1、应用 1、评测 1｜程序生成，未用教材或论文原图"><figcaption>18 站分层：几何骨架 13、学习 2、硬件桥 1、应用 1、评测 1｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘 · 移交下一集</div>
+  <h2>总结：两条链，同一套几何</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 11 章：相机、点、轨迹。</li><li>第 12 章：每个像素的深度。</li><li>一条稀疏，一条稠密，共用几何步骤。</li><li>下一集：隐函数、泊松、Marching Cubes。</li></ul>
+      <div class="src">依据：原书第 683–807 页；移交下一集</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两章对照</div><div class="kline">第 11 章：稀疏点与相机</div><div class="kline">第 12 章：稠密深度/视差</div><div class="kline">共同：对应、相机模型、优化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十一集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

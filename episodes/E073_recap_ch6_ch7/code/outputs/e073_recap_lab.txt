@@ -1,0 +1,12 @@
+[lab] E073 复盘课核对档 开始 2026-11-05T20:50:08
+[lab] 源码 sha256=f9e7c5b68e4d2f5fbefb440ddb006567aab45d6431017c8357bb0d23fddc6c5f（哨兵版本绑定）
+[PASS] R1 台账行数==18（识别链 10+特征链 8）　| 18 行 = 识别 10+特征 8
+[PASS] R2 口播结构：15 帧 9 页全非空+总字符 1800–2100　| 15 帧 9 页 总字符 2066
+[PASS] R3 口播页码 chip 全数⊆台账回链页∪章头页∪两章正文范围　| 12/12 命中：343/346/349/358/363/370/396/400/417/422/437/441
+[PASS] R4 全景图在盘（程序生成，红线 2 自证）　| e073_recap_map.png 128863 bytes
+[lab] PNG sha256(e073_recap_map.png)=42638a73a61a2bb5f9256442a5ce3abe0a92fb6570e86db65f1ac4e909ead85c
+[lab] readings → e073_recap_readings.json
+[lab] readings sha256=51d68b1de3209619266c7287269a727bd460c75c051034408e00ca89fc900d96
+[lab] LEDGER：断言 4 条，PASS 4
+[lab] 汇总 PASS 4 / FAIL 0 / 共 4
+[lab] 结束 2026-11-05T20:50:08

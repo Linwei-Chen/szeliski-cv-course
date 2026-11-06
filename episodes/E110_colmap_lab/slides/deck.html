@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>COLMAP 上机：从 12 张图到稀疏重建</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · pycolmap 4.2.1</div>
+  <h2>COLMAP：从照片到稀疏点云</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>COLMAP 是开源的 SfM 加 MVS 系统。</li><li>教材只交代它是什么，不教具体命令。</li><li>本集用 pycolmap 4.2.1 跑完整稀疏重建。</li><li>输入是 12 张程序生成的纹理房间图。</li></ul>
+      <div class="src">依据：原书第 727 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集范围</div><div class="kline">开源 SfM 加 MVS</div><div class="kline">只做稀疏重建</div><div class="kline">合成图，不是实拍</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">两个尺度</div>
+  <h2>稀疏和稠密差在哪</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>稀疏模型：相机位姿加三维点。</li><li>稠密模型：逐像素深度或表面。</li><li>教材例子：2.1 万张照片重建罗马。</li><li>真实照片有重复结构、镜像、行人。</li></ul>
+      <div class="src">依据：原书第 728 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">稀疏：只算特征点</div><div class="kline">稠密：每个像素都要算</div><div class="kline">本集只做稀疏</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">流水线</div>
+  <h2>七步走完一次重建</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>输入图像，提取特征。</li><li>两两匹配，做几何验证。</li><li>选初始像对，增量注册相机。</li><li>三角化新点，最后做 BA。</li></ul>
+      <div class="src">依据：原书第 725 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">可检查的中间产物</div><div class="kline">特征库与匹配对</div><div class="kline">初始模型</div><div class="kline">sparse/0 里的相机与三维点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">输入 · 重叠与视差</div>
+  <h2>绕一圈拍，相邻视角要重叠</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>12 个视角绕房间一圈。</li><li>相邻视角要有大量重叠。</li><li>初始像对还要有离面视差。</li><li>边缘视角 00 已经贴近左墙。</li></ul>
+      <div class="src">依据：原书第 726 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e110_views.png" style="width:110%; margin-left:-5%; max-height:440px" alt="12 个视角绕房间：相邻视角重叠，边缘视角更斜｜程序生成，未用教材或论文原图"><figcaption>12 个视角绕房间：相邻视角重叠，边缘视角更斜｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 特征提取</div>
+  <h2>12 张图提取 103373 个 SIFT</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>12 张图共 103373 个特征。</li><li>平均每张 8614 个。</li><li>视角 00 只有 2153 个。</li><li>弱纹理、模糊、过曝提不出稳定特征。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">特征看什么</div><div class="kline">可重复</div><div class="kline">可区分</div><div class="kline">SIFT 稳，ORB 快</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">匹配 · 全对比较</div>
+  <h2>12 张图，两两一共 66 对</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>12 张图两两比较，共 66 对。</li><li>66 对都建立了有效匹配。</li><li>上万张图不能穷举，要先检索。</li><li>几何验证后看内点，不看匹配总数。</li></ul>
+      <div class="src">依据：原书第 725 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">匹配两步</div><div class="kline">描述子匹配</div><div class="kline">基础矩阵或单应验证</div><div class="kline">内点不够就丢掉</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">初始像对</div>
+  <h2>起点要稳，视差要够</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>初始像对要有足够多一致匹配。</li><li>还要有显著的离面视差。</li><li>COLMAP 会自动试很多对。</li><li>基线太短深度不稳，太长匹配少。</li></ul>
+      <div class="src">依据：原书第 726 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">起点怎么选</div><div class="kline">一般让系统自动选</div><div class="kline">也可用 init_image_id1/2 指定</div><div class="kline">起点错，后面跟着错</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">增量注册</div>
+  <h2>一张一张加相机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先建初始两视图。</li><li>新相机用 PnP 估位姿。</li><li>三角化新点，再做局部或全局 BA。</li><li>本次 12 张全部注册，12/12。</li></ul>
+      <div class="src">依据：原书第 726 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">看注册也要看点</div><div class="kline">视角 00 只有 211 个点</div><div class="kline">12/12 不代表每张贡献相同</div><div class="kline">注册失败先查匹配</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 稀疏模型</div>
+  <h2>10324 个点勾出房间</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>10324 个三维点，55938 条观测。</li><li>平均轨迹长度 5.42。</li><li>平均重投影误差 0.2712 像素。</li><li>点云勾出墙面、地面和三个盒子。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e110_reconstruction.png" style="width:110%; margin-left:-5%; max-height:440px" alt="稀疏点云与 12 个相机：10324 点、重投影 0.2712 px｜程序生成，未用教材或论文原图"><figcaption>稀疏点云与 12 个相机：10324 点、重投影 0.2712 px｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 相似对齐</div>
+  <h2>先对齐尺度，再比误差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相似对齐后相机中心 RMS 0.0179。</li><li>最大误差 0.049，出现在视角 00。</li><li>视角 00 的三角化点也最少，211 个。</li><li>单目重建没有绝对尺度，先对齐再比。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e110_errors.png" style="width:110%; margin-left:-5%; max-height:440px" alt="相机中心误差（相似对齐后）与每视角三角化点数｜程序生成，未用教材或论文原图"><figcaption>相机中心误差（相似对齐后）与每视角三角化点数｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">内参</div>
+  <h2>焦距先验 700，主点固定</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先验焦距 700，主点 400/300。</li><li>优化后得到 700.15 和 702.74。</li><li>最大焦距误差 0.39%。</li><li>EXIF 可以给初值，BA 再调整。</li></ul>
+      <div class="src">依据：原书第 726 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">内参怎么定</div><div class="kline">手机照片先读 EXIF</div><div class="kline">主点这次固定</div><div class="kline">焦距漂会让点云前后缩</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">输出边界</div>
+  <h2>稀疏不是稠密</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>本集只做到稀疏模型。</li><li>10324 个点够定位和看结构。</li><li>不够做精细表面。</li><li>稀疏点云看起来空是正常的。</li></ul>
+      <div class="src">依据：原书第 728 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">稀疏与稠密</div><div class="kline">稀疏：只留稳定特征点</div><div class="kline">稠密：逐像素深度</div><div class="kline">稠密依赖稀疏位姿</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失败边界</div>
+  <h2>真实场景难在哪</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>重复或镜像结构会匹配错。</li><li>行人等动态物体会破坏重建。</li><li>弱纹理、纯旋转、重叠不足也会失败。</li><li>COLMAP 可能给出多个模型，或只注册一部分。</li></ul>
+      <div class="src">依据：原书第 728 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先看哪里</div><div class="kline">匹配图</div><div class="kline">注册率</div><div class="kline">必要时手动指定初始对</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复现 · pycolmap</div>
+  <h2>特征、匹配、建图三段</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先准备图像目录。</li><li>extract_features 提 SIFT 并写数据库。</li><li>match_exhaustive 做全对匹配。</li><li>incremental_mapping 做增量重建。</li></ul>
+      <div class="src">依据：本集实验（pycolmap 4.2.1）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">关键参数</div><div class="kline">相机模型 PINHOLE</div><div class="kline">参数 700,700,400,300</div><div class="kline">单相机 SINGLE</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">验收清单</div>
+  <h2>五看：注册、重投影、轨迹、内参、形状</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一看注册率：12 张是否都注册。</li><li>二看重投影误差：平均是否小于一像素。</li><li>三看轨迹长度：点是否被多张图看到。</li><li>四看焦距主点，五看轨迹与点云是否分叉。</li></ul>
+      <div class="src">依据：本集实验（工程经验）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">最后一步</div><div class="kline">把点云投回图像</div><div class="kline">看是否贴在纹理上</div><div class="kline">对不上，数字再好看也不能用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>工具跑通，再讲原理</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>流水线：特征、匹配、注册、三角化、BA。</li><li>单目重建没有绝对尺度，先相似对齐。</li><li>注册率和重投影误差要一起看。</li><li>下一集讲立体视觉：视差怎么变深度。</li></ul>
+      <div class="src">依据：原书第 725–728 页；移交 E111</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条线</div><div class="kline">本集：把工具跑通</div><div class="kline">下一集：把原理讲透</div><div class="kline">第 12 章：立体视觉</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零二集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

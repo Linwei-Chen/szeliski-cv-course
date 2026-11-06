@@ -1,0 +1,22 @@
+{
+ "n_pass": 10,
+ "n_total": 10,
+ "tau": 0.12,
+ "grid": 180,
+ "f_center": -0.49051923868800146,
+ "f_far": 1.197056274847714,
+ "max_trunc": 0.12,
+ "cov_one": 33,
+ "cov_four": 72,
+ "err_one": 0.0004378696427035804,
+ "err_four": 0.0013750406278985753,
+ "surface_weight": 1.0,
+ "corner_weight": 0.0,
+ "active_frac": 0.11135802469135803,
+ "std_noise_single": 0.0338702434075196,
+ "std_noise_fused": 0.023620894687316048,
+ "noise_trials": 20,
+ "cap_weight": 5,
+ "flip_err": 0.049461403419176576,
+ "n_cross_flip": 14
+}

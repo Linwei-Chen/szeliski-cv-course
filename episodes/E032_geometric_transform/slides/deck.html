@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>旋转缩放怎么做：几何变换与插值的取舍</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 定义域与值域</div>
+  <h2>几何变换：改定义域，不改值域</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>点运算和滤波，改每个位置上的值。</li><li>几何变换改的是值从哪里取。</li><li>点过程 g = h(f(x))：改值域。</li><li>几何变换 g = f(h(x))：改定义域。</li></ul>
+      <div class="src">依据：原书第 168 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条式子</div><div class="kline">点过程：g = h(f(x))</div><div class="kline">几何变换：g = f(h(x))</div><div class="kline">图像扭曲只改定义域</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十四集</span><span>01 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">变换族 · 自由度层级</div>
+  <h2>参数化变换族：二三四六八</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平移 2、刚体 3、相似 4、仿射 6、射影 8。</li><li>每一级还同时保住下面各级的性质。</li><li>刚体保长度，相似保角度。</li><li>仿射保平行，射影保直线、不保平行。</li></ul>
+      <div class="src">依据：原书第 168–169 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e032_transforms.png" style="max-height:500px" alt="五级变换族：平移 / 刚体 / 相似 / 仿射 / 射影｜程序生成，未用教材或论文原图"><figcaption>五级变换族：平移 / 刚体 / 相似 / 仿射 / 射影｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十四集</span><span>02 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">扭曲方向 · 前向与逆向</div>
+  <h2>前向与逆向：贴过去有洞，抽回来无缝</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>前向：源图每个像素搬到目标位置。</li><li>非整数位置没有定义，放大还会出洞。</li><li>逆向：目标每个像素回源图采样。</li><li>放大 1.5×：前向最近邻洞 1185/2209，逆向 0。</li></ul>
+      <div class="src">依据：原书第 169–171 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e032_warping.png" style="max-height:500px" alt="放大 1.5×：前向最近邻洞 1185 / splatting 洞 0 / 逆向双线性洞 0｜程序生成，未用教材或论文原图"><figcaption>放大 1.5×：前向最近邻洞 1185 / splatting 洞 0 / 逆向双线性洞 0｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十四集</span><span>03 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">重采样 · 抗混叠</div>
+  <h2>变换下的重采样：先预滤，再采样</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>双线性快，双三次和加窗 sinc 保质量。</li><li>旋转 45°：最近邻 RMSE 0.0504，双三次 0.0247。</li><li>一般变换先估采样率，再定核形状。</li><li>MIP-map：层号 log2 r，两层按小数部分混合。</li></ul>
+      <div class="src">依据：原书第 171–175 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e032_resampling.png" style="max-height:500px" alt="旋转 45°：最近邻 RMSE 0.0504 / 双线性 0.0253 / 双三次 0.0247｜程序生成，未用教材或论文原图"><figcaption>旋转 45°：最近邻 RMSE 0.0504 / 双线性 0.0253 / 双三次 0.0247｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十四集</span><span>04 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">局部变形 · 三种做法</div>
+  <h2>网格变形：局部动，别处不动</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>稀疏对应点：三角化，每个三角形内用仿射。</li><li>逐像素位移场：先扭位移场，补洞，再逆向重采样。</li><li>有向线段：段上精确迁移，附近按相似变换平滑插值。</li><li>权重取到线段的距离：段内用垂距，段外取端点距离。</li></ul>
+      <div class="src">依据：原书第 175–177 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种做法</div><div class="kline">稀疏点 → 三角形仿射</div><div class="kline">位移场 → 先扭再补洞</div><div class="kline">有向线段 → 相似变换</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十四集</span><span>05 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">morphing · 本集收束</div>
+  <h2>morphing：先对齐，再淡化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>直接交叉淡化会重影。</li><li>两幅图先各自向对方扭曲，再混合。</li><li>中间帧权重 1−t 和 t，位移也线性插值。</li><li>重影带：直接淡化 1490 像素，先扭曲 488。</li></ul>
+      <div class="src">依据：原书第 177–178 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e032_morph.png" style="max-height:500px" alt="morph 三格：源 A（t=0）/ 纯 dissolve（重影带 1490）/ warp+dissolve（重影带 488）｜程序生成，未用教材或论文原图"><figcaption>morph 三格：源 A（t=0）/ 纯 dissolve（重影带 1490）/ warp+dissolve（重影带 488）｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十四集</span><span>06 / 6</span></div>
+</section>
+<div id="subbar"></div></body></html>

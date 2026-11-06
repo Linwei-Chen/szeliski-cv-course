@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>对齐问题总动员：把两张图搬进同一坐标系</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章开场 · 原书第 501 页</div>
+  <h2>把两张图搬进同一个坐标系</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对齐：求两张图之间的坐标对应关系。</li><li>全景拼接、文档扫描、增强现实都从这一步开始。</li><li>先对齐坐标，再谈融合和接缝。</li><li>本集讲定义和五种平面变换。</li></ul>
+      <div class="src">依据：原书第 501–503 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集问题</div><div class="kline">两张照片怎么放进同一坐标系</div><div class="kline">对齐为什么是第一步</div><div class="kline">五种平面变换怎么排</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全章四节 · 本集只讲开头</div>
+  <h2>第 8 章的四块内容</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 503 页起：两两对齐。</li><li>第 514 页起：图像拼接。</li><li>第 526 页起：全局对齐；第 536 页起：合成。</li><li>最小二乘、RANSAC、捆扎都从这里展开。</li></ul>
+      <div class="src">依据：原书第 503–536 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四块顺序</div><div class="kline">两两对齐（第 503 页）</div><div class="kline">图像拼接（第 514 页）</div><div class="kline">全局对齐（第 526 页）</div><div class="kline">合成（第 536 页）</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">匹配之后 · 原书第 503 页</div>
+  <h2>匹配完，还要验证几何</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>特征提取后，先把不同图的特征匹配起来。</li><li>匹配只是候选，几何验证才算数。</li><li>一个变换解释不了的位移，就是外点。</li><li>验证做不好，后面都在错数据上优化。</li></ul>
+      <div class="src">依据：原书第 503 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e074_alignment_pipeline.png" style="max-height:500px" alt="对齐四步：两张图→找特征→配对→几何验证→估变换｜程序生成，未用教材或论文原图"><figcaption>对齐四步：两张图→找特征→配对→几何验证→估变换｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">配准的定义 · 原书第 503 页</div>
+  <h2>配准：求一个点对点的变换</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>几何图像配准，求变换把点映到对应点。</li><li>变换可以是二维，也可以是三维。</li><li>本集只做二维：全景和文档扫描的主场。</li><li>输出是一个变换矩阵，像素据此找位置。</li></ul>
+      <div class="src">依据：原书第 503 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">变换能描述什么</div><div class="kline">平移</div><div class="kline">旋转、缩放</div><div class="kline">剪切、透视</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三个近亲 · 边界要清</div>
+  <h2>配准、位姿、运动恢复结构</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>配准问：怎么把点搬过去。</li><li>位姿问：相机相对已知物体在哪、朝哪看。</li><li>运动恢复结构：同时估三维几何和相机运动。</li><li>本集只做配准，只做全局参数变换。</li></ul>
+      <div class="src">依据：原书第 503 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三者问什么</div><div class="kline">配准：点怎么搬</div><div class="kline">位姿：相机在哪</div><div class="kline">运动恢复结构：几何和运动</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Figure 8.2 · 原书第 503 页</div>
+  <h2>五种平面变换排成一级一级</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平移、欧氏、相似、仿射、投影。</li><li>共同假设：整张图共用一个变换。</li><li>参数从 2 个加到 8 个。</li><li>参数越多，能描述的运动越多，也越难估稳。</li></ul>
+      <div class="src">依据：原书第 503 页 Figure 8.2</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e074_transform_ladder.png" style="max-height:500px" alt="同一张网格的五种搬法：平移/欧氏/相似/仿射/投影，参数从 2 到 8｜程序生成，未用教材或论文原图"><figcaption>同一张网格的五种搬法：平移/欧氏/相似/仿射/投影，参数从 2 到 8｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">前两级 · 参数 2 和 3</div>
+  <h2>平移与欧氏：长度角度都不变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平移两个参数：横移、竖移。</li><li>欧氏再加一个旋转，三个参数。</li><li>两级都保持长度和角度，只许平移和旋转。</li><li>实验：平移和欧氏的最大距离误差 2.22e-16。</li></ul>
+      <div class="src">依据：原书第 503 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">参数与不变量</div><div class="kline">平移：2 个参数</div><div class="kline">欧氏：3 个参数</div><div class="kline">不变量：长度、角度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第三级 · 参数 4</div>
+  <h2>相似：形状不变，大小可变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>旋转、平移，再加一个统一缩放，共四个参数。</li><li>长度按同一比例变，角度不变。</li><li>横竖比例一样，圆还是圆。</li><li>实验：缩放比例 0.7200，波动 2.22e-16。</li></ul>
+      <div class="src">依据：原书第 503 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">相似变换</div><div class="kline">4 个参数</div><div class="kline">统一缩放：横竖同比例</div><div class="kline">不变量：形状、角度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第四级 · 参数 6</div>
+  <h2>仿射：平行还在，角度可变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>六个参数，横竖可以不同比例拉伸。</li><li>也允许剪切，正方形变平行四边形。</li><li>平行线仍然平行，长度和角度都可能变。</li><li>实验：平行度 0.00e+00，角度改变 3.20°。</li></ul>
+      <div class="src">依据：原书第 503 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">仿射变换</div><div class="kline">6 个参数</div><div class="kline">保留：平行</div><div class="kline">改变：长度、角度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第五级 · 参数 8</div>
+  <h2>投影与单应：平行线可以相交</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>八个参数，比仿射多一行透视除法。</li><li>平行线可以交于消失点，直线仍是直线。</li><li>交比不变；至少四对不共线的点。</li><li>实验：交比 1.2381→1.2381，平行度 0.0767。</li></ul>
+      <div class="src">依据：原书第 503 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">x' = H x</div><div class="mnote">x' 与 H x 相差一个尺度；H 为 3×3，8 个自由度，含透视除法</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">不变量表 · 程序生成</div>
+  <h2>越自由，能守住的不变量越少</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>五级是嵌套的：平移、欧氏、相似、仿射、投影。</li><li>每升一级，多放开一种运动。</li><li>也多丢掉一个不变量。</li><li>选模型，就是选你愿意假设什么不变。</li></ul>
+      <div class="src">依据：原书第 503 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e074_invariants.png" style="max-height:500px" alt="五种变换的不变量对照：长度/角度/平行/交比/参数｜程序生成，未用教材或论文原图"><figcaption>五种变换的不变量对照：长度/角度/平行/交比/参数｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程判断 · 不要一上来就八参数</div>
+  <h2>先看场景，再定模型</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>绕光心纯旋转：两图之间是单应。</li><li>面对平面：单应同样适用。</li><li>远距离、深度变化小：相似或仿射更稳。</li><li>只是手持平移：平移模型就够。</li></ul>
+      <div class="src">依据：原书第 503 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">看残差再升级</div><div class="kline">先选能解释数据的最小模型</div><div class="kline">残差够小，不加参数</div><div class="kline">残差系统性变大，再升级</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">怎么解 · 原书第 504 页起</div>
+  <h2>最小二乘加一致集</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最小二乘：最小化位置误差的平方和。</li><li>它假设匹配基本正确。</li><li>有外点，就先用 RANSAC 挑出一致集。</li><li>再在一致集上精解，顺序不能反。</li></ul>
+      <div class="src">依据：原书第 504 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">RANSAC：先保命</div><div class="kline">最小二乘：再求精</div><div class="kline">顺序不能反</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">边界 · 非刚性、视差</div>
+  <h2>一个矩阵解释不了所有像素</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>非刚性形变，单个矩阵不够。</li><li>明显视差：近处动得多，远处动得少。</li><li>办法：分块、换更复杂的模型、先全局再局部。</li><li>这不是算法失败，是模型不够。</li></ul>
+      <div class="src">依据：原书第 503 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">全局层的边界</div><div class="kline">非刚性形变</div><div class="kline">大视差</div><div class="kline">先全局对齐，再局部修正</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">回头看 · 五种搬法</div>
+  <h2>五种画面感，五种假设</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平移只挪位置，欧氏转个身。</li><li>相似整体缩放，仿射压成平行四边形。</li><li>投影一头大一头小。</li><li>看到平行线汇聚，就该想到投影。</li></ul>
+      <div class="src">依据：本集实验；原书第 503 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">看到什么，想到什么</div><div class="kline">只挪位置：平移</div><div class="kline">圆变椭圆：至少仿射</div><div class="kline">平行线汇聚：投影</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集换路</div>
+  <h2>梯子带走，下一集用像素</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对齐：从匹配到几何验证。</li><li>五种平面变换与它们的参数、不变量。</li><li>选型和求解路线：最小模型加残差检验。</li><li>下一集：不找匹配点，直接用像素梯度估位移。</li></ul>
+      <div class="src">依据：原书第 503–504 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集带走</div><div class="kline">对齐的定义与验证</div><div class="kline">五种变换的梯子</div><div class="kline">选型与求解路线</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十六集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,94 @@
+[lab-stdout-regression] 开始 2026-11-01T06:13:26
+[lab-stdout-regression] 输入 lab.txt sha256=d53aecfa3753eed40c9f68f813b5c73641058ce6c7315561966ef5830d33201b readings sha256=f0056687fa72d70540b67f1c5064086d99b443dac6fc950c1548517964927cb4（版本绑定存证头，r7 P2-3 修复 3：首行补开始时间使申报属实）
+[lab-stdout-regression] 绑定 工具 sha256 regression=875a21a39949efc56291603e6e442d9598f4c7faf8b73bc0146abd1f4550d999 make_script=556445595825d20cefb40f354348b1f12d294841405f5449367773099a239650 display_check=5df8134ae2c3ecda48ce90b7ad59f225f64a7c750e69b58a06d6d3d22775019a（r11 P1-2 工具版本绑定——down-sha 逐一比对盘面）
+[lab-stdout-regression] 绑定 申报层 status.json sha256=0b327cc5bec33f54d6b9342899c1334e74976d43300b35223cd69b791c67ff2b README.md sha256=66140d4130f56f193f42f51217a7d6e398bc8b70c3c756b674ef949bf255492e（r12 P2-3——申报层定稿后才跑回归，改动后必须重跑）
+[ok] 基线：33 个受检 token 全部命中（叶值 44 个）
+[ok] m1 外值注入 99999 被拦截：无同值出处 ['99999']
+[ok] m2 汉字贴数 实观测99999 被拦截：无同值出处 ['99999']
+[ok] m3 注入（0.35 处观测） 如实预期 PASS（弱一致性边界）——0.35 与 readings 叶值碰撞于 cfg.eps：无字段级绑定测不出，r5 P1-1 已申报降级
+[ok] m4 正对 0.247658↔负对 1.522540 读数互换 如实预期 PASS（弱一致性边界）——互换值均在叶集：弱一致性测不出错位绑定，r5 P1-1 已申报降级
+[ok] m5 篡改源码 sha 行 被哨兵拦截：存证内记源码 sha 0000000000000000… 与盘面 e049_vis_lab.py 现值不符——改 lab.py 
+[ok] m6 删一条 PNG sha 行 被哨兵拦截：PNG sha 自证行 2 条 ≠ 盘面 PNG 3 张——输出截断或图未同步（r6 P2-4 强化）
+[ok] m7 截掉一条 [PASS] 行 被哨兵拦截：LEDGER 计数与 [PASS]/[FAIL] 行数不符（LEDGER=LEDGER：断言 19 条，PASS 19，行数 1
+[ok] m10 PNG 行文件名改不存在 被哨兵拦截：存证内记 ghost_missing.png sha 与盘面现值不符或文件缺失——图已变未重跑 lab（r5 P2-5/r6 P
+[ok] d0 down-sha 基线：20 项比对全部一致，分项=display(lab.py,deck.html,display_check.py) probe(shots.json,deck.html,overflow_probe.py 工具,e049_fig1_hinton.png,e049_fig2_lineage.png,e049_fig3_adversarial.png) reg(lab.txt,readings,regression 工具,make_script 工具,display_check 工具,status.json,README.md) anchor(锚文件,raw,check_anchor_quotes.py 工具) batch_chain(batch_chain.py 工具)（display/probe/reg/anchor/batch_chain 五类全覆盖——reg 用合成副本，真实 reg 存证正文检由 mech 全量覆盖；分项由实际比对项拼接——r12 P2-1 修复 2 同款）
+[ok] m8 篡改 display 存证头 lab.py sha 被拦截：（变异副本） 内记 lab.py sha 0000000000000000… 与盘面 e049_vis_lab.py 现值不符——lab.py 
+[ok] m14 篡改 display 存证头 display_check.py sha 被拦截：（变异副本） 内记 display_check.py sha 0000000000000000… 与盘面 display_check.py 现值
+[ok] m9 删 display 存证 被拦截：display_check 存证缺失——stage 已入 S2 后段，缺存证不得静默跳过（r7 P2-1：删存证后 n_cmp 变小仍打印「全部
+[ok] m11 截断 display 存证末行 被拦截：（截断副本） 末行非「[display_check] 结束」——存证被截断或覆写（r7 P1-1 格式断言）
+[ok] m12 删 display 存证版本行 被拦截：（删版本行副本） 缺版本行 display_check vN——版本行被覆写或工具过旧（r7 P1-1 判例）
+[ok] p1 probe 副本删一条 PNG 行 被拦截：（变异副本） PNG sha 行 2 条 ≠ 盘面 PNG 3 张——probe 过旧（未绑 PNG，r7 P2-1）或存证截断
+[ok] p2 probe 副本 PNG 名改 ghost 被拦截：（变异副本） 绑定的 PNG ghost_missing.png 盘面文件缺失（r7 P2-1 文件缺失分支）
+[ok] p3 probe 副本 PNG sha 置 0 被拦截：（变异副本） 内记 e049_fig1_hinton.png sha 与盘面现值不符——图已变未重跑 probe（r7 P2-1）
+[ok] p4 probe 副本头 shots sha 置 0 被拦截：（变异副本） 内记 shots.json sha 0000000000000000… 与盘面 shots.json 现值不符——shots.js
+[ok] p5 probe 副本工具 sha 置 0 被拦截：（变异副本） 内记 overflow_probe.py 工具 sha 0000000000000000… 与盘面 overflow_probe.
+[ok] p5x 污染 display 下 p5 变异被 display 分支先拦截（报错含 display 条目「内记 lab.py sha」+盘面文件名 e049_vis_lab.py 双要素——r17 P1-1 修订：旧判据「lab.py」系 _cmp 公共模板尾注字样、对任何 _cmp 分支空真=申报「确为 display 分支」无机检支撑判例封堵）+expect 不符→branch_mismatch
+[ok] p5y 反向夹具：stub 永不拦截→三态版如实返回 not_blocked（stub 下 p5x 同判据必翻车）——core 注入点与 not_blocked 态实覆盖
+[ok] p5z 反向夹具：probe 分支失守报错含 probe 标签+「内记 overflow_probe.py 工具 sha」、不含「内记 lab.py sha」——p5x display 判据两要素在此报错均不成立=判据有判别力（非对任何分支都过）
+[ok] a1 锚存证头锚 sha 置 0 被拦截：（变异副本） 内记 锚文件 sha 不命中盘面任何 *anchors*.txt 现值——锚/raw 改后未重跑锚机检（r7 P2-1 覆盖面）
+[ok] a2 锚存证截末行 被拦截：（截断副本） 末行非「[anchor_check] 结束」——存证被截断或覆写（r7 P1-1 格式断言）
+[ok] a3 锚存证头 raw sha 置 0 被拦截：（变异副本） 内记 raw sha 不命中盘面任何 *pdftotext_raw*.txt 现值——锚/raw 改后未重跑锚机检（r7 P2-1
+[ok] a4 锚存证工具 sha 置 0 被拦截：（变异副本） 内记 check_anchor_quotes.py 工具 sha 0000000000000000… 与盘面 check_anch
+[ok] r1 reg 合成副本 lab.txt sha 置 0 被拦截：（reg 合成副本变异） 内记 lab.txt sha 0000000000000000… 与盘面 e049_vis_lab.txt 现值不符—
+[ok] r2 reg 合成副本截末行 被拦截：（reg 合成副本变异） 末行非「[lab-stdout-regression] 结束」——存证被截断或覆写（r7 P1-1 格式断言）
+[ok] r3 reg 合成副本 readings sha 置 0 被拦截：（reg 合成副本变异） 内记 readings sha 0000000000000000… 与盘面 e049_vis_readings.jso
+[ok] r4 reg 合成副本 regression 工具 sha 置 0 被拦截：（reg 合成副本变异） 内记 regression 工具 sha 0000000000000000… 与盘面 lab_stdout_regre
+[ok] r5 reg 合成副本申报层 status sha 置 0 被拦截：（reg 合成副本变异） 内记 status.json sha 0000000000000000… 与盘面 status.json 现值不符——
+[ok] s1 stage=s2 小写：stage 序号 2
+[ok] s2 stage=S2 大写（旧正则静默放行判例）：stage 序号 2
+[ok] s3 stage=s1 跳过档：stage 序号 1
+[ok] s4 status.json 缺失 被拦截：status.json 缺失——stage 无法判定，缺存证核验不可跳过（r8 P2-2 修复 3）
+[ok] s5 stage 不可解析 被拦截：stage=x 不可解析（期望 sN/SN/archived）——缺存证核验不可跳过（r8 P2-2 修复 3）
+[ok] t1 申报层基线：0 段最新申报 0 失守（受检 sha 声明 0 条=标签绑定 0/未解析回退 0/孤立 0，三档条数为机检返回值不手写；无手写 HH:MM 时刻）
+[ok] t2 注入手写旧 sha 被拦截：（t2 变异）: 申报 sha 前缀 deadbeef 与标签 shots 绑定文件现值 3c649bf6 不符（标签–文件错配——r9 P1-
+[ok] t3 注入手写时刻被拦截：（t3 变异）: 手写 HH:MM 时刻——时间以存证首行为准（r3 P2-2/r8 P2-1 判例；ISO 完整形态系链句窗口标记程序引用放行
+[ok] t3b/t3c ISO 完整日期时间窗口标记放行、同文本裸 HH:MM 仍拦（r22 期手写时刻豁免判据——豁免不波及裸时刻）
+[ok] t4 注入 fig1=1c04c93f 被拦截：（t4 变异）: 申报 sha 前缀 1c04c93f 与标签 fig1 绑定文件现值 ae7d198b 不符（标签–文件错配——r9 P1-1）
+[ok] t5 注入 shots sha=<lab.py 前缀 9e278f34> 被拦截：（t5 变异）: 申报 sha 前缀 9e278f34 与标签 shots 绑定文件现值 3c649bf6 不符（标签–文件错配——r9 P1-1）
+[ok] t6 跨子句 sha 声明（标签未解析）：0 失守且三档计数未解析回退 U=1（基线 0+1，如实分档——（t6 变异）: 前缀 3c649bf6 标签未解析——回退盘面任一受控文件判定（r10 P1-1 三档如实计数））
+[ok] t7a 注入含标点旧值被拦截且失守标签正确：[FAIL] 申报层字数/估时声明比对 1 项失守（r11 P1-1）: （t7a 变异）: 含标点字符数 申报 4129 ≠ 现值 3881——字数与估时只引 mech 存证 [durati
+[ok] t7b 注入去标点旧值被拦截且失守标签正确：[FAIL] 申报层字数/估时声明比对 1 项失守（r11 P1-1）: （t7b 变异）: 去标点字符数 申报 3464 ≠ 现值 3337——字数与估时只引 mech 存证 [durati
+[ok] t7c 注入估时旧值（估时+粗体形态）被拦截且失守标签正确：[FAIL] 申报层字数/估时声明比对 1 项失守（r11 P1-1）: （t7c 变异）: 估时（分钟）申报 15.44 ≠ 现值 14.87——字数与估时只引 mech 存证 [durat
+  [decl-num] 申报层字数/估时声明比对通过（命中 3 条与现值一致：含标点 3881/去标点 3337/估 14.87 分钟；无命中时如实为 0。盲区：裸数字（如「交付 4147/3479/15.50」）、侧数/例数/项数、版面 px、无分隔歧义连写、未穷举变体写法（错配 fail-closed 但新形态可能漏检——引存证不手写为唯一防线）不在扫描范围——r13 P2-4 切片窗口+r15 P2-6 消费 span/形态放宽+r16 P2-5 括注归属/括号前缀+P2-2 盲区申报）
+[ok] t8 正例（现值惯用形态 3881 含标点/3337 去标点/估 14.87 分钟）0 失守——无误报
+[ok] t7d 空格分隔旧值连写被拦截且双项标签/数值正确：[FAIL] 申报层字数/估时声明比对 2 项失守（r11 P1-1）: （t7d 变异）: 含标点字符数 申报 4129 ≠ 现值 3881; （t7d 变异）: 去标点字符数 申报 3478 ≠ 现值 3337——字
+[ok] t7e 页脚标准形态旧值被拦截且双项标签/数值正确：[FAIL] 申报层字数/估时声明比对 2 项失守（r11 P1-1）: （t7e 变异）: 含标点字符数 申报 4129 ≠ 现值 3881; （t7e 变异）: 去标点字符数 申报 3478 ≠ 现值 3337——字
+  [decl-num] 申报层字数/估时声明比对通过（命中 2 条与现值一致：含标点 3881/去标点 3337/估 14.87 分钟；无命中时如实为 0。盲区：裸数字（如「交付 4147/3479/15.50」）、侧数/例数/项数、版面 px、无分隔歧义连写、未穷举变体写法（错配 fail-closed 但新形态可能漏检——引存证不手写为唯一防线）不在扫描范围——r13 P2-4 切片窗口+r15 P2-6 消费 span/形态放宽+r16 P2-5 括注归属/括号前缀+P2-2 盲区申报）
+[ok] t8b 正例（页脚标准形态现值）0 失守——无误报
+[ok] t7f「含标点字数 N」变体被拦截且标签/数值正确：[FAIL] 申报层字数/估时声明比对 1 项失守（r11 P1-1）: （t7f 变异）: 含标点字符数 申报 4129 ≠ 现值 3881——字数与估时只引 mech 存证 [duration] 
+[ok] t7g「N 字（含标点）」括注形态被拦截且标签/数值正确：[FAIL] 申报层字数/估时声明比对 1 项失守（r11 P1-1）: （t7g 变异）: 含标点字符数 申报 4129 ≠ 现值 3881——字数与估时只引 mech 存证 [duration] 
+[ok] t7h「含标点（4129）」括号前缀形态被拦截且标签/数值正确：[FAIL] 申报层字数/估时声明比对 1 项失守（r11 P1-1）: （t7h 变异）: 含标点字符数 申报 4129 ≠ 现值 3881——字数与估时只引 mech 存证 [duration] 
+  [decl-num] 申报层字数/估时声明比对通过（命中 1 条与现值一致：含标点 3881/去标点 3337/估 14.87 分钟；无命中时如实为 0。盲区：裸数字（如「交付 4147/3479/15.50」）、侧数/例数/项数、版面 px、无分隔歧义连写、未穷举变体写法（错配 fail-closed 但新形态可能漏检——引存证不手写为唯一防线）不在扫描范围——r13 P2-4 切片窗口+r15 P2-6 消费 span/形态放宽+r16 P2-5 括注归属/括号前缀+P2-2 盲区申报）
+[ok] t8c「去标点 3337（含标点另计）」正例 0 失守——括注归属判定不再把前词已消费数字重复计入后词（旧版误报形态封堵；数值自校准）
+[ok] t9 范围行旧文回退被拦截（3 项：上半/下半+缺核心+子句抽取失败）且三行新文正例 0 失守
+[ok] t9b 范围子句变体（E044 括注缺一段）被拦截——三处子句须归一化逐字相等（r13 P2-5：v1 只查核心子串、子串外不受检判例封堵）
+[ok] t9c 注记裸旧文（无「旧」前缀）被拦截+「旧「上半/下半」」引述形态放行（r13 P2-5 剥注藏旧文封堵）
+[ok] t9d 课程地图行注入「（D27 核改）」「（f014 预告）」均恰命中 mark_re 一项（非 r 开头记号形态逃逸判例封堵）
+[ok] t10 历史条目基线：README rN 条目↔gatea_rN 剥回注归一化逐字相等（r10 起）0 失守
+[ok] t10x 合成正例 0 失守+README 侧替换一处被拦截：README r10 条目与 status.s2.gatea_r10 剥回注归一化后不一致（首差异@16: README「…机制自检锚文（t10x）原文改动句…」vs status「…机制自检（E044 集适配：门A 前合成对自检，实盘条目由 t10 把守）
+[ok] t11 s2.shots 注入「（v7 紧邻配对」被拦截：s2.shots 写死版本声明「v7」
+[ok] t11b 无空格 CJK 紧邻两形态（「（v7紧邻配对」「v4起」）均被拦截：s2.shots 写死版本声明「v7」
+[ok] t11c 禁用串：真实盘面 s2 副本 0 命中+注入「版本行为准」被拦截且报 s2.lab 与禁用串本体（活字段统一「版本以存证头工具 sha 为准」守护）
+[ok] t11d 禁用串变体「版本以回归存证头绑定为准」被拦截且报 s2.probe：s2.probe 含旧口径句式「版本以回归存证头绑定为准」——活字段统一「版本以存证头工具 sha 为准」（r16 P1-1/r17 P2-6 修复 2 正则化+r18 P1-
+[ok] t11e 无「版本以」前缀字面形态「（以 lab 存证版本行为准）」被拦截且报 s2.lab（r18 盲区 1 封堵——字面覆盖不再收窄）：s2.lab 含旧口径句式「版本行为准」——活字段统一「版本以存证头工具 sha 为准」（r16 P1-1/r17 P2-6 修复 2 正则化+r18 P1-1
+[ok] t11f 大写「（V8 大写形态」被拦截且报 s2.anchor（r18 盲区 2 封堵）：s2.anchor 写死版本声明「V8」
+[ok] t11g 单字用例编号「r5 变异守护」被拦截且报 s2.lab（r19 盲区 1 封堵）：s2.lab 含回归用例编号「r5」——用例清单与语义只入回归源码 docstring 与回归存证，活字段只留机制指针（r18 P1-2 修复 2/r19 P1
+[ok] t11h 轮次引用「r12 期升版」0 命中（排除式放行正例——判别力双向实证）
+[ok] t11i 判别力参数化用例 17 例全过（命中 9/放行 8——r/s 守卫+连写+排除形态+[tmpan] 主分支正反例全覆盖，「例s3」汉字紧邻命中=单字 s 守卫 ASCII 口径实证）
+[ok] t10y gatea_r10 注入 round11.md 恰拦 1 项且报 gatea_r10（roundK==N 断言判别力实证——r20 P2-4 修复 3）：gatea_r10 引用 round11.md 与条目号不符——round N 报告整改落 rN 条目（r19 P2-4 修复 3）
+[ok] b 系 batch_chain 全行断言用例 5 例全过（错序/漏行/无句均 FAIL、正句与散文触发样文不误检——旧工具名相对序核验的零变异判例封堵）
+[ok] m13b display_check 真实 deck 基线：退出码 0
+[ok] m13 deck 副本 max-height 345→100px（原值 deck 解析）：display_check 打印 verdict=不足 且 rc==1（图内字号显示核算破 12 线）
+[ok] m13c deck 副本图高规则类名换（.p2fix→.p2gone 精确定位）：max-height 缺键 fail-closed verdict=不足+rc==1+「max-height 未解析到」（r17 P2-1 分支断言——确系缺键分支触发）
+[ok] m13d deck 副本基础 .g2 规则改名：列宽三要素解析失败 rc==2（stdout「解析失败：列宽三要素」——与 rc==1 语义分离对照）
+[ok] m15 deck 副本页 2 caption 示意图内容词换（原书正文→讲义正文）：display 内容词机检 verdict=不足 且 rc==1（caption↔图内容读图机检在位）
+[ok] m16 deck 副本删「Hinton 图系程序生成」kicker 申报（页 2）：display 申报机检 verdict=不足 且 rc==1
+[ok] m16b deck 副本页 2 caption 删程序生成尾注：红线 2 fail-closed verdict=不足 且 rc==1
+[ok] m17 lab 副本图内字号（fontsize 档）12→9.0：display 核算 verdict=不足 且 rc==1（lab 源码→seg min→显示核算链路实证）
+[ok] m19 lab 副本剥全部 fontsize=/labelsize=：字号常量提取空集 rc==2+stdout「解析失败：lab 源码未提取到任何 fontsize/labelsize」（提取 fail-closed 分支断言）
+[numeric] e049_book_ch5_anchors.txt 剔除括号式号 6 个: 5.58 5.58 5.58 5.58 5.58 5.58（不进测量读数存档——E042 r7 P2-4③ 剔除实证，清单打印并入 E042 r7 P2-6）
+[ok] n1 前置 1：变体机具 canary（arch_map 反查：存档叶值 -0.95 的 1 位舍入变体 -1 ∉ 原样集；原样集外变体成员 共 49 个）——舍入变体机具真实覆盖（E043 期硬编码→E044 起 canary 自校准；E048 档 canary 系 readings 叶/锚摘录数值舍入产出——具体成员以本行反查打印为准）
+[numeric] e049_book_ch5_anchors.txt 剔除括号式号 6 个: 5.58 5.58 5.58 5.58 5.58 5.58（不进测量读数存档——E042 r7 P2-4③ 剔除实证，清单打印并入 E042 r7 P2-6）
+[ok] n1 注入「零点五五」被拦截：[FAIL] 口播小数读法在权威存档中无出处（round4 P1-1 数值机检）: [('f001', '零点五五', 0.55)]——读数与存
+[lab-stdout-regression] 2 FAIL 侧 + 2 申报侧 + 4 哨兵侧 + 23 down-sha 侧 + 1 numeric 侧 + 9 display 侧 + 5 stage 门控侧 + 34 申报层扫描侧 + 1 batch_chain 侧（行为与申报一致）
+[lab-stdout-regression] 结束 2026-11-01T06:13:26（起 2026-11-01T06:13:26）

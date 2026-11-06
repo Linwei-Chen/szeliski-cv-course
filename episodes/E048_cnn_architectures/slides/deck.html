@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>架构演进史：AlexNet、VGG、GoogLeNet、ResNet 的接力</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 5 章 · 5.4.3 网络架构</div>
+  <h2>十年接力：从 AlexNet 到 ResNet</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>卷积网络上世纪九十年代末就有。</li><li>2012 年 AlexNet 点火。</li><li>错误率 25.8% → 16.4%。</li><li>四件套：dropout、增广、动量、权重衰减。</li></ul>
+      <div class="src">依据：原书第 299–300 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集路线</div><div class="kline">5.4.3：四代架构</div><div class="kline">5.4.4：工程生态</div><div class="kline">精度、深度、效率、部署</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">ILSVRC 接力 · 程序生成图</div>
+  <h2>看图：五年五棒，误差一路降</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>2013 Zeiler & Fergus 加宽，误差降约 30%。</li><li>2014 VGG 堆 3×3，16–19 层。</li><li>误差再降 40%；两层 3×3 省 28%。</li><li>代价是计算量大幅增加。</li></ul>
+      <div class="src">依据：原书第 300 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e048_fig1_relay.png" style="max-height:500px" alt="五棒接力：AlexNet→Zeiler & Fergus→VGG→GoogLeNet→ResNet，数字取自原书正文｜程序生成，未用教材或论文原图"><figcaption>五棒接力：AlexNet→Zeiler & Fergus→VGG→GoogLeNet→ResNet，数字取自原书正文｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">GoogLeNet · 效率</div>
+  <h2>效率路线：先压图，再做分支</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>主干网把 224×224 压到 28×28。</li><li>Inception：多路卷积后拼接。</li><li>1×1 瓶颈：先压通道再做卷积。</li><li>删全连接，改全局平均池化。</li></ul>
+      <div class="src">依据：原书第 300–301 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个省钱招</div><div class="kline">1×1 瓶颈：约 8.5 倍</div><div class="kline">GAP：约 49 倍</div><div class="kline">先投影再卷积：Perona 1995</div><div class="kline">性能与 VGG 相当</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">ResNet · 程序生成图</div>
+  <h2>残差块：让梯度抄近道</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>跳跃连接让信息和梯度绕路。</li><li>网络学进出激活之间的差值。</li><li>瓶颈块：1×1 → 3×3 → 1×1。</li><li>18/34/50/101/152 层；2015 五项第一。</li></ul>
+      <div class="src">依据：原书第 302–303 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e048_fig2_residual.png" style="max-height:500px" alt="残差块：basic 与 bottleneck 对照，红色弧线=skip connection｜程序生成，未用教材或论文原图"><figcaption>残差块：basic 与 bottleneck 对照，红色弧线=skip connection｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Mobile networks</div>
+  <h2>第五棒：给手机省算力</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>反向潮流：给移动设备做小网络。</li><li>MobileNets：深度可分离卷积。</li><li>宽度、分辨率两个倍率可调。</li><li>MobileNetV2 倒残差；ShuffleNet 洗牌。</li></ul>
+      <div class="src">依据：原书第 303 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">轻量化名单</div><div class="kline">MobileNetV2：倒残差</div><div class="kline">ShuffleNet：通道洗牌</div><div class="kline">ShuffleNet V2：通道拆分</div><div class="kline">ESPNet 系列也在名单里</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">5.4.4 模型动物园</div>
+  <h2>模型动物园：下载、换头、微调</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从 TorchVision 等动物园下权重。</li><li>名字出自 Caffe 主开发 Shelhamer。</li><li>主干 + 头：末尾几层叫头。</li><li>微调：用更贴近应用的数据训练。</li></ul>
+      <div class="src">依据：原书第 304–305 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">迁移学习</div><div class="kline">数据少：接线性模型</div><div class="kline">数据多：接整段网络</div><div class="kline">微调主干：学习率调小</div><div class="kline">一处预训练，搬到另一处</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">尺子与 NAS</div>
+  <h2>两个尺子，一种自动设计</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>参数量量大小，FLOPs 量计算负载。</li><li>低精度算术、权重压缩能省。</li><li>XNOR-Net：二值权重，开或关。</li><li>NAS 让算法试拓扑，省研究者时间。</li></ul>
+      <div class="src">依据：原书第 305–306 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">效率趋势</div><div class="kline">FBNet/EfficientNet/RegNet</div><div class="kline">新一代少 10× 参数</div><div class="kline">甚至能做无监督搜索</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">深度学习软件</div>
+  <h2>工具箱：框架与生态</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>十年间出现二十多个框架。</li><li>Caffe 基本被 PyTorch、TensorFlow 取代。</li><li>教材：Keras、MXNet、CS231n。</li><li>TensorBoard、Visdom、Classy Vision。</li></ul>
+      <div class="src">依据：原书第 306–307 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">训练指南</div><div class="kline">Karpathy 写了实用指南</div><div class="kline">帮你避开常见的坑</div><div class="kline">高层封装少写代码</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 作业 · 移交</div>
+  <h2>接力跑完，留下两道题</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>口算：两层 3×3 替一层 5×5，省几成？</li><li>思考：参数量之外还有什么区别？</li><li>提示：数一数激活函数出现几次。</li><li>下一集：5.4.5 可视化权重与激活。</li></ul>
+      <div class="src">依据：原书第 299–307 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">交接</div><div class="kline">AlexNet → ResNet：152 层</div><div class="kline">模型动物园与工具箱</div><div class="kline">下一集看网络内部学到什么</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

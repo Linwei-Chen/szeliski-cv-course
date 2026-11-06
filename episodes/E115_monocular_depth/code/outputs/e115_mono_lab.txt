@@ -1,0 +1,24 @@
+[lab] E115 单目深度开始 2026-11-03T05:36:08
+[lab] 源码 sha256=50111437b75cdba7227bf01fb736cc14bce513db3a5c047a43dd8b375151018d
+[lab] 320x240｜f 300｜相机高 1.5 米｜有效 0.731｜地面 22983｜墙 28445｜球 1455｜方块 3257
+[PASS] 单图与深度图尺寸正确　| (240, 320, 3)
+[PASS] 有效深度占比超过 0.7　| 0.731
+[PASS] 地面像素足够多　| 22983 像素
+[PASS] 地面先验在地面精确　| 0.000 米
+[PASS] 地面先验在后墙失效　| 37.4 米
+[PASS] 地面先验在悬浮球失效　| 60.3 米
+[PASS] 已知球半径的尺寸线索可用　| 6.97 vs 7.00 米
+[PASS] 整体放大 2 倍图像不变　| 0.0e+00
+[PASS] 整体放大 2 倍深度翻倍　| 2.0 倍
+[PASS] 相对深度顺序完全一致　| 1.000000
+[lab] 地面先验 MAE：地面 0.00｜后墙 37.4｜悬浮球 60.3｜方块 1.75
+[lab] 尺寸线索：球面积 1455 像素，r_px 21.52，Z_est 6.97 vs 中心 7.00 米
+[lab] 尺度歧义：图像最大差 0.0e+00｜深度比 2.0｜相关 1.000000｜相机高度比 2.0
+[lab] PNG sha256(e115_scale.png)=e661af1467f8763b164829efc90be118ddb4938ca565855f622767cbac90713c
+[lab] PNG sha256(e115_scene.png)=df3e6e78147f0a0997f7b816daa8dad85509edea1bdab4e0091cf4d6b93d9f6d
+[lab] PNG sha256(e115_shortcut.png)=5dd7d986dba4f9788e43c2d7121071e618fdfeee025c2cccdacbc8c4f6a92c50
+[lab] readings → e115_mono_readings.json
+[lab] readings sha256=40a383c485d84f1ff80469aecd90732462fb3db748ee18be8ee5784817d22d82
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T05:36:08

@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>习题课：识别章精选题目精讲（含延伸阅读导读）</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 章末收尾</div>
+  <h2>先看地图，再做题目</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>识别章已走完：分类、人脸、检测、分割。</li><li>章末还有视频、语言、阅读指南和习题。</li><li>这一集：一张阅读地图，十三道题。</li><li>地图管方向，题目管检验。</li></ul>
+      <div class="src">依据：原书第 409–416 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集两件事</div><div class="kline">阅读指南：按主题排代表工作</div><div class="kline">习题：从预训练网络到整部电影</div><div class="kline">先读什么、会不会用，一起收尾</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章末阅读 · 指南总览</div>
+  <h2>教材给基础，教程给进展</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>没有最新的专门教材或综述。</li><li>老综述讲深度学习之前的路子。</li><li>最新材料看 ICCV、CVPR、ECCV 教程。</li><li>排行榜数据集也是找新论文的入口。</li></ul>
+      <div class="src">依据：原书第 409 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">阅读策略</div><div class="kline">综述与文集：补历史</div><div class="kline">大会教程：补现在</div><div class="kline">排行榜：顺着新论文走</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章末阅读 · 实例识别与检索</div>
+  <h2>从认物体到找同款</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>实例识别：静态人造物体，姿态会变。</li><li>方法：二维兴趣点加视角不变描述子。</li><li>实例检索：基于内容的图像检索。</li><li>下一章 7.1.4 节接着讲；也连着视觉相似搜索。</li></ul>
+      <div class="src">依据：原书第 409–410 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e064_reading_map.png" style="max-height:500px" alt="六条阅读线：实例识别与检索、特征法分类、AlexNet 与人脸、检测、分割、视频与语言；下一步第 7 章特征点｜程序生成，未用教材或论文原图"><figcaption>六条阅读线：实例识别与检索、特征法分类、AlexNet 与人脸、检测、分割、视频与语言；下一步第 7 章特征点｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章末阅读 · 特征法分类</div>
+  <h2>局部、部件、场景三层证据</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>词袋、关键点，或轮廓与形状上下文。</li><li>部件分解让模型对关节和姿态更稳。</li><li>图模型：树、星形、k 扇、星座。</li><li>场景上下文、机器学习、大规模标注库。</li></ul>
+      <div class="src">依据：原书第 410 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三层证据</div><div class="kline">局部：这一块像什么</div><div class="kline">部件：怎么摆</div><div class="kline">场景：整幅合不合理</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章末阅读 · AlexNet 与人脸</div>
+  <h2>手工特征退场，深度网络登场</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>AlexNet 2012 把重心转向深度网络。</li><li>更深网络、更好训练、更大无标注数据。</li><li>人脸：特征距离 → 子空间 → 形状模型。</li><li>转向深度后，形状模型做正面化，也用数据增强。</li></ul>
+      <div class="src">依据：原书第 410–411 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">人脸三代方法</div><div class="kline">早期：比特征距离</div><div class="kline">中期：低维子空间投影</div><div class="kline">后期：ASM / 3DMM / AAM</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章末阅读 · 检测史</div>
+  <h2>从专门类别到通用检测器</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>整图分类之后，转向多物体检测。</li><li>早期按人脸、行人、汽车分别研究。</li><li>两阶段：区域提议加多路分类器。</li><li>单阶段：SSD、RetinaNet、YOLO。</li></ul>
+      <div class="src">依据：原书第 411–412 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">两阶段：R-CNN / Fast / Faster / FPN</div><div class="kline">单阶段：一次输出多个位置</div><div class="kline">两阶段先找候选，单阶段边看边报</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章末阅读 · 分割回顾</div>
+  <h2>语义铺满，实例数清，全景都要</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>语义：这是什么材质。</li><li>实例：这是哪一个可数物体。</li><li>全景：材质还是物体，都要标。</li><li>Mask R-CNN：检测器加逐物体分割。</li></ul>
+      <div class="src">依据：原书第 412 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">分割路线</div><div class="kline">早期：预分割匹配、条件随机场</div><div class="kline">现代：金字塔全卷积</div><div class="kline">实例：检测器 + 逐物体分割</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章末阅读 · 视频与语言</div>
+  <h2>用一句短话说清一段视频</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>动作识别研究追到 1990 年代。</li><li>这十年转用深度网络。</li><li>完整句描述在 2010 年代初升温。</li><li>再往后是视觉问答与视觉对话。</li></ul>
+      <div class="src">依据：原书第 412–413 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">视频到语言</div><div class="kline">动作识别：先看有没有动</div><div class="kline">图像描述：把画面写成句子</div><div class="kline">VQA：指着画面提问</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">习题课 · 十三题总览</div>
+  <h2>诊断、训练、任务、分析</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6.1–6.2：预训练找错，再重训练。</li><li>6.3–6.6：扰动、归一化、分割、编码。</li><li>6.7–6.9：检测器、标签与描述、分布漂移。</li><li>6.10–6.13：自监督、跟踪、冻结浅层、整部电影。</li></ul>
+      <div class="src">依据：原书第 413–415 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e064_exercise_matrix.png" style="max-height:500px" alt="十三道习题矩阵：诊断/训练/任务/分析四类；6.1–6.13 逐题归位｜程序生成，未用教材或论文原图"><figcaption>十三道习题矩阵：诊断/训练/任务/分析四类；6.1–6.13 逐题归位｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">习题课 · 第 6.1 题</div>
+  <h2>先看怎么错：混淆矩阵</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>找一个预训练网络，分类或分割都行。</li><li>看它最常犯哪几类错误。</li><li>混淆矩阵：哪些类别被认成哪些。</li><li>换自己的数据：网页搜的或手机相册。</li></ul>
+      <div class="src">依据：原书第 413 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">6.1 做法</div><div class="kline">预训练网络：分类/分割/人脸/行人</div><div class="kline">混淆矩阵：行真实、列预测</div><div class="kline">Detectron2 + Colab 改图片地址</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">习题课 · 第 6.2 题</div>
+  <h2>再动手：重训练与自建数据</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>拿原数据重训练，改层数、通道、参数。</li><li>也可以加样本，看能不能更合意。</li><li>在线教程教从头训练；也可自建数据集。</li><li>最后写下训练过程、坑和发现。</li></ul>
+      <div class="src">依据：原书第 414 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">6.2 关键</div><div class="kline">自建数据：网页搜索 + 标注</div><div class="kline">低成本做法：信搜索结果当标签</div><div class="kline">Russakovsky、Kovashka 讨论过标注难度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">习题课 · 第 6.3+6.4 题</div>
+  <h2>训练细节：扰动与归一化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6.3：左上角贴按类唯一的颜色方块。</li><li>用 ResNet、EfficientNet 或 ViT 从零训练。</li><li>看是否只认颜色；评估时对抗换色。</li><li>6.4：ViT 去掉中间层归一化，比较损失地形。</li></ul>
+      <div class="src">依据：原书第 414 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两道题问什么</div><div class="kline">6.3：模型有没有偷懒</div><div class="kline">6.4：归一化帮了什么忙</div><div class="kline">都把训练里的隐形假设翻出来</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">习题课 · 第 6.5+6.6 题</div>
+  <h2>任务与表示：分割互转，编码升级</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6.5：三种分割的区别。</li><li>再想：每种能否后处理成另外两种。</li><li>6.6：类别用 one-hot，再过嵌入矩阵。</li><li>比较向量嵌入与 one-hot 的优劣。</li></ul>
+      <div class="src">依据：原书第 414–415 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两题考什么</div><div class="kline">6.5：任务边界能不能互转</div><div class="kline">6.6：表示为什么重要</div><div class="kline">表示决定模型能学到什么</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">习题课 · 第 6.7–6.9 题</div>
+  <h2>对比与漂移：代价、监督、泛化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6.7：DETR、Faster-RCNN、YOLOv4 参数量。</li><li>在 MS COCO 上训练，比较速度与单图推理。</li><li>6.8：类别标签与自然语言描述的差异。</li><li>6.9：ImageNet 预训练，零微调评 ImageNet Sketch。</li></ul>
+      <div class="src">依据：原书第 415 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三题各自问</div><div class="kline">工程代价：参数量与速度</div><div class="kline">监督信号：标签能问多细</div><div class="kline">泛化边界：出了训练集还灵不灵</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">习题课 · 第 6.10–6.12 题</div>
+  <h2>自监督与迁移：别从零开始</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6.10：静态图、视频、视觉-语言的自监督任务。</li><li>6.11：跟踪比逐帧独立预测好在哪里。</li><li>6.12：分类骨干改 YOLO，微调新头。</li><li>再想：为什么值得冻结浅层。</li></ul>
+      <div class="src">依据：原书第 415 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三题一条线</div><div class="kline">标签从哪来</div><div class="kline">时间上要不要记住</div><div class="kline">哪些知识可以复用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">习题课 · 第 6.13 题与小结</div>
+  <h2>从分类到语言，再交棒特征点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6.13：整部电影的长序列要改什么。</li><li>十三道题都能落回本章的一个方法。</li><li>本章路线：分类→人脸→检测→分割→视频→语言。</li><li>下一章：两张图的同一个点怎么找、怎么对。</li></ul>
+      <div class="src">依据：原书第 409–416 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e064_chapter_recap.png" style="max-height:500px" alt="第 6 章一条线：分类→检测→分割→视频→语言→第 7 章特征点｜程序生成，未用教材或论文原图"><figcaption>第 6 章一条线：分类→检测→分割→视频→语言→第 7 章特征点｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十六集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

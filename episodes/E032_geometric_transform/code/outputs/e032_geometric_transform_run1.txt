@@ -1,0 +1,77 @@
+口径注记（七项，与 refs 逐字同步；本 stdout 标头=权威存档标头）：
+· 变换族实现：原书 Table 3.3 只给矩阵形式与 DoF/保性质清单，未给具体矩阵数值——实验用标准构造（R(θ)、sR、一般仿射 A、射影 H̃），性质断言用几何检验（保平行=两条平行线映后方向叉积为 0、保直线=线上三点映后共线、保长度=两点距离不变），不作特定矩阵数值断言。
+· forward/inverse 口径：最近邻 forward 的「洞」=输出网格中无任何源像素写入的位置；splatting=双线性权重摊给四邻+逐像素累积+末尾归一（原书 L139–146 语义）；洞计数只对放大 1.5× 断言相对关系（2× 整数倍缩放下 splatting 的分数权重恒为 0、退化为最近邻，不具区分力——口径申报）；模糊对照=splatting 与逆向双线性在共同有效区内对解析连续图的 RMSE 比较（原书「moderate aliasing and blur」语义）。
+· 插值质量口径：bicubic 用 Keys 四点立方（a=−0.5，E029 Table 3.2 同族参数化）；误差对解析连续图（正弦条纹+圆盘）计算，断言三插值器误差排序相对关系。
+· MIP-map 层号口径：(3.77) 断言只对 r=2^k 与 r=2^(k+f) 的层号/层间权重复算；trilinear 权重=(1−frac, frac)——原书 L263–278 文字语义，未给实现细节。
+· Beier–Neely 口径：原书只给距离权重语义（u∈[0,1] 内用垂距 v，否则取到 P/Q 的较短距离，L425–426）与「线段对应=similarity 变换」（L422–424），未给权重公式常数（a、b）——实验只做单线段距离场语义断言（对称/延长线/垂距最短），不实现完整 morphing 算法。
+· morph 口径：对应特征位置由程序形状解析已知（椭圆中心），中间帧把两图 warp 到同一插值位置 M_t=(1−t)A+tB 后加权——原书 L440–447+L459–463 文字语义；「重影」量化=中间帧灰度介于 0.3–0.7 的像素数（过渡带宽度）。
+· 边界处理：变换后超界像素外圈置零——原书未给边界处理（申报在案）。
+
+#1 参数化变换族（Table 3.3 语义：DoF+保性质几何检验）
+  [读数] 变换参数: theta=30°, s=1.5, A=[[1.2,0.4],[0.1,0.9]], H 第三行=[0.006,0.003,1], t=[6.0, 4.0]
+  [读数] rigid 保长度: 原始 15.524175 vs 旋转后 15.524175
+  [PASS] 1-1 rigid(Euclidean) 保两点距离（3 DoF 语义）
+  [读数] similarity 保角度: 原始 58.369339° vs 相似变换后 58.369339°
+  [PASS] 1-2 similarity 保两向量夹角（4 DoF 语义）
+  [读数] affine 保平行: 映前方向叉积 0.0 → 映后方向叉积 0.00e+00（≈0 ⇒ 仍平行）；映后两线错开 9.8489（未重合）
+  [PASS] 1-3 affine 保平行（6 DoF 语义：映前平行两线映后方向叉积=0 且两线不重合）  叉积 0.0→0.00e+00
+  [PASS] 1-3b affine 映后两边线性无关（平行四边形未退化成一条线）  叉积 312.0000
+  [读数] projective 平行线斜率: l1 斜率 -0.0588 vs l2 斜率 -0.1152（不等⇒将相交）
+  [读数] projective 保直线: l1 上三点映后共线叉积 4.263e-14（≈0 ⇒ 三点仍共线，仍是直线）
+  [PASS] 1-4 projective 保直线（线上三点映后共线，叉积≈0）  叉积 4.26e-14
+  [PASS] 1-4b projective 不保平行（两水平线映后斜率不再相等，将相交）  -0.0588 vs -0.1152
+  [读数] Table 3.3 DoF 层级: {'translation': 2, 'rigid': 3, 'similarity': 4, 'affine': 6, 'projective': 8}
+  [PASS] 1-5 Table 3.3 层级 2/3/4/6/8 DoF（语义重绘依据，原书表未使用）
+
+#2 forward vs inverse warping（放大 1.5×，无旋转）
+  [读数] forward 最近邻洞数: 1185 / 2209（53.6%）
+  [PASS] 2-1 forward 最近邻放大产生洞（Figure 3.45 语义：洞>0）  1185
+  [读数] forward splatting 洞数: 0 / 2209（权重归一后仍无值的位置）
+  [PASS] 2-2 splatting 洞显著少于最近邻（填洞效果；原书「moderate aliasing and blur」语义）  0 < 1185
+  [读数] inverse 洞数: 0 / 2209
+  [PASS] 2-3 inverse warping 无洞（Figure 3.46 语义：放大时 ĥ 处处有定义）  0
+  [读数] inverse 双线性 vs 解析式: max err（连续条纹内区，排除圆盘膨胀带 295 px）=0.015966
+  [PASS] 2-4 inverse 双线性与解析连续图一致（连续区，避开边缘 clip 与圆盘间断）  0.0160
+  [读数] splatting vs 逆向双线性（共同有效区 RMSE，模糊语义）: splatting 0.0381 vs 逆向双线性 0.0064
+  [PASS] 2-5 splatting 比逆向双线性更糊（共同有效区对解析图 RMSE 更大；原书「moderate aliasing and blur」）  0.0381 > 0.0064
+
+#3 旋转 45°：最近邻/双线性/双三次插值质量
+  [读数] 旋转 45° RMSE: nearest 0.0504 / bilinear 0.0253 / bicubic 0.0247
+  [PASS] 3-1 插值质量排序：bicubic < bilinear < nearest RMSE（E029 频域结论的空间域复现）  0.0247 < 0.0253 < 0.0504
+
+#4 MIP-map 层号与 trilinear 权重（(3.77) 复算）
+  [PASS] 4-1 log2(1)=0  l=0.0
+  [PASS] 4-2 log2(2)=1  l=1.0
+  [PASS] 4-4 log2(4)=2  l=2.0
+  [PASS] 4-8 log2(8)=3  l=3.0
+  [读数] log2(6): l=2.584963 → 第 2 层权重 0.4150 + 第 3 层权重 0.5850（trilinear）
+  [PASS] 4-5 r=6 → l≈2.585：trilinear 在第 2/3 层间插值（(3.77)+线性混合语义）  l=2.5850
+
+#5 Beier–Neely 线段距离场（单线段，Figure 3.50a 语义）
+  [读数] 线段参数: P=[20.0, 48.0], Q=[76.0, 48.0]（96×96 画布，水平线段 y=48）
+  [读数] 线段上方/下方对称性: dist(48,24)=24.0000 vs dist(48,72)=24.0000
+  [PASS] 5-1 线段距离场沿线上下对称（到线段最小距离语义）
+  [PASS] 5-2 延长线上的点取到端点距离而非垂距（u<0 用 P 距离语义：dist(10,48)=10 而非 0）  dist=10.0000
+  [PASS] 5-3 u∈[0,1] 段内距离=垂距、与 x 无关（恒等于 |y−48|=24；若误用到 P 距离会得 36.9@x=48）  x=30..60 全段 24.0000…24.0000，对照到 P 距离 36.8782
+
+#6 morph vs cross-dissolve（Figure 3.51 语义）
+  [读数] morph 参数: t=0.5，A 特征平移 +32·t、B 特征平移 −32·t（半程对齐到 x=48）
+  [读数] t=0.5 中间灰度像素数（重影带宽度）: dissolve 1490 vs morph 488
+  [PASS] 6-1 morph 中间帧重影带显著窄于纯 dissolve（Figure 3.51 顶/底行语义）  488 < 1490
+  [读数] t=0.5 两 warp 形状重叠: overlap sum=501 vs A 面积 745
+  [PASS] 6-2 warp 半程后两形状中心重合、重叠超过 A 面积一半（特征对齐→重影消除机制）  501 > 372
+
+区分力注入
+  [PASS] D1 注入：把 similarity 当 rigid 检验（保长度）应 FAIL（s=2 时距离×2）  err=15.5242
+  [PASS] D2 注入：把 dissolve 当 morph 检验（重影带应收窄）应 FAIL（dissolve 带不窄于 morph 带）  1490 ≥ 488
+  [PASS] D3 注入：把 nearest 当最优插值应 FAIL（RMSE 比 bicubic 高）  0.0504 > 0.0247
+
+图件生成
+  e032_transforms.png
+  e032_warping.png
+  e032_resampling.png
+  e032_morph.png
+  4 张图已同步 code/outputs/
+
+汇总：26 条 PASS / 0 条 FAIL
+DONE

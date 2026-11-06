@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>参数不确定度：协方差告诉我们「有多确定」</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">不确定度</div>
+  <h2>答案算出来了，它有多确定</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>换一批数据重跑，答案会晃；这个晃法叫协方差。</li><li>书上第 952 页：很多应用要估不确定度。</li><li>最一般的完整概率分布通常算不动。</li><li>线性高斯：后验是多维高斯，协方差=噪声加权海塞的逆。</li></ul>
+      <div class="src">依据：原书第 952 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三步</div><div class="kline">一算：线性高斯特例</div><div class="kline">二验：±2σ 带覆盖率</div><div class="kline">三看：算不动怎么办</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十二集</span><span>01 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">式 B.19</div>
+  <h2>一条式子，报出误差棒</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 945 页：B.19 用测量矩阵和测量噪声算协方差。</li><li>转置、乘测量协方差的逆、再乘测量矩阵，求和取逆。</li><li>直线拟合的测量矩阵只有一行：横坐标 x 和 1。</li><li>本集 15 票集：m=0.54、b=0.96，σ_m≈0.03、σ_b≈0.07。</li></ul>
+      <div class="src">依据：原书第 945/952 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e040_band.png" style="max-height:500px" alt="±2σ 预测带：参数带宽 2σ_m=0.06 / 2σ_b=0.14｜程序生成，未用教材或论文原图"><figcaption>±2σ 预测带：参数带宽 2σ_m=0.06 / 2σ_b=0.14｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十二集</span><span>02 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">覆盖率</div>
+  <h2>四百次重抽，九成五罩得住</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>固定 16 个内点的横坐标，只重抽噪声，跑 400 次。</li><li>判据带宽按同一布局现算；外点不进实验。</li><li>斜率落带内 379 次，截距 382 次，约九成五。</li><li>完整协方差可能太大：只报方差、个别参数，或用特征值分析找主方向。</li></ul>
+      <div class="src">依据：原书第 952 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e040_cover.png" style="max-height:500px" alt="400 次重抽：落带内 379/382（94.8% / 95.5%）｜程序生成，未用教材或论文原图"><figcaption>400 次重抽：落带内 379/382（94.8% / 95.5%）｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十二集</span><span>03 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">主方向与下界</div>
+  <h2>晃向哪里，噪声估得准吗</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最大特征值方向与绕质心转线方向，夹角余弦 0.99。</li><li>非线性时，最优解附近估海塞，克拉默-拉奥下界取它的逆。</li><li>带宽不会比局部二次近似更小；实际只会一样或更晃。</li><li>外点不改 B.19 公式，只污染噪声估计：残差 std 0.43、MAD×1.4 0.28、真值 0.15。</li></ul>
+      <div class="src">依据：原书第 952 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e040_sigma_estimates.png" style="max-height:500px" alt="σ 三估计：OLS 0.43 / MAD×1.4 0.28 / 真 0.15｜程序生成，未用教材或论文原图"><figcaption>σ 三估计：OLS 0.43 / MAD×1.4 0.28 / 真 0.15｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十二集</span><span>04 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">谁在用</div>
+  <h2>谁在算，算来做什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 952 页：很多应用不算不确定度，但算一算能知道估计有多可靠。</li><li>卡尔曼滤波必须算：新旧估计融合靠它。</li><li>脚注：经典摄影测量里，报告精度几乎总被视为必须。</li><li>作业两道：造已知真值数据复算覆盖率；把 σ 换成 MAD×1.4 再算带宽。</li></ul>
+      <div class="src">依据：原书第 952 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">作业两道</div><div class="kline">一：已知真值，复算 ±2σ 覆盖率</div><div class="kline">二：σ 换 MAD×1.4，看带宽变化</div><div class="kline">对照：九成五</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十二集</span><span>05 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束</div>
+  <h2>有多确定，有式可报</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>估计值旁边要配一句：有多确定。</li><li>线性高斯：协方差=噪声加权海塞的逆；±2σ 带实测罩住九成五。</li><li>非线性：最优解附近海塞的逆，是不确定度的下界。</li><li>下一集：测量非线性时，方程组用非线性最小二乘迭代着解。</li></ul>
+      <div class="src">依据：原书第 952/945 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">报不确定度</div><div class="kline">线性高斯取海塞逆</div><div class="kline">非线性取下界</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十二集</span><span>06 / 6</span></div>
+</section>
+<div id="subbar"></div></body></html>

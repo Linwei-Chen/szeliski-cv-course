@@ -1,0 +1,19 @@
+[verify] 演示一 采样同一性 max|s1-s2| = 1.96e-15 （应为 0 量级）
+[verify] 演示一 H(0.75)=+0.3001（图注 30%）、H(1.25)=-0.1801（图注 -18%）
+[verify] 演示一 数值盒平均后 max|y2+0.6*y1| = 2.17e-04（倒相比例 -0.6）
+[verify] 演示二 右半区假纹振荡幅度：25%盒 0.354 / 100%盒 0.068 / 9-tap 0.0100
+[verify] 演示三 box-3     幅值谱 vs |闭式| 最大偏差 = 3.75e-16，虚部 max 5.6e-17（对称核：实响应）
+[verify] 演示三 box-5     幅值谱 vs |闭式| 最大偏差 = 6.66e-16，虚部 max 6.9e-17（对称核：实响应）
+[verify] 演示三 linear    幅值谱 vs |闭式| 最大偏差 = 3.33e-16，虚部 max 4.2e-17（对称核：实响应）
+[verify] 演示三 binomial  幅值谱 vs |闭式| 最大偏差 = 4.44e-16，虚部 max 4.6e-17（对称核：实响应）
+[verify] 演示三 Sobel     幅值谱 vs |闭式| 最大偏差 = 5.55e-16
+[verify] 演示三 corner    幅值谱 vs |闭式| 最大偏差 = 2.78e-16，虚部 max 4.2e-17（对称核：实响应）
+[verify] 演示三 四个平滑核 H(0) = ['1.000', '1.000', '1.000', '1.000']（应全为 1）
+[verify] 演示四 L= 2 级：图像唯一灰阶级数 = 2
+[verify] 演示四 L= 4 级：图像唯一灰阶级数 = 4
+[verify] 演示四 L= 8 级：图像唯一灰阶级数 = 8
+[verify] 演示四 L=16 级：图像唯一灰阶级数 = 16
+[verify] 演示五 DCT 矩阵正交性 max|CC^T−I| = 1.40e-15
+[verify] 演示五 全 64 系数重构 RMSE = 1.16e-15（应≈0）
+[verify] 演示五 每 8×8 块保留 16/6/3 系数：RMSE = 0.029/0.043/0.051
+DONE -> /Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E008_sampling_quantization/code/outputs

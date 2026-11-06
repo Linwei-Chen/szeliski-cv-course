@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>站在两幅图像之间：视图插值的原理</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">视图插值 · 最小问题</div>
+  <h2>两幅图之间，算出中间视角</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左右两幅参考图，各配一张深度图。</li><li>视图插值做几何 warp 加图像合并。</li><li>先把像素按深度搬到新位置，再合并。</li><li>这一集只算两幅图之间的虚拟视角。</li></ul>
+      <div class="src">依据：原书第 863–866 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三件事</div><div class="kline">参考图：给颜色</div><div class="kline">深度图：给每个像素的距离</div><div class="kline">相机位姿：给从哪儿看</div><div class="kline">本集数字来自二维合成实验</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 863–864 页 · 三件套</div>
+  <h2>三件套：参考图、深度、位姿</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 863 页：一对参考图加预计算深度图。</li><li>书上第 864 页：两幅渲染图加深度图生成中间视角。</li><li>参考图给颜色，深度图给距离，位姿定位相机。</li><li>三样里深度图最难，误差会变成 warp 误差。</li></ul>
+      <div class="src">依据：原书第 863–864 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">缺一不可</div><div class="kline">没有深度：只能做二维变形</div><div class="kline">没有位姿：不知道该往哪挪</div><div class="kline">三样齐了：才有几何正确的中间视角</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 864 页 · 前向 warp</div>
+  <h2>前向 warp：像素搬到哪里</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>用参考相机和虚拟相机的位姿，加深度图。</li><li>视差和深度成反比，近处挪得多。</li><li>合成场景前景视差 20 像素，背景 5 像素。</li><li>搬完会出现重叠和空洞。</li></ul>
+      <div class="src">依据：原书第 864 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">x′ = x + (t_virt − t_src) × K / Z</div><div class="mnote">K：焦距与基线合成的常数；Z：深度；视差单位是像素</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 864 页 · 遮挡竞争</div>
+  <h2>z-buffer：谁挡住谁</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>多个像素可能落到同一个目标像素。</li><li>用 z-buffer 记深度，或从后往前画。</li><li>没有深度竞争，后画的背景会盖掉前景。</li><li>无 z-buffer 版本，前景保留只剩 0.381。</li></ul>
+      <div class="src">依据：原书第 864 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种等价写法</div><div class="kline">z-buffer：每像素只留最近深度</div><div class="kline">从后往前画：近处最后覆盖</div><div class="kline">先画远再画近，结果一致</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 左中右</div>
+  <h2>看图：中间那张是算出来的</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左参考、插值中点、右参考，同一尺度。</li><li>中点不是左右平均，是逐像素搬过去再合并。</li><li>z-buffer 版本 PSNR 34.52 分贝。</li><li>前景保留 1.000。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e129_views.png" style="max-height:500px" alt="左参考 / 插值中点 / 右参考｜程序生成，未用教材或论文原图"><figcaption>左参考 / 插值中点 / 右参考｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 865 页 · 补洞</div>
+  <h2>空洞与基线：越宽洞越大</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一幅图有洞，用另一幅图补。</li><li>两幅都有值，按到两个源相机的距离混合。</li><li>基线越宽，前景和背景错开越多。</li><li>单图空洞从 225 涨到 1082 像素。</li></ul>
+      <div class="src">依据：原书第 865 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">补洞的两条规则</div><div class="kline">一幅有洞：用另一幅补</div><div class="kline">两幅都有值：按相对距离混合</div><div class="kline">补出来的区域不是新观测</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 基线 vs 空洞</div>
+  <h2>看图：洞在前景边缘</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>横轴基线，纵轴单图空洞像素数。</li><li>0.25 时 225，1.0 时 1082，单调上升。</li><li>窄基线是一条细月牙，宽基线是大月牙。</li><li>洞都在前景边缘。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e129_baseline.png" style="max-height:500px" alt="基线 vs 单图空洞 + 窄/宽基线掩码｜程序生成，未用教材或论文原图"><figcaption>基线 vs 单图空洞 + 窄/宽基线掩码｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 865 页 · 合并与曝光</div>
+  <h2>合并：洞和接缝</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 865 页：洞用另一幅补，都有值按距离混合。</li><li>曝光差太大，补洞区和混合区会不一致。</li><li>左图亮度乘 1.12，PSNR 34.52 掉到 27.25。</li><li>下降 7.27 分贝，接缝肉眼可见。</li></ul>
+      <div class="src">依据：原书第 865 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">几何之后是颜色</div><div class="kline">几何对齐：第一步</div><div class="kline">颜色一致：第二步</div><div class="kline">曝光和白平衡校正不能省</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · z-buffer</div>
+  <h2>看图：没有深度竞争，前景被吃掉</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>有 z-buffer、无 z-buffer、目标视图三张并排。</li><li>无 z-buffer 前景保留 0.381，PSNR 26.01。</li><li>背景把圆盘切成两块。</li><li>z-buffer 用深度决定谁覆盖谁。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e129_zbuffer.png" style="max-height:500px" alt="有 z-buffer / 无 z-buffer / 目标视图｜程序生成，未用教材或论文原图"><figcaption>有 z-buffer / 无 z-buffer / 目标视图｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 865 页 · 刚性/非刚性</div>
+  <h2>真实图像还有哪些坑</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>刚性场景的锯齿可用两遍前向-后向算法改善。</li><li>非刚性场景可以用 view morphing。</li><li>真实图像还有曝光、裂缝、遮挡边界、非刚性形变。</li><li>本集合成场景只覆盖前两个。</li></ul>
+      <div class="src">依据：原书第 865 页；本集实验边界</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先分场景，再选方法</div><div class="kline">刚性场景：几何 warp</div><div class="kline">非刚性场景：view morphing</div><div class="kline">完整系统：多视角重建</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 865–866 页 · 视角相关纹理</div>
+  <h2>视角相关纹理：一个模型，多幅图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不给每幅图单独配深度，建一个 3D 模型。</li><li>按虚拟相机位置选不同源图。</li><li>按虚拟视角和源视角的夹角倒数加权。</li><li>源视角 −40°、0°、35°，虚拟 10°，权重 0.132/0.610/0.258。</li></ul>
+      <div class="src">依据：原书第 865–866 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">夹角越小，权重越大</div><div class="kline">源视角：−40°、0°、35°</div><div class="kline">虚拟视角：10°</div><div class="kline">归一化权重：0.132、0.610、0.258</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 下一集光场</div>
+  <h2>总结：warp、z-buffer、blend</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视图插值等于深度图 warp 加 morphing。</li><li>z-buffer 决定遮挡，补洞和混合决定洞和接缝。</li><li>基线越宽洞越大，曝光差会留接缝。</li><li>下一集：从两幅图之间走向四维光场。</li></ul>
+      <div class="src">依据：原书第 863–866 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个词</div><div class="kline">warp：按深度搬像素</div><div class="kline">z-buffer：决定谁挡住谁</div><div class="kline">blend：补洞与混合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十一集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,23 @@
+[lab] E120 表面重建开始 2026-11-03T07:25:51
+[lab] 源码 sha256=cedeabe08c6f405e1c2bffb8e000cc2fe4eea6cbe777637715bde3c2b9caf9cf
+[lab] 边界：合成球；Poisson 为 2D 切片演示，完整 3D 重建是工程实现
+[PASS] SDF 符号：球心为负、远处为正 | -0.956 / 1.078
+[PASS] N=64 球面半径误差 <0.001 | 0.000060
+[PASS] N=96 半径误差小于 N=48 | 0.000027 < 0.000107
+[PASS] N=96 三角面数 >4×N=48 | 59036 vs 14492
+[PASS] N=96 网格体积误差 <0.1% | -0.038%
+[PASS] 等值面 +0.1：半径外移约 0.1 | 1.1000
+[PASS] Poisson 恢复半径误差 <0.005 | 0.000884
+[PASS] Poisson 误差小于带噪场 | 0.000884 < 0.037731
+[PASS] 错误边界（全零）抹掉零等值面 | 轮廓 0 条
+[PASS] 一半法向翻转：零等值面消失 | 轮廓 0 条
+[lab] MC：48 14492 面/0.000107；64 25964 面/0.000060；96 59036 面/0.000027
+[lab] 体积误差 -0.038%｜等值面 +0.1 半径 1.1000
+[lab] Poisson：真值半径 1.0000｜恢复 0.9991｜带噪 1.0377｜零边界 0 轮廓｜半翻 0 轮廓
+[lab] PNG sha256(e120_representations.png)=c0c49ddcc143e3dc3514ba8fbafeb369b02563fdcb6257ede93d7a9a91150d27
+[lab] PNG sha256(e120_mc.png)=9124efb6dcc5a1a4e81ec88bc67e374174faa1f2f4549a6d8dfcf695487b0992
+[lab] PNG sha256(e120_poisson.png)=9e494f6a6aed82783cc939bbfc6d0795e26555c90af21d0aac11f64bc9905907
+[lab] readings sha256=0a3c2268b31c62a5fd02b793d90599dd0b58d65449f92f66d221d858e3704d93
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T07:25:52

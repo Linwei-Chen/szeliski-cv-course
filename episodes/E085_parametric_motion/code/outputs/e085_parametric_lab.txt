@@ -1,0 +1,20 @@
+[lab] E085 参数运动/样条 开始 2026-11-02T18:29:30
+[lab] 源码 sha256=c7e28e0b81abe4e8a291d4bd5ff276abddb390e4d036212a3078fb58f47e62fb
+[PASS] 粗层残差大降且参数可用　| RMSE 0.110→0.0119（9.2×），参数误差 0.00424
+[PASS] 全分辨率恢复参数　| max|p̂−p|=0.00015
+[PASS] 解析雅可比=有限差分　| rel=1.60e-10
+[PASS] Hessian 正定　| λmin=3.788
+[PASS] 分块 Hessian 近似可用　| rel(24)=0.067
+[PASS] 分块 GN 仍能恢复参数　| max|p̂−p|=0.00070
+[PASS] 分块大幅省外积　| 6×6 外积成本比=0.1127，约 8.875× 省
+[PASS] 样条重建精确　| RMSE=1.05e-14px
+[PASS] 正则化压低粗糙度　| 粗糙度比=0.00522
+[PASS] 正则化拟合误差仅小增　| 数据误差比=1.100
+[lab] PNG sha256(e085_jacobian.png)=36e0cceefa0ad59f0d59ad7a8d7e623d8c6f4957841b4a1570fa3925572ba83b
+[lab] PNG sha256(e085_models.png)=b9f1f1693a8096aa0c5c7b7b94a2629abb1d2d23cd74d3ac3605cd08d20cc38b
+[lab] PNG sha256(e085_spline.png)=98054b6401032e1aada3d4a466192d78846a6306760545de6909b0c68bfbd5b4
+[lab] readings → e085_parametric_readings.json
+[lab] readings sha256=c9666e22fa164e34a657d38247e3cade43990aa6cda9345f5d3bc5d8e32ec614
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T18:29:31

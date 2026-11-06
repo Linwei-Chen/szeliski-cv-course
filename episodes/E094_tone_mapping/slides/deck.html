@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>明明白白压回来：色调映射 Tone Mapping</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 色调映射</div>
+  <h2>把大范围压回屏幕</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>辐亮度图要显示在 8 位屏幕上。</li><li>色调映射把大范围压回可显示范围。</li><li>压得太狠会发灰，压得太浅高光白掉。</li><li>同一张 HDR 可以映射出很多风格。</li></ul>
+      <div class="src">依据：原书第 627 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">要做的取舍</div><div class="kline">保哪些亮部</div><div class="kline">让哪些暗部</div><div class="kline">屏幕只有一个全局范围</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>01 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">HDR 格式</div>
+  <h2>浮点才存得下高光</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不差空间就用 32 位浮点 RGB。</li><li>PPM 可扩成 PFM，TIFF 也支持浮点。</li><li>Radiance 的 .hdr 用公共指数加尾数。</li><li>OpenEXR 用 16 位浮点，JPEG XR 更新。</li></ul>
+      <div class="src">依据：原书第 627 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">格式决定上限</div><div class="kline">8 位 PNG/JPEG 存显示值</div><div class="kline">超过 1 的亮度要浮点</div><div class="kline">中间结果尽量保浮点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>02 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">两类方法</div>
+  <h2>全局曲线，还是局部算子</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一类是空间变化的传递函数。</li><li>一类是压缩图像梯度再重建。</li><li>全局曲线是最简单的特例。</li><li>全局快而稳，局部保细节但更敏感。</li></ul>
+      <div class="src">依据：原书第 627 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么选</div><div class="kline">保细节</div><div class="kline">保全局对比</div><div class="kline">局部更容易出伪影</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>03 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全局曲线</div>
+  <h2>先压亮度，再带回颜色</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>全局传递曲线用 gamma 映回显示域。</li><li>逐通道 gamma 会让颜色变淡。</li><li>先映射亮度，再按比例带回颜色。</li><li>线性裁切窗外全白，亮度路线还有颜色。</li></ul>
+      <div class="src">依据：原书第 627 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e094_global.png" style="width:110%; margin-left:-5%; max-height:440px" alt="线性裁切、逐通道、亮度路线：平均饱和 0.15 vs 0.28｜程序生成，未用教材或论文原图"><figcaption>线性裁切、逐通道、亮度路线：平均饱和 0.15 vs 0.28｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>04 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">base 与 detail</div>
+  <h2>拆成亮度和纹理两层</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图像拆成亮度和色度。</li><li>log 亮度低通得到 base。</li><li>原 log 亮度减去 base 得到 detail。</li><li>base 管大范围明暗，detail 管边缘纹理。</li></ul>
+      <div class="src">依据：原书第 628 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么在 log 域</div><div class="kline">压暗变成减一个数</div><div class="kline">细节不会被一起压没</div><div class="kline">只压 base，不动 detail</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>05 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">局部曝光</div>
+  <h2>按邻域亮度决定压多少</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>全局曲线在宽曝光范围仍保不住细节。</li><li>暗房 dodging/burning 按局部平均亮度调整。</li><li>数学上近似于除以邻域平均亮度。</li><li>邻域越大越平滑，越小越容易出光晕。</li></ul>
+      <div class="src">依据：原书第 627–628 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">局部曝光</div><div class="kline">亮处多压</div><div class="kline">暗处少压</div><div class="kline">后面要用保边滤波</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>06 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">压缩 base</div>
+  <h2>压 base，留 detail</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>base 压到目标 log 范围。</li><li>再和 detail 相加，指数回亮度。</li><li>式 10.14 下标印成 H_H。</li><li>同页正文和 Figure 10.19 图注说压的是 base。</li></ul>
+      <div class="src">依据：原书第 628 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读法</div><div class="kline">下标印为 HH</div><div class="kline">按正文与图注读 base</div><div class="kline">压 detail 会削掉边缘</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>07 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">晕轮</div>
+  <h2>线性低通会把边缘抹开</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>线性低通不是保边滤波。</li><li>高斯把亮暗边界抹开，base 在边缘变缓。</li><li>detail 因此多出亮边和暗边。</li><li>晕轮在天空、窗户、树梢最明显。</li></ul>
+      <div class="src">依据：原书第 629 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e094_local.png" style="width:110%; margin-left:-5%; max-height:440px" alt="高斯 detail 有晕轮，双边 base 保边｜程序生成，未用教材或论文原图"><figcaption>高斯 detail 有晕轮，双边 base 保边｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>08 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">保边滤波</div>
+  <h2>双边滤波：跨边缘不混</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>解决办法是用保边滤波器做 base。</li><li>Durand 和 Dorsey 比较各向异性扩散，最后选双边。</li><li>双边在空间近、亮度也近的像素间平均。</li><li>代价是参数敏感、计算更贵。</li></ul>
+      <div class="src">依据：原书第 630 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个参数</div><div class="kline">σ_s 管看多远</div><div class="kline">σ_r 管差多少算同类</div><div class="kline">都要按图像内容调</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>09 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">梯度域</div>
+  <h2>压梯度，再解泊松方程</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不压 base，压它的导数。</li><li>先求 log 亮度梯度，压大梯度。</li><li>再解泊松方程把梯度积分回图像。</li><li>重建只差一个常数，亮度基准要另外定。</li></ul>
+      <div class="src">依据：原书第 630–631 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e094_operators.png" style="width:110%; margin-left:-5%; max-height:440px" alt="梯度域与泊松重建；WLS 保边平滑，噪声降约一半｜程序生成，未用教材或论文原图"><figcaption>梯度域与泊松重建；WLS 保边平滑，噪声降约一半｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>10 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">WLS</div>
+  <h2>把稀疏笔触插值成曝光图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>用户画几笔曝光调整。</li><li>WLS 把稀疏笔触插值成平滑曝光修正图。</li><li>平滑权重和 log 亮度梯度成反比。</li><li>λ、α、ε 控制平滑和保边。</li></ul>
+      <div class="src">依据：原书第 633–634 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">WLS 的特点</div><div class="kline">平坦区更平滑</div><div class="kline">边缘处更敢跳</div><div class="kline">解稀疏线性系统</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>11 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验读数</div>
+  <h2>趋势要横向比较</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>动态范围约 15608 倍，线性裁切丢高光 66.3%。</li><li>饱和 0.15 vs 0.28；晕轮 69.6% vs 7.4%。</li><li>双边保住阶跃 100%。</li><li>梯度能量降 99.6%，泊松重建误差 0.00%。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">同一套实验</div><div class="kline">WLS 噪声标准差降约一半</div><div class="kline">合成图，无真实相机噪声</div><div class="kline">数字说明趋势，不是画质排名</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>12 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程选型</div>
+  <h2>先看动态范围，再选算子</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>差两三档，全局曲线就够。</li><li>差很多档，再上局部算子。</li><li>局部映射先保边，再谈压多少。</li><li>颜色走亮度通道，别逐通道硬压。</li></ul>
+      <div class="src">依据：本集实验（工程选型）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">输出前检查</div><div class="kline">base 压太狠会发灰</div><div class="kline">detail 放太大会有光晕</div><div class="kline">高光不全白，暗部不死黑</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>13 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>色调映射，压进显示域</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>色调映射把辐亮度压进显示域。</li><li>全局曲线简单，但保不住大范围细节。</li><li>局部 base/detail 和梯度域能保细节，但怕晕轮。</li><li>保边滤波是局部算子的关键。</li></ul>
+      <div class="src">依据：原书第 627–634 页；移交 E095</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">超分辨率</div><div class="kline">多帧对齐</div><div class="kline">学习式放大</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十六集</span><span>14 / 14</span></div>
+</section>
+<div id="subbar"></div></body></html>

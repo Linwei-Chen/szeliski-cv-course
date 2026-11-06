@@ -1,0 +1,32 @@
+[lab] E137 资源课实验开始 2026-11-03T16:14:39
+[lab] 源码 sha256=0a264eaee638fc9f2d29341869387a8865cf7bb6e07055f958386d3152f79528
+[lab] OpenCV 5.0.0 / SciPy scipy.ndimage / NumPy 2.5.4
+[lab] 边界：单机单操作合成图；不是通用 benchmark，绝对时间随硬件/版本变化
+[lab] 128×128: OpenCV 0.1 ms；SciPy 0.4 ms；NumPy 3.5 ms
+[lab] 256×256: OpenCV 0.2 ms；SciPy 1.8 ms；NumPy 23.0 ms
+[lab] 512×512: OpenCV 1.0 ms；SciPy 24.6 ms；NumPy 204.7 ms
+[lab] 1024×1024: OpenCV 5.8 ms；SciPy 42.0 ms；NumPy 607.7 ms
+[PASS] OpenCV 比 NumPy 快：5.8 vs 607.7 ms
+[PASS] SciPy 比 NumPy 快：42.0 vs 607.7 ms
+[PASS] OpenCV 加速比 ≥5×：104.8×
+[PASS] SciPy 加速比 ≥5×：14.5×
+[PASS] SciPy 与 OpenCV PSNR ≥40dB：120.00 dB
+[PASS] NumPy 与 OpenCV PSNR ≥40dB：120.00 dB
+[PASS] OpenCV 运行时随像素数近线性增长（斜率>0.8）：slope=1.14
+[PASS] SciPy 运行时随像素数近线性增长（斜率>0.8）：slope=1.19
+[PASS] NumPy 运行时随像素数近线性增长（斜率>0.8）：slope=1.28
+[PASS] 航线图 8 条任务：8 条
+[PASS] 每条任务都有数据集：8/8
+[PASS] 每条任务都有工具：8/8
+[PASS] 数据集列全部非空且不重复：8 个唯一数据集
+[PASS] 工具列全部非空且不重复：8 个唯一工具
+[PASS] 地图节点=任务+数据集+工具：24 个文本节点
+[lab] PNG sha256(e137_runtime.png)=661b8bcc6666ccec462f5b8d6b5f2d8f0f2ede0c7aa94428fc26e83c62487b02
+[lab] PNG sha256(e137_agreement.png)=97d228058071301b36eafdd596a90e095b41093cdb12abcc2831259cb335f8ef
+[lab] PNG sha256(e137_route_map.png)=d016c6fff1bad1a9eecfea6a585b463959d875bfe31275b95eea829dd41e3adb
+[lab] LEDGER：断言 15 条，PASS 15
+[lab] 汇总：15/15 断言通过
+[lab] 1024² 耗时：OpenCV 0.0058s；SciPy 0.0420s；NumPy 0.6077s
+[lab] 加速比：OpenCV 104.8×；SciPy 14.5×；PSNR 120.00/120.00 dB
+[lab] 斜率：OpenCV=1.14；SciPy=1.19；NumPy=1.28
+[lab] readings sha256=b0158b64025ef728d419bece523c54480401b242feb70080b1d85b2d8b06fa26

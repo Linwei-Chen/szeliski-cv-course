@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E001 · 线性代数够用就行</title>
+<link rel="stylesheet" href="../../../assets/shared/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<script defer src="../../../assets/shared/vendor/katex/katex.min.js"></script>
+<script defer src="../../../assets/shared/vendor/katex/contrib/auto-render.min.js"></script>
+<script defer src="../../../assets/shared/deck.js"></script>
+<script>
+window.addEventListener("load", () => {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    });
+  }
+});
+</script>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="2">
+  <div class="course step" data-step="1">数学工具箱 · 01</div>
+  <h1 class="step" data-step="1">线性代数<span class="hl">够用</span>就行</h1>
+  <p class="ep step" data-step="2">向量 · 矩阵 · 三种乘法理解 —— 这一集补齐全书的地基</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>01 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">WHY · 为什么需要它</div>
+  <h2>图像就是<span class="hl">一大片数字</span></h2>
+  <div class="formula step" data-step="1">
+    $$I(x,\ y) \in \{0,\ 1,\ \dots,\ 255\}$$
+    <div class="note">一张灰度图 = 一个巨大的数字表格；彩色图 = 三张这样的表</div>
+  </div>
+  <p class="lead step" data-step="1">所有图像操作，都是对这片数字做<b>同一类运算</b>。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>02 / 19</span></div>
+</section>
+
+<section class="slide split" data-steps="3">
+  <div class="col-l">
+    <div class="kicker">主角一 · VECTOR</div>
+    <h2>向量：<span class="hl">带方向的箭头</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:10px">最直观的样子：「向右三步，再向上两步」。</p>
+    <p class="lead step" data-step="3" style="margin-top:26px">图像里一个 5×5 的小块展开，就是一个 <b>25 维</b>向量——维度高一点而已，一点都不神秘。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="向量箭头图示">
+      <defs>
+        <marker id="arrA" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto">
+          <path d="M0,0 L9,4 L0,8 z" fill="#1e3a5f"></path>
+        </marker>
+      </defs>
+      <g stroke="#e8e0d2" stroke-width="1.5">
+        <line x1="80" y1="16" x2="80" y2="400"></line>
+        <line x1="144" y1="16" x2="144" y2="400"></line>
+        <line x1="208" y1="16" x2="208" y2="400"></line>
+        <line x1="272" y1="16" x2="272" y2="400"></line>
+        <line x1="336" y1="16" x2="336" y2="400"></line>
+        <line x1="400" y1="16" x2="400" y2="400"></line>
+        <line x1="464" y1="16" x2="464" y2="400"></line>
+        <line x1="528" y1="16" x2="528" y2="400"></line>
+        <line x1="80" y1="80" x2="592" y2="80"></line>
+        <line x1="80" y1="144" x2="592" y2="144"></line>
+        <line x1="80" y1="208" x2="592" y2="208"></line>
+        <line x1="80" y1="272" x2="592" y2="272"></line>
+        <line x1="80" y1="336" x2="592" y2="336"></line>
+      </g>
+      <line x1="80" y1="400" x2="592" y2="400" stroke="#8a8377" stroke-width="3"></line>
+      <line x1="80" y1="400" x2="80" y2="16" stroke="#8a8377" stroke-width="3"></line>
+      <line x1="80" y1="400" x2="272" y2="272" stroke="#1e3a5f" stroke-width="7" marker-end="url(#arrA)"></line>
+      <text x="180" y="448" font-size="30" fill="#8a8377">右 3 步</text>
+      <text x="300" y="322" font-size="30" fill="#8a8377">上 2 步</text>
+      <text x="200" y="310" font-size="40" font-weight="700" fill="#e8590c">a</text>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>03 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">主角一 · VECTOR</div>
+  <h2>向量只会<span class="hl">两件事</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">加法</div>
+      <svg class="diagram" viewBox="0 0 360 150" style="margin-top:18px" aria-label="向量加法">
+        <defs>
+          <marker id="arrB" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#1e3a5f"></path></marker>
+          <marker id="arrC" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#e8590c"></path></marker>
+        </defs>
+        <line x1="30" y1="120" x2="170" y2="60" stroke="#1e3a5f" stroke-width="6" marker-end="url(#arrB)"></line>
+        <line x1="170" y1="60" x2="310" y2="100" stroke="#e8590c" stroke-width="6" marker-end="url(#arrC)"></line>
+        <line x1="30" y1="120" x2="310" y2="100" stroke="#f6c98a" stroke-width="5" stroke-dasharray="10 8"></line>
+        <text x="60" y="90" font-size="30" fill="#1e3a5f" font-weight="700">a</text>
+        <text x="230" y="62" font-size="30" fill="#e8590c" font-weight="700">b</text>
+      </svg>
+      <div class="cap">箭头首尾相接<small>先走 a，再走 b，等于直接走 a+b</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">数乘</div>
+      <svg class="diagram" viewBox="0 0 360 150" style="margin-top:18px" aria-label="向量数乘">
+        <line x1="40" y1="110" x2="160" y2="50" stroke="#1e3a5f" stroke-width="6" marker-end="url(#arrB)"></line>
+        <line x1="40" y1="110" x2="300" y2="20" stroke="#e8590c" stroke-width="6" marker-end="url(#arrC)"></line>
+        <text x="90" y="60" font-size="30" fill="#1e3a5f" font-weight="700">a</text>
+        <text x="200" y="34" font-size="30" fill="#e8590c" font-weight="700">2a</text>
+      </svg>
+      <div class="cap">把箭头拉长、缩短或反向<small>2a 就是走两遍；−1·a 就是掉头</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">复杂操作，全由这两件小事堆出来。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>04 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">主角二 · DOT PRODUCT</div>
+  <h2>点积：你们俩<span class="hl">有多合拍</span>？</h2>
+  <p class="lead step" data-step="1">两个向量做点积，答案是一个<b>数</b>：方向越一致，值越大；互相垂直，等于零；方向相反，是负数。</p>
+  <div class="formula step" data-step="2">
+    $$\mathbf{a} \cdot \mathbf{b} = a_1b_1 + a_2b_2 = \|\mathbf{a}\|\,\|\mathbf{b}\|\cos\theta$$
+    <div class="note">代数：对应相乘再相加 ｜ 几何：长度相乘 × 夹角余弦</div>
+  </div>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>05 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">主角二 · DOT PRODUCT</div>
+  <h2>点积的<span class="hl">视觉伏笔</span></h2>
+  <p class="lead step" data-step="1">两个图像小块各拉直成 25 维向量，点积越大，长得<b>越像</b>。</p>
+  <div class="cards c2">
+    <div class="card step" data-step="1"><div class="big" style="font-size:56px">第 7 章</div><div class="cap">特征匹配<small>判断两个小块像不像，核心就是比点积</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:56px">第 5 章</div><div class="cap">神经网络<small>神经元的核心一步，也是一次加权点积</small></div></div>
+  </div>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>06 / 19</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="kicker">主角三 · MATRIX</div>
+  <div class="qmark step" data-step="1">“</div>
+  <blockquote class="step" data-step="1">矩阵，就是空间的「线性」动作。</blockquote>
+  <p class="attrib step" data-step="1">不是死的数据——是一个还没按下去的按钮。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>07 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">矩阵 × 向量 · RULE</div>
+  <h2>规则只有<span class="hl">一条</span></h2>
+  <div class="formula step" data-step="1">
+    $$(A\mathbf{x})_i = \text{第}\, i \,\text{行} \cdot \mathbf{x}$$
+    <div class="note">结果的第 i 个分量 = 矩阵第 i 行与 x 的点积</div>
+  </div>
+  <p class="lead step" data-step="1">「行点积」是入门必须会的手工算法。但真正让你看透它的，是下一页的另一个角度。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>08 / 19</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">矩阵 × 向量 · 心脏</div>
+    <h2>列的<span class="hl">加权混合</span></h2>
+    <div class="formula step" data-step="1" style="margin-top:20px">
+      $$A\mathbf{x} = x_1\,\mathbf{a}_1 + x_2\,\mathbf{a}_2 + \cdots$$
+      <div class="note">A 的列 = 原料 ｜ x 的分量 = 配方</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:30px">旋转、投影、坐标变换，全是这句话的不同戏服。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 620 460" aria-label="列的加权混合图示">
+      <text x="30" y="60" font-size="34" font-weight="700" fill="#1e3a5f">a₁</text>
+      <rect x="30" y="90" width="120" height="330" rx="12" fill="#1e3a5f" opacity="0.85"></rect>
+      <text x="46" y="270" font-size="34" fill="#ffffff">×x₁</text>
+      <text x="205" y="240" font-size="52" fill="#8a8377">+</text>
+      <text x="270" y="60" font-size="34" font-weight="700" fill="#e8590c">a₂</text>
+      <rect x="270" y="180" width="120" height="240" rx="12" fill="#e8590c" opacity="0.8"></rect>
+      <text x="286" y="310" font-size="34" fill="#ffffff">×x₂</text>
+      <text x="445" y="240" font-size="52" fill="#8a8377">=</text>
+      <text x="500" y="60" font-size="34" font-weight="700" fill="#1e1e26">Ax</text>
+      <rect x="500" y="120" width="90" height="300" rx="12" fill="#1e3a5f" opacity="0.35"></rect>
+      <rect x="500" y="240" width="90" height="180" rx="12" fill="#e8590c" opacity="0.45"></rect>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>09 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">马上能用 · ROTATE 30°</div>
+  <h2>一个旋转矩阵<span class="hl">长这样</span></h2>
+  <div class="formula step" data-step="1">
+    $$R(30°) = \begin{pmatrix} \cos 30° & -\sin 30° \\ \sin 30° & \cos 30° \end{pmatrix} = \begin{pmatrix} 0.87 & -0.50 \\ 0.50 & 0.87 \end{pmatrix}$$
+    <div class="note">把它作用在图像的每一个像素坐标上，整张图就转了三十度</div>
+  </div>
+  <p class="lead step" data-step="1">几分钟后，你会在代码里亲手做这件事。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>10 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">一个短板 · TRANSLATE</div>
+  <h2>旋转矩阵搞不定<span class="hl">平移</span></h2>
+  <p class="lead step" data-step="1">旋转是<b>乘法</b>，平移是<b>加法</b>：\(R\mathbf{x} + \mathbf{t}\)——两件事不合拍，公式马上变丑。</p>
+  <p class="lead step" data-step="2">下一集教你一个漂亮的魔术：<b>齐次坐标</b>（homogeneous coordinates），给向量加一个「1」，让平移也变成乘法。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>11 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">钉死符号 · NOTATION</div>
+  <h2>三个<span class="hl">必记</span>符号</h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big">\(I\)</div><div class="cap">单位矩阵<small>乘谁都等于没乘，空间的「不动动作」</small></div></div>
+    <div class="card step" data-step="1"><div class="big">\(A^{-1}\)</div><div class="cap">逆矩阵<small>满足 \(A^{-1}A = I\)：动作可以被撤销</small></div></div>
+    <div class="card step" data-step="1"><div class="big">\(\|\mathbf{x}\|\)</div><div class="cap">向量范数<small>箭头的长度，误差的尺子</small></div></div>
+  </div>
+  <p class="lead dim step" data-step="2">以后所有「误差」的度量，都是真值减预测值，再取范数——最小二乘（E034）的地基。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>12 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">对照原书 · APPENDIX A</div>
+  <h2>附录 A 在<span class="hl">等</span>你</h2>
+  <div class="formula step" data-step="1" style="font-size:40px;text-align:left;font-family:var(--serif);border-left-color:var(--sand)">
+    “本附录介绍全书用到的线性代数与数值方法，第一节就是奇异值分解。”
+    <div class="note" style="text-align:right">—— 附录 A 开篇 · 原书第 920 页</div>
+  </div>
+  <p class="lead step" data-step="2">别被 SVD 吓到：它做的事，无非是<b>把一个复杂动作拆成一串最简单的动作</b>——学完这一集，它手里的每个零件你都认识了。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>13 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">动手 · CODE</div>
+  <h2>实验：手写旋转矩阵</h2>
+  <div class="cards c4">
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">①</div><div class="cap">生成图像<small>棋盘 + 圆环 + 十字</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">②</div><div class="cap">写出矩阵<small>\(R(30°)\)</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">③</div><div class="cap">逆映射<small>用 \(R^{-1}\) 反查原坐标</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">④</div><div class="cap">插值取色<small>双线性 + 保存对比图</small></div></div>
+  </div>
+  <p class="lead step" data-step="1">全部只靠 NumPy 手搓，不调任何现成的旋转函数。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>14 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验结果 · OUTPUT</div>
+  <h2>你刚刚<span class="hl">用矩阵转动了空间</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/rotation_demo.png" alt="旋转矩阵作用于图像">
+    <figcaption>左：原图 ｜ 右：旋转矩阵 R(30°) 作用后的结果（本集代码实跑输出）</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>15 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">易错点 · PITFALL</div>
+  <h2>矩阵乘法<span class="hl">不</span>满足交换律</h2>
+  <div class="formula step" data-step="1">
+    $$AB \neq BA$$
+    <div class="note">先逆时针转 90° 再把 x 拉长 2 倍 ≠ 先拉长再转——落点完全不同</div>
+  </div>
+  <p class="lead step" data-step="1">几何动作的顺序，必须像做菜一样严格遵守。</p>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>16 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">收个尾 · RECAP</div>
+  <h2>带走<span class="hl">两句话</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">记忆锚</div>
+      <div class="cap">矩阵，就是空间的线性动作<small>原点不动，直线不弯</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">心脏</div>
+      <div class="cap">矩阵乘向量 = 列的加权混合<small>按 x 的分量当配方，混 A 的每一列原料</small></div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>17 / 19</span></div>
+</section>
+
+<section class="slide endcard" data-steps="2">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>附录 A 开篇（原书第 920–921 页），试试看懂 A.1 在说什么</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>跑通 code/rotate_demo.py，把旋转角改成 −45° 再看结果</div>
+  <div class="row step" data-step="2"><span class="tag">下一集</span>E002 齐次坐标：让「平移」也变成乘法</div>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>18 / 19</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 01 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E001 · 数学工具箱</span><span>19 / 19</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

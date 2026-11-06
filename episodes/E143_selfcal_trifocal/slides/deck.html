@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>自标定与三焦张量：两帧 SfM 的高级收尾</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第11章 · 两帧 SfM 收尾</div>
+  <h2>自标定与三焦：最后两块拼图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>这一集补两件事：自标定、三焦张量。</li><li>自标定：把投影重建变成可测量的度量重建。</li><li>三焦张量：教材跳过，只讲它在三视图里做什么。</li></ul>
+      <div class="src">依据：原书 pp.684、712</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集路线</div><div class="kline">① 自标定：恢复相机内参 K</div><div class="kline">② 三焦：三视图的线传递</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 712 页 · 为什么自标定</div>
+  <h2>度量重建：让重建有真实尺度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>投影重建：平行线可能不平行，直角可能不直角。</li><li>度量重建：尺度、角度、平行关系都恢复。</li><li>做法：恢复每幅图的 K，把投影重建升级为度量重建。</li><li>只靠对应点不够，还需要平行线、消失点等信息。</li></ul>
+      <div class="src">依据：原书 p.712</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">P = K [R | t]</div><div class="mnote">K 是相机内参。恢复 K，才能从投影重建走到度量重建。</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 713 页 · 模型假设</div>
+  <h2>自标定的三条假设</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>零倾斜：相机没有绕光轴旋转。</li><li>方形像素：纵横比已知，通常取 1。</li><li>主点居中：像主点在图像中心。</li><li>假设越强，解越稳，但适用范围越窄；偏心裁剪会先破坏主点假设。</li></ul>
+      <div class="src">依据：原书 p.713</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条假设</div><div class="kline">零倾斜</div><div class="kline">方形像素</div><div class="kline">主点居中</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 713–714 页 · 两帧代数</div>
+  <h2>Kruppa 方程：从 F 求焦距</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>输入：基础矩阵 F。</li><li>用 F 的奇异向量和奇异值构造三组方程。</li><li>每组方程对 f² 是仿射的，交叉相乘得到二次方程。</li><li>输出：两幅图的焦距 f0、f1。</li></ul>
+      <div class="src">依据：原书 pp.713–714</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">输入与输出</div><div class="kline">输入：F（3×3）</div><div class="kline">输出：f0、f1</div><div class="kline">不解三维点，只解焦距</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 714 页 · 何时失效</div>
+  <h2>退化：两帧只是初值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>无旋转、光轴相交等配置会退化。</li><li>退化时出现浮雕歧义，两组焦距都可能零代价。</li><li>工程上常用三帧以上，或用 EXIF/默认焦距做初值。</li><li>两帧结果适合做束调整的初值，不是最终答案。</li></ul>
+      <div class="src">依据：原书 p.714</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">工程做法</div><div class="kline">条件好：两帧初始化</div><div class="kline">条件差：多拍几帧</div><div class="kline">最终：束调整精修</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图1 · 合成两帧实验</div>
+  <h2>代价面的谷底就是焦距</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>40 个合成三维点，两帧相机。</li><li>真值 f0=800，f1=1000，加 0.3 像素噪声。</li><li>8 点法估 F；网格搜索得到 f0≈820、f1≈1010。</li><li>代价面有尖谷；谷底很平，说明数据信息不足。</li></ul>
+      <div class="src">依据：程序生成实验，未用教材原图</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e143_selfcal.png" style="max-height:520px" alt="两帧自标定：合成对应点、代价面、f0/f1 误差｜程序生成，未用教材原图"><figcaption>两帧自标定：合成对应点、代价面、f0/f1 误差｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图2 · 退化实验</div>
+  <h2>纯平移：两个零代价解</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>把相机改成无旋转、纯平移。</li><li>代价面出现两个零代价解：800/1000 与 1120/1400。</li><li>两组焦距都让本质矩阵奇异值相等。</li><li>这是数据信息不足，不是算法没算好。</li></ul>
+      <div class="src">依据：程序生成实验，未用教材原图</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e143_degeneracy.png" style="max-height:520px" alt="自标定退化：一般配置 vs 无旋转纯平移的两个零代价解｜程序生成，未用教材原图"><figcaption>自标定退化：一般配置 vs 无旋转纯平移的两个零代价解｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 684/732–733 页 · 边界</div>
+  <h2>三焦张量：三视图的线传递</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>基础矩阵 F：管两视图的点—线约束。</li><li>三焦张量 T：管三视图的线—线传递。</li><li>一条线在三幅图可见时，可以从一对图转到另一对图。</li><li>教材不展开 27 个参数；本集只讲位置和用途。</li></ul>
+      <div class="src">依据：原书 pp.684、732–733</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两视图 vs 三视图</div><div class="kline">F：两视图，3×3</div><div class="kline">T：三视图，3×3×3</div><div class="kline">T 约束的是线，不是单点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图3 · 三焦示意</div>
+  <h2>一条线，三幅图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三台合成相机看同一条三维线。</li><li>三条投影线都有限，深度都为正。</li><li>这只是几何示意，不是从图像估张量。</li><li>真要估 T，需要三视图的线对应和更复杂的代数。</li></ul>
+      <div class="src">依据：程序生成实验，未用教材原图</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e143_trifocal.png" style="max-height:520px" alt="三视图线传递示意：三台合成相机看同一条三维线｜程序生成，未用教材原图"><figcaption>三视图线传递示意：三台合成相机看同一条三维线｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 713–714 页 · 工程取舍</div>
+  <h2>绝对度量还是可视化？</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>只做可视化或 IBR：三条假设通常够用。</li><li>要绝对精度：先预标定，再用地面控制点。</li><li>两帧自标定可以给束调整一个初值。</li><li>先粗对齐，再精修。</li></ul>
+      <div class="src">依据：原书 pp.713–714</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">按用途选假设</div><div class="kline">可视化 → 假设够用</div><div class="kline">绝对精度 → 预标定</div><div class="kline">两帧 → 只做初值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">本集边界 · 三焦不展开</div>
+  <h2>边界：合成管线与教材范围</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>实验全是合成数据，内参假设已知。</li><li>F 用 8 点法；自标定用奇异值相等的代价。</li><li>三焦只做线投影示意，没有估计 27 个参数。</li><li>目标是知道它是什么、什么时候用、为什么难。</li></ul>
+      <div class="src">依据：原书 p.684</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">能做到哪一步</div><div class="kline">自标定：能跑，有假设/退化</div><div class="kline">三焦：只示意，不实现</div><div class="kline">完整实现：回教材与文献</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第11章 · 补遗收束</div>
+  <h2>收束：能做稳，知道边界</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>自标定：Kruppa 从 F 估焦距；假设是零倾斜、方形像素、主点居中。</li><li>退化时加帧数或预标定。</li><li>三焦张量：三视图线传递；教材只点名，不展开。</li><li>作业：跑两帧 8 点法看代价面；改纯平移，看零代价解。</li></ul>
+      <div class="src">依据：本集回顾；原书 pp.712–714、732–733</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">带走三句话</div><div class="kline">自标定 = 从 F 估焦距</div><div class="kline">退化 = 加帧或预标定</div><div class="kline">三焦 = 三视图线传递</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十五集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,20 @@
+[lab] 开始 2026-11-01T21:15:41
+[lab] 源码 sha256=b550dc34983165dc49aff72bc9252d2914da91ab6f20ce5b586a16b1045fe521
+[PASS] 图1 词面命中（f003 口播词面）　| 阶梯 3 级、5 个词面全命中
+[PASS] 图2 词面命中（f009 口播词面）　| 两级流水线、4 个词面全命中
+[PASS] 图3 词面命中（f014 口播词面）　| 三条数据/损失支路、6 个词面全命中
+[PASS] 图内字号≥14pt（三图）　| 图一最小 15.0pt、图二最小 15.0pt、图三最小 15.0pt
+[PASS] 程序生成注记在档×3　| 三图各一条
+[PASS] 箭头端点贴框缘（数据坐标常数自证）　| 4 支箭头坐标核对通过
+[PASS] 图内文字内部记号零泄漏（红线 5）　| 图内 Text 收割 28 条，命中 无
+[PASS] FG1 程序生成图落盘　| e058_finegrained_ladder.png（sha 自证见 [lab] PNG 行）
+[PASS] FG2 程序生成图落盘　| e058_retrieval_rerank.png（sha 自证见 [lab] PNG 行）
+[PASS] FG3 程序生成图落盘　| e058_groknet_arch.png（sha 自证见 [lab] PNG 行）
+[lab] readings → e058_deep_networks_readings.json
+[lab] readings sha256=1e1f0d1c78886fb800f8addbc7dfc9a98ae3837a1d4611aa2351c8b9834899a9
+[lab] PNG sha256(e058_finegrained_ladder.png)=cf88ae9790ddaaa22e424ce1850bbcb75a48e1fee621b88537d0eb46df7d4895
+[lab] PNG sha256(e058_groknet_arch.png)=0b07dc52d2ba5f27f756be45691c55fddfe794341edef3fd58335fd7ad2b2164
+[lab] PNG sha256(e058_retrieval_rerank.png)=c28bb34e560e91a451fb13bfe672bbadbef9e2f00f2d0a25bebbac2308106870
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-01T21:15:41

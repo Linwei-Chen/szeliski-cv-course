@@ -1,0 +1,20 @@
+[lab] E083 平移对齐与 SSD 开始 2026-11-02T17:39:35
+[lab] 源码 sha256=dce94e639d0c302e10c133a5da18de765957766a93b69dbf505e760f1166f005
+[PASS] 原始 SSD 命中真值　| best=(7,-5)
+[PASS] 原始 SSD 误差非零　| mse=3.75e-02
+[PASS] 偏置/增益回归命中真值　| best=(7,-5)
+[PASS] 回归误差远小于 SSD　| 回归=3.65e-05/SSD=3.75e-02
+[PASS] NCC 命中真值　| best=(7,-5)
+[PASS] NCC 峰值足够高　| NCC=0.9990
+[PASS] SAD 命中真值附近　| best=(7,-4)
+[PASS] 回归斜率接近 1.2　| g=1.2001
+[PASS] GM 压外点贡献　| GM=0.13/SSD=0.89
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e083_biascorr.png)=3ee81f3619550268b9c75be59825a9c5f326df27926b945151fc58bacc819026
+[lab] PNG sha256(e083_losses.png)=7f7bb48be46a6336b7a33a8a7416df59aca10e7a135bf6d1588474791219aed2
+[lab] PNG sha256(e083_outlier.png)=d554ea864ead63f77b654d02395001665b2a5be9778cc0f5fea86c959e090000
+[lab] readings → e083_ssd_readings.json
+[lab] readings sha256=b033c0b24f40c0d6dbed40bdb141dd7b6375d8f2745ed4465f641474b567fb54
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T17:39:35

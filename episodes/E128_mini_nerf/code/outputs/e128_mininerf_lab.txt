@@ -1,0 +1,22 @@
+[lab] E128 迷你NeRF 开始 2026-11-03T11:04:22
+[lab] 源码 sha256=829d89175b763243976b090e8187e8ae16713a2ac2bd2afb58d1a87fd018a505
+[lab] 边界：二维坐标 MLP 拟合合成汉堡；不是完整 3D NeRF/体积渲染；三图程序生成
+[PASS] 汉堡图尺寸/范围正确 | (40, 40, 3)
+[PASS] L=4 特征维度 = 18 | 18
+[PASS] 裸坐标 PSNR ≤ 25 | 21.68
+[PASS] 位置编码 PSNR ≥ 30 | 34.35
+[PASS] 位置编码提升 ≥ 8dB | 12.67
+[PASS] L=2 不如 L=4 | 30.04 < 34.35
+[PASS] L=5 相对 L=4 饱和（<+1dB） | 33.98 vs 34.35
+[PASS] 训练损失下降 ≥ 90% | 0.1442→0.0004
+[PASS] 位置编码高频误差更低 | 0.00366 < 0.04661
+[PASS] 2 倍分辨率渲染 PSNR ≥ 22 | 23.46
+[PASS] 只增加输入层参数 | 768 = 16×48
+[PASS] 协议字段完整且声明非完整 NeRF | {'image': 40, 'hidden': 48, 'freqs': 4, 'steps': 500, 'seed': 1, 'lr': 0.01, 'representation': '2D coordinate MLP', 'full_nerf': False}
+[lab] LEDGER：断言 12 条，PASS 12
+[lab] PNG sha256(e128_burger.png)=ac8b9d957d4ddba44eafec2d68aedeafce44830938a978642da0b3705d450fbb
+[lab] PNG sha256(e128_curve.png)=1a2b99ee247d8025443f903393ef507982a05ddbed50b261ba17d4781fc0dc43
+[lab] PNG sha256(e128_freq.png)=1e3c9ae794db946843a02a4e9ad7d23fa42d4bb93c3b2a827cb14994c43fb05d
+[lab] readings sha256=6900867856cbc9b998204a7bbec35e4b93eccb44d3258eca92d48e71e0e72397
+[lab] 汇总 PASS 12 / FAIL 0 / 共 12
+[lab] 结束 2026-11-03T11:04:25

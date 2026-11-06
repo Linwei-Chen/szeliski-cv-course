@@ -1,0 +1,20 @@
+[lab] E074 五种平面变换 开始 2026-11-02T06:39:09
+[lab] 源码 sha256=ce13357ab4952443c796fb321e218b8ecb3f1df24596c56fc3aab554f75da056
+[PASS] 平移保持距离　| max|Δd|=2.22e-16
+[PASS] 欧氏保持距离　| max|Δd|=2.22e-16
+[PASS] 相似按统一比例缩放　| 比例=0.7200 波动=2.22e-16
+[PASS] 仿射保持平行　| 平行度=0.00e+00
+[PASS] 仿射改变角度　| Δ角=3.20°
+[PASS] 投影保持共线　| 叉积=1.39e-17
+[PASS] 投影保持交比　| 交比=1.2381→1.2381
+[PASS] 投影可破坏平行　| 平行度=0.0767
+[PASS] 参数计数　| 2/3/4/6/8
+[PASS] 三张图在盘　| 3/3
+[lab] PNG sha256(e074_alignment_pipeline.png)=838c5beea15f9a8a535f83200b3595c5cb9f8423ff76fbb3789bd09e6a596399
+[lab] PNG sha256(e074_invariants.png)=5f607eed48bd35cb9246c4833654c3cc44a6bb7d9067f8cb00c9c64fae58a99f
+[lab] PNG sha256(e074_transform_ladder.png)=7984d19aff740b421276e0415b14689454c3540f07dc861ee4fb069fd4c3eb97
+[lab] readings → e074_alignment_readings.json
+[lab] readings sha256=12872db47d71786ec7387a1db9da916ee92c9ef39274522f11dfc18c5f43e74e
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T06:39:09

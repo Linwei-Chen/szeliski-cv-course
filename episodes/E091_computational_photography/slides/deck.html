@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>软件吃掉相机：计算摄影学导览</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 第 10 章</div>
+  <h2>软件也能参与成像</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>前面讲把画面摆正、把运动估出来。</li><li>这一章的主题是计算摄影。</li><li>手机夜景、HDR、人像虚化靠多拍再算。</li><li>章末回到一个具体案例：手机夜景。</li></ul>
+      <div class="src">依据：原书第 607–610 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本章线索</div><div class="kline">先看全景</div><div class="kline">再拆零件</div><div class="kline">最后合成夜景</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">商业影响 · 原书第 609 页</div>
+  <h2>计算摄影为什么重要</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>过去十年，商业影响可能是视觉里最大的。</li><li>把图像分析和处理算法用到一张或多张照片。</li><li>做出传统成像系统做不到的图像。</li><li>从全景拼接开始，手机一直在用多帧。</li></ul>
+      <div class="src">依据：原书第 609 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个关键词</div><div class="kline">一张或多张照片</div><div class="kline">算法加工</div><div class="kline">硬件不够软件补</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">成像管线 · 原书第 610 页</div>
+  <h2>管线里每一步都能改</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三个要标定的组件：辐射响应、暗角、PSF。</li><li>后面还有去马赛克、去噪、色调映射。</li><li>光子进镜头，变成数字，再被 ISP 加工。</li><li>标定量的是物理偏差，不是审美。</li></ul>
+      <div class="src">依据：原书第 610 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">标定对象</div><div class="kline">辐射响应</div><div class="kline">暗角</div><div class="kline">点扩散函数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">动态范围 · 本集实验</div>
+  <h2>一张照片装不下场景</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>合成场景动态范围约 1600:1。</li><li>短曝光暗部信噪比不到 1。</li><li>长曝光高光饱和 72%，中曝光饱和 5%。</li><li>8 位只有 256 级，两端总有一端断。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个概念别混</div><div class="kline">动态范围：最亮比最暗</div><div class="kline">位深：能分多少级</div><div class="kline">单张照片顾此失彼</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 曝光序列</div>
+  <h2>三张曝光各缺一块</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>曝光时间：半毫秒、五毫秒、五十毫秒。</li><li>短曝光保住高光，暗部全是噪声。</li><li>长曝光保住暗部，高光全白。</li><li>合并取各自可信的部分，再色调映射。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e091_exposure.png" style="max-height:500px" alt="场景辐亮度/短曝光/中曝光/长曝光/合并与色调映射｜程序生成，未用教材或论文原图"><figcaption>场景辐亮度/短曝光/中曝光/长曝光/合并与色调映射｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">HDR 合并 · 原书第 609 页</div>
+  <h2>按信噪比和饱和加权</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>HDR 用多张曝光捕获完整亮度范围。</li><li>权重看信噪比高、又没饱和。</li><li>三张曝光覆盖 100% 像素。</li><li>合并误差 0.50%，单张中曝光 0.82%。</li></ul>
+      <div class="src">依据：原书第 609 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">理想上限</div><div class="kline">覆盖 100% 像素</div><div class="kline">辐亮度相关接近 1</div><div class="kline">真实相机还要对齐去鬼影</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">色调映射 · 原书第 609 页</div>
+  <h2>把宽动态塞回屏幕</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>色调映射把高动态图像映射回普通显示。</li><li>合并后动态范围约 1600:1。</li><li>色调映射后压到 59:1。</li><li>代价是局部对比度被压。</li></ul>
+      <div class="src">依据：原书第 609 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">不是简单 gamma</div><div class="kline">压缩动态范围</div><div class="kline">保住局部对比</div><div class="kline">屏幕只有几百比一</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 成像管线</div>
+  <h2>五段管线，各管一段</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>场景辐亮度、镜头/PSF、传感器/Bayer。</li><li>再到 ISP/去噪/色调，最后到显示。</li><li>PSF 决定锐不锐，Bayer 决定颜色。</li><li>第 10 章每一节都在修其中一段。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e091_pipeline.png" style="max-height:500px" alt="成像管线：场景辐亮度/镜头 PSF/传感器 Bayer/ISP/显示｜程序生成，未用教材或论文原图"><figcaption>成像管线：场景辐亮度/镜头 PSF/传感器 Bayer/ISP/显示｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">下一集 · 光度标定</div>
+  <h2>先量相机的性格</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>下一集讲辐射响应、噪声、暗角、PSF。</li><li>先知道相机把光变成数字的偏差。</li><li>后面合并、去噪、超分才有共同语言。</li><li>辐射响应是一条曲线，不是简单 gamma。</li></ul>
+      <div class="src">依据：原书第 610 页起</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四件事</div><div class="kline">辐射响应</div><div class="kline">噪声水平</div><div class="kline">暗角与光学模糊</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">预告 · HDR 与色调映射</div>
+  <h2>拿全信息，再放回屏幕</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>HDR：多曝光对齐、去鬼影、辐射域合并。</li><li>色调映射：全局/局部算子、梯度域、显示。</li><li>移动物体不能直接按像素平均。</li><li>手持多曝光还要先做几何对齐。</li></ul>
+      <div class="src">依据：原书第 609 页起</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两步都做对</div><div class="kline">HDR：把信息拿全</div><div class="kline">色调：把信息塞进屏幕</div><div class="kline">顺序不能反</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">预告 · 超分与去噪</div>
+  <h2>多帧能白赚多少</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>超分辨率：插值、多帧、学习式放大。</li><li>去噪：高斯、双边、BM3D、神经网络。</li><li>同一曝光拍八张，单张约 25 分贝。</li><li>八张平均约 34 分贝，白赚近 9 分贝。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">多帧超分靠亚像素位移</div><div class="kline">学习式超分靠先验</div><div class="kline">降噪上限看帧数和噪声</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">预告 · 去雾与修补</div>
+  <h2>跟信息丢失打交道</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>去雾：暗通道先验、大气光、透射率。</li><li>修补：从扩散到样例，再到深度先验。</li><li>暗通道假设局部总有一个很暗的通道。</li><li>两者都可能编出不存在的内容。</li></ul>
+      <div class="src">依据：原书第 610 页起</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">各自做什么</div><div class="kline">去雾：扣掉散射光</div><div class="kline">修补：补出缺失像素</div><div class="kline">都不是万能的</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">预告 · 夜景综合</div>
+  <h2>夜景是一条流水线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>手机夜景：多帧对齐、降噪、HDR。</li><li>还有色调、去鬼影、超分。</li><li>任何一段拖后腿，最后都能看出来。</li><li>先对齐还是先降噪，结果不同。</li></ul>
+      <div class="src">依据：原书第 607–610 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">难点</div><div class="kline">暗</div><div class="kline">抖</div><div class="kline">灯亮、物体动</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 章节地图</div>
+  <h2>六条支线汇到夜景</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>光度标定、HDR、色调映射。</li><li>超分/去噪、去雾/修补、夜景综合。</li><li>标定是前置，HDR 和去噪是信息源。</li><li>色调是出口，六条支线有依赖。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e091_topics.png" style="max-height:500px" alt="第 10 章六条支线：标定/HDR/色调/超分去噪/去雾修补/夜景｜程序生成，未用教材或论文原图"><figcaption>第 10 章六条支线：标定/HDR/色调/超分去噪/去雾修补/夜景｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">选型 · 三个问题</div>
+  <h2>多帧、先验、给谁看</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>信息是多帧还是单帧？</li><li>先验是物理还是学习？</li><li>输出是给人看还是给测量？</li><li>给测量的图不要过度色调映射。</li></ul>
+      <div class="src">依据：本集实验；原书第 609 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">对应关系</div><div class="kline">多帧：噪声和动态范围</div><div class="kline">先验：病态问题</div><div class="kline">显示：好看</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>第 10 章导览收束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>计算摄影 = 多帧 + 物理 + 算法。</li><li>单张装不下动态范围，所以要多曝光。</li><li>多帧能降噪、能超分，但要对齐去鬼影。</li><li>下一集：辐射响应标定。</li></ul>
+      <div class="src">依据：原书第 607–610 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">量出相机的曲线</div><div class="kline">再谈合并与美化</div><div class="kline">第 10 章按顺序推进</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十三集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

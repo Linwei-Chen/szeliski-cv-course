@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>实验课：光流场可视化与手写 LK 求解器</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章上机 · 实验课</div>
+  <h2>从公式到能跑的程序</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>这一集把光流做成手写程序。</li><li>先学看：颜色、箭头、误差图。</li><li>再写局部 Lucas–Kanade 求解器。</li><li>最后试三类难例：孔径、大位移、平坦区。</li></ul>
+      <div class="src">依据：本集实验；算法回指原书第 579–583 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三件事</div><div class="kline">看光流：颜色/箭头/误差</div><div class="kline">写 LK：窗口/梯度/迭代</div><div class="kline">试难例：孔径/大位移/平坦</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 §9.3 · 原书第 579 页</div>
+  <h2>光流为什么欠约束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个像素两个未知量，只有一个测量。</li><li>一个方程两个未知数，信息本身不够。</li><li>路线一：局部重叠窗口汇总。</li><li>路线二：加平滑项做全局优化。</li></ul>
+      <div class="src">依据：原书第 579 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">局部窗口：邻居一起投票</div><div class="kline">全局平滑：邻居别差太多</div><div class="kline">后来还会合流</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 §9.3 · 原书第 579 页</div>
+  <h2>Patch LK：泰勒展开加金字塔</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>泰勒展开把位移后的图像线性化。</li><li>得到亚像素估计，就是 Lucas–Kanade。</li><li>Anandan 把离散搜索和 LK 细化放进金字塔。</li><li>由粗到细，能估大位移。</li></ul>
+      <div class="src">依据：原书第 579 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条要点</div><div class="kline">小位移：邻域梯度解 2×2</div><div class="kline">一次不够就 warp 再解</div><div class="kline">大位移：金字塔逐层细化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 §9.3 · 原书第 580 页</div>
+  <h2>窗口聚合与全局平滑</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>重叠窗口先算梯度外积和亮度误差。</li><li>再用移动平均滤波做窗口求和。</li><li>Horn–Schunck 加平滑约束，同时解所有流。</li><li>脚注：其他平滑或聚合滤波器也能用。</li></ul>
+      <div class="src">依据：原书第 580 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种聚合</div><div class="kline">窗口求和：邻居投票</div><div class="kline">平滑项：邻居之间别差太多</div><div class="kline">一个偏局部，一个偏全局</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">可视化 · 读图方法</div>
+  <h2>先学会看光流</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>色相表示方向，亮度表示大小。</li><li>箭头看局部方向，适合关键点。</li><li>误差图要和真值比。</li><li>颜色图不是精确读数。</li></ul>
+      <div class="src">依据：本集实验；颜色轮读法为通用解释</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三张图</div><div class="kline">颜色：方向与大小</div><div class="kline">箭头：局部方向</div><div class="kline">误差图：和真值比</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 合成数据</div>
+  <h2>实验设置：真值已知</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>合成有纹理的图，整体平移 2.3、1.7 像素。</li><li>大位移用 12.6、−9.4 像素。</li><li>另做条纹、平坦区、加噪纹理三组对照。</li><li>图像归一化到 0 到 1。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四组数据</div><div class="kline">小位移：看迭代收敛</div><div class="kline">大位移：看金字塔</div><div class="kline">条纹：看孔径</div><div class="kline">平坦/加噪：看信息与窗口</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">光流可视化 · 程序生成</div>
+  <h2>看图：颜色、箭头、误差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>四联图：输入帧、真值流、LK 估计、误差图。</li><li>真值一片橙，说明整幅同向。</li><li>LK 估计也基本一片橙。</li><li>平均误差 0.11 像素，亮点在边界和弱纹理。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e089_flow.png" style="max-height:440px" alt="合成平移：输入帧、真值流、LK 估计、误差图｜程序生成，未用教材或论文原图"><figcaption>合成平移：输入帧、真值流、LK 估计、误差图｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 推导</div>
+  <h2>手写 LK：2×2 法方程</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>邻域里求 Ix²、IxIy、Iy²、IxIt、IyIt。</li><li>解出 du、dv，再 warp 到新位置。</li><li>矩阵两个特征值都大，才敢信二维运动。</li><li>行列式太小，说明这个窗口不可信。</li></ul>
+      <div class="src">依据：标准 LK 推导；特征值回指原书第 579 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">Sxx·du + Sxy·dv = −Sxt<br>Sxy·du + Syy·dv = −Syt</div><div class="mnote">S：窗口内梯度的加权和；解出 du、dv 后 warp，再迭代</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 小位移</div>
+  <h2>一次不够：迭代到亚像素</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一次线性化误差 1.87 像素。</li><li>迭代五次降到 0.11 像素。</li><li>迭代是每次 warp 后解一个小增量。</li><li>增量来回摆，说明步长或窗口不合适。</li></ul>
+      <div class="src">依据：本集实验；迭代细化回指原书第 579、583 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">小位移读数</div><div class="kline">一次线性化：1.87px</div><div class="kline">五次迭代：0.11px</div><div class="kline">已经亚像素</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 §9.3 · 原书第 579 页</div>
+  <h2>孔径：法向可测，切向不可观</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>竖直条纹只有水平梯度，矩阵秩一。</li><li>沿条纹方向走多远都看不出变化。</li><li>法向流可测，切向流不可观。</li><li>角点比边缘更适合跟踪。</li></ul>
+      <div class="src">依据：原书第 579 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么退化</div><div class="kline">只有一个方向的梯度</div><div class="kline">Hessian 最小特征值近零</div><div class="kline">秩一矩阵定不住二维</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 孔径</div>
+  <h2>实测：法向准，完整错</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>条纹真实运动 3.2、5.1 像素。</li><li>法向分量误差不到 0.001 像素。</li><li>完整流误差 5.10 像素。</li><li>最小特征值比最大特征值接近零。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读数与原因</div><div class="kline">真值：3.2 / 5.1px</div><div class="kline">法向误差：<0.001px</div><div class="kline">完整误差：5.10px</div><div class="kline">λmin / λmax ≈ 0</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">孔径实验 · 程序生成</div>
+  <h2>看图：三个箭头</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>绿色真值，蓝色法向流，橙色虚线是 LK。</li><li>LK 只把法向分量估对了。</li><li>切向分量停在零。</li><li>右图对数坐标，最小特征值接近零。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e089_aperture.png" style="max-height:440px" alt="竖直条纹：真值、法向流、LK 箭头与误差、Hessian 特征值｜程序生成，未用教材或论文原图"><figcaption>竖直条纹：真值、法向流、LK 箭头与误差、Hessian 特征值｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · coarse-to-fine</div>
+  <h2>大位移：金字塔救场</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>单层 LK 误差 15.5 像素，基本没动。</li><li>五层金字塔、每层 20 次迭代，降到 0.54 像素。</li><li>粗层先估大概，逐层上采样再细化。</li><li>层数按最大位移选，最粗层剩一两像素。</li></ul>
+      <div class="src">依据：本集实验；coarse-to-fine 回指原书第 579、583 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读数与做法</div><div class="kline">单层：15.5px</div><div class="kline">五层 / 每层 20 次：0.54px</div><div class="kline">每层只修一点点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">金字塔/窗口 · 程序生成</div>
+  <h2>看图：红线下不去，绿线下去</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>红线是单层，迭代再多也停在 15 像素左右。</li><li>绿线是五层金字塔，几次迭代就掉到 1 像素以下。</li><li>二十次到 0.54 像素。</li><li>窗口 5 误差 1.85，窗口 25 降到 0.65。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e089_pyramid.png" style="max-height:440px" alt="大位移：单层与 5 层金字塔收敛曲线；窗口 5/25 误差｜程序生成，未用教材或论文原图"><figcaption>大位移：单层与 5 层金字塔收敛曲线；窗口 5/25 误差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失败模式 · 条件数</div>
+  <h2>两个失败模式：平坦与弱纹理</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平坦区没有梯度，LK 误差 6.02 像素。</li><li>6.02 正好是位移的模长，说明根本没动。</li><li>平坦区两个特征值都太小。</li><li>孔径是一个特征值太小，法向还能测。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">条件数与自检</div><div class="kline">平坦：两个特征值都小</div><div class="kline">孔径：一个小，法向可测</div><div class="kline">工程上加正则、做前后向自检</div><div class="kline">按特征值给置信度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集复盘</div>
+  <h2>实验课收束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>颜色轮看方向，箭头看局部，误差图看真值差。</li><li>LK 用邻域梯度解 2×2 方程。</li><li>迭代和金字塔缺一不可。</li><li>先看矩阵特征值，再决定信不信。</li></ul>
+      <div class="src">依据：本集实验；下一集为第 8–9 章复盘</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">第 8–9 章复盘</div><div class="kline">对齐、拼接、运动估计串起来</div><div class="kline">下一集见</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十一集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

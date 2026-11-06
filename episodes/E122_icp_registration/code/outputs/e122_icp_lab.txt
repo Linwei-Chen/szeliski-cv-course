@@ -1,0 +1,20 @@
+[lab] E122 ICP 开始 2026-11-03T08:22:54
+[lab] 源码 sha256=fb3974675937ca00d42c54bd18f73c1e7aa9a69aecb3bacb1c98db72b0c4a16c
+[lab] 边界：2D 合成 L 形边界点；三维情形同步骤，换 3D SVD/四元数，不冒充 3D 性能
+[PASS] Kabsch 精确恢复已知旋转/平移 | 角度误差 1.1e-14 / 平移误差 8.1e-16
+[PASS] 点到点 ICP 把 RMSE 降 70% 以上 | 0.1938 → 0.0495（降 74.5%）
+[PASS] 点到点最终旋转误差 <0.5° | 0.209°
+[PASS] 点到点最终平移误差 <0.01 | 0.0053
+[PASS] 鲁棒权重比普通最小二乘更准 | 0.0001° < 0.2095°
+[PASS] 点到面比点到点迭代更少 | 7 < 24 次
+[PASS] 180° 初值落入局部极小 | 0.1310 > 2×0.0495
+[PASS] KD-tree 与暴力最近点一致 | 100 个抽样点索引完全相同
+[PASS] 距离阈值保留 85% 以上的内点 | 保留 100.0% 内点（离群点 63.3% 也在阈值内，靠鲁棒权重降权）
+[PASS] 收敛判据在最大迭代前触发 | 24 次，ΔRMSE=0.0e+00
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] PNG sha256(e122_icp_align.png)=8fffb735614508266b95a00b5ae16b1c9eba6910b565ec2e54e59bc14346da2c
+[lab] PNG sha256(e122_variants.png)=ab8666b4aa74e1fe4605d50d09c2a05f163f3fa0b58a6932e6bbace6d7321c6c
+[lab] PNG sha256(e122_basin.png)=07e529fb984aa9a8e03031ff279ceb988f92ea56020157995e71eecb5a7ac986
+[lab] readings sha256=5879fc642a290316a6193921c629a4e5854830e98805cfa3b6dc9da1fd73b8d2
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T08:22:55

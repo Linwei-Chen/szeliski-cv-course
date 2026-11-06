@@ -1,0 +1,17 @@
+[lab] 开始 2026-11-05T22:41:32
+[lab] 源码 sha256=91b0f82010b2bf572df4027ad9b47becc78c7ad2fc023e4161b3e89907124cac
+[PASS] 图1 两行四格文本==口播 f003/f004 关键词（逐格比对）　| 文档行 4 格+视觉行 4 格全命中
+[PASS] 图1 移植箭头三支==对照格数前 3（数据常数自证）　| 移植箭头 3 支，格行箭头 2×3 支
+[PASS] 图2 五框主名序列==主线常数（前三框==口播 f015 三段词——锚 §32 直证词）　| 特征提取→编码→索引→粗筛候选→几何验证，字号最小 10.5pt
+[PASS] 图2 两段分界标注在档（粗筛求快/精验求准）　| 标注 2 处全命中
+[PASS] 主文本字号≥10pt+程序生成注记在档×2　| 对照图格文本最小 10.5pt/流水线图框主名最小 10.5pt（全图字号档统一 10.5/11.5——display 缩放核算随 display_check）
+[PASS] 图内文字内部记号零泄漏（红线 5——E044–E055 同款收割断言）　| 图内 Text 收割 26 条，命中 无
+[PASS] FG1 程序生成图落盘　| e056_ir_bridge.png 已落盘（sha 自证见 [lab] PNG 行）
+[PASS] FG2 程序生成图落盘　| e056_pipeline.png 已落盘（sha 自证见 [lab] PNG 行）
+[lab] readings → e056_retrieval_readings.json
+[lab] readings sha256=f84bc16e7d51dca4ad38723f3c58d51f06d03e06703c0034c8dee60b413d621e
+[lab] PNG sha256(e056_ir_bridge.png)=3487ddd54431d1144f75c720a2d12ccef3a1dc448e1dd4d3074da01da1f4f4e7
+[lab] PNG sha256(e056_pipeline.png)=98e47a124cb615abda2a2bbfa7ac718b5ff269442501c467740af490d5162b45
+[lab] LEDGER：断言 8 条，PASS 8
+[lab] 汇总 PASS 8 / FAIL 0 / 共 8
+[lab] 结束 2026-11-05T22:41:36

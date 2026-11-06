@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E014 · 二维变换的族谱</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  figure.shot img { max-height: 480px; }
+  .fam { display: grid; grid-template-columns: 1.35fr 1.5fr 0.62fr 1.35fr; gap: 10px; margin-top: 26px; }
+  .fam .fh { font-size: 24px; font-weight: 700; color: var(--orange); padding: 8px 14px; }
+  .fam .fr { background: #fff; border: 1px solid #e6dcc8; border-radius: 12px; padding: 12px 16px;
+             font-size: 26px; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+  .fam .fr b { color: var(--blue); }
+  .fam .fr .dof { color: var(--orange); font-weight: 900; font-size: 30px; }
+  .fam .fr .keep { font-size: 24px; color: #4a5568; }
+  .vocab .cards { gap: 22px; margin-top: 30px; }
+  .vocab .card { padding: 24px 34px; }
+  .vocab .big { font-size: 46px; }
+  .vocab .cap { font-size: 25px; margin-top: 10px; line-height: 1.4; }
+  .vocab .cap small { font-size: 21px; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="2">
+  <div class="course step" data-step="1">正课 · 06 · 第 2 章 图像形成</div>
+  <h1 class="step" data-step="1">二维变换的<span class="hl">族谱</span></h1>
+  <p class="ep step" data-step="1">欧氏、相似、仿射、射影一家亲 · §2.1.1 2D transformations</p>
+  <p class="lead dim step" data-step="2">四段：① 五级变换逐个过 ② 族谱表与嵌套群 ③ 线怎么跟着变 ④ 三个附加变换与数值实验</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>01 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">导览 · 2D TRANSFORMATIONS</div>
+  <h2>两张预告，<span class="hl">今天兑现</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">E002 混过脸熟</div>
+      <div class="cap">齐次坐标那集预告过族谱：自由度 2→3→4→6→8<small>今天对照原书表 2.1 正式逐层过（第 42 页）</small></div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big warn">E013 点了名</div>
+      <div class="cap">上一集片尾：下一集让这些对象动起来<small>范围 §2.1.1（原书第 40–43 页）；§2.1.2 三维变换留待 E015 开场</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="2">讲者按：主菜不是背五种矩阵，是看清一条规则——矩阵越自由，保住的几何性质越少（讲者归纳）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>02 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">第一级 · TRANSLATION</div>
+  <h2>平移：<span class="hl">2 个自由度</span></h2>
+  <div class="formula step" data-step="1">x′ = x + t —— 式(2.14)，原书第 40 页</div>
+  <div class="formula step" data-step="2">x̄′ = [I t; 0 1] x̄ —— 式(2.15)：2×3 紧凑，补 [0ᵀ 1] 行成 3×3 全秩（可链乘、可求逆）</div>
+  <p class="note step" data-step="2">3×3 版本让「一连串变换」缩成一个矩阵乘法（式 2.15，原书第 40 页）——讲者按：代价只是多存一行</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>03 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">第二级 · RIGID / EUCLIDEAN</div>
+  <h2>刚体（欧氏）变换：<span class="hl">转起来</span></h2>
+  <div class="formula step" data-step="1">x′ = Rx + t —— 式(2.16)；R = [cosθ −sinθ; sinθ cosθ]，RRᵀ = I、|R| = 1 —— 式(2.17)</div>
+  <p class="lead dim step" data-step="1">3 个自由度（θ, tₓ, t_y）；欧氏距离不变，故称 2D 欧氏变换（原书第 40 页）</p>
+  <p class="note step" data-step="2">学名叫 2D 刚体运动；机器人教程记作 SE(2)，「special」= 无反射（|R|=+1，脚注 1，原书第 42 页）；图像 y 轴朝下时正角视觉上顺时针——E002 作业的彩蛋（讲者按）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>04 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">第三级 · SIMILARITY</div>
+  <h2>相似变换：<span class="hl">再给一个缩放</span></h2>
+  <div class="formula step" data-step="1">x′ = sRx + t = [a −b tₓ; b a t_y]x̄<br>不再要求 a²+b²=1 —— 式(2.18)，原书第 41 页</div>
+  <p class="lead dim step" data-step="1">4 个自由度（s, θ, tₓ, t_y）；保线与线之间的夹角（讲者按：直观说，形状放大缩小不变形）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>05 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">第四级 · AFFINE</div>
+  <h2>仿射变换：<span class="hl">六个数全放开</span></h2>
+  <div class="formula step" data-step="1">x′ = Ax̄，A 为任意 2×3 矩阵 —— 式(2.19)，原书第 41 页</div>
+  <p class="lead dim step" data-step="1">6 个自由度；平行线仍平行、直线仍直线——角度与长度不再有保证（长度在相似级已放开）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>06 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">第五级 · PROJECTIVE</div>
+  <h2>射影变换：<span class="hl">单应</span></h2>
+  <div class="formula step" data-step="1">x̃′ = H̃x̃，H̃ 任意 3×3，只差倍数算同一个<br>式(2.20)，原书第 41 页</div>
+  <div class="formula step" data-step="2">x′ = (h₀₀x+h₀₁y+h₀₂)/(h₂₀x+h₂₁y+h₂₂) —— 式(2.21)：分母含 x、y，先除再落座</div>
+  <p class="note step" data-step="2">9 个数 − 1 个尺度 = 8 个自由度；保直线（直线变换后仍是直线）；别称透视变换或单应 homography（原书第 41 页）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>07 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">重绘 · FIGURE 2.4</div>
+  <h2>同一方格，<span class="hl">五级变形</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/e014_fig2_4.png" alt="重绘的 2D 变换五级示意图">
+    <figcaption>据原书 Figure 2.4（第 40 页）与 Table 2.1（第 42 页）重绘 · 原书图未使用 · 代码实跑输出</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>08 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">族谱 · TABLE 2.1</div>
+  <h2>一页族谱，<span class="hl">五级阶梯</span></h2>
+  <div class="fam step" data-step="1">
+    <div class="fh">变换</div><div class="fh">矩阵</div><div class="fh">DoF</div><div class="fh">保住什么（含下行各条）</div>
+    <div class="fr"><b>平移</b></div><div>[I&nbsp;t]</div><div class="dof">2</div><div class="keep">定向 · 长度 · 角度 · 平行 · 直线</div>
+    <div class="fr"><b>刚体（欧氏）</b></div><div>[R&nbsp;t]</div><div class="dof">3</div><div class="keep">长度 · 角度 · 平行 · 直线</div>
+    <div class="fr"><b>相似</b></div><div>[sR&nbsp;t]</div><div class="dof">4</div><div class="keep">角度 · 平行 · 直线</div>
+    <div class="fr"><b>仿射</b></div><div>[A]<sub>2×3</sub></div><div class="dof">6</div><div class="keep">平行 · 直线</div>
+    <div class="fr"><b>射影</b></div><div>H̃（3×3）</div><div class="dof">8</div><div class="keep">直线</div>
+  </div>
+  <p class="note step" data-step="2">表 2.1 原文要点：每一行也保住下面各行的性质——相似不只保角度，也保平行与直线（原书第 42 页）；「定向」＝朝向，即线段方向不变（讲者注解）；2×3 矩阵补 [0ᵀ 1] 行即成 3×3；更细的层级描述见 Hartley &amp; Zisserman (2004)（原书第 41 页）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>09 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">结构 · NESTED GROUPS</div>
+  <h2>嵌套群：<span class="hl">为什么是「族」</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">封闭</div>
+      <div class="cap">同族变换复合仍是同族：相似∘相似=相似<small>closed under composition（原书第 41 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">可逆</div>
+      <div class="cap">逆变换还在本族里：T⁻¹、(1/s)Rᵀ 型、H̃⁻¹<small>inverse in the same group（原书第 41 页）</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="2">每个简单群都是下一级的子群（原书第 41 页）；2D 旋转/刚体的李群记号 SO(2)/SE(2) 有成套机器人教程（Dellaert &amp; Kaess 2017 等，原书第 42 页）——深究再读；复合与逆在 §3.6 把这些变换施加到图像上时是刚需（原书第 41 页；讲者按：此处埋伏笔）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>10 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">对偶 · CO-VECTORS</div>
+  <h2>线怎么变：<span class="hl">逆转置</span></h2>
+  <div class="formula step" data-step="1">l̃′ = H̃⁻ᵀ l̃ —— 式(2.22)，原书第 42 页</div>
+  <p class="lead dim step" data-step="1">点用 H̃ 变，线的齐次向量要用「转置的逆」变——这样 l̃′·x̃′ = l̃·x̃ 才对每个点成立</p>
+  <p class="note step" data-step="2">讲者按：又是点线对偶——E013 里点线共用内积，这里点线各用一套矩阵，互为镜像（讲者归纳）；符号细节见 Jim Blinn (1998) 第 9–10 章（原书第 42 页）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>11 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">附加 ① · STRETCH / SQUASH</div>
+  <h2>拉扁压扁：<span class="hl">改长宽比</span></h2>
+  <div class="formula step" data-step="1">x′ = sₓx + tₓ；y′ = s_y y + t_y —— 原书第 43 页</div>
+  <p class="lead dim step" data-step="1">仿射的一种受限形式；原书：遗憾的是，它不能干净地嵌进表 2.1 的群链（第 43 页）</p>
+  <p class="note step" data-step="2">讲者按：它本身是仿射的子群，只是不在平移⊂刚体⊂相似这条链上——「不嵌套」说的是不落在这条链，不是不属于任何群（讲者归纳）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>12 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">附加 ② · PLANAR SURFACE FLOW</div>
+  <h2>平面流：<span class="hl">八参数小运动</span></h2>
+  <div class="formula step" data-step="1">x′ = a₀+a₁x+a₂y+a₆x²+a₇xy；y′ = a₃+a₄x+a₅y+a₆xy+a₇y² —— 原书第 43 页</div>
+  <p class="lead dim step" data-step="1">平面发生微小 3D 运动时的流动场——完整单应的小运动近似</p>
+  <p class="note step" data-step="2">最大卖点：对运动参数 aₖ 是线性的，而这些参数常是待估量（原书第 43 页）；非线性近似做线性化，估计里省事（讲者按）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>13 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">附加 ③ · BILINEAR INTERPOLANT</div>
+  <h2>双线性插值：<span class="hl">四角定乾坤</span></h2>
+  <div class="formula step" data-step="1">x′ = a₀+a₁x+a₂y+a₆xy；y′ = a₃+a₄x+a₅y+a₇xy —— 原书第 43 页</div>
+  <p class="lead dim step" data-step="1">由方形四角点的运动插值出整个形变（任意四个不共线点也行）</p>
+  <p class="note step" data-step="2">对参数线性，但一般不保直线——只有平行于方形两轴的线例外（原书第 43 页）；样条网格插值见 §9.2.2（讲者按：稀疏网格变形的常用件）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>14 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">实验 · NUMERICAL CHECK</div>
+  <h2>把族谱<span class="hl">算一遍</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">18 项数值断言</div>
+      <div class="cap">逐级验证「保什么」+ 反例（仿射不保角、射影不保平行）+ 群闭合 + 逆在同族 + co-vector 恒等 + DoF 计数<small>多数项配随机数、几项用固定特例</small></div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big warn">1 项同步检查</div>
+      <div class="cap">重绘输出图与幻灯片目录逐文件 md5 比对<small>讲者设计实验（非原书内容）</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="1">讲者按：表中每级的主性质都有断言，另加结构、群与计数检验；说不保的，就造反例（讲者归纳）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>15 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验结果 · CROSS CHECK</div>
+  <h2>18+1 全过：<span class="hl">族谱立得住</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/e014_fig2_4.png" alt="五级变换重绘验证图">
+    <figcaption>讲者设计实验 · 断言 18 项 + 同步 1 项全过（明细见代码 stdout）· 配图为重绘演示图（非断言输出）· 原书图未使用</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>16 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">归纳 · ONE SENTENCE</div>
+  <h2>一句话带走：<span class="hl">自由与承诺</span></h2>
+  <p class="lead step" data-step="1">讲者归纳：二维变换是一套「受限的 3×3 矩阵」——每往下一级，就少承诺一样几何性质：定向、长度、角度、平行，逐级让渡；直线是底线，连射影都保住。</p>
+  <p class="note step" data-step="2">讲者按：记忆锚——「8 = 9 − 1」：3×3 九个数，整体乘倍数不算数，射影 8 个自由度；表上「保住什么」那列从下往上读，就是「约束逐步收紧」（讲者归纳）</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>17 / 19</span></div>
+</section>
+
+<section class="slide vocab" data-steps="1">
+  <div class="kicker">盘点 · VOCABULARY</div>
+  <h2>本集新词，<span class="hl">五个</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1">
+      <div class="big">单应</div>
+      <div class="cap">homography = 透视变换 = 射影变换<small>式(2.20)，第 41 页</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">自由度</div>
+      <div class="cap">DoF：2 / 3 / 4 / 6 / 8 阶梯<small>Table 2.1，第 42 页</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">嵌套群</div>
+      <div class="cap">封闭 + 可逆；子群逐级嵌套<small>第 41 页</small></div>
+    </div>
+  </div>
+  <div class="cards c2 step" data-step="1">
+    <div class="card">
+      <div class="big">SO(2) / SE(2)</div>
+      <div class="cap">特殊正交群 / 特殊欧氏群：2D 旋转与刚体<small>第 42 页及脚注 1</small></div>
+    </div>
+    <div class="card">
+      <div class="big">余向量</div>
+      <div class="cap">co-vector：线用 H̃⁻ᵀ 变换<small>式(2.22)，第 42 页</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">讲者归纳：单应、自由度、嵌套群、SO(2)/SE(2)、余向量——原书说三维那套族谱与二维非常相似（第 43 页），这些词下集继续用。</p>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>18 / 19</span></div>
+</section>
+
+<section class="slide endcard" data-steps="2">
+  <div class="kicker">NEXT · 族谱到手</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§2.1.1（原书第 40–43 页），对照 Figure 2.4（第 40 页）与 Table 2.1（第 42 页）</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>E002 的 −30° 旋转接上平移与缩放：验证它仍是 [a −b; b a] 形式；再用三点共线叉积验证射影保直线</div>
+  <div class="row step" data-step="2"><span class="tag">下一集</span>E015 三维到二维：相机投影的代数（§2.1.2 3D 变换 + 针孔模型开场）</div>
+  <div class="pagefoot"><span>E014 · 正课第六集</span><span>19 / 19</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+[lab] E086 KLT/特征跟踪 开始 2026-11-02T19:05:04
+[lab] 源码 sha256=22d2be7679d8cf1fbb2fae99ced3647077db312f6eb1483838d2cd176621248e
+[PASS] 角点最小特征值远高于边缘　| corner=3.92, edge=1.07e-01
+[PASS] 边缘最大特征值远高于平坦　| edge_max=8.02, flat=1.17e-01
+[PASS] 固定模板漂移小　| drift=0.0175px
+[PASS] 重采样漂移更大　| 14.084 vs 0.0175px
+[PASS] 亮度变化：原始 SSD 有偏差　| raw_err=0.171px
+[PASS] 亮度变化：增益/偏置补偿更准　| comp_err=0.061px（2.8× 改善）
+[PASS] 仿射序列：平移模型误差大　| corner_err=4.402px
+[PASS] 仿射细化：角点误差小　| corner_err=0.011px
+[PASS] 仿射细化：残差下降　| RMSE 0.0954→0.0064
+[PASS] 大位移：金字塔优于局部　| pyr=0.000, local=13.601px
+[lab] PNG sha256(e086_affine.png)=e66774f275519668c58315260699e12b76e85bc6a9a7a1115b31feed7dbff1ea
+[lab] PNG sha256(e086_klt.png)=5329d2bce1016bf27ad0b88af36e1814958548061a860adbd700fa9e324b0c5a
+[lab] PNG sha256(e086_search.png)=3829e8d9b5388b358faa7b7dd654bd8b37d0736d26ab6f14815bbe6f777d2b16
+[lab] readings → e086_klt_readings.json
+[lab] readings sha256=3689a03ec79712639d34d821fcca40336079a903bb18bc715048571854c83fed
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T19:05:05

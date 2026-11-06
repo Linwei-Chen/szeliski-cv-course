@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>跟住它：KLT 特征跟踪的工程之道</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 特征跟踪</div>
+  <h2>别每帧重新认人</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集把整张图的运动压成一组参数。</li><li>这一集只关心一个点：下一帧去哪了。</li><li>KLT：第一帧挑特征，后续帧小窗口跟踪。</li><li>三个问题：什么点好、怎么发现丢、为什么漂。</li></ul>
+      <div class="src">依据：本集导言；原书第 452 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">跟踪三步</div><div class="kline">第一帧选特征</div><div class="kline">后续帧局部搜索</div><div class="kline">失败再重检</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">检测再跟踪 · 视频里的做法</div>
+  <h2>先检测，再跟踪</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>也可以每帧独立检测，再匹配。</li><li>先在第一帧找一组特征位置。</li><li>再到后续图里找对应位置。</li><li>视频相邻帧运动小，先检测再跟踪更常用。</li></ul>
+      <div class="src">依据：原书第 452 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种做法</div><div class="kline">检测加匹配：每帧全图重复</div><div class="kline">检测再跟踪：第一帧多花力气</div><div class="kline">前提：运动小、外观别大变</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">好特征 · 双方向梯度</div>
+  <h2>两个方向都卡住</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两个方向都有高梯度的区域。</li><li>自相关矩阵两个特征值都大。</li><li>角点 3.92，边缘 0.107，平坦 0.117。</li><li>边缘最大 8.02，只在一个方向有约束。</li></ul>
+      <div class="src">依据：原书第 452 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种块</div><div class="kline">角点：两边都卡住</div><div class="kline">边缘：一边卡住、一边能滑</div><div class="kline">平坦：哪边都能滑</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">看图 · 特征值与大位移</div>
+  <h2>看图：特征值与大位移</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左图：角点、边缘、平坦的两个特征值。</li><li>角点两个都在四左右。</li><li>边缘一大一小，平坦都接近零点一。</li><li>右图：十像素位移，局部 13.601，金字塔 0。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e086_search.png" style="max-height:410px" alt="特征值与金字塔：三类块的特征值、大位移误差｜程序生成，未用教材或论文原图"><figcaption>特征值与金字塔：三类块的特征值、大位移误差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">搜索 · 平方差不够时</div>
+  <h2>平方差不够时怎么办</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>后续帧找平方差低的位置，通常够用。</li><li>亮度变了，显式补偿或 NCC 更稳。</li><li>搜索范围大，用金字塔由粗到细。</li><li>平方差假设窗口内权重相同，外点会拉偏。</li></ul>
+      <div class="src">依据：原书第 452 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种情况</div><div class="kline">长相不变：平方差</div><div class="kline">亮度变化：增益偏置 / NCC</div><div class="kline">大位移：金字塔</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">模板 · 固定还是更新</div>
+  <h2>固定模板，还是每帧更新</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>跟长序列：和最初模板比，还是重采样？</li><li>固定模板怕外观变化，比如透视缩短。</li><li>重采样怕特征从原位置慢慢漂走。</li><li>小配准误差会累积成随机游走。</li></ul>
+      <div class="src">依据：原书第 452 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种取舍</div><div class="kline">固定模板：怕变样</div><div class="kline">每帧重采样：怕将错就错</div><div class="kline">折中：隔几帧更新一次</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">KLT 实验 · 模板策略</div>
+  <h2>漂移：错误会滚雪球</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>八十帧，每帧移动零点一五像素。</li><li>固定模板最终误差约零点零一七像素。</li><li>每帧重采样加噪声，累积到十四点零八像素。</li><li>估错一点，下一帧拿错样子继续找。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">误差怎么滚</div><div class="kline">重采样把当前估计写进模板</div><div class="kline">估错一点，下一帧继续错</div><div class="kline">更新越勤，越要小心漂移</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">看图 · 跟踪三件事</div>
+  <h2>看图：跟谁、怎么漂、怎么补</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左：跟踪窗里两个方向都有纹理。</li><li>中：固定模板误差贴零，重采样一路涨。</li><li>右：仿射残差从约零点一降到零点零零六。</li><li>三张子图：跟谁、怎么漂、怎么补。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e086_klt.png" style="max-height:410px" alt="跟踪窗、固定模板与重采样的漂移曲线、仿射细化残差｜程序生成，未用教材或论文原图"><figcaption>跟踪窗、固定模板与重采样的漂移曲线、仿射细化残差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">仿射模型 · KLT 循环</div>
+  <h2>平移给初值，仿射收尾</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>更好的办法：仿射运动模型对最初模板。</li><li>Shi 和 Tomasi 先用平移模型比相邻帧。</li><li>平移估计当初始值，初始化仿射配准。</li><li>特征只在跟踪失败的区域重检。</li></ul>
+      <div class="src">依据：原书第 453 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">KLT 循环</div><div class="kline">预测位置</div><div class="kline">局部搜索 + 仿射细化</div><div class="kline">残差大就丢掉，稍后补点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">KLT 实验 · 亮度补偿</div>
+  <h2>允许整体变亮变暗</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>目标帧亮度乘一点八，加零点一五偏置。</li><li>原始平方差误差零点一七一像素。</li><li>先拟合增益偏置再比，误差零点零六一。</li><li>改善约二点八倍；NCC 等价于先做线性校正。</li></ul>
+      <div class="src">依据：本集实验；原书第 452 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">补偿怎么做</div><div class="kline">允许整体变亮变暗</div><div class="kline">每个候选拟合增益和偏置</div><div class="kline">代价是多算统计量</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">看图 · 仿射 KLT</div>
+  <h2>六个自由度吃形变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>蓝框只估平移，绿框仿射 KLT，红框真值。</li><li>只估平移，角点平均误差四点四零二像素。</li><li>仿射细化后零点零一一像素，几乎贴住真值。</li><li>旋转、缩放、透视缩短都要六个自由度解释。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e086_affine.png" style="max-height:410px" alt="角点对齐：平移、仿射、真值三组框与平均误差｜程序生成，未用教材或论文原图"><figcaption>角点对齐：平移、仿射、真值三组框与平均误差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">大位移 · 金字塔</div>
+  <h2>先粗后细，才追得上</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>大范围搜索用金字塔：低分辨率给初值。</li><li>十像素位移，局部正负三搜索只到边界。</li><li>局部搜索误差十三点六零一像素。</li><li>三层金字塔粗层覆盖正负十六像素，误差零。</li></ul>
+      <div class="src">依据：原书第 452 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先问位移多大</div><div class="kline">局部搜索：只在家门口找</div><div class="kline">金字塔：先粗后细</div><div class="kline">范围不够，后面再细也没用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">后续工作 · 几何与学习</div>
+  <h2>几何更紧，或学得更多</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Beardsley 等把特征跟踪和 SfM 结合。</li><li>从视频增量建稀疏三维模型。</li><li>Kang 等把相邻网格块的角点连起来增稳。</li><li>还有人改虚假匹配剔除和特征选择。</li></ul>
+      <div class="src">依据：原书第 453–454 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">几何约束加得更紧</div><div class="kline">把长什么样学出来</div><div class="kline">学习式跟踪支持更快运动</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">应用 · 表演驱动动画</div>
+  <h2>演员带动画一起动</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>表演驱动动画：跟踪用户动作，变形三维模型。</li><li>先画眼睛和嘴巴的控制线。</li><li>人脸跟踪器定位特征，最近邻匹配选图。</li><li>三角重心插值做形变，再算头部位置朝向。</li></ul>
+      <div class="src">依据：原书第 454–455 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">系统四步</div><div class="kline">画控制线</div><div class="kline">人脸跟踪定位特征</div><div class="kline">最近邻外观匹配选图</div><div class="kline">重心插值 + 头部姿态</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程清单 · 六个开关</div>
+  <h2>六个开关，什么时候拨</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>选双方向都有梯度的点。</li><li>小运动局部搜索，大运动上金字塔。</li><li>亮度会变就补偿，或用 NCC。</li><li>形变大上仿射，初值仍从平移来。</li></ul>
+      <div class="src">依据：本集综述；原书第 452–453 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">还要会认错</div><div class="kline">残差突然变大</div><div class="kline">前后向跟踪对不上</div><div class="kline">特征跑到窗口边缘</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">小结 · 移交下一集</div>
+  <h2>选点、跟住、纠偏</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>好特征是双方向都被约束的角点。</li><li>跟踪在小窗口找最像的块，漂移来自错误进模板。</li><li>仿射 KLT：平移给初值，六参数解释形变。</li><li>下一集：RAFT，网络直接学稠密光流。</li></ul>
+      <div class="src">依据：原书第 452–455 页；下一集预告</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三件事</div><div class="kline">选点：两个方向都有梯度</div><div class="kline">跟住：局部搜索 + 金字塔</div><div class="kline">纠偏：亮度补偿 + 仿射 + 重检</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十八集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

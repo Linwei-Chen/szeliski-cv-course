@@ -1,0 +1,26 @@
+[PASS] E1a 剔除外点 OLS 贴近真值（|m−0.5|<0.05）  m_clean=0.5071
+[PASS] E1b 一个外点拉偏 OLS（|m−0.5|≥0.10）  m_out=0.7057
+[PASS] E1c 单次实现偏差口径：拉偏幅度是内点噪声级扰动的 3 倍以上  pull=0.2057 vs noise=0.0071（单次实现偏差，非噪声标准误）
+[PASS] E2a α=2 极限=L2（ρ=r²/2）
+[PASS] E2b α=1 退化为 Charbonnier（解析 c²(√((r/c)²+1)−1)）
+[PASS] E2c 五个 α 的 ρ 单调不减
+[PASS] E2d 大残差惩罚随 α 减小递减（L2>Charbonnier>Cauchy>Welsch>GM）  12.5000 4.0990 2.6027 2.0180 1.7241
+[PASS] E2e D29 留痕：印刷形 |α−2|/2 在 α=−2, r=1 给负损失（-0.4）  printed=-0.4000
+[PASS] E2f ψ=ρ′（数值导数 vs 解析，五 α 全部一致）
+[PASS] E2g 柯西型权重解析 w=1/(1+r²/(2c²))（α=0）
+[PASS] E3a 拉偏拟合残差使 MAD 失真（MAD×1.4 > 2σ——残差被坏线带偏，估计随之失真）  mad_init=0.3454 vs σ=0.15
+[PASS] E3b 拉偏拟合残差的普通 std 更离谱（|std−σ|>1.5σ）  std=0.4175
+[PASS] E4a IRLS 收敛（≤40 步，末步斜率增量 <1e-8）  steps=17
+[PASS] E4b 收敛斜率贴近剔除外点解（|Δ|<0.02）  m_irls=0.4987 vs m_clean=0.5071
+[PASS] E4c 外点最终权重趋零（<0.05 且 <内点均权/10）  w_out=0.01425 vs w_in_mean=0.7981
+[PASS] E4d 收敛后残差再估 MAD×1.4 回到 σ 邻近（比值 0.6–1.6）  mad_final=0.1639
+[PASS] E4e 收敛后 MAD vs 拉偏 std（跨口径对照，仅示意——|Δ| 比较）  mad|Δ|=0.0139 vs std|Δ|=0.2675
+[PASS] E5a 2×2 网格（尺度策略×初值）四终点极差 0.0436≥0.02（vs 柯西对照 0.0265，见 E5d）  grid=[0.5066, 0.4784, 0.4631, 0.4631] spread=0.0436
+[PASS] E5b 四终点离剔除外点解不全 <0.02——更狠的尺子不保证更贴（柯西 |Δ|=0.0084 对照）  deltas=[0.0005, 0.0287, 0.0441, 0.0441] vs cauchy=0.0084
+[PASS] E5c 网格固定 c+柯西解初值格：外点最终权重比柯西更小（最终权重对照）  w_welsch=0.001591（该格） < w_cauchy=0.014246
+[PASS] E5d 同网格柯西对照读数：四终点离剔除外点解全 <0.02 且极差小于韦尔施（对照设计偏注：柯西解初值列=其自身不动点、自调+拉偏格=E4 本尊，有信息量格位仅固定 c+拉偏初值）  cauchy_grid=[0.5253, 0.4987, 0.4987, 0.4987] spread=0.0265 vs welsch 0.0436
+[PASS] E5e 韦尔施网格四终点去重后=3 处（口播「三个不同的地方」口径）  distinct=3
+[PASS] E6a 断言总数=23（含本条）  n=23
+LEDGER: 断言 23 条，全部 PASS
+READINGS-DONE → e037_robust_readings.json；traj 18 步；m_clean=0.5071 m_out=0.7057 m_irls=0.4987 mad_init=0.3454 mad_final=0.1639 c_final=0.1639
+E037-ROBUST-LAB-DONE

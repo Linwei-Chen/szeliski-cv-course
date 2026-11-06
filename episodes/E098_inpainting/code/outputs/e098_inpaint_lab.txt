@@ -1,0 +1,20 @@
+[lab] E098 inpainting 开始 2026-11-02T23:59:29
+[lab] 源码 sha256=86eb9b61d21a4333b2f280965a3b4ea7908d56163d6a0286bba70296b6ab3e68
+[PASS] 扩散填满洞　| ok
+[PASS] 扩散优于常数填充　| 26.83 vs 21.58 dB
+[PASS] 示例块纹理更接近真值　| 0.0605 vs 0.0000
+[PASS] PSNR 偏爱扩散　| 26.83 vs 19.86 dB
+[PASS] 简单边缘扩散相关更高　| 0.823 vs 0.720
+[PASS] 大洞更难　| 16.19 vs 19.86 dB
+[PASS] 小洞更易　| 28.01 vs 19.86 dB
+[PASS] patch 大小有影响　| 5.77 dB
+[PASS] 填充来自已知像素　| copy
+[PASS] 两种顺序都填满　| ok
+[lab] PNG sha256(e098_methods.png)=4638ae397b776929824b5d21797da84d8afa81ff9288c6f45614551cf47fdc95
+[lab] PNG sha256(e098_params.png)=104acc5a5dca584111ee9ecc7ae7167691f0bbf4589ca22266f61519dfe1258c
+[lab] PNG sha256(e098_priority.png)=eeca704bf503aa71f28aad244a199ad97ea97d96de4e59c631f3f8e20180098e
+[lab] readings → e098_inpaint_readings.json
+[lab] readings sha256=8c363b57d03be49d69500d1b81ae6422a889324cd2a0f0e44d324c74b2e074e6
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T23:59:31

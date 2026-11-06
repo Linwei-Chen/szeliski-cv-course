@@ -1,0 +1,53 @@
+{
+  "generated_at": "2026-11-01T09:16:08",
+  "src_sha16": "ae35ec7ff6136da7",
+  "cfg": {
+    "k_cb": 512,
+    "grid": 32,
+    "dv": 8,
+    "seed1": 61,
+    "k2": 512,
+    "z": 1024,
+    "d_real": 0.9,
+    "d_fake": 0.2,
+    "d_ideal_r": 0.9999,
+    "d_ideal_f": 0.0001,
+    "img2": 256,
+    "rf": 70,
+    "stride": 16
+  },
+  "e1": {
+    "n_positions": 1024,
+    "n_hit": 398,
+    "mean_shift": 1.5020909426049052,
+    "max_shift": 3.4078535950692777
+  },
+  "e2": {
+    "digits": 2775,
+    "digits_log": 2775
+  },
+  "e3": {
+    "real_term": -0.10536051565782628,
+    "fake_term": -0.2231435513142097,
+    "joint": -0.328504066972036,
+    "ideal": -0.00020001000066669465,
+    "prob_fake_rejected": 0.8
+  },
+  "e4": {
+    "pos_per_dim": 12,
+    "n_blocks": 144,
+    "overlap": 0.7714285714285715,
+    "overlap_px": 54,
+    "overlap_pct": 77.1
+  },
+  "e10": {
+    "ans1": "512^1024（2775 位数）",
+    "ans2": 144
+  },
+  "png": {
+    "FG1": "4b3950c551e754de",
+    "FG2": "5d33ced9ecdf63ab",
+    "FG3": "353a898b7545ff25"
+  },
+  "fig_text_count": 153
+}

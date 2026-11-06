@@ -1,0 +1,66 @@
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+== E028_ft2d 数值实验 run1 ==
+口径注记（Figure 3.19 交叉引用疑点）：§3.4.2 正文（原书第 148 页）称
+「Figure 3.19 shows some examples of linear and non-linear filters being
+used to remove noise」，但该图实为 §3.3.1 的 Median and bilateral filtering
+图（原书第 131 页附近）——二版 final draft 引用与图注不匹配；本实验不复制
+原书图（红线 2），去噪对比全部程序生成。
+
+== #1 二维 DFT（式 3.58–3.60，pp.146–147 上） ==
+  [PASS] #1a 式 3.60 直接定义（1/MN 归一、M=宽 32/N=高 16）vs fft2/(MN)（max err<1e-12）  max err=2.28e-16
+  [PASS] #1b 可分离性两顺序（先行后列/先列后行）均=直接定义（max err<1e-12）  行→列 err=0.00e+00；列→行 err=7.76e-18
+  [PASS] #1c 式 3.58 有向正弦（kx=5,ky=2）：y=0 剖面=sin(ωx x)（err<1e-12）+等相位线（整数位移 (5,−2)，2·5+5·(−2)=0）逐点恒定（std<1e-12）  剖面 err=0.00e+00；等相位 std=1.22e-15
+  [PASS] #1d 有向正弦幅度谱 top-2 峰=±(kx,ky) 共轭对位置（(2,5) 与 wrap(62,59)）  top2=[(2, 5), (62, 59)] want=[(2, 5), (62, 59)]
+  [PASS] #1e 实图 DFT 全谱共轭对称 H(ky,kx)=conj H(−ky,−kx)（两种写法 max err<1e-12）  err=4.19e-15/4.19e-15
+  [PASS] #1f 45° 方向正弦（ωx=ωy=2π·4/64）：幅度谱全局峰在 (ky,kx) 对角（行=列=4 或 60）  峰位=(row 4, col 4)
+  [PASS] #1g 线性性质逐点（FT(a·h1+b·h2)=a·H1+b·H2，err<1e-12）——「All of the Fourier transform properties from 1D carry over」  err=2.37e-17
+== #2 Wiener 功率谱（式 3.61，pp.146–147） ==
+    口径注记：Ps 取讲者补充径向幂律 1/(1+(f/f0)²)（原书未给具体形式）；实性=独立半谱+共轭镜像（原书只写 take its inverse FFT）
+  [PASS] #2a 生成法（逐点零均值方差 Ps 复高斯+共轭镜像）ifft2 虚部 max<1e-12（实图像）  max|Im|=1.42e-18
+  [PASS] #2b 谱共轭对称 S(ky,kx)=conj S(−ky,−kx) 全谱逐点（max err<1e-12）  err=0.00e+00
+  [PASS] #2c 蒙特卡洛 600 次：8 频点 |S(k)|² 族均值/Ps 全部落在 (0.85, 1.15)（式 3.61 期望语义）  0.982 0.962 1.105 1.020 1.014 0.993 0.961 1.016
+  [PASS] #2d 单次实现 |S(k)|²/Ps 中位相对偏差>15%（单张图看不出 Ps——期望记号的必要性实证）  中位偏差=0.818（单次 ratios: 0.04 0.75 0.11 0.25 4.28 0.80 0.11 1.03）
+  [PASS] #2e 生成图像水平自相关 ρ(1)>ρ(5)>ρ(20) 严格单调衰减且 ρ(1)>0.1（空间统计一阶描述）  ρ(1)=0.806 ρ(5)=0.129 ρ(20)=0.038
+== #3 DCT（式 3.62/3.63，pp.147–148 上） ==
+  [PASS] #3a Gram C·Cᵀ=diag(N, N/2, …, N/2)（N=8；½ 偏移 Wallace 1991，max err<1e-9）  max err=6.66e-15
+  [PASS] #3b 正交化 1D DCT 完美重构（F̂=S·C·f，f=Cᵀ·S·F̂，err<1e-12）  err=1.17e-15
+  [PASS] #3c 常数信号 F(0)=N·c、F(k>0)=0（err<1e-9）——DC 基编码块平均  F=[29.6  0.  -0.   0.   0.  -0.  -0.   0. ]
+  [PASS] #3d 线性斜坡的 DCT 以 F(1) 为最大系数（第二基=斜坡语义）  |F|=[0.    3.681 0.    0.385 0.    0.115 0.    0.029]
+  [PASS] #3e 式 3.63 直接双循环 vs 可分离（每行 DCT→每列 DCT）一致（err<1e-12）  err=0.00e+00
+  [PASS] #3f 可分离顺序无关（先列后行/先行列两种次序的独立循环实现均=双循环定义，max err<1e-12）  列→行 err=1.78e-15；行→列 err=8.88e-16
+  [PASS] #3g 2D 正交化 DCT 完美重构（err<1e-12）  err=1.78e-15
+  [PASS] #3h 合成自然样图 2D DCT 前 16×16 系数能量占比>90%（能量压缩≈KL/PCA 最优；样图含纹理与边缘故能量集中度低于纯平滑图像——讲者口径）  16×16 占比=0.9484；8×8 占比=0.9058
+  [PASS] #3i 轻量化（JPEG 表 scale=0.3）块压缩重建 PSNR>40 dB（量化仅舍入损耗）  PSNR=45.3 dB
+  [PASS] #3j 强量化（scale=4.0）块边界/块内梯度比>1.4 而轻量化（scale=0.3）<0.9（块边界相对不连续只在强量化下出现——「blocking artifacts (visible edge-aligned discontinuities)」两点对照实证）  scale0.3 比=0.90；scale4.0 比=1.63
+== #4 去噪评价（PSNR 式 2.120+SSIM；§3.4.2 pp.148–149 上） ==
+    口径注记：原书正文引 Figure 3.19 为去噪例图，但 Figure 3.19 实为 §3.3.1
+    的 Median and bilateral filtering 图（p.131 附近）——二版 final draft 交叉
+    引用疑点；本实验不复制原书图，对比全部程序生成（红线 2）。
+  [PASS] #4a 式 2.120 双形式恒等 10log₁₀(Imax²/MSE)≡20log₁₀(Imax/RMS)（err<1e-9）  MSE=392.81；PSNR=22.1890 dB
+  [PASS] #4b PSNR 随噪声 σ=10/20/40 单调降（含噪图口径）  σ=10:28.1dB σ=20:22.1dB σ=40:16.1dB
+  [PASS] #4c 四法（box-3/box-7/中值3/双边）相对含噪图 PSNR 均提升>0.5 dB  box-3:+7.50dB box-7:+7.59dB 中值3:+6.58dB 双边:+6.56dB
+  [PASS] #4d SSIM(x,x)=1（err<1e-12）且 SSIM(含噪,干净)≤1  SSIM 自身=1.000000000000；含噪=0.3166
+  [PASS] #4e SSIM 随噪声 σ=10/20/40 单调降  σ=10:0.616 σ=20:0.312 σ=40:0.118
+    [读数] PSNR：{'box-3': np.float64(29.68), 'box-7': np.float64(29.78), '中值3': np.float64(28.77), '双边': np.float64(28.75)}
+    [读数] 全局 SSIM：{'box-3': 0.7143, 'box-7': 0.7361, '中值3': 0.6494, '双边': 0.6414}
+    [读数] 纹理区 SSIM：{'box-3': 0.7155, 'box-7': 0.665, '中值3': 0.6559, '双边': 0.6535}
+  [PASS] #4f box-7 vs box-3：PSNR 更高 且 全局 SSIM 更高 但 纹理区 SSIM 反转更低（「PSNR encourage smooth or flat average results；感知口径 prefer … texture」实证；方向由本读数承载）  ΔPSNR=+0.09dB；Δ全局SSIM=+0.0219；Δ纹理SSIM=-0.0504
+== C1–C4 常数核对 ==
+  [PASS] C1 式 3.58 离散换算 ωx=2πkx/M：kx=5、M=64 剖面周期=64/5（err<1e-12）  err=3.54e-15
+  [PASS] C2 式 3.60 归一：H(0,0)=mean(h)（err<1e-12）  H(0,0)=0.007178971 mean=0.007178971
+  [PASS] C3 式 3.62 基逐点：C[2,i]=cos(π/8)(i+½)·2 且 k=0 行全 1（err<1e-12）  err=0.00e+00
+  [PASS] C4 式 2.120 常数：恒定偏差 5 ⇒ PSNR=20log₁₀(255/5)（err<1e-9）  PSNR=34.151404 dB
+== #S 程序生成图（5 张，写入 figures/ 与 slides/figures/） ==
+  [PASS] #S 程序生成图 5 张写入两处且 md5 一致（oriented_sin/power_spectrum/dct_basis/dct_blocking/denoise_compare）  e028_oriented_sin.png=fa408aec e028_power_spectrum.png=211877f4 e028_dct_basis.png=6d196c16 e028_dct_blocking.png=71f8bfcd e028_denoise_compare.png=f74a441c
+== #D 区分力注入（4 项，不计数） ==
+  [PASS] D-1 2D DFT 漏 1/MN 归一 → #1a 拦截  max err=14.26
+  [PASS] D-2 DCT 基漏 ½ 偏移 → #3a Gram 拦截  max err=1.00（非对角显著非零）
+  [PASS] D-3 PSNR 用 ln 冒充 log₁₀ → #4a/C4 拦截  ln 版=78.64 vs 正确=34.15（差 44.49 dB）
+  [PASS] D-4 不共轭镜像直接 ifft2 → #2a 虚部断言拦截  max|Im|=0.007（应为复图像，非实）
+
+汇总：33 条 PASS / 0 FAIL＋区分力 4/4（注入自检，不计数）
+DONE

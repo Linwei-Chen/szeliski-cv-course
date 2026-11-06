@@ -1,0 +1,75 @@
+{
+ "n_pass": 12,
+ "n_total": 12,
+ "p_blur": 32.29271496154554,
+ "p_noise": 32.29271496155406,
+ "s_blur": 0.9742926564697059,
+ "s_noise": 0.9647095796273621,
+ "noise_sigma": 0.0245716291331064,
+ "p_ident": 120.0,
+ "s_ident": 1.0,
+ "psnr_mse01": 20.0,
+ "bench": {
+  "Mip-NeRF360": {
+   "Plenoxels": {
+    "ssim": 0.626,
+    "psnr": 23.08,
+    "lpips": 0.463,
+    "train_min": 25.8,
+    "fps": 6.79,
+    "mem_gb": 2.1
+   },
+   "INGP-Big": {
+    "ssim": 0.699,
+    "psnr": 25.59,
+    "lpips": 0.331,
+    "train_min": 7.5,
+    "fps": 9.43,
+    "mem_gb": 0.048
+   },
+   "M-NeRF360": {
+    "ssim": 0.792,
+    "psnr": 27.69,
+    "lpips": 0.237,
+    "train_min": 2880.0,
+    "fps": 0.06,
+    "mem_gb": 0.0086
+   },
+   "Ours-30K": {
+    "ssim": 0.815,
+    "psnr": 27.21,
+    "lpips": 0.214,
+    "train_min": 41.55,
+    "fps": 134.0,
+    "mem_gb": 0.734
+   }
+  },
+  "Tanks&Temples": {
+   "M-NeRF360": {
+    "ssim": 0.759,
+    "psnr": 22.22,
+    "lpips": 0.257,
+    "train_min": 2880.0,
+    "fps": 0.14,
+    "mem_gb": 0.0086
+   },
+   "Ours-30K": {
+    "ssim": 0.841,
+    "psnr": 23.14,
+    "lpips": 0.183,
+    "train_min": 26.9,
+    "fps": 154.0,
+    "mem_gb": 0.411
+   }
+  }
+ },
+ "protocol": {
+  "test_every": 8,
+  "gpu": "A6000",
+  "metrics": [
+   "PSNR",
+   "SSIM",
+   "LPIPS"
+  ]
+ }
+}

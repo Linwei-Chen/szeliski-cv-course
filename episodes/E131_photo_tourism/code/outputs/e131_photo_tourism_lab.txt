@@ -1,0 +1,20 @@
+[lab] E131 Photo Tourism 开始 2026-11-03T13:06:32
+[lab] 源码 sha256=d63bbf0a21cb60dfe96d2a578f64e5ee81485422a793b2d1e03e575d40930791
+[lab] 边界：合成正面外墙+一个前景柱子；平面代理是已知背景平面；不是真实照片/SfM/完整 Photo Tourism
+[PASS] 合成照片尺寸与数量　| 15/240×180
+[PASS] 背景平面 warp 内区 PSNR≥30　| 45.0
+[PASS] 平面代理整图 PSNR 在 15–25　| 17.05
+[PASS] 前景平面代理 MSE≥0.03　| 0.0733
+[PASS] 前景重影像素数≥500　| 4480
+[PASS] 前景/背景位移差=40px　| 40.0
+[PASS] 照片图 15 个节点全连通　| 15/15
+[PASS] A→B 最短路径=6 步　| 6
+[PASS] 路径单步最大距离=0.5　| 0.5
+[PASS] 15 张网格比 4 个角点覆盖更密　| 0.349/1.070 倍=3.07
+[PASS] lab 边界声明为合成场景　| 合成外墙+前景柱，无真实 SfM
+[lab] LEDGER：断言 11 条，PASS 11
+[lab] readings sha256=358a8f657bce2e7fd2b30213d10fb4902596d343b671b5606717dd8d9a4cc7b0
+[lab] PNG sha256(e131_graph.png)=b50969269227faf79bf78a6fe6e5b968906b75adbd5d33e5b46ebda859946f1d
+[lab] PNG sha256(e131_proxy.png)=4113a9ff2a7508a8a782623cf82d288b39dd4832d4ea3043cf98d92ab1ac0b60
+[lab] PNG sha256(e131_path.png)=ddfb01cc20c62b4ce6eda8335c9d9e24156863b3fadfef91c6f1cf15d431501f
+[lab] E131 Photo Tourism 结束 2026-11-03T13:06:34

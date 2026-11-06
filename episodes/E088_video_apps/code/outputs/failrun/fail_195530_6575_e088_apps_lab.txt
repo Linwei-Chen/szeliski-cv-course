@@ -1,0 +1,20 @@
+[lab] E088 防抖/插帧 开始 2026-11-02T19:55:22
+[lab] 源码 sha256=46dc386c5369fd3c32a64432ca6518ed6e9249a92dda0dc2a2487f6c7e07328a
+[PASS] 全局平移估计可用　| mean_err=0.052px
+[PASS] 平滑压抖动>5×　| 0.417→0.079
+[PASS] 校正后残余抖动小　| jitter=0.079px
+[PASS] 裁剪面积损失≤18%　| crop=6px, loss=17.9%
+[PASS] 光流插值 PSNR>30　| PSNR=99.0dB
+[PASS] 光流优于直接平均>5dB　| 99.0 vs 14.6dB
+[PASS] 遮挡区 mask 更准　| 99.0 vs 6.2dB
+[FAIL] 2× 采样降低时域差　| 0.0995→0.0754
+[PASS] 插帧后帧数增加　| 3 帧
+[PASS] 无 mask 会污染前景　| naive=6.2dB
+[lab] PNG sha256(e088_interp.png)=eb1cbf7ee331e7649f5289faf757fda73cd0a370bec8be46b6358a4011a69c6a
+[lab] PNG sha256(e088_stabilize.png)=32ee0a455346abaaf36fa668e6268452ece6d8cdbb04296b5c0611d155334de7
+[lab] PNG sha256(e088_temporal.png)=3e833cab12e7ec8d9c1a3448fb41c9547da98b87d58c3a5c0287660481ab67bb
+[lab] readings → e088_apps_readings.json
+[lab] readings sha256=d9028745481bf624d1b09a9080bb690c939e5b8119e5c89f94981163921e04ef
+[lab] LEDGER：断言 10 条，PASS 9
+[lab] 汇总 PASS 9 / FAIL 1 / 共 10
+[lab] 结束 2026-11-02T19:55:30

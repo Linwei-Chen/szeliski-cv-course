@@ -1,0 +1,23 @@
+{
+ "translation_error": 2.220446049250313e-16,
+ "euclidean_error": 2.220446049250313e-16,
+ "similarity_scale": 0.72,
+ "similarity_spread": 2.220446049250313e-16,
+ "affine_parallel": 0.0,
+ "affine_angle_before": 12.094757077012149,
+ "affine_angle_after": 8.89478501200517,
+ "affine_angle_delta": 3.1999720650069783,
+ "projective_collinear_err": 1.3877787807814457e-17,
+ "projective_cross_ratio_before": 1.2380952380952381,
+ "projective_cross_ratio_after": 1.238095238095238,
+ "projective_parallel_after": 0.0766612509337565,
+ "params": [
+  2,
+  3,
+  4,
+  6,
+  8
+ ],
+ "n_pass": 10,
+ "n_total": 10
+}

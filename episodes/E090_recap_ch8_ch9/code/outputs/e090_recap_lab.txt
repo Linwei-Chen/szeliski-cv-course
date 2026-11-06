@@ -1,0 +1,14 @@
+[lab] E090 复盘 开始 2026-11-05T01:26:29
+[lab] 源码 sha256=35ba00c857752b0fa0813f1efc5ea8ecc536fa13344ee139296f9380b182bb99
+[PASS] 台账 16 站且 ID 连续　| E074–E089, 16 站
+[PASS] Ch8/Ch9 各 8 站　| 8+8
+[PASS] 全景六步引用齐全　| 6 步
+[PASS] 三图在盘　| map/pipeline/motion
+[lab] PNG sha256(e090_map.png)=db548fc2eaca0bf89b493d18f6821df359c1bd22156c1190c549125fac0c822b
+[lab] PNG sha256(e090_motion.png)=9463f870b14c750933045f3914681972a8e43bcaed5b31b62d097a9c3efb8597
+[lab] PNG sha256(e090_pipeline.png)=bc2630e557471abeba22a7f4b9ce74c08d38bca58f195b24c18a7aab88b42627
+[lab] readings → e090_recap_readings.json
+[lab] readings sha256=be85051ffe73879e218be196ce488c39d659cba8dcea104008e655b1a482a66d
+[lab] LEDGER：断言 4 条，PASS 4
+[lab] 汇总 PASS 4 / FAIL 0 / 共 4
+[lab] 结束 2026-11-05T01:26:31

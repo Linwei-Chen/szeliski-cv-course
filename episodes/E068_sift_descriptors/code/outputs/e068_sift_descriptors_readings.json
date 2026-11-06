@@ -1,0 +1,49 @@
+{
+ "generated_at": "2026-11-02T04:16:17",
+ "src_sha16": "78eb3ee07a58db40",
+ "fig1": {
+  "window": 16,
+  "cells": 4,
+  "bins": 8,
+  "dim": 128,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.16,
+  "page": 435
+ },
+ "fig2": {
+  "descriptors": 6,
+  "mops_dim": 64,
+  "sift_dim": 128,
+  "pca_dim": 36,
+  "gloh_raw": 272,
+  "gloh_dim": 128,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "page": 437
+ },
+ "fig3": {
+  "dim": 128,
+  "clip": 0.2,
+  "raw_len": 1.3193,
+  "unit_len": 1.0,
+  "renorm_len": 1.0,
+  "clipped": 3,
+  "cos": 0.966489,
+  "max_unit": 0.4169,
+  "max_renorm": 0.2291,
+  "min_fs": 14.0,
+  "max_fs": 16.0,
+  "page": 436
+ },
+ "scope": {
+  "page_start": 434,
+  "page_end": 437,
+  "frames": 16
+ },
+ "texts": {
+  "collected": 52,
+  "leaked": 0
+ },
+ "pngs": 3
+}

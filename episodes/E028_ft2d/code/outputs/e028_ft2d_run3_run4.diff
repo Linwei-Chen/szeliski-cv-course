@@ -1,0 +1,19 @@
+1,7c1,2
+< findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+< findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+< findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+< findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+< findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+< == E028_ft2d 数值实验（stdout 存档 code/outputs/e028_ft2d_runN.txt，N 与文件名一致） ==
+< 口径注记（Figure 3.19 交叉引用疑点）：§3.4.2 正文（原书第 148 页）称
+---
+> == E028_ft2d 数值实验 run4 ==
+> 口径注记（Figure 3.19 交叉引用疑点）：原书第 148 页正文称
+9,10c4,5
+< used to remove noise」，但该图实为 §3.3.1 的 Median and bilateral filtering
+< 图（印刷 p.132，图注见留档 e028_book_p132_fig319.txt L79–82）——§3.4.2 正文的
+---
+> used to remove noise」，但该图实为原书第 132 页的 Median and bilateral filtering
+> 图（印刷 p.132，图注见留档 e028_book_p132_fig319.txt L79–82）——正文的
+11a7
+> [存档] 本 stdout 保存为 code/outputs/e028_ft2d_run4.txt（文件名 N 与此标头一致）。

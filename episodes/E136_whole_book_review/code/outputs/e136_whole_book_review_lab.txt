@@ -1,0 +1,28 @@
+[lab] E136 全书复盘实验开始 2026-11-04T19:43:20
+[lab] 源码 sha256=ce619fc66f95d3b3e634bd44b3d30aea5d845e35cfa1eca36fd171a19f707163
+[lab] 边界：三个任务均为合成数据；地图是教学依赖图，不是教材 Figure 1.12 复制
+[PASS] 直线拟合斜率误差 <0.05：a=0.6033（真值 0.6）
+[PASS] 直线拟合截距误差 <0.05：b=0.2034（真值 0.2）
+[PASS] TLS 正交误差不高于 OLS：TLS 0.00168 vs OLS 0.00168
+[PASS] 仿射对齐最大参数误差 <0.02：0.0066
+[PASS] 仿射对齐残差 RMS <0.02：0.0090
+[PASS] 光度立体平均法向误差 <2°：0.594°
+[PASS] 光度立体反照率相关 >0.99：0.9977
+[PASS] 有效像素比例 >0.70：88.9%
+[PASS] 噪声敏感性 直线 斜率 >0.4：slope=0.95
+[PASS] 噪声敏感性 仿射 斜率 >0.4：slope=0.93
+[PASS] 噪声敏感性 光度立体 斜率 >0.4：slope=0.99
+[PASS] 地图覆盖 18 个节点且不重：18 节点
+[PASS] 地图六层齐全：6 层
+[PASS] 地图边数 ≥16：20 条边
+[PASS] 地图无环（DAG）：拓扑访问 18/18
+[lab] PNG sha256(e136_three_tasks.png)=3747773638a20402a6cd5309d07a4f9735a41bac6b61adf0a6d74a68626e81bc
+[lab] PNG sha256(e136_noise.png)=cfc80d9b3073a5e45b853742d782de4fd8d4100355c5e4cddb52eb620379a981
+[lab] PNG sha256(e136_map.png)=39bf34e423f25e199cfe6aa494aabd9b81422d1bb7a2b7bd69de7556c761c6c0
+[lab] LEDGER：断言 15 条，PASS 15
+[lab] 汇总：15/15 断言通过
+[lab] 直线 a=0.6033 b=0.2034；TLS 0.00168 vs OLS 0.00168
+[lab] 仿射参数误差 0.0066，残差 RMS 0.0090
+[lab] 光度立体角误差 0.594°，反照率相关 0.9977，有效 88.9%
+[lab] 噪声斜率：直线=0.95；仿射=0.93；光度立体=0.99
+[lab] readings sha256=b2699a9ec33cf2ccd34b2f2a1a89c3f139cb5b2c952bb0b3f5e70543f6c0f031

@@ -1,0 +1,20 @@
+[lab] E099 night pipeline 开始 2026-11-06T02:58:57
+[lab] 源码 sha256=a37c6377bb29025f9d44fd2f44c29340ad3bbf0667b780af3c13c0a966da1e5e
+[PASS] 对齐估计准确　| 平均误差 0.00 像素
+[PASS] 暗部多帧更优　| 28.49 vs 24.35 dB
+[PASS] 对齐优于不对齐　| 23.13 vs 20.68 dB
+[PASS] 暗部噪声下降　| 0.0205 vs 0.0414
+[PASS] 合并后去噪仍有增益　| +1.60 dB（24.73 vs 23.13）
+[PASS] 过度去噪损纹理　| 0.0039 vs 0.0309
+[PASS] 长曝光高光裁切　| 4.8% vs 0.0%
+[PASS] 帧数收益递减　| 22.04/22.66/22.97/23.13
+[PASS] 双线性去马赛克色彩误差在 0.03 容差内（不优于最近邻）　| 0.0158（最近邻 0.0076）
+[PASS] 十八步全部有归属　| 18/18 步有页面归属
+[lab] PNG sha256(e099_crops.png)=08b2abab38c637d8b3c4bb016286e1a622c369953411b80976bc0508f72574d6
+[lab] PNG sha256(e099_pipeline.png)=c28c7e1f7d4b92955164134d218df31c91c4eddee6326a6b4c0d4592ed94b477
+[lab] PNG sha256(e099_stages.png)=791c4cae0cf802f6c915505e0ac74d6a762f497024ebf6e064d1bc0e78965703
+[lab] readings → e099_night_readings.json
+[lab] readings sha256=3e46cd9240ea8e7d20f5fd3441556e862612841942990e43eb5fbb2c0bf2acdf
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-06T02:58:57

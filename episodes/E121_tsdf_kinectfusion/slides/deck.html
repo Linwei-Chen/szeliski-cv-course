@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>深度图融合与 TSDF：多帧观测、加权融合与零交叉</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 13 章 · 深度图融合</div>
+  <h2>一帧不够：把多帧叠成模型</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一帧深度图只能拍到物体的一面。</li><li>多帧对齐、合并，叠成完整模型。</li><li>range data merging 的核心是 TSDF。</li><li>这一集讲融合；配准留给下一集。</li></ul>
+      <div class="src">依据：原书第 821–824 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个词</div><div class="kline">range data merging：多帧合并</div><div class="kline">TSDF：截断符号距离函数</div><div class="kline">KinectFusion：实时融合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">从 ICP 到 TSDF</div>
+  <h2>三个词：配准、融合、提面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>ICP 是三维配准最常用的技术。</li><li>TSDF 拟合所有三维数据点。</li><li>先对齐，再融进体素，最后提面。</li><li>本集只讲融合与 TSDF。</li></ul>
+      <div class="src">依据：原书第 821–822 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">ICP：找最近点，解刚体变换</div><div class="kline">TSDF：把观测写进体素</div><div class="kline">ICP 只保证局部最优</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">符号距离 · 内负外正</div>
+  <h2>从深度到符号：d 减 z</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>表面深度 d，体素深度 z。</li><li>d 减 z：沿视线的符号距离。</li><li>表面之前为正，之后为负。</li><li>符号反了，零交叉就跑偏。</li></ul>
+      <div class="src">依据：原书第 831 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">sdf = d − z</div><div class="mnote">d：相机到表面；z：相机到体素；单位要一致</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">截断 · VRIP</div>
+  <h2>截断：只留表面一层</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>完整距离场太大，只留表面附近。</li><li>负 τ 到正 τ 的窄带，τ 是截断距离。</li><li>VRIP 用游程编码分空、已见、变化。</li><li>τ 太小漏表面，太大糊错位。</li></ul>
+      <div class="src">依据：原书第 822 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">省内存的做法</div><div class="kline">空空间：不必逐体素存</div><div class="kline">表面附近：才存距离值</div><div class="kline">游程编码：连续同类压成一段</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">加权平均 · 融合</div>
+  <h2>融合：一个体素一个数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同一体素会被很多帧看到。</li><li>每次观测有 sdf 和权重 w。</li><li>新值 =（旧值×旧权重 + 新观测）/（旧权重+1）。</li><li>权重封顶，避免老观测压住新帧。</li></ul>
+      <div class="src">依据：原书第 822 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">TSDF ← (TSDF·w + sdf) / (w + 1)</div><div class="mnote">权重可封顶；本实验为了看清公式，统一给 1</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 三切片</div>
+  <h2>看图：一帧只有半圈</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左：精确符号距离；中：单视角；右：四视角。</li><li>单视角覆盖 33 个方位，四视角 72 个。</li><li>绿点零交叉，虚线是真实圆。</li><li>一帧只能看半圈，多视角才补全。</li></ul>
+      <div class="src">依据：原书第 830–831 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e121_tsdf_slices.png" style="max-height:440px" alt="三切片：精确符号距离、单视角、四视角｜程序生成，未用教材或论文原图"><figcaption>三切片：精确符号距离、单视角、四视角｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 覆盖与噪声</div>
+  <h2>两个收益：补全与去噪</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>四视角半径误差 0.001375。</li><li>单帧标准差 0.0339，20 帧 0.0236。</li><li>四视角解决看不全，平均解决看不稳。</li><li>左图纵轴放大，真实误差千分之一量级。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e121_fusion.png" style="max-height:440px" alt="覆盖与噪声：单/四视角半径，单帧 vs 20 帧标准差｜程序生成，未用教材或论文原图"><figcaption>覆盖与噪声：单/四视角半径，单帧 vs 20 帧标准差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失败对照 · 符号与权重</div>
+  <h2>符号、截断、权重，哪个都不能错</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>符号翻转：零交叉只剩 14 个方位。</li><li>半径误差从千分之一量级变成 0.0495。</li><li>权重为 0 表示没看见，不是空或实。</li><li>提面时，权重 0 的体素不投票。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种状态</div><div class="kline">有观测：权重非 0</div><div class="kline">未观测：权重 0</div><div class="kline">权重 0 不等于空</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">KinectFusion · 主循环</div>
+  <h2>跟踪与融合交替</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>深度帧进来，先做位姿跟踪。</li><li>再把这一帧融进 TSDF。</li><li>然后提面或渲染，供下一帧对齐。</li><li>跟踪错了，融合会把错位写进模型。</li></ul>
+      <div class="src">依据：原书第 824 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e121_pipeline.png" style="max-height:440px" alt="KinectFusion 主循环：跟踪、融合、提面与渲染｜程序生成，未用教材或论文原图"><figcaption>KinectFusion 主循环：跟踪、融合、提面与渲染｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">引用边界 · 定义与公式</div>
+  <h2>定义可引，工程公式要标</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 824 页指向 13.5.1 节。</li><li>830–831 页讲内外函数、符号距离、Poisson。</li><li>没有给出截断和权重的完整公式。</li><li>τ、w 和加权平均按通行定义整理。</li></ul>
+      <div class="src">依据：原书第 824/830–831 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">引用层级</div><div class="kline">书：名字、用途、符号距离定义</div><div class="kline">通行定义：τ、w、加权平均</div><div class="kline">不冒充原书原句</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程取舍 · 稀疏体素</div>
+  <h2>分辨率、τ、哈希一起选</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>体素越细越准，内存按三维体积涨。</li><li>τ 越大越容忍位姿误差，窄带越厚。</li><li>Octomap 用八叉树和概率占据。</li><li>Voxel Hashing、Chisel 用空间哈希。</li></ul>
+      <div class="src">依据：原书第 824 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">压缩思路</div><div class="kline">八叉树：远处用大格子</div><div class="kline">空间哈希：只给表面块分配</div><div class="kline">参数要匹配场景</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>深度图给观测，零交叉给表面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>深度帧 → 截断距离 → 加权融合 → 零交叉。</li><li>跟踪和融合是一对循环。</li><li>下一集：点云怎么先对齐。</li><li>先配准，再融合，顺序不能反。</li></ul>
+      <div class="src">依据：第 13 章；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">主线</div><div class="kline">深度图给观测</div><div class="kline">TSDF 存证据</div><div class="kline">零交叉给表面</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十三集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

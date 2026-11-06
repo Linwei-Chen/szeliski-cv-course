@@ -1,0 +1,20 @@
+[lab] E081 两图到全景 开始 2026-11-02T16:56:14
+[lab] 源码 sha256=2046a42d9a11868b328cccd92fa254ffe83b8e6567a5f953795d4c47fa5ef77e
+[PASS] 柱面往返误差可控　| rmse=2.39e-02
+[PASS] 1D 列剖面粗对齐　| dx=375/真值 377.0
+[PASS] 2D NCC 细化位移　| dx=376/dy=0
+[PASS] 全局增益估到重叠区均值　| gain=1.1071/期望 1.1108
+[PASS] 硬拼全频接缝跳变明显　| 跳变=0.0171/基线 0.00297
+[PASS] 羽化压低接缝跳变　| 羽化=0.0026
+[PASS] 金字塔压低接缝跳变　| 金字塔=0.0027
+[PASS] 羽化会糊高频　| 相对硬拼 hp=0.831
+[PASS] 金字塔保住更多高频　| 金=1.000/羽=0.831
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e081_align.png)=879b1b574391a7f11d744396099ee7ae17390f925c4d42893960bbf961810241
+[lab] PNG sha256(e081_blend.png)=9f25b0bd8ae72936f4f2c7a358994a42f098c1e76f5acef08b295408db107202
+[lab] PNG sha256(e081_cylindrical.png)=73d4d906df0edd176458c5a8b55db16555f096c63b983772fa4f7da3cffe2abd
+[lab] readings → e081_panorama_readings.json
+[lab] readings sha256=611018ec65491496a8a274da3cd6b7adeb1f67958af99a4a3665344f881fcaaf
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T16:56:14

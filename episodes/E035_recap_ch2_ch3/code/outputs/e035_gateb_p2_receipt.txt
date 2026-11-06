@@ -1,0 +1,49 @@
+E035 门B 附录：round3 verdict 8 条 P2 逐条回执（verdict 原文要求「在门B 报告中逐条回执」）
+门B 六项：12 PASS / 0 FAIL（/tmp/e035_gateb_r1.txt，GATEB-DONE）；成片 releases-local/E035_recap_ch2_ch3.mp4（558.9s）
+
+P2-1 自报与证据不符（四件）——已关闭
+  ① f011 对照表引句非子串：status.gatea_r3 以现行 refs 实文重录（「讲者按辖域注记：斜率读数以 E032 存档为准（E032 run 实录两条斜率读数；本集口播不读具体值，numeric 白名单 0 项）」）；
+  ② 脚注墨迹量测污染：改 #8a94a8 色过滤精测=12.5 CSS px（≥12）+map 脚本 extent 打印 em=14.6 CSS px——/tmp/e035_r3_png_verify.txt [B] 行；
+  ③ P1-a 端点公式符号：map docstring 改「端点贴缘（容差 TOL）」不写符号方向——e035_recap_map.py L3-4；
+  ④ gatea_r2「512px→500px」残留：status 已更正为终值 470px（gatea_r2 P2-b 句现文）。
+
+P2-2 负例记录不完整——已关闭
+  map 负例输出完整 got/exp 差异（不截断）：/tmp/e035_map_negative_test.txt——首失配下标 12，
+  got[12]=('插值与抽取','金字塔') vs exp[12]=('金字塔','小波')；docstring/注释统一「端点+流拓扑断言」，
+  注入槽位注释改 ARROWS[13]（行 2 rl 第 3 支、预期流=金字塔→插值与抽取）——e035_recap_map.py 负例分支。
+
+P2-3 桥标注净空断言常数自比——已关闭
+  map 脚本 fig.canvas.draw()+get_window_extent（含 bbox pad）真实相交断言+双向净空 ≥2px：
+  标注盒↔线性滤波/可分离滤波 4.5px、↔镜头畸变/光度成像 29.7px（/tmp 输出 [extent] 行）；
+  PNG 层棕色∩4px 描边邻域计数=6，全部归设计贴碰两带（桥竖段起点贴相机与色彩下缘 −0.008、
+  标注盒底边框距 row1 框顶 4.5px），带外意外=0——/tmp/e035_r3_png_verify.txt [A] 行；
+  3x 桥区截图 /tmp/e035_r3_bridge_zoom.png（肘线三段+标注盒+下指箭头，与 Ch3 标题无交叠）。
+
+P2-4 refs 语料库防自证不完整——已关闭
+  _quote_corpus 改排除本集全部文件（f.is_relative_to(ep)）后复跑 refs 机检 PASS——
+  f007 的 E023/E024 汇总句确系 e023_linfilter_stdout.txt / e024_separable_stdout.txt 原文，
+  转写嫌疑被复跑证伪（tools/make_script.py _quote_corpus 现文）。
+
+P2-5 refs 口播子串通道无负例——已关闭
+  f009 refs 临时追加无豁免前缀行「口播核：「去噪就是乘一个遮罩再换回来」」→机检 FAIL 实文：
+  [FAIL] refs 引句与口播/存档语料不符（红线 6）: [('f009', '去噪就是乘一个遮罩再换回来')]；
+  原句对照（「…掩模再换回来」）七项全过；已还原 shots.json 后全链复跑通过——
+  /tmp/e035_refs_negative_test.txt（round3 版，含三条负例+正例）。
+
+P2-6 七项机检未在最终 deck 全量复跑——已关闭
+  deck 重建（P2-7 四卡）+图重生成（P2-3 extent 版）后全量复跑：seq 14 帧+scope/recite/refs/
+  numeric/refseq/mirror 七行全 PASS，去标点 2113/9.42 分钟——/tmp/e035_gatea_r3_mech.txt。
+
+P2-7 逐卡核对表 4 处误判——已关闭
+  卡行改述对齐口播（build_deck.py 现文+f004/f008 整页目检）：
+  页1卡2「每站都标了原书的节和页」（删修辞「复盘不背清单，走链」）；
+  页3卡1 删「代码骨架：」前缀（「点线面 → 齐次坐标 → 矩阵乘法」）；
+  页3卡3「薄透镜聚光，光圈数怎么算」（删无证据公式「=焦距÷口径」）；
+  页4卡3「中值排序、双边去噪」（删口播未含的「保边」）。
+
+P2-8 陈旧与缺位——已关闭
+  map docstring/纵向预算注释与代码对齐（肘线三段、脚注 0.028、Ch2 标题 0.845）；
+  台账 E014 行 echo_ep 改 E013+E014+注「E013 与 E014 同站」→A2 演示集清单补入 E013 行，
+  台账重跑 54 行（code/outputs/e035_recap_ledger.txt，map 台账双比对断言随之过）。
+
+——GATEB-P2-RECEIPT-DONE

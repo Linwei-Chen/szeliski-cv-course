@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>视频防抖、慢动作与插帧：运动场的应用烟花</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 运动估计的三件产品</div>
+  <h2>运动估计能做三件事</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>防抖：把抖动的相机轨迹拉直。</li><li>插帧：在两张图之间造一张。</li><li>慢动作：把中间帧按时间铺开。</li><li>三件事都靠同一个信息：谁去哪了。</li></ul>
+      <div class="src">依据：原书第 573–575、593–594 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">共同点</div><div class="kline">运动估得准，画面稳、顺</div><div class="kline">估不准就抖、糊、重影</div><div class="kline">本集先防抖，再插帧</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 573 页 · 防抖</div>
+  <h2>防抖：把已经拍抖的画面摆稳</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视频防抖是参数运动估计最广泛的应用之一。</li><li>算法既跑在摄像机、相机硬件里，也跑在软件包里。</li><li>防抖用运动信息把画面重新摆稳。</li><li>它便宜通用，但边界和遮挡躲不掉。</li></ul>
+      <div class="src">依据：原书第 573 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个落点</div><div class="kline">硬件：相机、摄像机</div><div class="kline">软件：后期提升画质</div><div class="kline">代价：边界与遮挡</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 574 页 · 三阶段</div>
+  <h2>三阶段：估运动、平滑、重采样</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先估每帧相对参考的相机运动。</li><li>再把高频抖动去掉，留下低频摇镜。</li><li>最后按修正量把每帧重采样回去。</li><li>三步里最难的是第一步，估错后面越平滑越错。</li></ul>
+      <div class="src">依据：原书第 574 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">顺序</div><div class="kline">估：量出怎么抖</div><div class="kline">平：画理想轨迹</div><div class="kline">重采样：把每帧挪过去</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 574 页 · 锁背景</div>
+  <h2>锁背景，别被前景带偏</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>运动估计常用相似变换。</li><li>相似变换处理相机平移、旋转和缩放。</li><li>难点是锁住背景运动。</li><li>前景一大、纹理一强，全局估计会被拽走。</li></ul>
+      <div class="src">依据：原书第 574 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">工程做法</div><div class="kline">先分前景和背景</div><div class="kline">或用鲁棒估计压外点</div><div class="kline">和 RANSAC 是同一类思路</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 574 页 · 平滑</div>
+  <h2>平滑：低频留，高频删</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>保留低频的慢变运动。</li><li>估计并去掉高频抖动。</li><li>常用二次惩罚。</li><li>想锁定或匀速，可用 L1 最小化导数。</li></ul>
+      <div class="src">依据：原书第 574 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">L2 与 L1</div><div class="kline">二次像橡皮筋，抖得远拉得狠</div><div class="kline">L1 允许少数大修正</div><div class="kline">要顺还是要直</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 574–575 页 · 代价</div>
+  <h2>代价：边界、模糊、三维重建</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>重采样会带来边界缺失。</li><li>可以裁剪、用其他帧补，或者 inpaint。</li><li>快速运动还会让帧模糊。</li><li>相机大幅平移时，用完整运动恢复结构重渲染三维路径。</li></ul>
+      <div class="src">依据：原书第 574–575 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">二维：掰画面，便宜</div><div class="kline">三维：换相机路径，更贵</div><div class="kline">三维不会把画面掰到没边</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">防抖实验 · 合成序列</div>
+  <h2>实测：抖动压五倍，裁掉一成八</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>合成一段边走边抖的序列。</li><li>全局平移估计平均误差 0.052 像素。</li><li>因果移动平均后，残余抖动 0.417 降到 0.079 像素。</li><li>原图 128 像素见方，每边裁 6 像素，面积只剩八成二。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读数</div><div class="kline">抖动压了五倍多</div><div class="kline">裁剪损失约一成八</div><div class="kline">只演示平移</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">防抖实验 · 程序生成示意图</div>
+  <h2>看图：抖的轨迹与平滑的轨迹</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>红线是估计出的抖动轨迹。</li><li>蓝线是平滑后的轨迹，只保留慢变趋势。</li><li>校正后抖动从 0.417 掉到 0.079。</li><li>蓝线结尾略滞后，这是因果平滑的代价。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e088_stabilize.png" style="max-height:500px" alt="防抖：估计轨迹、平滑轨迹与校正前后残余抖动｜程序生成，未用教材或论文原图"><figcaption>防抖：估计轨迹、平滑轨迹与校正前后残余抖动｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 593 页 · 插帧</div>
+  <h2>插帧：匹配刷新率，还要判遮挡</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>帧插值把输入视频匹配到显示器刷新率。</li><li>在前后帧之间造新帧。</li><li>每个未知像素都需要准确运动。</li><li>光有运动不够，遮挡信息同样关键。</li></ul>
+      <div class="src">依据：原书第 593 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两件事</div><div class="kline">运动：像素从哪来</div><div class="kline">遮挡：中间时刻该露谁</div><div class="kline">少了遮挡，前景会污染背景</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 593 页 · 一致性与混合</div>
+  <h2>一致就混，不一致先判可见</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同一个运动在前后帧都对得上，叫光流一致。</li><li>搬到中间时刻，颜色按线性插值混合。</li><li>运动不一致时，要判断哪个对、哪个被遮挡。</li><li>一致的地方直接混，不一致先判 visibility。</li></ul>
+      <div class="src">依据：原书第 593 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">(1−t) I0(x0) + t I1(x0+u0)</div><div class="mnote">t：中间时刻；I0、I1：前后帧；u0：运动</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">插帧实验 · 合成场景</div>
+  <h2>实测：重影和干净差多少</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相机横移 20 像素，前景棋盘再移 20 像素。</li><li>直接平均的 PSNR 只有 14.6 分贝。</li><li>光流插值到 99 分贝。</li><li>只看遮挡区，直接平均 6.2 分贝，光流插值仍是 99。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读数</div><div class="kline">全图：14.6 对 99</div><div class="kline">遮挡区：6.2 对 99</div><div class="kline">合成数据运动精确已知</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">插帧实验 · 程序生成示意图</div>
+  <h2>看图：两个重影变成一个</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从左到右：前帧、后帧、直接平均、光流插值、真值。</li><li>直接平均里有两个棋盘重影。</li><li>光流插值把前景搬到中间，只剩一个。</li><li>先看前景边缘和遮挡边界，那里最容易穿帮。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e088_interp.png" style="max-height:500px" alt="中间帧对照：前帧、后帧、直接平均、光流插值、真值｜程序生成，未用教材或论文原图"><figcaption>中间帧对照：前帧、后帧、直接平均、光流插值、真值｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 593–594 页 · 深度插帧</div>
+  <h2>深度插帧：估流、判可见、合成一起学</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>更近的插帧用深度网络。</li><li>有的用时空卷积，有的算双向光流。</li><li>再用上下文特征或软可见性图合并两帧。</li><li>Niklaus 和 Liu 的系统用 softmax splatting 合并，解码网络合成。</li></ul>
+      <div class="src">依据：原书第 593–594 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">流程</div><div class="kline">多分辨率深度特征</div><div class="kline">双向光流前向 warp</div><div class="kline">软可见性合并与解码</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">慢动作 · 4× 采帧</div>
+  <h2>慢动作：中间帧越准越顺</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>在四分之一、二分之一、四分之三时刻各补一帧。</li><li>帧率变成四倍。</li><li>模糊后的相邻帧平均绝对差 0.0995 降到 0.0446。</li><li>中间帧有重影，慢放会把重影也放慢。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e088_temporal.png" style="max-height:500px" alt="遮挡区与 4× 采帧前后相邻帧差（高斯模糊 σ=4）｜程序生成，未用教材或论文原图"><figcaption>遮挡区与 4× 采帧前后相邻帧差（高斯模糊 σ=4）｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">应用工程 · 本集归纳</div>
+  <h2>取舍表：三件事各有代价</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>防抖要裁边界。</li><li>插帧要判遮挡。</li><li>慢动作要中间帧准。</li><li>三者都怕快速运动、无纹理、光照突变和卷帘快门。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先问四件事</div><div class="kline">离线还是在线</div><div class="kline">能不能接受裁剪</div><div class="kline">有没有深度和 IMU</div><div class="kline">下游是显示、剪辑还是测量</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集实验课</div>
+  <h2>收束：三件事，一条线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>防抖 = 估运动 + 平滑轨迹 + 重采样。</li><li>插帧 = 逐像素运动 + 遮挡 + 线性混合。</li><li>慢动作 = 插帧的时间版。</li><li>下一集：画光流场，手写 Lucas–Kanade 求解器。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">光流场可视化</div><div class="kline">手写 Lucas–Kanade 求解器</div><div class="kline">看窗口、梯度、迭代</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,20 @@
+[lab] E076 单应参数化与 DLT 开始 2026-11-02T07:22:13
+[lab] 源码 sha256=43c6854b4d7bc9a126b3f615a2bbb1e162cf2d2e895274c3f3a2441effa8fa41
+[PASS] 四点 DLT 精确复原　| 误差=2.71e-16
+[PASS] 二十点 DLT 精确　| 误差=5.07e-16
+[PASS] 八自由度　| H 3×3 且 h22=1
+[PASS] 仿射解释不了透视　| 仿射=0.096 单应=5.1e-16
+[PASS] 归一化改善大坐标　| 归一=0.0000 未归一=0.0000
+[PASS] 共线点退化　| 次小奇异值=1.05e-16
+[FAIL] 直线仍映射为直线　| 共线误差=1.62e-02
+[PASS] 噪声下误差可控　| 误差=0.0024
+[PASS] 四个最小点　| 4 对
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e076_dlt_pipeline.png)=9fc92adb4c1b3bc8d95dc00987d9b4f8eba1f129639b5b8eb664a60e706cf6ba
+[lab] PNG sha256(e076_error_compare.png)=56bc14289c6923e86f58f82fd9f465015d75065e72fe3728c38af5941353a6b6
+[lab] PNG sha256(e076_four_points.png)=2ea6906cbd675926276c89934e4a695e01896cbfce1dab191d77c31dec8b571f
+[lab] readings → e076_homography_readings.json
+[lab] readings sha256=0600de581e4edaebc09728488be4fc38d8288c00b9a3e11f858e1aa3cd1667a5
+[lab] LEDGER：断言 10 条，PASS 9
+[lab] 汇总 PASS 9 / FAIL 1 / 共 10
+[lab] 结束 2026-11-02T07:22:13

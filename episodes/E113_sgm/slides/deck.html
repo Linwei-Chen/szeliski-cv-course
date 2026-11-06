@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>半全局匹配 SGM：多方向一维优化</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 12 章 · 12.5.1 动态规划</div>
+  <h2>SGM：沿扫描线找最小路径</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两条对应扫描线，先算两两匹配代价。</li><li>动态规划找一条总代价最小的路径。</li><li>路径每个点给出一个视差值。</li><li>顺序约束：扫描线内像素次序不能乱。</li></ul>
+      <div class="src">依据：原书第 774 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个关键词</div><div class="kline">代价矩阵</div><div class="kline">最小代价路径</div><div class="kline">顺序约束</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">动态规划 · 遮挡与惩罚</div>
+  <h2>斜走是匹配，平走是遮挡</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>部分遮挡：一组像素对另一张图的一个像素。</li><li>每个状态加 DSI 匹配代价和前驱代价。</li><li>遮挡像素加一个固定惩罚。</li><li>斜走一步表示匹配，水平或垂直走表示遮挡。</li></ul>
+      <div class="src">依据：原书第 774–775 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">路径的选择</div><div class="kline">匹配错，还是承认看不见</div><div class="kline">遮挡惩罚通常小于匹配错代价</div><div class="kline">惩罚太大，会把匹配当遮挡</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">一维 DP 的局限</div>
+  <h2>逐行优化，条纹与顺序问题</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>遮挡代价不好选，扫描线之间难一致。</li><li>一行一行独立优化，结果出现横向条纹。</li><li>窄前景挡住后面的点，顺序约束被违反。</li><li>一维 DP 快，但最优只在单行成立。</li></ul>
+      <div class="src">依据：原书第 775 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个问题</div><div class="kline">遮挡代价</div><div class="kline">扫描线一致性</div><div class="kline">顺序约束</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">半全局匹配 · 多方向</div>
+  <h2>多个方向，各做一维 DP</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>把多个方向的累积代价加起来。</li><li>原书举八个方向：N、E、W、S、NE、SE、SW、NW。</li><li>SGM 效果更好，而且高效，可做实时低功耗。</li><li>四个方向已能压住大部分条纹。</li></ul>
+      <div class="src">依据：原书第 775 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么叫半全局</div><div class="kline">每个方向沿一条线传播</div><div class="kline">没有解二维全局优化</div><div class="kline">方向越多越贵</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验实现 · 四路径</div>
+  <h2>四张累积代价图相加</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左到右、右到左、上到下、下到上。</li><li>每个方向做一次一维动态规划。</li><li>四张累积代价图相加后取最小。</li><li>每个像素的代价融合四个方向的支持。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e113_paths.png" style="max-height:500px" alt="SGM 四方向：左→右、右→左、上→下、下→上，累积后取最小｜程序生成，未用教材或论文原图"><figcaption>SGM 四方向：左→右、右→左、上→下、下→上，累积后取最小｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">平滑项 · P1 与 P2</div>
+  <h2>P1 管缓变，P2 管跳变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>P1：相邻像素视差变 1 的代价。</li><li>P2：视差大跳变的代价，一般大于 P1。</li><li>P2 太小边界会糊，太大弱纹理会拉平。</li><li>很多实现让 P2 随图像梯度自适应。</li></ul>
+      <div class="src">依据：原书第 775 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实验取值</div><div class="kline">P1 = 0.02</div><div class="kline">P2 = 0.12</div><div class="kline">P2 大于 P1</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合成双目实验 · 误差</div>
+  <h2>弱纹理与边界都被压下去</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>总体误差从 0.98 降到 0.44 像素。</li><li>弱纹理从 10.31 降到 3.33。</li><li>边界从 4.59 降到 1.41。</li><li>块匹配在弱纹理块里接近乱猜。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e113_penalty.png" style="max-height:500px" alt="块匹配 vs SGM：总体 0.98→0.44，弱纹理 10.31→3.33，边界 4.59→1.41｜程序生成，未用教材或论文原图"><figcaption>块匹配 vs SGM：总体 0.98→0.44，弱纹理 10.31→3.33，边界 4.59→1.41｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验设置 · 320×240</div>
+  <h2>人为挖一块弱纹理</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集合成双目降到 320×240。</li><li>视差范围 0–85，代价用 3×3 SAD。</li><li>背景左上角挖一块无纹理平地。</li><li>左右图填同一灰度，统计剔除遮挡和边界。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">设置</div><div class="kline">320×240</div><div class="kline">视差 0–85</div><div class="kline">3×3 SAD</div><div class="kline">弱纹理块单独统计</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">结果 · 剔除遮挡与边界</div>
+  <h2>收益来自弱纹理和边界</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SGM 总体 0.44，块匹配 0.98。</li><li>弱纹理 3.33 对 10.31。</li><li>边界 1.41 对 4.59。</li><li>遮挡区仍然没有办法，要后处理。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">还不够</div><div class="kline">左右一致性检查</div><div class="kline">亚像素</div><div class="kline">补洞</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视差图对比</div>
+  <h2>弱纹理块被填平</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>真值、块匹配、SGM 三张视差图。</li><li>块匹配在弱纹理块里是一团噪声。</li><li>SGM 基本填成背景视差，边界更整齐。</li><li>细长结构、重复纹理仍会错。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e113_compare.png" style="max-height:500px" alt="真值/块匹配/SGM：弱纹理块被 SGM 填平，边界更整齐｜程序生成，未用教材或论文原图"><figcaption>真值/块匹配/SGM：弱纹理块被 SGM 填平，边界更整齐｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程边界</div>
+  <h2>内存、参数与失败边界</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>代价体大小为宽×高×视差范围。</li><li>视差范围大、分辨率高，内存和带宽吃紧。</li><li>P1/P2 没有通用值，要按场景调。</li><li>实时实现常用多核、SIMD 或 FPGA。</li></ul>
+      <div class="src">依据：原书第 775 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">仍然会错</div><div class="kline">遮挡</div><div class="kline">细结构</div><div class="kline">重复纹理</div><div class="kline">不理解语义</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>SGM 的三句话</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>多方向一维动态规划，近似二维全局优化。</li><li>P1/P2 控制平滑与边界，参数按场景调。</li><li>弱纹理和边界改善，遮挡与细结构靠后处理。</li><li>下一集：PSM-Net 与端到端立体匹配。</li></ul>
+      <div class="src">依据：原书第 774–775 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">3D 卷积</div><div class="kline">代价体</div><div class="kline">从数据里学规则</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零五集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E003 · 导数、偏导与梯度：误差往哪边下山最快</title>
+<link rel="stylesheet" href="../../../assets/shared/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<style>
+  /* E003 集内微调：公式卡保持全尺寸字号，压缩 KaTeX display 边距与卡片内边距 */
+  .formula-tight .katex-display { margin: .3em 0; }
+  .formula-tight { padding: 34px 60px; }
+</style>
+<script defer src="../../../assets/shared/vendor/katex/katex.min.js"></script>
+<script defer src="../../../assets/shared/vendor/katex/contrib/auto-render.min.js"></script>
+<script defer src="../../../assets/shared/deck.js"></script>
+<script>
+window.addEventListener("load", () => {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    });
+  }
+});
+</script>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 03</div>
+  <h1 class="step" data-step="1">导数、偏导与梯度：<br><span class="hl">往哪边下山最快</span></h1>
+  <p class="ep step" data-step="1">给拟合一个方向 —— E004 正规方程、E039 LM 算法共同的地基</p>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>01 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">任务 · LINE FITTING</div>
+    <h2>两个旋钮，<span class="hl">一条直线</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:10px">原书附录 A.2 讲最小二乘，第一个例子是<b>特征点对齐图像</b>——求的是变换的参数，正是上一集那类参数。这里先拿最简单的直线练手：拟一条 \(y = mx + b\) 的直线，两个旋钮：<b>斜率 m、截距 b</b>。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:26px">误差：每个点的<b>竖直距离</b>，平方后加总——离得越远罚得越狠。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="直线拟合与残差">
+      <g font-family="PingFang SC, sans-serif">
+        <line x1="70" y1="410" x2="600" y2="410" stroke="#d8cfc0" stroke-width="3"></line>
+        <line x1="70" y1="410" x2="70" y2="50" stroke="#d8cfc0" stroke-width="3"></line>
+        <line x1="110" y1="370" x2="570" y2="120" stroke="#1e3a5f" stroke-width="5"></line>
+        <line x1="200" y1="255" x2="200" y2="316" stroke="#e8590c" stroke-width="4" stroke-dasharray="7 5"></line>
+        <line x1="330" y1="185" x2="330" y2="140" stroke="#e8590c" stroke-width="4" stroke-dasharray="7 5"></line>
+        <line x1="440" y1="130" x2="440" y2="185" stroke="#e8590c" stroke-width="4" stroke-dasharray="7 5"></line>
+        <g fill="#2b2b33">
+          <path d="M193,248 l14,14 M207,248 l-14,14" stroke="#2b2b33" stroke-width="5"></path>
+          <path d="M323,178 l14,14 M337,178 l-14,14" stroke="#2b2b33" stroke-width="5"></path>
+          <path d="M433,123 l14,14 M447,123 l-14,14" stroke="#2b2b33" stroke-width="5"></path>
+          <path d="M513,158 l14,14 M527,158 l-14,14" stroke="#2b2b33" stroke-width="5"></path>
+        </g>
+        <text x="600" y="230" font-size="26" fill="#1e3a5f" font-weight="700" text-anchor="end">y = mx + b</text>
+        <text x="90" y="45" font-size="23" fill="#8a8378">b：截距（直线往哪儿放）</text>
+        <text x="585" y="445" font-size="23" fill="#8a8378" text-anchor="end">m：斜率（直线往哪儿翘）</text>
+        <text x="215" y="352" font-size="22" fill="#e8590c">残差</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>02 / 14</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">地形 · ERROR SURFACE</div>
+  <h2>误差，是<span class="hl">一片地形</span></h2>
+  <div class="formula step" data-step="1">
+    $$E = \sum_i \|r_i\|^2, \qquad r_i = \text{观测}_i - \text{预测}_i$$
+    <div class="note">残差 = 观测减预测（原书式 A.23/A.24，平方后与符号无关） ｜ 讲者类比：把 (m, b) 当平面坐标、总误差 E 当高度</div>
+  </div>
+  <p class="lead step" data-step="2">找最优参数 = 在地形里<b>找最低点</b>。山里有雾，看不见谷底，只能看清脚下这一小块——往哪边迈一小步，高度降得最快？</p>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>03 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">单变量 · DERIVATIVE</div>
+    <h2>导数 = <span class="hl">瞬时变化率</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:10px">曲线上取两点连成<b>割线</b>，两点越靠越近，极限就是<b>切线</b>。切线的斜率，就是导数。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:26px">斜率为正：上坡；为负：下坡；等于零：脚下平坦——山顶、谷底，或都不是（比如 \(y=x^3\) 的原点）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="割线逼近切线">
+      <g font-family="PingFang SC, sans-serif">
+        <path d="M80,90 C240,400 420,420 590,150" fill="none" stroke="#2b2b33" stroke-width="5"></path>
+        <line x1="150" y1="190" x2="560" y2="185" stroke="#e8590c" stroke-width="3" stroke-dasharray="9 6"></line>
+        <line x1="260" y1="180" x2="560" y2="290" stroke="#d8a13c" stroke-width="3" stroke-dasharray="9 6"></line>
+        <line x1="300" y1="120" x2="580" y2="330" stroke="#1e3a5f" stroke-width="5"></line>
+        <circle cx="440" cy="230" r="11" fill="#1e3a5f"></circle>
+        <text x="628" y="440" text-anchor="end" font-size="24" fill="#1e3a5f">切线：斜率 = 导数</text>
+        <text x="170" y="150" font-size="22" fill="#8a8378">两点拉开：割线</text>
+        <text x="120" y="440" font-size="23" fill="#8a8378">两点越靠越近 → 切线</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>04 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">多变量 · PARTIAL</div>
+    <h2>偏导数 = <span class="hl">一次冻一个</span></h2>
+    <div class="formula step" data-step="1" style="margin-top:8px">
+      $$\frac{\partial E}{\partial m} \qquad\qquad\qquad \frac{\partial E}{\partial b}$$
+      <div class="note">左：冻住 b、只拧 m ｜ 右：冻住 m、只拧 b ｜ ∂ 在提醒你：这是多元函数里沿某一个坐标轴方向的坡度</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:16px">两个旋钮，各量一次坡度。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="偏导：一次只拧一个旋钮">
+      <g font-family="PingFang SC, sans-serif">
+        <circle cx="200" cy="200" r="80" fill="#ffffff" stroke="#e8590c" stroke-width="5"></circle>
+        <text x="200" y="215" font-size="44" fill="#e8590c" text-anchor="middle" font-weight="700">m</text>
+        <path d="M200,90 A110,110 0 0 1 310,200" fill="none" stroke="#e8590c" stroke-width="5"></path>
+        <path d="M310,200 l-18,-16 M310,200 l-24,6" stroke="#e8590c" stroke-width="5" fill="none"></path>
+        <text x="200" y="330" font-size="24" fill="#e8590c" text-anchor="middle">正在拧：量坡度</text>
+        <circle cx="450" cy="200" r="80" fill="#ffffff" stroke="#d8cfc0" stroke-width="5"></circle>
+        <text x="450" y="215" font-size="44" fill="#8a8378" text-anchor="middle" font-weight="700">b</text>
+        <line x1="360" y1="286" x2="540" y2="114" stroke="#1e3a5f" stroke-width="4"></line>
+        <line x1="378" y1="304" x2="558" y2="132" stroke="#1e3a5f" stroke-width="4"></line>
+        <text x="450" y="330" font-size="24" fill="#1e3a5f" text-anchor="middle">冻住：不许动</text>
+        <text x="320" y="435" font-size="25" fill="#2b2b33" text-anchor="middle">一次只动一个，其余全冻住</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>05 / 14</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">合体 · GRADIENT</div>
+  <h2>梯度：<span class="hl">偏导排成向量</span></h2>
+  <div class="formula formula-tight step" data-step="1">
+    $$\nabla E = \begin{bmatrix} \dfrac{\partial E}{\partial m} \\[6pt] \dfrac{\partial E}{\partial b} \end{bmatrix}$$
+    <div class="note">几何意义：梯度指向<b>爬升最快</b>的方向——两个旋钮往哪边同时拧、误差涨得最快，它说了算</div>
+  </div>
+  <p class="lead step" data-step="1">直线拟合的梯度就两个分量：对 m 的偏导、对 b 的偏导。</p>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>06 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="2">
+  <div class="col-l">
+    <div class="kicker">下山的方向 · STEEPEST</div>
+    <h2>垂直等高线，<span class="hl">就是最陡</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:10px">梯度（不为零时）<b>垂直于等高线</b>，指向上坡最陡的方向。想下山？<b>倒着走</b>：沿负梯度方向迈步——这就是<b>梯度下降</b>。</p>
+    <p class="lead dim step" data-step="2" style="margin-top:26px">为什么垂直？相邻等高线的落差固定，垂直穿过路程最短，坡度自然最陡。原书把正规方程的残差 \(d - Cx\) 叫<b>最陡下降方向</b>（第 935 页）——它恰好就是负梯度（注意：这是方程残差，不是开头的观测减预测）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="梯度垂直于等高线">
+      <g font-family="PingFang SC, sans-serif">
+        <ellipse cx="330" cy="230" rx="70" ry="46" fill="none" stroke="#d8cfc0" stroke-width="3"></ellipse>
+        <ellipse cx="330" cy="230" rx="140" ry="94" fill="none" stroke="#d8cfc0" stroke-width="3"></ellipse>
+        <ellipse cx="330" cy="230" rx="215" ry="146" fill="none" stroke="#d8cfc0" stroke-width="3"></ellipse>
+        <ellipse cx="330" cy="230" rx="285" ry="196" fill="none" stroke="#d8cfc0" stroke-width="3"></ellipse>
+        <circle cx="330" cy="230" r="8" fill="#2b2b33"></circle>
+        <text x="330" y="212" font-size="22" fill="#8a8378" text-anchor="middle">谷底</text>
+        <circle cx="430" cy="170" r="9" fill="#2b2b33"></circle>
+        <line x1="430" y1="170" x2="500" y2="119" stroke="#e8590c" stroke-width="6"></line>
+        <path d="M500,119 l-22,4 M500,119 l-6,20" stroke="#e8590c" stroke-width="6" fill="none"></path>
+        <text x="512" y="150" font-size="24" fill="#e8590c" font-weight="700">∇E 上坡最陡</text>
+        <line x1="430" y1="170" x2="360" y2="221" stroke="#1e3a5f" stroke-width="6"></line>
+        <path d="M360,221 l22,-4 M360,221 l6,-20" stroke="#1e3a5f" stroke-width="6" fill="none"></path>
+        <text x="250" y="255" font-size="24" fill="#1e3a5f" font-weight="700">−∇E 下山</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>07 / 14</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">谷底 · SET TO ZERO</div>
+  <h2>谷底处，<span class="hl">梯度为零</span></h2>
+  <div class="formula formula-tight step" data-step="1">
+    $$\frac{\partial E}{\partial m} = -2\sum_i x_i\,(y_i - mx_i - b) = 0$$
+    $$\frac{\partial E}{\partial b} = -2\sum_i (y_i - mx_i - b) = 0$$
+    <div class="note">讲者推导：谷底处两个偏导同时为零 ｜ 原书 A.2 以矩阵形式给出，名为正规方程（式 A.30，第 928 页）</div>
+  </div>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>08 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="2">
+  <div class="col-l">
+    <div class="kicker">真实世界 · NONLINEAR</div>
+    <h2>一次近似，<span class="hl">分步下山</span></h2>
+    <div class="formula step" data-step="1" style="margin-top:8px">
+      $$J = \partial f/\partial p$$
+      <div class="note">近似目标：\(\|J\,\Delta p - r\|^2 \approx E(p+\Delta p)\)（原书式 A.46）｜ 雅可比 = f 对参数的偏导，在当前位置做线性近似</div>
+    </div>
+    <p class="lead step" data-step="2" style="margin-top:16px">迈多大？增量乘 α：从 1 开始，误差没降就<b>减半</b>（线搜索）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="线性近似迭代下山">
+      <g font-family="PingFang SC, sans-serif">
+        <path d="M100,100 C280,430 460,430 590,180" fill="none" stroke="#2b2b33" stroke-width="5"></path>
+        <line x1="120" y1="140" x2="330" y2="355" stroke="#d8a13c" stroke-width="3" stroke-dasharray="9 6"></line>
+        <circle cx="150" cy="180" r="10" fill="#e8590c"></circle>
+        <text x="120" y="150" font-size="23" fill="#e8590c">位置1：画切线</text>
+        <circle cx="280" cy="330" r="10" fill="#e8590c"></circle>
+        <text x="255" y="395" font-size="23" fill="#e8590c">位置2：再画</text>
+        <circle cx="390" cy="398" r="10" fill="#1e3a5f"></circle>
+        <text x="480" y="110" font-size="24" fill="#8a8378">f 不是线性的？</text>
+        <text x="480" y="145" font-size="24" fill="#8a8378">那就一段一段近似</text>
+        <text x="320" y="452" font-size="22" fill="#8a8378" text-anchor="middle">示意：每步在当前点重新线性化，逐步贴近谷底</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>09 / 14</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">实验 · CODE</div>
+  <h2>三条轨迹：<span class="hl">步长定生死</span></h2>
+  <p class="lead step" data-step="1">三条轨迹：蓝绿<b>起点不同、步长相同</b>，橙色<b>步长放大越界</b>。</p>
+  <p class="lead dim step" data-step="1" style="margin-top:12px">稳定上限 = 2 ÷ 海森矩阵最大特征值（讲者推导；本实验碗的 E=½dᵀAd，海森矩阵即 A）</p>
+  <figure class="shot step" data-step="2">
+    <img src="figures/gradient_descent_demo.png" alt="梯度下降三条轨迹实验图" style="max-height:315px">
+  </figure>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>10 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">彩蛋 · CONJUGATE GRADIENT</div>
+    <h2>下山路线，<span class="hl">也是学问</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:10px">原书 A.5.1 把主角让给<b>共轭梯度</b>：需要的迭代步数，从大致跟条件数成正比，降到只跟<b>条件数的平方根</b>成正比。条件数就是碗有多扁：峡谷越窄长，条件数越大。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:26px">普通下降在峡谷里来回横跳是讲者的演示；共轭梯度从最陡下降方向出发（第 935 页），之后每一步都记住上一步的走向。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="普通下降与共轭梯度路线对比">
+      <g font-family="PingFang SC, sans-serif">
+        <ellipse cx="330" cy="240" rx="90" ry="52" fill="none" stroke="#d8cfc0" stroke-width="3"></ellipse>
+        <ellipse cx="330" cy="240" rx="180" ry="104" fill="none" stroke="#d8cfc0" stroke-width="3"></ellipse>
+        <ellipse cx="330" cy="240" rx="272" ry="158" fill="none" stroke="#d8cfc0" stroke-width="3"></ellipse>
+        <circle cx="330" cy="240" r="8" fill="#2b2b33"></circle>
+        <path d="M150,110 L370,190 L250,290 L330,240" fill="none" stroke="#e8590c" stroke-width="5" stroke-dasharray="10 7"></path>
+        <circle cx="150" cy="110" r="9" fill="#e8590c"></circle>
+        <text x="120" y="80" font-size="24" fill="#e8590c">来回横跳</text>
+        <path d="M540,110 L400,185 L336,238" fill="none" stroke="#1e3a5f" stroke-width="5"></path>
+        <circle cx="540" cy="110" r="9" fill="#1e3a5f"></circle>
+        <text x="490" y="80" font-size="24" fill="#1e3a5f">共轭路线</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>11 / 14</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="qmark step" data-step="1">「</div>
+  <blockquote class="step" data-step="1">导数是瞬时变化率，偏导是冻住其他旋钮的导数；<br>梯度上坡最陡，下山请倒着走。</blockquote>
+  <div class="attrib step" data-step="1">—— 本集记忆锚 ｜ 两条纪律：谷底处梯度为零；一步别迈太大</div>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>12 / 14</span></div>
+</section>
+
+<section class="slide endcard" data-steps="1">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>附录 A.2（原书第 927–928 页正规方程）→ A.3（第 930–931 页雅可比与线搜索）→ 有余力再看 A.5.1（第 934–936 页共轭梯度）</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>把 code/gradient_descent_demo.py 的步长系数改成 0.5 倍和 1.5 倍，观察三条轨迹怎么变</div>
+  <div class="row step" data-step="1"><span class="tag">下一集</span>E004 矩阵求导与最小二乘的灵魂</div>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>13 / 14</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 03 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E003 · 数学工具箱</span><span>14 / 14</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

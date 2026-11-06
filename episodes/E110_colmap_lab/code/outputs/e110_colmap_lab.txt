@@ -1,0 +1,25 @@
+[lab] E110 COLMAP 上机开始 2026-11-03T04:12:34
+[lab] 源码 sha256=6436d2ed2a72d965d3561618a9a284b2da3f18d99b5790e8843e3bc31332415e
+[lab] COLMAP/pycolmap 版本 4.2.1｜输入 12 视角 800x600｜相机先验 f=700, c=(400,300)
+[PASS] 12 张输入图在盘　| 12 张
+[PASS] COLMAP 全部注册　| 12/12
+[PASS] 匹配对足够多　| 66 对
+[PASS] 稀疏点足够多　| 10324 点
+[PASS] 平均重投影误差小　| 0.2712 px
+[PASS] 焦距误差小　| 0.39%
+[PASS] 相机中心 RMS 小　| 0.0179
+[PASS] 最差相机中心误差小　| 0.0490
+[PASS] 平均轨迹长度够　| 5.42
+[PASS] 三图在盘　| views/reconstruction/errors
+[lab] 注册 12/12｜匹配 66 对｜稀疏点 10324｜观测 55938｜平均轨迹 5.42
+[lab] 重投影 0.2712 px｜焦距 700.15/702.74（真值 700）｜误差 0.39%
+[lab] 相机中心对齐后 RMS 0.0179｜最大 0.0490｜相似尺度 0.5494
+[lab] 三角化最少视角 0 号 211 点｜0 号 211 点/2153 特征
+[lab] PNG sha256(e110_errors.png)=d077e5a1f0eba5937a303f69221acf4052b34ef7e0fd60f72e46ce0618bfb6bf
+[lab] PNG sha256(e110_reconstruction.png)=fb4e1b846305f1a7476baeb1ab84a4d97fec018db1b138db2c3b02e1bdf0a6cc
+[lab] PNG sha256(e110_views.png)=0078791127ff915e4399f830702825003ccc343e524ba2b83622e2a11db39ba2
+[lab] readings → e110_colmap_readings.json
+[lab] readings sha256=d28a1d75873f5b8de90d7c20191bfb0fb86c3256d98a155a3b0b93b8dc009a11
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T04:12:34

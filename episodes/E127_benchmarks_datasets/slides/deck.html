@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>重建怎么算好坏：指标、基准与数据集</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">评测课 · 数据、划分、统计</div>
+  <h2>基准不只是排行榜</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>数据从哪来，训练和测试怎么分。</li><li>结果怎么报统计量。</li><li>换数据集、换划分，冠军可能换人。</li><li>所以基准是实验设计。</li></ul>
+      <div class="src">依据：原书第 954–960 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个问题</div><div class="kline">数据来源</div><div class="kline">划分方式</div><div class="kline">统计口径</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">数据集 · 四件事</div>
+  <h2>数据集不只是照片</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>要在有挑战、有代表性的数据上测。</li><li>有真值或别人的结果，测试更定量。</li><li>数据集至少有场景、标注、真值和划分。</li><li>按场景分和随机分，结论可能不同。</li></ul>
+      <div class="src">依据：原书第 954 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先问两件事</div><div class="kline">它代表什么</div><div class="kline">它怎么划分</div><div class="kline">不然测到的是记忆，不是泛化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">基准 · 三件套</div>
+  <h2>基准：数据、协议、榜单</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>数据集常自带 benchmark、结果和代码。</li><li>书里点名 Middlebury、PASCAL、ImageNet、KITTI。</li><li>还有 Sintel 和 COCO。</li><li>协议包括划分、指标、分辨率和聚合。</li></ul>
+      <div class="src">依据：原书第 954 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读榜顺序</div><div class="kline">先看协议</div><div class="kline">再看名次</div><div class="kline">榜单是入口，不是结论</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">3D 数据 · 任务决定数据</div>
+  <h2>重建数据集：任务决定数据</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>NYU3D 和 ScanNet 是早期室内数据集。</li><li>新算法常用 3D Scenes、ICL-NUIM、ShapeNet。</li><li>也常用 Tanks and Temples。</li><li>ETH3D 和 Tanks and Temples 有榜单。</li></ul>
+      <div class="src">依据：原书第 958、960 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">数据集有偏</div><div class="kline">采集方式和场景分布不同</div><div class="kline">DTU 多是论文自报</div><div class="kline">别把室内结论直接搬到室外</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 划分泄漏</div>
+  <h2>看图：随机划分会抬高分数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>随机划分准确率 1.000。</li><li>按场景留出只有 0.500。</li><li>两者相差 0.500。</li><li>同场景纹理泄漏进测试集。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e127_split.png" style="max-height:500px" alt="随机 vs 按场景留出：同场景泄漏｜程序生成，未用教材或论文原图"><figcaption>随机 vs 按场景留出：同场景泄漏｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">真值 · 四种来路</div>
+  <h2>真值从哪来，各有偏差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>真值有激光扫描、合成渲染、多视图重建。</li><li>人工标注也是一种来路。</li><li>激光有遮挡和孔洞，合成图太干净。</li><li>多视图继承匹配误差，人工受规范影响。</li></ul>
+      <div class="src">依据：原书第 954 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">真值误差</div><div class="kline">先问怎么来、误差多大</div><div class="kline">和模型误差分开报</div><div class="kline">真值错了，排名再漂亮也没用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 均值陷阱</div>
+  <h2>看图：平均分会掩盖失败</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>A 平均 0.715，高于 B 的 0.700。</li><li>B 的中位数和最差都是 0.700。</li><li>A 的中位数和最差只有 0.550。</li><li>八个场景里，B 赢了五个。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e127_uncertainty.png" style="max-height:500px" alt="逐场景得分与均值/中位数/最差｜程序生成，未用教材或论文原图"><figcaption>逐场景得分与均值/中位数/最差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">不确定度 · 误差分析</div>
+  <h2>不确定度：别只报均值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>高斯线性情形，协方差是噪声加权 Hessian 的逆。</li><li>大问题可以只报方差或单参数协方差。</li><li>非线性或鲁棒问题，用局部 Hessian 给下界。</li><li>只报均值不够，要报不确定度。</li></ul>
+      <div class="src">依据：原书第 952–953 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个提醒</div><div class="kline">Hessian 越陡，估计越稳</div><div class="kline">参数估计要给范围</div><div class="kline">至少报关键参数的方差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 数据配比</div>
+  <h2>看图：换配比就换冠军</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>五五配比，B 是 0.775，A 是 0.750。</li><li>室内占七成，A 是 0.825，B 是 0.762。</li><li>翻转点在 57.1% 室内。</li><li>测试集配比一变，冠军就换。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e127_composition.png" style="max-height:500px" alt="总体得分随室内比例变化，换配比就换冠军｜程序生成，未用教材或论文原图"><figcaption>总体得分随室内比例变化，换配比就换冠军｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">读榜 · 五个问题</div>
+  <h2>读榜五问：先看考卷</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>任务是什么。</li><li>训练和测试怎么划分。</li><li>指标朝哪个方向，结果怎么聚合。</li><li>代码和配置能不能复现。</li></ul>
+      <div class="src">依据：原书第 954 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五问之后</div><div class="kline">再看排名</div><div class="kline">协议不同，数字不能同桌比</div><div class="kline">聚合会藏事：均值、中位数、最差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">常见坑 · 复现</div>
+  <h2>五个坑：第一名可能是熟人</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同一数据集训练和测试，换数据集就掉。</li><li>同场景泄漏、榜单过拟合。</li><li>论文自报、硬件不同、只报平均。</li><li>看跨数据集、最差场景、能不能复现。</li></ul>
+      <div class="src">依据：原书第 960 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三样都过</div><div class="kline">再信这个第一名</div><div class="kline">域适应可以缓解跨数据集问题</div><div class="kline">速度和显存不能直接横比</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>这一集的三件事</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>数据集要看代表性和真值。</li><li>基准要看协议和划分。</li><li>统计要报均值、中位数、最差和不确定度。</li><li>下一集：动手做迷你 NeRF 实验。</li></ul>
+      <div class="src">依据：原书第 952–960 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">把数据、训练、评测串起来</div><div class="kline">看一个场景从照片到新视角</div><div class="kline">下一集见</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十九集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

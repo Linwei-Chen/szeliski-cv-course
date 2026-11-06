@@ -1,0 +1,16 @@
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight bold for Hiragino Sans GB, now using 600.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight bold for Hiragino Sans GB, now using 600.
+findfont: Failed to find font weight bold for Hiragino Sans GB, now using 600.
+/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E020_color/code/e020_color.py:483: RuntimeWarning: divide by zero encountered in divide
+  globals()[target] = lambda xyz: np.asarray(xyz, dtype=float) / np.asarray(xyz, dtype=float)[0]
+/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E020_color/code/e020_color.py:483: RuntimeWarning: invalid value encountered in divide
+  globals()[target] = lambda xyz: np.asarray(xyz, dtype=float) / np.asarray(xyz, dtype=float)[0]

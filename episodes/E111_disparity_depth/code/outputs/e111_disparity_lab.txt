@@ -1,0 +1,24 @@
+[lab] E111 视差即深度开始 2026-11-03T04:30:01
+[lab] 源码 sha256=c97e817427c1f0e15750b0cb530164be14ed4c8c9cb25d6fb6d4a4030d47a335
+[lab] 基线 0.2｜焦距 800｜图像 640x480｜深度 [1.0, 2.0, 4.0, 8.0]｜视差 [160.0, 80.0, 40.0, 20.0]
+[PASS] d·Z 恒定　| max dev 0.00e+00
+[PASS] 视差随深度递减　| 160→80→40→20
+[PASS] 近远比等于深度比　| 8.0
+[PASS] 基线加倍视差加倍　| 320
+[PASS] 焦距加倍视差加倍　| 320
+[PASS] 块匹配平均误差小　| 0.182 px
+[PASS] 1px 内准确率高　| 99.8%
+[PASS] 中心深度误差小　| max 0.00%
+[PASS] 边界误差更大　| 23.65 vs 0.18
+[PASS] 三图在盘　| geometry/curve/stereo
+[lab] d·Z=160.0（max dev 0.00e+00）｜近远比 8.0｜B×2=320｜f×2=320
+[lab] 块匹配 MAE 0.182 px｜1px 内 99.8%｜中心深度最大误差 0.00%
+[lab] 边界误差 23.65 px vs 内部 0.18 px
+[lab] PNG sha256(e111_curve.png)=e67c5d09b48eebed7a463fc76cd984ea82b766fde982415c37ba75be69bff564
+[lab] PNG sha256(e111_geometry.png)=7d707219588bc0dabc4311a93d9d2314887e1069d417de0e5193fb3d1db29461
+[lab] PNG sha256(e111_stereo.png)=1779a83d4241e45a69577f2a548d66ba8821fe552836a103de0ba3dd12e4d3db
+[lab] readings → e111_disparity_readings.json
+[lab] readings sha256=156a5004dacdbcbd6bed52ca894a6b1c8f9dce2fc960570cc72c262045eef24b
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T04:30:01

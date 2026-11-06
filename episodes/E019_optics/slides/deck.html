@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>从针孔到薄透镜：对焦、曝光、渐晕与像差</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">导引 · 本集五站</div>
+  <h2>从针孔走到薄透镜</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集讲光如何变亮暗，这一集进镜头。</li><li>光要先穿过镜头，才落到传感器上。</li><li>四件事：对焦、曝光、渐晕、像差。</li><li>五站：薄透镜、弥散圆、f 值、像差、渐晕。</li></ul>
+      <div class="src">依据：原书第 74–79 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集五站</div><div class="kline">薄透镜与透镜定律</div><div class="kline">弥散圆与景深</div><div class="kline">f 值与曝光</div><div class="kline">像差与渐晕</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">薄透镜 · 式 2.97</div>
+  <h2>薄透镜：会聚焦的针孔</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>薄透镜是一块玻璃，两面曲率很小且相等。</li><li>式 2.97：1/zo + 1/zi = 1/f。</li><li>焦距 100mm、物距 5m 时，像距约 102mm。</li><li>物距无穷时，像距等于 f，退化为针孔。</li></ul>
+      <div class="src">依据：原书第 74–75 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e019_fig2_19.png" style="max-height:500px" alt="薄透镜光路：焦距 100mm、物距 5m、像距约 102mm，弥散圆张角放大 10 倍示意｜程序生成，未用教材或论文原图"><figcaption>薄透镜光路：焦距 100mm、物距 5m、像距约 102mm，弥散圆张角放大 10 倍示意｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">对焦 · 弥散圆</div>
+  <h2>糊不糊，看弥散圆</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>转动对焦环，把焦平面挪开 Δzi。</li><li>原本聚成一点的像摊成圆盘，叫弥散圆 c。</li><li>c 取决于 Δzi 相对 zi 的比例和孔径 d。</li><li>孔径越小，弥散圆越小。</li></ul>
+      <div class="src">依据：原书第 75–76 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个量</div><div class="kline">焦平面移动量 Δzi</div><div class="kline">孔径直径 d</div><div class="kline">弥散圆 c</div><div class="kline">景深由对焦距离与光圈决定</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">曝光 · f 值</div>
+  <h2>f 值：焦距除以孔径</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>式 2.98：N = f/d。</li><li>f/2.8 就是焦距除以 2.8 得到孔径直径。</li><li>全挡序列 1.4、2、2.8、4、5.6、8、11、16、22，每挡乘根号二。</li><li>面积翻倍就是一挡 EV，等效快门 1/250 到 1/125。</li></ul>
+      <div class="src">依据：原书第 76 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">N = f / d</div><div class="mnote">式 2.98；N 是 f 值，f 是焦距，d 是孔径直径（同单位）</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">像差 · 五种</div>
+  <h2>五种赛德尔像差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>真实镜头不是无限薄，会有几何像差。</li><li>三阶光学下有五种经典赛德尔像差。</li><li>球差、彗差、像散、场曲、畸变。</li><li>畸变把直线拍弯；其余四种坏聚焦质量和像面形状。</li></ul>
+      <div class="src">依据：原书第 76–77 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五种像差</div><div class="kline">球差、彗差</div><div class="kline">像散、场曲</div><div class="kline">畸变</div><div class="kline">复合透镜可减轻</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">色差 · 横与纵</div>
+  <h2>色差：不同颜色不同焦点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>玻璃折射率随波长略有不同。</li><li>不同颜色的焦点距离和放大率都略有差别。</li><li>横向色差：放大率随波长变，可按逐色径向畸变建模。</li><li>纵向色差：焦距随波长变，逐色模糊，高频难恢复。</li></ul>
+      <div class="src">依据：原书第 77 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e019_chromatic.png" style="max-height:500px" alt="双色镜头：蓝光焦距 100mm、红光 101mm，红焦平面上蓝光糊成一圈（放大 20 倍示意）｜程序生成，未用教材或论文原图"><figcaption>双色镜头：蓝光焦距 100mm、红光 101mm，红焦平面上蓝光糊成一圈（放大 20 倍示意）｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">渐晕 · cos⁴α</div>
+  <h2>渐晕：亮度向边缘衰减</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>自然渐晕是几何的，缩光圈也躲不掉。</li><li>机械渐晕是遮挡，缩光圈可以缓解。</li><li>三个来源共四个 cos 因子，合成 cos⁴α。</li><li>基本辐射度关系：E = L·(π/4)·(d/f)²·cos⁴α。</li></ul>
+      <div class="src">依据：原书第 78–79 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e019_vignetting.png" style="max-height:500px" alt="cos⁴α 曲线与全画面渐晕热图：45° 只剩四分之一，全画幅角落约 0.71｜程序生成，未用教材或论文原图"><figcaption>cos⁴α 曲线与全画面渐晕热图：45° 只剩四分之一，全画幅角落约 0.71｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">小结 · 一条线</div>
+  <h2>从针孔到薄透镜的一条线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>针孔模型管几何。</li><li>薄透镜加对焦，回答哪里清晰。</li><li>f 值回答进多少光。</li><li>像差和渐晕是真实镜头的代价，大多可标定。</li></ul>
+      <div class="src">依据：原书第 75–79 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四个问题</div><div class="kline">清晰在哪里</div><div class="kline">进多少光</div><div class="kline">哪里会糊</div><div class="kline">哪里会暗</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 透镜定律</div>
+  <h2>透镜定律与放大率</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>物距无穷，像距 100mm。</li><li>物距 2f，像距 200mm，放大率 1。</li><li>物距 5m、f=100mm，像距 102.04mm。</li><li>放大率 m = zi/zo：5m 约 1/49，1.5f 处为 2。</li></ul>
+      <div class="src">依据：本集实验；原书第 75 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三点验证</div><div class="kline">zo→∞ ⇒ zi=f</div><div class="kline">zo=2f ⇒ zi=2f, m=1</div><div class="kline">zo=5m ⇒ zi=102.04mm</div><div class="kline">m = zi/zo</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 弥散圆</div>
+  <h2>弥散圆与景深表</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对焦 5m、挪 1mm、孔径 10mm，c≈0.098mm。</li><li>全画幅 6.2μm 像素，约盖 16 个像素。</li><li>屈光度：对焦 5m 是 0.2D；∞ 差 0.2D，3m 差 0.13D。</li><li>景深界 [4.36, 5.86]m；f/20 加宽到 [3.86, 7.08]m。</li></ul>
+      <div class="src">依据：本集实验；原书第 75–76 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e019_dof_chart.png" style="max-height:500px" alt="景深表与弥散圆 V 形曲线：固定 f=100mm、c=0.03mm，变量为对焦距离与 f 值｜程序生成，未用教材或论文原图"><figcaption>景深表与弥散圆 V 形曲线：固定 f=100mm、c=0.03mm，变量为对焦距离与 f 值｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 双色镜头</div>
+  <h2>双色镜头：色差的玩具版</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>蓝光 f=100mm，红光 f′=101mm。</li><li>同一 5m 物点，像距 102.04mm 与 103.08mm。</li><li>纵向差 1.04mm；放大率相对差 1.02%。</li><li>盘状模糊 MTF 在第一零点前单调下降。</li></ul>
+      <div class="src">依据：原书第 75、77 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个方向</div><div class="kline">纵向：焦距差</div><div class="kline">横向：放大率差</div><div class="kline">纵向差 1.04mm</div><div class="kline">横向差 1.02%</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验四 · 渐晕</div>
+  <h2>自然渐晕的定量值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>cos⁴α：0° 为 1，15° 为 0.87，30° 为 0.5625，45° 为 0.25。</li><li>全画幅半对角 23.4°，角落约 0.71。</li><li>f/2 的 E 是 f/16 的 64 倍，正好六挡。</li><li>全画幅与手机底单像素集光面积差约 30.8 倍。</li></ul>
+      <div class="src">依据：本集实验；原书第 78–79 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个依赖</div><div class="kline">像素面积</div><div class="kline">f 值平方</div><div class="kline">cos⁴α</div><div class="kline">增益与噪声归下一集</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 五句话</div>
+  <h2>五句话带走</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>薄透镜 1/zo+1/zi=1/f，zo→∞ 时为针孔。</li><li>失焦用弥散圆度量，景深由对焦距离与光圈决定。</li><li>f 值 N=f/d；全挡根号二，一挡进光翻倍。</li><li>五种赛德尔像差，色差分横向与纵向；进光看 E=L(π/4)(d/f)²cos⁴α。</li></ul>
+      <div class="src">依据：原书第 75–79 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五句话</div><div class="kline">透镜定律</div><div class="kline">弥散圆与景深</div><div class="kline">f 值与 EV</div><div class="kline">像差、色差、渐晕</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">记忆锚</div>
+  <h2>薄透镜是会聚焦的针孔</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对焦选清楚谁，光圈选进多少光。</li><li>模糊与变暗是真实镜头的代价。</li><li>大多可以标定，也可以缓解。</li><li>自然渐晕缩光圈也躲不掉，机械渐晕可以。</li></ul>
+      <div class="src">依据：原书第 75、78–79 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个极限</div><div class="kline">物距无穷 ⇒ 针孔</div><div class="kline">自然渐晕纯几何</div><div class="kline">机械渐晕可缩光圈</div><div class="kline">模型是包含不是替换</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">回书 · 页码</div>
+  <h2>翻回原书第 74–79 页</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>式 2.97 与 Figure 2.19：第 75 页。</li><li>景深与式 2.98、EV：第 75–76 页。</li><li>五像差与色差、前后节点：第 76–77 页。</li><li>式 2.99–2.102、机械渐晕：第 78–79 页。</li></ul>
+      <div class="src">依据：原书第 74–79 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四张图</div><div class="kline">2.19、2.21 程序重绘</div><div class="kline">2.20 镜头照片未重绘</div><div class="kline">2.22 未重绘，图表呼应</div><div class="kline">未使用原书图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">作业 · 移交</div>
+  <h2>作业与下一集</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>本集范围：2.2.3 光学，第 74–79 页。</li><li>作业一：推导习题 2.4 的弥散圆与景深界。</li><li>作业二：验证一挡 f 值等效一挡快门。</li><li>作业三：按 Figure 2.20 画景深刻度窗。</li></ul>
+      <div class="src">依据：原书第 75–79 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">光子怎么变成 RGB</div><div class="kline">曝光、增益与快门</div><div class="kline">非线性、采样、噪声</div><div class="kline">颜色另讲</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十一集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

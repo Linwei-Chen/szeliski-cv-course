@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>匹配的保险丝：比率测试、互检与几何校验联防</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 7 章 · 特征匹配</div>
+  <h2>描述子之后：把两张图的点对上</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>特征和描述子提取完，下一步是初步匹配。</li><li>已知重叠的图像和数据库检索，策略不同。</li><li>重叠图像里，多数特征能匹配，少数被遮挡。</li></ul>
+      <div class="src">依据：原书第 441 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先问应用</div><div class="kline">拼接：图像已知重叠</div><div class="kline">检索：可能完全不对应</div><div class="kline">遮挡与外观变化要容忍</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 两个组件</div>
+  <h2>匹配拆成两半：留哪些，怎么找快</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先选匹配策略，决定哪些对应进入下一阶段。</li><li>再设计数据结构与算法，把搜索做快。</li><li>策略决定准不准，索引决定快不快。</li></ul>
+      <div class="src">依据：原书第 441 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个组件</div><div class="kline">匹配策略：筛选对应</div><div class="kline">索引结构：加速搜索</div><div class="kline">本集先讲策略，再讲索引</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 距离与白化</div>
+  <h2>距离与白化：先调平各分量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>假设描述子让欧氏距离可以给候选排序。</li><li>更可靠的轴，先按已知好匹配重新标定。</li><li>变换到新的缩放基，叫白化。</li><li>不调平，距离会被大方差分量带偏。</li></ul>
+      <div class="src">依据：原书第 441 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两步</div><div class="kline">重标定：可靠轴权重高</div><div class="kline">白化：换到缩放基</div><div class="kline">目的：距离更可比</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 固定阈值</div>
+  <h2>固定阈值：假阳和假阴两头难</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>设一个最大距离，阈值内都算匹配。</li><li>阈值太高，假阳增多，错配被返回。</li><li>阈值太低，假阴增多，正确匹配漏掉。</li><li>图 7.21 画出了这两种情况。</li></ul>
+      <div class="src">依据：原书第 441–442 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e069_threshold_tradeoff.png" style="max-height:500px" alt="阈值两难：距离分布、真阳、假阳、假阴｜程序生成，未用教材或论文原图"><figcaption>阈值两难：距离分布、真阳、假阳、假阴｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 混淆矩阵</div>
+  <h2>混淆矩阵：四个格子看清对错</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>表 7.1 的例子：真阳 18、假阳 4。</li><li>假阴 2、真阴 76。</li><li>真阳是正确匹配，假阴是漏掉的正确匹配。</li><li>假阳是错误匹配，真阴是正确拒绝。</li></ul>
+      <div class="src">依据：原书第 442 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四个格子</div><div class="kline">真阳：配对且正确</div><div class="kline">假阳：报了但错了</div><div class="kline">假阴：对的没报</div><div class="kline">真阴：不配且拒绝</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 比率指标</div>
+  <h2>四个比率：查全与查准</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>真阳率、假阳率、阳性预测值、准确率。</li><li>检索文献里，阳性预测值叫精确率。</li><li>真阳率叫召回率，两者可合成 F 值。</li><li>F 值是精确率和召回率的调和平均。</li></ul>
+      <div class="src">依据：原书第 443 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两组问法</div><div class="kline">精确率：报出的有多少是真的</div><div class="kline">召回率：真的有多少被报出</div><div class="kline">F 值：两边都要顾</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · ROC 与 AUC</div>
+  <h2>ROC 与 AUC：把取舍画成一条线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>理想情况是真阳率接近 1、假阳率接近 0。</li><li>改变阈值得到一族点，连起来就是 ROC。</li><li>越靠左上、AUC 越大，性能越好。</li><li>也可以用等错误率，图 7.22 还画了距离分布。</li></ul>
+      <div class="src">依据：原书第 443–444 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个数</div><div class="kline">AUC：所有阈值的总体排序</div><div class="kline">等错误率：两条错误率相等处</div><div class="kline">都不绑定单一阈值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 阈值难设</div>
+  <h2>死阈值难设：先找最近邻</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>有用阈值的范围，会随特征空间区域变化。</li><li>更好的做法是直接找特征空间里的最近邻。</li><li>有些特征本来没有匹配，仍要留阈值压假阳。</li><li>有训练数据时，阈值可以随区域自适应。</li></ul>
+      <div class="src">依据：原书第 443–444 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">从全局到局部</div><div class="kline">全局阈值：一个数管全部</div><div class="kline">最近邻：先找最像的</div><div class="kline">自适应：按区域调</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 最近距离比率</div>
+  <h2>NNDR：最近比次近领先多少</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>拼接或无序照片建三维时，常用这个启发式。</li><li>比较最近邻距离和次近邻距离。</li><li>次近邻最好取自一张已知不匹配的图像。</li><li>DA 是目标，DB 和 DC 是最近的两个邻居。</li></ul>
+      <div class="src">依据：原书第 444 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">比率怎么看</div><div class="kline">比率小：第一名领先明显</div><div class="kline">比率大：前两名差不多</div><div class="kline">大比率匹配可疑</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 比率示例</div>
+  <h2>三种选法：漏配、错配与比率测试</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>固定阈值下，DA 配不上 DB。</li><li>DD 还会错配 DC 和 DE。</li><li>只取最近邻，DA 能配对，DD 仍错。</li><li>NNDR 小比率接受 DA，大比率拒绝 DD。</li></ul>
+      <div class="src">依据：原书第 445 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e069_nndr.png" style="max-height:500px" alt="NNDR 比率：DA 小比率接受、DD 大比率拒绝｜程序生成，未用教材或论文原图"><figcaption>NNDR 比率：DA 小比率接受、DD 大比率拒绝｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 互检</div>
+  <h2>互检：两边都点头才算数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>单向 NNDR 之外，还可以做相互 NNDR。</li><li>至少也要加交叉一致性检查。</li><li>书上说，这明显优于单向 NNDR。</li><li>互检尤其能挡住一对多的错配。</li></ul>
+      <div class="src">依据：原书第 444 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">互检</div><div class="kline">A 认 B，B 也认 A</div><div class="kline">两边都通过才保留</div><div class="kline">专治一对多</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 高效搜索</div>
+  <h2>找得快：先建索引再细比</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最简单是全对全比较，现代 GPU 已经能承受。</li><li>更高效的是建索引，比如多维搜索树或哈希表。</li><li>索引可以按图建，也可以给整个数据库建。</li><li>超大数据库用词汇树、乘积量化、倒排多索引。</li></ul>
+      <div class="src">依据：原书第 445 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">索引只负责快</div><div class="kline">全对全：简单但贵</div><div class="kline">索引：先圈一小撮</div><div class="kline">准不准还要靠策略</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 哈希索引</div>
+  <h2>哈希：按大致方位分抽屉</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>多维哈希把描述子映射到固定大小的桶。</li><li>查询时把新特征哈希进桶，再搜邻近桶。</li><li>MOPS 用八乘八图块的四个象限求和。</li><li>局部敏感哈希用多个独立哈希函数取并集。</li></ul>
+      <div class="src">依据：原书第 445–446 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">MOPS 的数字</div><div class="kline">三元素索引</div><div class="kline">十个一维桶取最近两个</div><div class="kline">三维索引共八个桶</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · k-d 树</div>
+  <h2>k-d 树：沿轴切分特征空间</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>沿交替的轴对齐超平面切分特征空间。</li><li>切分尽量让树平衡。</li><li>查询先定位到所在箱，再搜邻近叶。</li><li>最佳箱优先按空间邻近顺序搜箱。</li></ul>
+      <div class="src">依据：原书第 446–447 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">查询顺序</div><div class="kline">先定位所在箱</div><div class="kline">再搜邻近叶</div><div class="kline">保证找到最近邻才停</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 近似最近邻库</div>
+  <h2>现成工具：随机化 k-d 树与成熟库</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Muja 与 Lowe 比较多种方法，随机化 k-d 树往往最好。</li><li>现代近似最近邻库有 FLANN 和 Faiss。</li><li>工程上先看成熟库的默认配置。</li><li>数据规模变了，参数要重新调。</li></ul>
+      <div class="src">依据：原书第 447 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条建议</div><div class="kline">多个随机化 k-d 树</div><div class="kline">FLANN 与 Faiss</div><div class="kline">规模变了重调参数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征匹配 · 几何验证</div>
+  <h2>几何验证：RANSAC 怎么筛内点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>用几何对齐判断哪些是内点、哪些是离群点。</li><li>抽一小批种子匹配拟合全局变换，再验证更多。</li><li>这个过程常叫随机采样或 RANSAC。</li><li>RANSAC 内点太少时，也会拟合出错误变换。</li></ul>
+      <div class="src">依据：原书第 447–448 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e069_match_pipeline.png" style="max-height:500px" alt="匹配四道闸：候选、阈值、NNDR 与互检、几何验证｜程序生成，未用教材或论文原图"><figcaption>匹配四道闸：候选、阈值、NNDR 与互检、几何验证｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十一集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

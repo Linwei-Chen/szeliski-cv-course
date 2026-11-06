@@ -1,0 +1,21 @@
+[lab] E133 空间计算开始 2026-11-03T14:15:44
+[lab] 源码 sha256=b89a45445f10ecea66b2a502fa690dd5d40f8899b080d820fa783a0f87a32cd3
+[lab] 边界：合成一维相机阵列；两层深度+软边界；时间中值是离线示例，不是完整 VR/6DoF 系统
+[PASS] 合成图像尺寸与相机数　| 8/320×180
+[PASS] 硬边界图与目标有差异　| 34.64 dB
+[PASS] 软边界 PSNR 高于硬边界　| 34.64→37.46
+[PASS] 软边界边缘误差下降≥20%　| 96.8%
+[PASS] 时间序列帧数　| 24
+[PASS] 抖动深度标准差≥0.05　| 0.100
+[PASS] 时间平滑后标准差降至抖动前 40% 以下　| 0.100→0.030
+[PASS] 闪烁指标下降≥30%　| 0.00060→0.00004
+[PASS] 时间滤波 PSNR 提升≥0.3dB　| 0.75
+[PASS] 每帧 PSNR 有限　| finite
+[PASS] 背景区域非空　| 44232 px
+[PASS] 边界声明为合成/非完整系统　| 一维阵列+两层深度+离线时间平滑
+[lab] LEDGER：断言 12 条，PASS 12
+[lab] readings sha256=4f5721a08a7157cb90bf126c32e5070ed80425313600bddfad8d648efe147b48
+[lab] PNG sha256(e133_rig.png)=bfcc6c7dc00a93e38546724d0d2b4343777a9e6a83d4a0e25c709d86cd083c53
+[lab] PNG sha256(e133_layers.png)=cc03a262006bfaca716aa8854eff2274774119df70ccb2332857b3d88997b78f
+[lab] PNG sha256(e133_temporal.png)=20ebd29e4cfc5bccbe109aa25c0629ca576351e4440d9ed886e7aa7f319d9e56
+[lab] E133 空间计算结束 2026-11-03T14:15:53

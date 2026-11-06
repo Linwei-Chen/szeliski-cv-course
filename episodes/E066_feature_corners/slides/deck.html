@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>角点怎么找：Harris 与 Shi-Tomasi 的结构张量</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 7 章 · 角点检测 · 教材 p.422</div>
+  <h2>什么样的位置最好找</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>没有纹理的区域，几乎无法定位。</li><li>只有一条边，沿边方向说不清。</li><li>至少两个方向都有梯度，才是角点。</li><li>实验图三块小块：1 块好找，2 块难找。</li></ul>
+      <div class="src">依据：原书第 422 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e066_aperture.png" style="max-height:500px" alt="孔径问题三例：平坦区 / 单向边缘 / 角点｜程序生成，未用教材或论文原图"><figcaption>孔径问题三例：平坦区 / 单向边缘 / 角点｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · 加权平方差</div>
+  <h2>把好找写成加权平方差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对应小块逐像素相减、平方、加权求和。</li><li>位移向量 u 让一块相对另一块移动。</li><li>窗口权重 w 可以中心高，也可以均匀。</li><li>和第 9 章估计整幅图运动是同一个式子。</li></ul>
+      <div class="src">依据：原书第 422 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">式子的三样东西</div><div class="kline">u：位移向量</div><div class="kline">w：窗口权重</div><div class="kline">求和：覆盖 patch 全部像素</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · 自相关面</div>
+  <h2>不看对手，只看自己挪一点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>特征检测不知道以后会匹配哪张图。</li><li>只能把图块自己平移，看误差怎么变。</li><li>这个误差面叫自相关函数或自相关面。</li><li>误差上升越快，位置越容易被钉住。</li></ul>
+      <div class="src">依据：原书第 423–424 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">自相关面看什么</div><div class="kline">只看自身平移，不用另一张图</div><div class="kline">某方向误差不变：该方向说不清</div><div class="kline">面越尖，定位越准</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · 三个例子</div>
+  <h2>花坛尖坑，屋檐单向谷</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>花坛纹理丰富，自相关面有强极小。</li><li>屋檐边缘沿一个方向一直很平。</li><li>云朵没有稳定极小，几乎没法定位。</li><li>三种面对应角点、边缘、平坦区。</li></ul>
+      <div class="src">依据：原书第 424 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种面</div><div class="kline">花坛：强极小</div><div class="kline">屋檐：单向歧义</div><div class="kline">云朵：无稳定极小</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · 结构张量</div>
+  <h2>泰勒展开只剩一个矩阵</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一阶泰勒展开，自相关面近似成二次型。</li><li>位移向量左右各乘一次矩阵 A。</li><li>A 由梯度外积在窗口内加权卷积得到。</li><li>经典 Harris 用五点差分，现代用高斯导数。</li></ul>
+      <div class="src">依据：原书第 424 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">E(Δu) ≈ Δuᵀ A Δu</div><div class="mnote">A = w ∗ [Ix² IxIy; IxIy Iy²]；梯度尺度通常取 1</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · 特征值</div>
+  <h2>两个特征值，两个方向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>A 的两个特征值是 λ0、λ1。</li><li>A 的逆给出匹配位置不确定度的下界。</li><li>特征值越大，位置越确定。</li><li>不确定度椭圆轴长正比于 λ 的负二分之一次方。</li></ul>
+      <div class="src">依据：原书第 425 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e066_harris_geometry.png" style="max-height:500px" alt="自相关面与特征值：花坛尖坑 / 屋檐单向谷 / 云朵平底，加四象限与不确定度椭圆｜程序生成，未用教材或论文原图"><figcaption>自相关面与特征值：花坛尖坑 / 屋檐单向谷 / 云朵平底，加四象限与不确定度椭圆｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · Shi-Tomasi</div>
+  <h2>Shi-Tomasi 只看小特征值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最大不确定度由较小的特征值决定。</li><li>Shi 与 Tomasi 在 1994 年找小特征值的局部极大。</li><li>响应函数就是较小的那个特征值。</li><li>两小是平坦，一大一小是边缘，两大是角点。</li></ul>
+      <div class="src">依据：原书第 425 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四象限</div><div class="kline">λ0 小、λ1 小：平坦</div><div class="kline">一大一小：边缘</div><div class="kline">两个都大：角点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · Harris</div>
+  <h2>Harris：行列式减 α 乘迹方</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Harris 与 Stephens 在 1988 年给出这个量。</li><li>响应等于行列式减 α 乘迹的平方。</li><li>α 通常取 0.06，不需要开平方。</li><li>旋转不变，并且压低边缘特征。</li></ul>
+      <div class="src">依据：原书第 425 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">R = det(A) − α·tr(A)²</div><div class="mnote">α = 0.06；不用开方；旋转不变；压低边缘</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · 其他测度</div>
+  <h2>两种替代测度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Triggs：λ0 减 αλ1，α 取 0.05。</li><li>目的：压低一维边缘。</li><li>Brown 等用调和平均，特征值接近时更平滑。</li><li>二阶 Hessian 还能推广到参数运动。</li></ul>
+      <div class="src">依据：原书第 426 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">共同目标</div><div class="kline">两个特征值都大</div><div class="kline">配方不同，目标一致</div><div class="kline">混叠会抬高小特征值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · 响应等值线</div>
+  <h2>等值线比较响应函数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图 7.7 把常用检测函数的等值线画在一起。</li><li>它们都在找两个特征值都大的位置。</li><li>只是混合方式不同。</li><li>看等值线就知道哪些区域会被判成角点。</li></ul>
+      <div class="src">依据：原书第 426 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">图 7.7 看什么</div><div class="kline">横轴 λ0，纵轴 λ1</div><div class="kline">右上角才是角点</div><div class="kline">单一方向的大梯度不算</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · Harris 与 DoG</div>
+  <h2>Harris 与 DoG 各盯一类</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图 7.8 对比 Harris 响应和 DoG 响应。</li><li>圆圈大小和颜色表示检测尺度。</li><li>两种检测子倾向于在互补位置响应。</li><li>一个盯角点，一个盯斑块。</li></ul>
+      <div class="src">依据：原书第 427 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种响应</div><div class="kline">Harris：角点</div><div class="kline">DoG：斑块</div><div class="kline">尺度空间接 DoG 这条线</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · ANMS</div>
+  <h2>ANMS：强，也要周围没人更强</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>大多数检测子只找局部极大。</li><li>结果特征点在高对比区域扎堆。</li><li>ANMS 要求比半径 r 内邻居强 10%。</li><li>先按响应排序，再按抑制半径建表。</li></ul>
+      <div class="src">依据：原书第 426–427 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三步</div><div class="kline">找局部极大</div><div class="kline">按响应强弱排序</div><div class="kline">按半径 r 自适应筛选</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · ANMS 效果</div>
+  <h2>从扎堆到摊开</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图 7.9 对比最强 250 个、500 个点。</li><li>ANMS 选出的点分布更均匀。</li><li>实验两栏各 60 个点做最小演示。</li><li>强点扎堆，跟踪时会挤在同一块。</li></ul>
+      <div class="src">依据：原书第 427 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e066_anms.png" style="max-height:500px" alt="ANMS 前后：最强点扎堆 vs 按半径摊开｜程序生成，未用教材或论文原图"><figcaption>ANMS 前后：最强点扎堆 vs 按半径摊开｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · MOPS</div>
+  <h2>MOPS：五层金字塔的定向块</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图 7.10 在五层金字塔上提取。</li><li>框的方向表示特征方向。</li><li>框内区域用来采样描述子。</li><li>到这儿，检测还只在单一尺度。</li></ul>
+      <div class="src">依据：原书第 428 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">MOPS</div><div class="kline">五层金字塔</div><div class="kline">框方向 = 特征方向</div><div class="kline">框内采样描述子</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">角点检测 · 重复率</div>
+  <h2>怎么比检测子</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Schmid 等在 2000 年首提重复率。</li><li>重复率：变换后 1.5 像素内重现的频率。</li><li>信息量：旋转不变描述子的熵。</li><li>高斯导数 Harris，σd=1、σi=2 效果最好。</li></ul>
+      <div class="src">依据：原书第 428 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个指标</div><div class="kline">重复率：找得回</div><div class="kline">信息量：值不值得描述</div><div class="kline">改进的高斯导数 Harris 最好</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>两个特征值都大，才是角点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>孔径问题 → 加权平方差 → 结构张量 A。</li><li>两个特征值 → Harris 与 Shi-Tomasi。</li><li>ANMS 让特征点分布更均匀。</li><li>下一集：尺度空间与 SIFT。</li></ul>
+      <div class="src">依据：原书第 422–428 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">平坦没得找</div><div class="kline">边缘只一边</div><div class="kline">角点两边都变</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十八集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

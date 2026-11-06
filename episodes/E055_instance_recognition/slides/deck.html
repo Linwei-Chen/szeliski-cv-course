@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>认出图里谁是谁：实例识别与几何验证</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 6 章 · 导入课</div>
+  <h2>识别：认出图里谁是谁</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从把图分门别类，升级到认出个体。</li><li>识别：说出图里有什么、是谁。</li><li>实例识别认这一个，类别识别认这一种。</li><li>本章十集，先看问题版图。</li></ul>
+      <div class="src">依据：原书第 343–346 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">导入课三问</div><div class="kline">识别到底在认什么</div><div class="kline">分几种认法</div><div class="kline">靠什么认出来</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十七集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">数据 · 军备竞赛</div>
+  <h2>数据集：识别的燃料</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Xerox 10 与 Caltech-101 先打底。</li><li>PASCAL VOC：第一个够大够难，20 类。</li><li>ImageNet：1000 类、超百万标注图。</li><li>COCO 补上逐物体精细分割。</li></ul>
+      <div class="src">依据：原书第 345 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e055_dataset_race.png" style="max-height:500px" alt="数据集军备竞赛五节点：Xerox 10 → Caltech-101 → PASCAL VOC → ImageNet → COCO｜程序生成，未用教材或论文原图"><figcaption>数据集军备竞赛五节点：Xerox 10 → Caltech-101 → PASCAL VOC → ImageNet → COCO｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十七集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">概念 · 两种识别</div>
+  <h2>实例识别与类别识别</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>实例识别：再认见过的具体物体。</li><li>难点是换角度、杂乱背景、部分遮挡。</li><li>类别识别：认猫、车、自行车。</li><li>同一类里千变万化，类别识别更难。</li></ul>
+      <div class="src">依据：原书第 346–347 页（含脚注）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个词别混</div><div class="kline">实例识别：这个物体见过没</div><div class="kline">实例分割：逐像素抠出物体</div><div class="kline">分割在 6.4 节再讲</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十七集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">算法 · 三代演进</div>
+  <h2>从三维模型到特征匹配</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第一代：线条、轮廓、表面配三维模型。</li><li>第二代：多视角图库分解到特征空间。</li><li>第三代：提稀疏特征、匹配、做几何验证。</li><li>高精度特征法至今仍是许多系统首选。</li></ul>
+      <div class="src">依据：原书第 345/347 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">前两代</div><div class="kline">三维模型匹配：视角一变就断</div><div class="kline">特征空间法：认图变成查表</div><div class="kline">共同追求：不变的描述</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十七集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">几何验证 · 抓外点</div>
+  <h2>几何验证：给匹配做体检</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>库图兴趣点与描述子先建索引树。</li><li>匹配凑够三个以上，触发几何验证。</li><li>Lowe 2004：霍夫投票选几何变换。</li><li>仿射模型适合平面或近平面物体。</li></ul>
+      <div class="src">依据：原书第 348 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">非平面怎么办</div><div class="kline">Rothganger 2006：局部仿射区域</div><div class="kline">SIFT 描述子加 10×10 颜色直方图</div><div class="kline">多视角解三维仿射模型</div><div class="kline">可升级成欧氏重建</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十七集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全流程 · 程序生成图</div>
+  <h2>四步走完一次识别</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>离线：库图特征存进索引树。</li><li>新图提特征，去树里查匹配。</li><li>霍夫投票筛外点，攒出仿射变换。</li><li>验证通过，物体框出。</li></ul>
+      <div class="src">依据：本集程序生成图；语义对应原书图 6.2（p.347）</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e055_match_demo.png" style="max-height:500px" alt="特征匹配与几何验证：流程四步 + 库图到场景匹配示意｜程序生成，未用教材或论文原图"><figcaption>特征匹配与几何验证：流程四步 + 库图到场景匹配示意｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十七集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">风向 · 实例检索</div>
+  <h2>从定位物体到实例检索</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>匹配还能顺带得到像素级分割。</li><li>后续工作推广到非刚性形变物体。</li><li>2000 年代中期热点转向实例检索。</li><li>实例检索也叫基于内容的图像检索。</li></ul>
+      <div class="src">依据：原书第 349 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本页两件事</div><div class="kline">分割：6.4 节再正面讲</div><div class="kline">检索：百万千万张图里找同款</div><div class="kline">以图搜图从这里来</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十七集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">小结 · 本章路线</div>
+  <h2>三样收获与五站路线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>识别分两种：认这一个、认这一种。</li><li>数据是燃料：VOC 20 类到 ImageNet 百万图。</li><li>现代流程：提特征、查匹配、几何验证。</li><li>本章五站：分类、检测、分割、视频、语言。</li></ul>
+      <div class="src">依据：原书第 345–349 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本章五站</div><div class="kline">6.2 图像分类</div><div class="kline">6.3 目标检测</div><div class="kline">6.4 语义分割</div><div class="kline">6.5–6.6 视频与语言</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十七集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">移交 · 第 7 章检索</div>
+  <h2>下一集：海量检索</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>下一集去第 7 章 7.1.4 节。</li><li>讲特征量化、词汇树与大规模检索。</li><li>目标是百万图库的实时查找。</li><li>借完工具，回第 6 章 6.2。</li></ul>
+      <div class="src">依据：原书第 349 页自注</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">特征量化</div><div class="kline">词汇树</div><div class="kline">先粗筛后精验</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十七集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

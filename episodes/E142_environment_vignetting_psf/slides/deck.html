@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>环境蒙版、暗角与 PSF：透明、变暗与变糊</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 + 第 10 章 · 光度与渲染</div>
+  <h2>两个物理层：折射与镜头</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>环境蒙版：透明物体从背景哪里取色。</li><li>暗角：广角、大光圈镜头角落变暗。</li><li>PSF：镜头把边缘糊成卷积核。</li><li>一个在物体侧，一个在相机侧。</li></ul>
+      <div class="src">依据：原书第 883、615、616 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个量</div><div class="kline">环境蒙版：折射与反射</div><div class="kline">暗角：亮度衰减</div><div class="kline">PSF：空间模糊</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">环境蒙版 · 原书第 883 页</div>
+  <h2>抠图之外，还要记取色方向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>透明物体放到新背景，不能只抠颜色。</li><li>要建模每个像素从环境哪个方向取光。</li><li>四维映射把像素坐标映到方向。</li><li>整体是六维表示，Zongker 等命名。</li></ul>
+      <div class="src">依据：原书第 883、885 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">多出什么</div><div class="kline">普通 matte：alpha 和 F</div><div class="kline">环境蒙版：方向和强度</div><div class="kline">能表现背景被放大、翻转、扭曲</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合成方程 · 原书第 884 页</div>
+  <h2>alpha 加一个间接项</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>普通合成：C = αF + (1−α)B。</li><li>环境蒙版再加间接项 I = R∫A B。</li><li>复杂版本用多个有向高斯叠加。</li><li>每个高斯有中心、宽度和方向。</li></ul>
+      <div class="src">依据：原书第 884 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">C = αF + (1−α)B + I</div><div class="mnote">I = R∫A B；α 管盖住多少，F 管物体颜色，R 和 A 管背景从哪来、来多少</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">采集 · 原书第 885 页</div>
+  <h2>拍一套图案，解一组参数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>物体放在显示器前，换不同图案。</li><li>纯色背景估 alpha 和 F。</li><li>横竖条纹估支持区。</li><li>四方向高斯条纹估多个高斯响应。</li></ul>
+      <div class="src">依据：原书第 885 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">边界</div><div class="kline">多背景方法处理不了动态场景</div><div class="kline">水倒进杯子要用单张渐变背景</div><div class="kline">单张渐变估一个二维位移</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 合成折射物体</div>
+  <h2>多一层折射，重渲染就对了</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>160×160 折射物体，4 方向 3 相位条纹。</li><li>alpha 误差 1.79e−17，位移误差 1.901 像素。</li><li>折射权重误差 0.0291。</li><li>重渲染 PSNR 57.52，朴素抠图 38.29 分贝。</li></ul>
+      <div class="src">依据：本集实验（readings.environment）</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e142_environment.png" style="max-height:560px" alt="环境蒙版：输入、alpha、位移场、新背景真值/重渲染/朴素抠图｜程序生成，未用教材或论文原图"><figcaption>环境蒙版：输入、alpha、位移场、新背景真值/重渲染/朴素抠图｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">表示代价 · 原书第 885 页</div>
+  <h2>6D、8D，再加时间和波长</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>环境蒙版原理上是六维表示。</li><li>覆盖所有视点需要 8D 映射。</li><li>4D BRDF 可以降回 6D，但丢掉多重折射。</li><li>加时间、加波长，维度还会涨。</li></ul>
+      <div class="src">依据：原书第 885 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集简化</div><div class="kline">lab 每像素一个位移、一个权重</div><div class="kline">不是完整多高斯模型</div><div class="kline">真实玻璃可能有多条折射路径</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">暗角 · 原书第 615–616 页</div>
+  <h2>角落为什么变暗</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>广角、大光圈镜头容易让角落变暗。</li><li>分自然、光学、机械三类。</li><li>最准的标定是积分球或均匀白墙。</li><li>没有暗角模型，梯度域融合也拼不好全景。</li></ul>
+      <div class="src">依据：原书第 615–616 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">只跟半径有关</div><div class="kline">先估乘法衰减</div><div class="kline">再逐像素除回去</div><div class="kline">三类叠加还是一条径向曲线</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 合成暗角</div>
+  <h2>白墙估衰减，角落补回来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>200×280 合成图，角落亮度是中心的 0.450。</li><li>白墙按半径分箱，拟合 1 − ar² − br⁴。</li><li>径向 profile 的 RMSE 是 0.00035。</li><li>校正后 PSNR 从 18.34 升到 69.73 分贝。</li></ul>
+      <div class="src">依据：本集实验（readings.vignetting）</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e142_vignetting.png" style="max-height:500px" alt="暗角：输入、径向 profile 与拟合、校正结果｜程序生成，未用教材或论文原图"><figcaption>暗角：输入、径向 profile 与拟合、校正结果｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">PSF · 原书第 616–618 页</div>
+  <h2>镜头把边缘糊成卷积核</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>空间响应函数就是 PSF，也就是卷积核。</li><li>受镜头模糊、径向畸变、抗混叠、像素形状影响。</li><li>斜边法先得到一维 LSF，再转 MTF。</li><li>最小二乘解 B = D·I ⊛ K，得到二维核。</li></ul>
+      <div class="src">依据：原书第 616–618 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">斜边法的条件</div><div class="kline">边要长、要直</div><div class="kline">方向覆盖水平、垂直、对角</div><div class="kline">只有水平边只能恢复水平投影</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 斜边与 PSF</div>
+  <h2>核估准，边缘才敢去卷积</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>96×96 斜边靶标，真 PSF 是 7×7 各向异性高斯。</li><li>估出的核与真核相关 0.966，核 MSE 0.000132。</li><li>模糊把边缘梯度从 0.343 压到 0.232。</li><li>Richardson–Lucy 去卷积后梯度回到 0.514。</li></ul>
+      <div class="src">依据：本集实验（readings.psf）</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e142_psf.png" style="max-height:560px" alt="PSF：清晰/模糊斜边、真/估核、亮度剖面、Richardson–Lucy 结果｜程序生成，未用教材或论文原图"><figcaption>PSF：清晰/模糊斜边、真/估核、亮度剖面、Richardson–Lucy 结果｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">lab 边界 · 小节更正</div>
+  <h2>合成管线不能冒充真实相机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三个实验都是合成的。</li><li>环境蒙版只有单位移、单权重。</li><li>暗角用白墙，PSF 用已知斜边靶标。</li><li>暗角是 §10.1.3，PSF 是 §10.1.4，不是 §10.1.2。</li></ul>
+      <div class="src">依据：本集实验；原书小节 §10.1.3–§10.1.4</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">真实相机还有</div><div class="kline">噪声、滚动快门、色差</div><div class="kline">非均匀照明</div><div class="kline">先线性化、去噪、配准，再估参数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 + 第 10 章 · 三线闭环</div>
+  <h2>透明、变暗、变糊</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>环境蒙版回答：透明像素从背景哪里取色。</li><li>暗角回答：角落为什么变暗。</li><li>PSF 回答：边缘为什么变糊。</li><li>三件事都先测量，再反着补回去。</li></ul>
+      <div class="src">依据：原书第 883–885、615–620 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">顺序与思路</div><div class="kline">先修暗角和 PSF</div><div class="kline">再谈环境蒙版合成</div><div class="kline">把物理效应显式写出来</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十四集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>傅里叶变换Ⅱ：二维频谱、DCT 压缩与去噪</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">本集路线 · 从二维频谱到去噪</div>
+  <h2>一维的公式，搬进二维图像</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先铺开：二维频谱与有向正弦。</li><li>再压缩：DCT、JPEG 与块伪影。</li><li>最后看版图：去噪方法与评价尺。</li><li>二维谱、DCT、去噪，各有实验读数。</li></ul>
+      <div class="src">依据：原书第 146–149 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三步</div><div class="kline">铺开：二维频谱</div><div class="kline">压缩：DCT 与 JPEG</div><div class="kline">版图：去噪与评价</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>01 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 146 页 · 二维傅里叶变换</div>
+  <h2>条纹不只横竖，还能斜着走</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>有向正弦：s 等于 sin(ωx x 加 ωy y)。</li><li>连续变换对横、纵坐标做二重积分。</li><li>离散变换前面乘 M 乘 N 分之一。</li><li>M、N 是图像的宽和高。</li></ul>
+      <div class="src">依据：原书第 146 页 + 本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">s(x, y) = sin(ωx x + ωy y)</div><div class="mnote">式 3.58；离散域见式 3.60，带 1/(MN) 归一</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>02 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 146 页 · 功率谱</div>
+  <h2>谱还能描述一整类图像</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>把图像看成随机噪声场。</li><li>功率谱是每个频率上的期望幅度平方。</li><li>谱上填高斯随机数，再做一次逆 FFT。</li><li>六百次平均，族均值落回功率谱。</li></ul>
+      <div class="src">依据：原书第 146–147 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e028_power_spectrum.png" style="max-height:520px;width:108%;margin-left:-4%" alt="功率谱模型、单次实现与 120 次族均值｜程序生成，未用教材或论文原图"><figcaption>功率谱模型、单次实现与 120 次族均值｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>03 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 147 页 · 离散余弦变换</div>
+  <h2>DCT：为按块压缩而生</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>DCT 是傅里叶变换的变体，适合块压缩。</li><li>像素块与不同频率的余弦做点积。</li><li>半像素偏移让基系数对称。</li><li>第一条基是块平均，第二条是斜坡微弯。</li></ul>
+      <div class="src">依据：原书第 147 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e028_dct_basis.png" style="max-height:520px;width:108%;margin-left:-4%" alt="八条一维 DCT 基：k=0 直流，k=1 半周期｜程序生成，未用教材或论文原图"><figcaption>八条一维 DCT 基：k=0 直流，k=1 半周期｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>04 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 147–148 页 · DCT 的性质</div>
+  <h2>为什么偏偏用余弦</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>DCT 是自然图像小块上 K-L 分解的好近似。</li><li>K-L 把信号去相关到最彻底。</li><li>二维 DCT 行、列各做一遍，可分离。</li><li>每一遍只要 N 乘 log N 量级。</li></ul>
+      <div class="src">依据：原书第 147–148 页 + 本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">F(k,l) = ΣΣ cos((π/N)(i+½)k) · cos((π/N)(j+½)l) · f(i,j)</div><div class="mnote">式 3.63；先对每行做，再对每列做</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>05 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 148 页 · JPEG 与块伪影</div>
+  <h2>压缩在用它，也怕它</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>DCT 广泛用于图像与视频压缩。</li><li>替代方案有小波与交叠版 DCT。</li><li>块独立变换与量化，接缝处出现不连续。</li><li>轻量化几乎无损；狠量化边界明显。</li></ul>
+      <div class="src">依据：原书第 148 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e028_dct_blocking.png" style="max-height:520px;width:108%;margin-left:-4%" alt="八乘八块 DCT：轻量化与强量化的块边界｜程序生成，未用教材或论文原图"><figcaption>八乘八块 DCT：轻量化与强量化的块边界｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>06 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 148 页 · 锐化、模糊与去噪</div>
+  <h2>一页点名两族滤波</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>锐化、模糊、去噪，核心都是邻域处理。</li><li>过去用线性滤波，今天更常用非线性。</li><li>加权中值、双边、各向异性扩散、非局部均值。</li><li>变分与全变差；深度网络后来接管。</li></ul>
+      <div class="src">依据：原书第 148 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两族滤波</div><div class="kline">线性：均值、高斯</div><div class="kline">非线性：中值、双边</div><div class="kline">各向异性扩散</div><div class="kline">全变差、深度网络</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>07 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 101/148–149 页 · 评价指标</div>
+  <h2>给去噪打分：两把尺</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>PSNR：峰值强度平方比均方误差，取对数。</li><li>八位图里，峰值强度取 255。</li><li>SSIM、FLIP 量的是感知相似度。</li><li>神经感知指标偏好相近的纹理量。</li></ul>
+      <div class="src">依据：原书第 101/148–149 页 + 本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">PSNR = 10 log₁₀(Imax² / MSE)</div><div class="mnote">式 2.120；八位图 Imax 取 255</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>08 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">本集实验 · 去噪四法</div>
+  <h2>全局分数与局部纹理的分歧</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>样图加标准差 20 的高斯噪声。</li><li>四法：三乘三、七乘七、中值、双边。</li><li>PSNR 28.8 到 29.8 分贝，全部高于含噪图。</li><li>纹理区 SSIM 反转：七乘七低 0.05。</li></ul>
+      <div class="src">依据：本集实验 + 原书第 148–149 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e028_denoise_compare.png" style="max-height:520px;width:108%;margin-left:-4%" alt="去噪四法对比：三乘三、七乘七、中值、双边｜程序生成，未用教材或论文原图"><figcaption>去噪四法对比：三乘三、七乘七、中值、双边｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>09 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 146–149 页 · 本集小结</div>
+  <h2>三步收束：频谱、压缩、版图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>铺开：有向正弦、二维变换、功率谱。</li><li>压缩：DCT、余弦基、能量集中、块伪影。</li><li>版图：去噪谱系与评价两把尺。</li><li>下一集：改变分辨率，图像金字塔与小波。</li></ul>
+      <div class="src">依据：原书第 146–149 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三件事</div><div class="kline">二维频谱</div><div class="kline">DCT 与压缩</div><div class="kline">去噪与评价</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十集</span><span>10 / 10</span></div>
+</section>
+<div id="subbar"></div></body></html>

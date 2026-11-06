@@ -1,0 +1,36 @@
+{
+ "n_pass": 12,
+ "n_total": 12,
+ "environment": {
+  "object_pixels": 5513,
+  "alpha_mae": 1.7872717837018437e-17,
+  "fg_mae": 1.7927762451577517e-16,
+  "displacement_mean_error_px": 1.9009754818341036,
+  "refraction_weight_mean_error": 0.029128450985460956,
+  "novel_psnr_db": 57.51696559054945,
+  "naive_psnr_db": 38.28581875892057,
+  "psnr_gain_db": 19.231146831628877
+ },
+ "vignetting": {
+  "corner_ratio": 0.44999999999999996,
+  "profile_rmse": 0.0003458385711891976,
+  "psnr_before_db": 18.341585677082012,
+  "psnr_after_db": 69.72912712480807,
+  "psnr_gain_db": 51.387541447726065,
+  "fit_coeff": [
+   0.5520831245586032,
+   -0.004146370480321034
+  ]
+ },
+ "psf": {
+  "kernel_corr": 0.9659658084728454,
+  "kernel_mse": 0.00013203229775674878,
+  "kernel_sum": 1.0,
+  "blur_psnr_db": 35.82362123633592,
+  "deblur_psnr_db": 25.839145061657433,
+  "deblur_gain_db": -9.984476174678484,
+  "sharp_grad": 0.34269490696546,
+  "blur_grad": 0.23222301454382022,
+  "deblur_grad": 0.5139301029318419
+ }
+}

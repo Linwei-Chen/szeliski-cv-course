@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>深度相机硬件志：Kinect、ToF 与激光雷达三分天下</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">主动测距</div>
+  <h2>深度相机：自己发光测距</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>双目和单目靠环境光，弱纹理、黑暗、反光会失灵。</li><li>主动传感器自己发光，再测光怎么回来。</li><li>书上第 816 页：主动照明早就用来造深度传感器。</li><li>彩色图加深度图叫 RGB-D；标定比算法更关键。</li></ul>
+      <div class="src">依据：原书第 816 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条路线</div><div class="kline">结构光：三角测量</div><div class="kline">ToF：相位差</div><div class="kline">LiDAR：往返计时</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>01 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三种原理</div>
+  <h2>三条路线：三角、相位、计时</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>结构光测图案横向位移，靠三角测量。</li><li>ToF 以相位式为例，测发射和接收的相位差。</li><li>LiDAR 测脉冲往返时间。</li><li>结构光要基线；ToF 和 LiDAR 发射接收同站。</li></ul>
+      <div class="src">依据：原书第 816–819 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e116_triad.png" style="max-height:500px" alt="三种主动测距：结构光三角、ToF（相位式）、LiDAR 计时｜程序生成，未用教材或论文原图"><figcaption>三种主动测距：结构光三角、ToF（相位式）、LiDAR 计时｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>02 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Kinect 散斑</div>
+  <h2>Kinect 散斑：给白墙造纹理</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 818 页：Kinect 投红外散斑，是标定好的伪随机图案。</li><li>测散斑在红外相机里的横向位移，就能算深度。</li><li>没被点到的像素，用插值补上。</li><li>遮挡处有黑阴影，强阳光会冲淡红外图案。</li></ul>
+      <div class="src">依据：原书第 818 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">散斑要点</div><div class="kline">图案提前标定</div><div class="kline">投影器和相机不能乱动</div><div class="kline">密度决定空间分辨率</div><div class="kline">功率决定量程</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>03 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三角测量</div>
+  <h2>结构光：Z = fB/d</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>知道光条平面方程，用三角测量反推三维位置。</li><li>基线 0.1 米、焦距 600 像素，2 米处视差 30 像素。</li><li>深度误差和距离平方成正比：4 米是 2 米的 4 倍。</li><li>5 米误差约 0.042 米；近距准，远距迅速变差。</li></ul>
+      <div class="src">依据：原书第 816 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">Z = f·B / d</div><div class="mnote">f 焦距、B 基线、d 视差；深度误差与 Z² 成正比</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>04 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">ToF</div>
+  <h2>ToF：测光走了多久</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 819 页：脉冲光积分回波，得到每个像素的飞行时间。</li><li>Kinect V2 改用 ToF，测幅度调制光的相位。</li><li>ToF 发射接收同站，不需要基线，不怕弱纹理。</li><li>相位有周期：超过一个周期就分不清，叫模糊距离。</li></ul>
+      <div class="src">依据：原书第 819 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种 ToF</div><div class="kline">脉冲：直接计时，没有周期歧义</div><div class="kline">相位：精度高，有模糊距离</div><div class="kline">相位怕多路径反射</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>05 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">模糊距离</div>
+  <h2>模糊距离：5 米外折回</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>30 兆赫单频，模糊距离 5.00 米。</li><li>7 米目标折回成 2.00 米。</li><li>30 和 40 兆赫双频，拍频量程 14.99 米，解出 7.00 米。</li><li>频率越低量程越大，越高精度越高；拍频之外还会模糊。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e116_range.png" style="max-height:500px" alt="误差随距离：结构光 ∝Z²、ToF 单频 5 米折回、LiDAR 稳定｜程序生成，未用教材或论文原图"><figcaption>误差随距离：结构光 ∝Z²、ToF 单频 5 米折回、LiDAR 稳定｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>06 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">编码结构光</div>
+  <h2>编码与主动立体：给像素编号</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 817 页：逐位投影 10 次，定位 1024 列。</li><li>格雷码相邻码字只差一位，抗误判比二进制好。</li><li>书上第 819 页：主动立体投随机条纹，造合成纹理。</li><li>编码要多次投影、精度高；主动立体一次投影，适合动态场景。</li></ul>
+      <div class="src">依据：原书第 817/819 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种做法</div><div class="kline">编码：每列有唯一编号</div><div class="kline">主动立体：一次投影配双目</div><div class="kline">代价：图案污染彩色图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>07 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">LiDAR</div>
+  <h2>LiDAR：远而稀的点云</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 816 页：LiDAR 和激光扫描器曾经很贵，后来小型化。</li><li>10 米往返 66.7 纳秒，100 米 667.1 纳秒。</li><li>64 线、每线 1024 点，一圈 65536 个点。</li><li>1920×1080 图像覆盖率约 3.2%；远、准，但点云稀疏。</li></ul>
+      <div class="src">依据：原书第 816 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">LiDAR 特点</div><div class="kline">测脉冲往返时间</div><div class="kline">不怕弱纹理</div><div class="kline">点云稀疏、角度精确</div><div class="kline">常和相机融合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>08 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失败模式</div>
+  <h2>失败模式：镜子、玻璃、阳光</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 820 页：太反光的表面会出错，镜子会被当成场景。</li><li>理想正对平面镜、镜后有空间：2 米测成 4 米，误差 2 米。</li><li>遮挡有阴影，强阳光压低信噪比，多台设备互相干扰。</li><li>镜面、玻璃、水面是难点；深度图不是真值。</li></ul>
+      <div class="src">依据：原书第 820 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">失效清单</div><div class="kline">镜面反射</div><div class="kline">半透明物体</div><div class="kline">烟雾和雨滴</div><div class="kline">多机互扰</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>09 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">选型</div>
+  <h2>选型：没有一种通吃</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>结构光近距密，怕远、怕镜子。</li><li>ToF 中距稳，要解相位模糊。</li><li>LiDAR 远距稀而准，成本高；自动驾驶常配摄像头。</li><li>选型看场景：人脸用结构光，手机后摄用 ToF/LiDAR。</li></ul>
+      <div class="src">依据：原书第 816–820 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e116_tradeoff.png" style="max-height:500px" alt="结构光 / ToF / LiDAR 的定性取舍｜程序生成，未用教材或论文原图"><figcaption>结构光 / ToF / LiDAR 的定性取舍｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零八集</span><span>10 / 10</span></div>
+</section>
+<div id="subbar"></div></body></html>

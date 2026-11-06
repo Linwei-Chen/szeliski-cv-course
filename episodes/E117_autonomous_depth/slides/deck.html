@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>自动驾驶感知栈里深度住在哪一层</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">感知栈 · 总览</div>
+  <h2>自动驾驶：一条感知栈</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>传感器进来，感知、预测、规划、控制逐层往下。</li><li>书上第 737 页：视觉早期就用于机器人导航。</li><li>检测、自由空间、定位都要用深度。</li><li>深度错了，后面的模块跟着错。</li></ul>
+      <div class="src">依据：原书第 737 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">栈里的深度</div><div class="kline">传感器 → 感知 → 预测</div><div class="kline">预测 → 规划 → 控制</div><div class="kline">深度：多个模块共用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>01 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三个传感器 · 三个下游</div>
+  <h2>深度：三个模块共用的坐标</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相机稠密，远距变差；LiDAR 稀疏但稳。</li><li>雷达能测距，横向比较粗。</li><li>问谁消费深度、各自要多准。</li><li>融合第一步是时间戳对齐。</li></ul>
+      <div class="src">依据：原书第 737 页；本集整理</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e117_stack.png" style="max-height:420px" alt="感知栈：深度是共享中间表示｜程序生成，未用教材或论文原图"><figcaption>感知栈：深度是共享中间表示｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>02 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">早期系统 · 历史线</div>
+  <h2>早期系统：从 4 米到 100 公里</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 738 页：最早有 Stanford Cart。</li><li>CMU 早期项目 10 秒走 4 米。</li><li>VaMoRs 用 25Hz 卡尔曼滤波跑 100km/h。</li><li>DARPA 的车装激光雷达和双目。</li></ul>
+      <div class="src">依据：原书第 738 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">早期系统</div><div class="kline">Stanford Cart：早期导航</div><div class="kline">CMU：10 秒 4 米</div><div class="kline">VaMoRs：25Hz、100km/h</div><div class="kline">DARPA：激光雷达+双目</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>03 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">组件清单 · 深度藏在哪</div>
+  <h2>组件清单：深度藏在哪</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 738 页列了数据集、传感器、检测、分割。</li><li>还有立体、场景流、SLAM、场景理解、端到端。</li><li>深度没有单列，藏在立体和场景流里。</li><li>距离数据用于建图定位，叫 RGB-D SLAM。</li></ul>
+      <div class="src">依据：原书第 738 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">组件清单</div><div class="kline">数据集与基准</div><div class="kline">检测/分割/立体/场景流</div><div class="kline">SLAM/场景理解/端到端</div><div class="kline">深度没有单列</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>04 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">误差随距离 · 沙盘实验</div>
+  <h2>误差：双目远距会飘</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>双目 20 米 0.20 米，50 米 1.25 米。</li><li>LiDAR 50 米 0.05 米，雷达 0.10 米。</li><li>融合 50 米 0.045 米，比 LiDAR 还好。</li><li>曲线是沙盘模型，不是厂商标称。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e117_error.png" style="max-height:440px" alt="深度误差随距离：双目、LiDAR、雷达、融合｜程序生成，未用教材或论文原图"><figcaption>深度误差随距离：双目、LiDAR、雷达、融合｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>05 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">自由空间 · 误检实验</div>
+  <h2>幽灵障碍：噪声被阈值放大</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>50 米处本来空着，双目可能测成 49 米内。</li><li>同样阈值，双目误检 21.2%。</li><li>LiDAR 误检 0.0%，但点云稀疏。</li><li>阈值越紧，误检越多。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">自由空间</div><div class="kline">50 米阈值 1 米</div><div class="kline">双目误检 21.2%</div><div class="kline">LiDAR 误检 0.0%</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>06 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">延迟链 · 单点失效</div>
+  <h2>冗余：坏一个还能开</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>30+20+20+10+20，链路共 100 毫秒。</li><li>相机掉线，还剩 LiDAR 加雷达，0.045 米。</li><li>LiDAR 掉线，剩相机加雷达，0.100 米。</li><li>大雨浓雾会同时影响多个传感器。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e117_latency.png" style="max-height:440px" alt="融合链路 100ms 与单点失效：相机/LiDAR/两者都失效｜程序生成，未用教材或论文原图"><figcaption>融合链路 100ms 与单点失效：相机/LiDAR/两者都失效｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>07 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">延迟预算 · 安全距离</div>
+  <h2>延迟：100 毫秒等于 1.5 米</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>15 米每秒就是 54 公里每小时。</li><li>100 毫秒里，车往前走 1.5 米。</li><li>每多 10 毫秒，安全距离多留 0.15 米。</li><li>500 毫秒的完美深度，对刹车可能太晚。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">延迟账</div><div class="kline">15m/s × 0.1s = 1.5 米</div><div class="kline">每 10ms 多 0.15 米</div><div class="kline">100ms 只是感知预算</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>08 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">定位 · RGB-D SLAM</div>
+  <h2>定位：深度把像素变成米</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>隧道、城市峡谷、地下车库没有卫星。</li><li>深度加视觉可以做里程计和回环。</li><li>没有深度，单目 SLAM 只有相似变换。</li><li>米制轨迹是控制需要的输入。</li></ul>
+      <div class="src">依据：原书第 738 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">定位要尺度</div><div class="kline">无 GPS：隧道/峡谷/车库</div><div class="kline">深度把像素运动变米制</div><div class="kline">单目只有相似变换</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>09 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 移交下一集</div>
+  <h2>总结：深度贯穿整条栈</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>检测要距离，自由空间要可通行。</li><li>定位要尺度，最后一起进规划控制。</li><li>书上第 738 页：这些系统促成 Google、Tesla。</li><li>书上第 739 页：Skydio 用多图和深度图飞行。</li></ul>
+      <div class="src">依据：原书第 738–739 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个消费者</div><div class="kline">检测要距离</div><div class="kline">自由空间要可通行</div><div class="kline">定位要尺度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零九集</span><span>10 / 10</span></div>
+</section>
+<div id="subbar"></div></body></html>

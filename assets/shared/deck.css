@@ -1,0 +1,146 @@
+/* szeliski-cv-course 课程幻灯片共享样式 —— v2 明亮纸感·知识杂志风
+ * 画布 1920×1080；米白纸底 + 宋体衬线标题 + 墨蓝卡片 + 暖橙点缀
+ * 截图渲染用（?slide=&step=&sub= 驱动状态）；进度条由 deck.js 自动注入
+ * 版式族：标准页 / .split 左文右图 / .quote 杂志引言 / .bignum 大数字 / .full-fig 全幅图
+ */
+:root {
+  --bg: #faf7f2;
+  --bg-deep: #f3ede2;
+  --ink: #2b2b33;
+  --ink-strong: #1e1e26;
+  --blue: #1e3a5f;
+  --orange: #e8590c;
+  --sand: #f6c98a;
+  --line: #e8e0d2;
+  --muted: #8a8377;
+  --serif: "Songti SC", "STSong", "Noto Serif SC", Georgia, serif;
+  --sans: "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", Arial, sans-serif;
+  --mono: "SF Mono", "Menlo", "JetBrains Mono", monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; }
+body {
+  background: linear-gradient(180deg, #fbf8f3 0%, var(--bg) 42%, #f6f0e6 100%);
+  font-family: var(--sans);
+  color: var(--ink);
+  position: relative;
+}
+/* 顶部进度条（deck.js 注入并按 帧进度 着色）——动效感的横向锚点 */
+#progress {
+  position: absolute; top: 0; left: 0; height: 7px; width: 0;
+  background: linear-gradient(90deg, var(--orange), #f0824d);
+  border-radius: 0 4px 4px 0; z-index: 40;
+}
+
+.slide { display: none; position: absolute; inset: 0; padding: 96px 130px 150px; }
+.slide.active { display: block; }
+.slide.title-slide.active, .slide.endcard.active { display: flex; }
+.slide.split.active { display: grid; grid-template-columns: 1.05fr 1fr; gap: 100px; align-items: center; }
+.slide.split h2 { font-size: 62px; }
+.slide:not(.active) { display: none !important; }
+body.hassub .pagefoot { display: none; }
+
+.kicker {
+  font-size: 29px; letter-spacing: .22em; color: var(--orange);
+  font-weight: 700; margin-bottom: 30px;
+}
+.kicker::before { content: "— "; color: var(--sand); }
+
+h1 { font-family: var(--serif); font-size: 104px; font-weight: 900; line-height: 1.22; color: var(--ink-strong); }
+h1 .hl { color: var(--orange); }
+h2 { font-family: var(--serif); font-size: 74px; font-weight: 900; margin-bottom: 44px; color: var(--ink-strong); letter-spacing: .01em; }
+h2 .hl { color: var(--orange); }
+p.lead { font-size: 38px; line-height: 1.7; color: var(--ink); margin-top: 38px; max-width: 1400px; }
+p.lead b, .col-l b { color: var(--blue); }
+.dim { color: var(--muted); }
+
+/* 步进显现：截图静态、放映时有渐入动效 */
+.step { opacity: 0; transform: translateY(16px); visibility: hidden; }
+.step.on { opacity: 1; transform: none; visibility: visible; transition: opacity .35s ease, transform .35s ease; }
+
+/* 卡片族：白卡 + 细线 + 暖影 */
+.cards { display: grid; gap: 34px; margin-top: 50px; }
+.cards.c2 { grid-template-columns: 1fr 1fr; }
+.cards.c3 { grid-template-columns: 1fr 1fr 1fr; }
+.cards.c4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+  background: #ffffff; border: 1px solid var(--line); border-radius: 14px;
+  padding: 42px 46px; box-shadow: 0 3px 16px rgba(30, 58, 95, .06);
+}
+.card .big { font-family: var(--serif); font-size: 74px; font-weight: 900; color: var(--blue); line-height: 1.1; }
+.card .big.warn { color: var(--orange); }
+.card .cap { font-size: 33px; margin-top: 20px; line-height: 1.5; color: var(--ink); }
+.card .cap small { display: block; font-size: 27px; color: var(--muted); margin-top: 12px; }
+
+ul.big { list-style: none; margin-top: 46px; }
+ul.big li { font-size: 41px; line-height: 1.55; padding-left: 58px; position: relative; margin-bottom: 32px; }
+ul.big li::before {
+  content: ""; position: absolute; left: 0; top: .5em; width: 24px; height: 24px;
+  border-radius: 6px; background: var(--orange);
+}
+ul.big li .en { color: var(--muted); font-size: .82em; }
+
+/* 公式卡：白底 + 墨蓝左标 */
+.formula {
+  background: #ffffff; border: 1px solid var(--line); border-left: 10px solid var(--blue);
+  border-radius: 14px; padding: 46px 60px; margin-top: 46px;
+  font-size: 52px; text-align: center; color: var(--blue);
+  box-shadow: 0 3px 16px rgba(30, 58, 95, .06);
+}
+.formula .note { font-family: var(--sans); font-size: 29px; color: var(--muted); margin-top: 24px; text-align: center; }
+.katex { font-size: 1.32em; }
+
+/* 内联 SVG 图示 */
+.diagram { width: 100%; height: auto; display: block; }
+figure.shot { margin-top: 40px; text-align: center; }
+figure.shot img { max-width: 100%; max-height: 640px; border-radius: 14px; border: 1px solid var(--line); background: #fff; }
+figure.shot figcaption { font-size: 28px; color: var(--muted); margin-top: 22px; }
+
+/* 杂志引言页 */
+.slide.quote.active { display: flex; flex-direction: column; justify-content: center; }
+.slide.quote .qmark { font-family: var(--serif); font-size: 150px; color: var(--sand); line-height: .6; }
+.slide.quote blockquote { font-family: var(--serif); font-size: 66px; font-weight: 900; line-height: 1.5; color: var(--blue); }
+.slide.quote .attrib { font-size: 30px; color: var(--muted); margin-top: 44px; }
+
+/* 大数字页 */
+.slide.bignum.active { display: flex; flex-direction: column; justify-content: center; }
+.slide.bignum .huge { font-family: var(--serif); font-size: 300px; font-weight: 900; color: var(--orange); line-height: 1; }
+.slide.bignum .huge small { font-size: 110px; color: var(--blue); }
+
+/* 片头：杂志封面 */
+.title-slide { flex-direction: column; justify-content: center; align-items: flex-start; }
+.title-slide .course { font-size: 34px; color: var(--orange); letter-spacing: .34em; font-weight: 700; }
+.title-slide .course::after { content: ""; display: block; width: 120px; height: 6px; background: var(--sand); margin-top: 22px; }
+.title-slide .ep { font-size: 38px; color: var(--muted); margin-top: 52px; }
+/* 片尾：墨蓝封底 */
+.endcard { flex-direction: column; justify-content: center; align-items: flex-start;
+  background: linear-gradient(150deg, #24466e 0%, var(--blue) 60%, #16294a 100%); }
+.endcard .kicker { color: var(--sand); }
+.endcard .kicker::before { color: rgba(246, 201, 138, .5); }
+.endcard .row { font-size: 42px; margin: 26px 0; color: #f4f1ea; }
+.endcard .row .tag { display: inline-block; min-width: 240px; color: var(--sand); font-weight: 700; }
+.endcard .pagefoot { color: rgba(244, 241, 234, .55); }
+.endcard .pagefoot span { color: rgba(244, 241, 234, .55); }
+
+/* 底部字幕条：近实色深色面板，高度随口播长度自适应（整段字幕烧进帧，最长约 4 行） */
+#subbar {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(23, 32, 51, .98);
+  border-top: 3px solid var(--orange);
+  padding: 26px 130px 30px; min-height: 96px; box-sizing: border-box;
+}
+#subbar.on { display: flex; }
+#subbar span {
+  font-size: 30px; line-height: 1.55; text-align: center; color: #f3efe6;
+  max-width: 1660px;
+}
+#subbar span b { color: var(--sand); font-weight: 700; }
+
+/* 页脚 */
+.pagefoot {
+  position: absolute; bottom: 36px; left: 130px; right: 130px;
+  display: flex; justify-content: space-between; font-size: 25px; color: #b3a993;
+  border-top: 1px solid var(--line); padding-top: 18px;
+}
+.endcard .pagefoot { border-top-color: rgba(244, 241, 234, .2); }

@@ -1,0 +1,24 @@
+[lab] 开始 2026-11-02T04:28:07
+[lab] 源码 sha256=496bc0fd6188a88b6762ce11f63199edfce63c3f41502387506c6cc2671ea2b9
+[lab] 图1 文本：程序生成，未用原书原图 · 对应原书 p.442–444 图 7.21/7.22，布局自绘 / 阈值 θ / 真阳 / 假阳 / 假阴 / 抬高阈值：假阴少一点，假阳多很多 / 特征距离 d / 数量 / AUC=0.93 / 越靠左上越好 / ROC 曲线 / 假阳率 / 真阳率
+[lab] 图2 文本：NNDR：最近距离比上次近距离 / DA / DB / DC / DD / DE / d1 / d2 / d1' / d2' / DA：d1/d2 = 0.33 / 小比率→接受（配 DB） / DD：d1'/d2' = 0.92 / 大比率→拒绝（不配 DC） / 程序生成，未用原书原图 · 对应原书 p.445 图 7.23，布局自绘
+[lab] 图3 文本：匹配四道闸：数量逐级收窄 / ① 描述子 + 候选匹配 / 500 对 / ② 阈值 / 最近邻 / 120 对 / ③ NNDR + 互检 / 80 对 / ④ RANSAC 验证 / 72 内点 / 8 离群 / 每过一道闸，错配少一批；最后只留下几何上说得通的内点 / RANSAC：抽小批种子拟合变换→数内点→重复取最好→用全部内点重估 / 程序生成，未用原书原图 · 对应原书 p.441–448 正文，布局自绘
+[lab] 图内字号：图1 [12.0, 13.0] / 图2 [12.0, 14.0] / 图3 [12.0, 14.0]
+[PASS] 图 1 阈值与混淆矩阵词在档：True
+[PASS] 图 1 ROC/AUC 在档：True
+[PASS] 图 2 NNDR 要素在档：True
+[PASS] 图 2 小比率接受/大比率拒绝：True
+[PASS] 图 3 四道闸在档：True
+[PASS] 图 3 数量单调收窄：True
+[PASS] 主文本字号≥12pt+程序生成注记在档×3　| 图一 最小 12.0pt/图二 最小 12.0pt/图三 最小 12.0pt
+[PASS] 三图均含「程序生成，未用原书原图」：True
+[PASS] 图内文字内部记号零泄漏（红线 5）　| 图内 Text 收割 40 条，命中 无
+[PASS] 三张 PNG 落盘：True
+[lab] readings → e069_feature_matching_readings.json
+[lab] readings sha256=a005a1834e26db37af6e12b519294261ef03643512899907fc0f0947936d18dd
+[lab] PNG sha256(e069_threshold_tradeoff.png)=12137e513d657fc71100f95778f1af4c5297554ed5d8dfbd166a5ec6cd1851ba
+[lab] PNG sha256(e069_nndr.png)=cdfb6afadffac3a13ea9f95f9a5c79833cf6c353e9b63b2406778135cfc99016
+[lab] PNG sha256(e069_match_pipeline.png)=506630457462784c51ee03775e9955e690300ad71a65753a59d619a2aabf588f
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T04:28:07

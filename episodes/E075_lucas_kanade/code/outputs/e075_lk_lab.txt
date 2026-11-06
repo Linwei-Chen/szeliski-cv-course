@@ -1,0 +1,20 @@
+[lab] E075 最小二乘与 Lucas–Kanade 开始 2026-11-02T07:11:49
+[lab] 源码 sha256=102cef596691ef6a8ad23d7b53d54fad656492b5b9ab37d369b6780310fa5120
+[PASS] 平移最小二乘=平均位移　| 估计=[0.42, -0.23]
+[PASS] 仿射最小二乘精确复原　| max误差=5.55e-16
+[PASS] 加权最小二乘压住外点　| 加权=0.0142 未加权=0.651
+[PASS] 旋转 Gauss–Newton 收敛　| 误差=0.0000°
+[PASS] 旋转迭代次数≤10　| 4 次
+[PASS] 小位移 LK 收敛　| 估计=0.1500 真值=0.15
+[PASS] 大位移直接 LK 失败　| 估计=-0.0064 误差=0.806
+[PASS] 金字塔大位移收敛　| 估计=0.8000 误差=0.0000
+[PASS] LM 阻尼缩短步长　| 无阻尼:0.420 加阻尼:0.210
+[PASS] 三张图在盘　| 三张全在
+[lab] PNG sha256(e075_lk_convergence.png)=676a3e0a9aaabfac1fc7a1f7d7b0ad068d042e9536ccf1c984d2990f84007ea1
+[lab] PNG sha256(e075_lk_pipeline.png)=0d3c3422589d45d744aa34ed0043c1e33160588af576a65c9932066e6c8f0c35
+[lab] PNG sha256(e075_translation_ls.png)=1805655779576797e47b1bb86ca79c8c2cce2a94b9219daad53a8a91798a5f36
+[lab] readings → e075_lk_readings.json
+[lab] readings sha256=0f0e0f522b18a580199e40da388ffd782c71b2344f1da0add21c2fd3ad774bef
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T07:11:49

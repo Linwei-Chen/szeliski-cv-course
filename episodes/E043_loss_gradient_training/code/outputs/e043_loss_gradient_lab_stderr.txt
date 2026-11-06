@@ -1,0 +1,9 @@
+/Users/chenlinwei/miniforge3/lib/python3.13/site-packages/numpy/_core/_methods.py:132: RuntimeWarning: overflow encountered in reduce
+  ret = umr_sum(arr, axis, dtype, out, keepdims, where=where)
+findfont: Failed to find font weight normal for STSong, now using 300.
+findfont: Failed to find font weight normal for STSong, now using 300.
+findfont: Failed to find font weight normal for STSong, now using 300.
+/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E043_loss_gradient_training/code/e043_loss_gradient_lab.py:235: RuntimeWarning: overflow encountered in square
+  E_line = lambda w: float(((A @ w - Y) ** 2).mean())
+/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E043_loss_gradient_training/code/e043_loss_gradient_lab.py:557: RuntimeWarning: invalid value encountered in subtract
+  w = w - eta * grad_line(w)

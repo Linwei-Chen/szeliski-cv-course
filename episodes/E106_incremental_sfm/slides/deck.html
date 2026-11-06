@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>增量式重建流水线：从两张图长到整个场景</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">从种子图开始</div>
+  <h2>增量式 SFM：一台台加相机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先在两两图像间建立稀疏对应。</li><li>把对应串成特征轨迹。</li><li>二维特征和全局三维点关联。</li><li>输出相机位姿和稀疏点云。</li></ul>
+      <div class="src">依据：原书第 725 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">输入与输出</div><div class="kline">输入：照片集</div><div class="kline">输出：相机位姿 + 稀疏点云</div><div class="kline">稠密表面交给 MVS</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">起步</div>
+  <h2>种子对：匹配多，视差也要大</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>所有图像两两比较是 O(N²)。</li><li>先用图像检索缩小候选对。</li><li>一致匹配多，降低错配概率。</li><li>离面视差够，深度才可解。</li></ul>
+      <div class="src">依据：原书第 725–726 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个条件</div><div class="kline">纯旋转：没有视差</div><div class="kline">基线太短：深度误差放大</div><div class="kline">单应残差可当视差代理</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">增量循环</div>
+  <h2>生长循环：五步加一台相机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>选下一台能看到已有点的相机。</li><li>用 PnP 估它的位姿。</li><li>按重投影误差筛内点。</li><li>三角化新点，再跑局部 BA。</li></ul>
+      <div class="src">依据：原书第 726 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e106_pipeline.png" style="max-height:500px" alt="增量式 SFM 五步：种子对→三角化→PnP 加相机→局部 BA→补新点｜程序生成，未用教材或论文原图"><figcaption>增量式 SFM 五步：种子对→三角化→PnP 加相机→局部 BA→补新点｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">顺序与合并</div>
+  <h2>顺序影响成败，失败就回退</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先加与当前模型重叠最多的相机。</li><li>重叠太少，PnP 点不够，注册失败。</li><li>按共视点数和匹配质量排序。</li><li>另一条路：三张图三元组再合并。</li></ul>
+      <div class="src">依据：原书第 726 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三元组合并</div><div class="kline">先重建小三元组</div><div class="kline">相似变换对齐尺度/旋转/平移</div><div class="kline">局部错误不易传遍全局</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">规模</div>
+  <h2>稠密解贵，骨骼集省</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>稠密相机系统直接解是 O(N³)。</li><li>每几张重跑 BA，总时间约四次方。</li><li>骨骼集先重建一小部分代表图像。</li><li>其余图像用 PnP 折进来，最后全局 BA。</li></ul>
+      <div class="src">依据：原书第 726–727 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">骨骼集的边界</div><div class="kline">误差在有界倍数内</div><div class="kline">形状接近全量 BA</div><div class="kline">选代表要做不确定性分析</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">开源系统</div>
+  <h2>COLMAP：大规模代表</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>开源 SFM 和多视图立体系统。</li><li>能重建非常大的场景。</li><li>流程：特征、匹配、轨迹、种子对。</li><li>再增量注册、BA，可选 MVS。</li></ul>
+      <div class="src">依据：原书第 727–728 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">大规模的两个麻烦</div><div class="kline">重复结构、镜像文字</div><div class="kline">动态行人留下鬼影</div><div class="kline">前面通常还有检索和几何验证</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 种子</div>
+  <h2>种子对视差决定深度误差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>10 相机、80 点、0.5 像素噪声。</li><li>高视差中位误差 0.0011。</li><li>低视差中位误差 0.0290，差约 27 倍。</li><li>90 分位从 0.0033 涨到 0.1374。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e106_seed.png" style="max-height:500px" alt="高/低视差种子：中位深度误差 0.0011 vs 0.0290｜程序生成，未用教材或论文原图"><figcaption>高/低视差种子：中位深度误差 0.0011 vs 0.0290｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 顺序生长</div>
+  <h2>10 台相机全部注册</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相机中心中位误差 0.0024。</li><li>最大误差 0.0053。</li><li>三维点中位误差 0.0036。</li><li>最终重投影 RMS 1.09 像素。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实验设置</div><div class="kline">按 0 到 9 顺序加相机</div><div class="kline">注册阈值 5 像素</div><div class="kline">每步 PnP 加位姿精化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 骨骼集</div>
+  <h2>精度接近，规模更省</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先重建 0、2、4、6、8 五台。</li><li>再把 1、3、5、7、9 折进来。</li><li>相机中位误差 0.0027，最大 0.0070。</li><li>重投影 RMS 1.31 像素。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e106_growth.png" style="max-height:500px" alt="顺序生长 vs 骨骼集：相机中位误差 0.0024 / 0.0027｜程序生成，未用教材或论文原图"><figcaption>顺序生长 vs 骨骼集：相机中位误差 0.0024 / 0.0027｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失败边界</div>
+  <h2>漂移与重复结构</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>种子视差太小，深度不可信。</li><li>匹配错，轨迹串错，整条链被带歪。</li><li>重复结构让匹配张冠李戴。</li><li>长序列会漂移，要靠回环或全局 BA。</li></ul>
+      <div class="src">依据：原书第 728 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">工程对策</div><div class="kline">图像检索 + 几何验证</div><div class="kline">轨迹一致性检查</div><div class="kline">注册失败回退；必要时加 GPS/IMU</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程落地</div>
+  <h2>落地：六步检查</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先检索和几何验证，别全量匹配。</li><li>选高视差、高内点的种子对。</li><li>串轨迹，剔除短轨迹和矛盾轨迹。</li><li>按共视排序加相机，失败回退。</li></ul>
+      <div class="src">依据：原书第 726–727 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">后两步</div><div class="kline">每批局部 BA，最后全局 BA</div><div class="kline">留验证集看重投影和轨迹</div><div class="kline">验证集要留出没参与重建的相机/点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>种子、顺序、规模</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>高视差种子对起步。</li><li>PnP 加相机，BA 一轮轮压误差。</li><li>顺序和轨迹质量决定会不会漂。</li><li>下一集：全局 SFM。</li></ul>
+      <div class="src">依据：原书第 725–728 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">本集：一台台加相机</div><div class="kline">下一集：先旋转平均，再解位置</div><div class="kline">适合万张级、乱序照片</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十八集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,20 @@
+[lab] 开始 2026-11-02T01:47:40
+[lab] 源码 sha256=b16f20e56f36ed8f0fd5bd3fe9bd01ce8d8d3a07f2c236eb8449c2c458f18036
+[PASS] 图1 三视角+三架构词在档　| 单帧/光流/时空立方/双流/三维卷积/SlowFast 全命中
+[PASS] 图1 读时间对照句在档　| 画面→外观/运动→变化/多帧→时空 全命中
+[PASS] 图2 描述三步+CLIP 词在档　| 物体/属性/关系/CLIP/零样本/图文匹配 全命中
+[PASS] 图2 匹配得分行在档　| 狗 0.82/猫 0.11/房子 0.07
+[PASS] 图3 文生图+VQA 词在档　| 文生图/VQA/问题/答案/解码/重排 全命中
+[PASS] 主文本字号≥12pt+程序生成注记在档×3　| 图一 最小 12.0pt/图二 最小 12.0pt/图三 最小 12.0pt
+[PASS] 图内文字内部记号零泄漏（红线 5）　| 图内 Text 收割 52 条，命中 无
+[PASS] FG1 程序生成图落盘　| e063_video_understanding.png
+[PASS] FG2 程序生成图落盘　| e063_captioning_clip.png
+[PASS] FG3 程序生成图落盘　| e063_text_to_image_vqa.png
+[lab] readings → e063_video_language_readings.json
+[lab] readings sha256=400a1d5536814b5312b4771b35aedf57891123fd7e6f0cf29f9b12c6bd3d6dd9
+[lab] PNG sha256(e063_captioning_clip.png)=aa591811f04e4d2a3a741dd1e62d145007a11a1accd43c205e68f2afab608049
+[lab] PNG sha256(e063_text_to_image_vqa.png)=05c88428d496bed044b42d4d4826d269fc64ad33021f76f55a185fadb39a9504
+[lab] PNG sha256(e063_video_understanding.png)=7140ac80ae903e7833253acf0ea44afb5d59727295509670cc3d934e9fa6f55c
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T01:47:40

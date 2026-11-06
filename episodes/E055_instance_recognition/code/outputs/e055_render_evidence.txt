@@ -1,0 +1,26 @@
+# E055 渲染存证 1（本文件由 tools/render_deck.py --evidence-out 程序化生成——
+#   头/起止时间/输入与逐帧 sha 全部来自本次实际运行，stdout 全量在下方；
+#   早期「重定向+手拼头」的落盘时间来源不明判例不再发生）
+# 落盘: 2026-11-01T14:06:01
+# exit=0
+[render] 开始 2026-11-01T14:05:43
+[render] 输入 shots.json sha256=f6a001d5704da7297b2814b909150d8f4cf6d8b765d2707d43c84d6d18eb80b6
+[render] 输入 deck.html   sha256=7e3bea1e9402d30a590322da9d18a6a869288db09012e3d92d3492426e3bd6fb
+渲染完成 16/16 帧 → /Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E055_instance_recognition/production/frames
+[render] f001.png sha256=e4cf8679280fdf48d9d95736c118791a76e761808db35c9244f8d779c3be87fe
+[render] f002.png sha256=921e09f69665f9223d52455d9af9d644c68808f0664fe98360cd7a7a7dc4f301
+[render] f003.png sha256=9970c07465a9638693d6400d5c059ca25bb656efabe25d9a1c40dbd616318436
+[render] f004.png sha256=ff0fbc0a609d397633997a831c0641b944cd5d647516974dc4bc28bed7756096
+[render] f005.png sha256=232ac83d3b63b3fa830848f3c1094cd5d1da0f5333d8227eab011d28e377a672
+[render] f006.png sha256=c70d66daadfbdecd53225be018fc501b1625a7db6a3c8050ee7b017094bc6a02
+[render] f007.png sha256=a00300ba833ffb918ded642ba9d4126d93123ee6d5aaa1266cf4aee44bf748a5
+[render] f008.png sha256=f35debb153674826e067f040b8b4d7ecc5d36af04c243719044ee21d870ae089
+[render] f009.png sha256=46a75772acfdf8846cabd716302d27575ce785325790ec192586a78663a3b6d7
+[render] f010.png sha256=7ed04bdcefcfd65351527ffd32947603e7a1d7a4817f1c6a5e16acca4ab715fa
+[render] f011.png sha256=eb0ceff1bca88c9e9c9d22e9addccd1dfac5055a3581b5bfac48c51f2b5c6e4a
+[render] f012.png sha256=6283f55811f6735ecb972c84eed5cd68fc05ed4a513c5ba653fba3bd482223a8
+[render] f013.png sha256=aa7c8750df2a1ea10ce1cc61bdd89de2a05c49dce4a4df60f808389f510b34e8
+[render] f014.png sha256=68268b38d2d6caed93eb101c4e9a9e345e8078fc660c1fb2fa6428a499b338e3
+[render] f015.png sha256=12ba4229af6fe65df68191b76b026162fcc247612401edacf80bc6394e2d98a2
+[render] f016.png sha256=54a34d17e2740f2cccc1599263b3a66c762ab4487e3f1f7ba11277c866a01dd2
+[render] 结束 2026-11-01T14:06:01

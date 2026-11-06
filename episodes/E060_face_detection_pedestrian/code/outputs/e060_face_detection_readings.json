@@ -1,0 +1,27 @@
+{
+ "generated_at": "2026-11-01T23:13:25",
+ "src_sha16": "46c1739a62a49193",
+ "fig1": {
+  "routes": 3,
+  "pipeline": 3,
+  "min_fs": 11.5,
+  "max_fs": 14.0
+ },
+ "fig2": {
+  "features": 2,
+  "integral_grid": 4,
+  "cascade_stages": 3,
+  "min_fs": 11.5,
+  "max_fs": 14.0
+ },
+ "fig3": {
+  "grid_cells": 25,
+  "bins": 5,
+  "min_fs": 10.0,
+  "max_fs": 14.0
+ },
+ "texts": {
+  "collected": 39,
+  "leaked": 0
+ }
+}

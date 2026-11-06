@@ -1,0 +1,18 @@
+[lab] E101 SFM overview 开始 2026-11-05T15:17:42
+[lab] 源码 sha256=2e5840e8c81a1b04f02bddea72d800e20dad44148c2bb0fe84bc55dd86dbf4a0
+[PASS] 视差随深度反比　| 近 0.411 vs 远 0.134
+[PASS] 基线越大视差越大　| b=0.25→4.0 单调增
+[PASS] 基线越大三角化越准　| 0.0046 vs 0.0163
+[PASS] 噪声越大误差越大　| 0.0429 vs 0.0046
+[PASS] 零基线不可三角化　| 视差=0，深度无定义
+[PASS] 管线六步齐全　| 照片→匹配→几何→三角化→BA→点云
+[PASS] 章节五节齐全　| 11.1–11.5
+[PASS] 三图在盘　| pipeline/map/parallax
+[lab] PNG sha256(e101_map.png)=87058b70b1fe5d1e48a7e43bf1814e403df3e0cb76024d362d1dd93a12c7324d
+[lab] PNG sha256(e101_parallax.png)=071a7c3e8a46dad3532c1112baf5e0882e14bbfefa7d6f98b3452c47251eb125
+[lab] PNG sha256(e101_pipeline.png)=d1fd13adc07713ccbadca79d2d14c108ed5e6d98c398d74550881a01a85373e1
+[lab] readings → e101_sfm_readings.json
+[lab] readings sha256=84aa4fb18837b0c95949c3dd13e9c7ecea76a8f34e6bcfbdf679b25fb551e76b
+[lab] LEDGER：断言 8 条，PASS 8
+[lab] 汇总 PASS 8 / FAIL 0 / 共 8
+[lab] 结束 2026-11-05T15:17:42

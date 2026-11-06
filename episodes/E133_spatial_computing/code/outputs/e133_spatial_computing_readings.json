@@ -1,0 +1,48 @@
+{
+ "n_pass": 12,
+ "n_total": 12,
+ "image": [
+  320,
+  180
+ ],
+ "cameras": [
+  -0.7,
+  -0.5,
+  -0.3,
+  -0.1,
+  0.1,
+  0.3,
+  0.5,
+  0.7
+ ],
+ "n_cameras": 8,
+ "target": 0.0,
+ "z_bg": 6.0,
+ "z_fg": 2.0,
+ "psnr_hard": 34.642504945400226,
+ "psnr_soft": 37.45754641132495,
+ "edge_hard": 0.032045386877963884,
+ "edge_soft": 0.001034651939892642,
+ "edge_gain_pct": 96.77129209320259,
+ "n_frames": 24,
+ "flicker_noisy": 0.0005974627334063971,
+ "flicker_smooth": 4.168026841254681e-05,
+ "flicker_noisy_display": 0.0006,
+ "flicker_smooth_display": 4e-05,
+ "flicker_reduce_pct": 93.02378774741157,
+ "bg_pixels": 44232,
+ "psnr_noisy": 36.89382581475269,
+ "psnr_smooth": 37.64224439889416,
+ "psnr_gain": 0.7484185841414686,
+ "depth_std_before": 0.10034854652028918,
+ "depth_std_after": 0.029905250809021938,
+ "protocol": {
+  "synthetic": true,
+  "cameras": "1D array",
+  "layers": "background Z=6 + foreground Z=2",
+  "matting": "soft alpha vs hard mask",
+  "temporal": "offline gaussian smoothing",
+  "full_vr": false,
+  "full_6dof": false
+ }
+}

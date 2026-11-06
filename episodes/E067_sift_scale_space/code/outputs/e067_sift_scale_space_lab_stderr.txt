@@ -1,0 +1,10 @@
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+findfont: Failed to find font weight bold for Arial Unicode MS, now using 400.
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+findfont: Failed to find font weight bold for Arial Unicode MS, now using 400.
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+findfont: Failed to find font weight bold for Arial Unicode MS, now using 400.
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+findfont: Failed to find font weight bold for Arial Unicode MS, now using 400.
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+findfont: Failed to find font weight bold for Arial Unicode MS, now using 400.

@@ -1,0 +1,66 @@
+口径注记（与 refs 逐字同步；门A r1 P0-3 补打印）：
+· 式 3.68 读法：原书第 155 页明说「a five-tap kernel of the form」——一维五抽头核 [c,b,a,b,c]，b=1/4、c=1/4−a/2、a=3/8 代入恰得式 3.69 binomial [1,4,6,4,1]/16（与 E029 Table 3.2 binomial 列全等）。pdftotext 留档把五个系数的行内空格拉大（抽取伪迹），原书印刷并未断开——排版伪迹只记本标头，不进 deck/口播。
+· Figure 3.32 图注「reconstruction filter coefficients are twice the analysis coefficients」：原书给事实未给推导——本实验以 perfect reconstruction 闭环反证（×2 时 err=1.11e−16；不×2 err=0.793）。
+· 脚注 14「any smoothing kernel」：原书未给收敛率——binomial 与 box 对照演示（讲者口径；两种核不足以外推一切核）。
+· 变体「less aliasing」：原书文字陈述、无度量——不作数值断言，仅数值实证 not self-inverting（err=0.353）。
+· DoG↔LoG：原书只给式 3.70/3.71 与 Figure 3.34「close fit」图注，未给符号约定——讲者口径同尺度剖面 |cc|=0.9184（反相），形状同族不作等式断言。
+· half-octave/quincunx：原书未给 quincunx 滤波器组系数（引 Feilner, Van De Ville, and Unser 2005）——本实验只核算层数账与采样格算术（7-2），不实现完整滤波器组。
+
+#1 式 3.68 核推导：b=1/4、c=1/4−a/2、a=3/8 → 式 3.69 binomial（p.155 L82–90）
+  [读数] a=3/8 → c=1/4−a/2 = 0.0625 → 核 = [0.0625, 0.25, 0.375, 0.25, 0.0625]
+  [PASS] 1-1 式 3.68(a=3/8) 全等式 3.69 [1,4,6,4,1]/16  max|Δ|=0.0e+00
+  [PASS] 1-2 与 E029 Table 3.2 binomial 列全等（0.3750/0.2500/0.0625）
+  [PASS] 1-3 unit DC gain（Table 3.2 图注 L42–43：sum up to 1）  sum=1.000000000000000
+  [PASS] 1-4 对称奇长（Table 3.2 图注 L42：odd length, symmetric）
+  [PASS] 1-5 shifts and adds 系数来源：(1+z⁻¹)⁴=[1,4,6,4,1]（L91 shifts and adds）
+  [注入已拦截] D1 错误 a=1/2（c=0）应推不出 binomial（断言非恒真）
+#2 Gaussian pyramid 构造：blur+↓2，每层像素 ¼（Figure 3.31 L114–115）
+  [读数] 层形状: [(256, 256), (128, 128), (64, 64), (32, 32), (16, 16)]
+  [PASS] 2-1 五层构造且逐层宽高减半
+  [PASS] 2-2 每层像素数=上层 ¼（Figure 3.31：a quarter of the pixels）
+  [PASS] 2-3 最粗层非空且幅值有界 [0,1]（非负归一核=凸组合，值域不扩）  [0.127,0.649]
+  [注入已拦截] D2 不 blur 直接 ↓2 的『金字塔』应与正确版不同（blur 必要性）
+    └ max|Δ|=0.324
+#3 Laplacian pyramid 与 perfect reconstruction（L171–178：exactly reconstruct）
+  [读数] perfect reconstruction max|I−Î| = 1.110e-16
+  [读数] 对照：synthesis 不 ×2 时 max|I−Î| = 0.793
+  [PASS] 3-1 五层 Laplacian 金字塔各层尺寸与 Gaussian 层一致
+  [PASS] 3-2 重构系数=analysis×2 时 max|I−Î| ≤ 1e−10（机器精度级）  err=1.11e-16
+  [PASS] 3-3 插值核=analysis×2 的增益闭环：常数图 ↑2 插零后卷积 [1,4,6,4,1]/8 内部恒等（半零位×核和 2=1）  内部区 [0.500000,0.500000]
+  [PASS] 3-4 带通=本层−上采样插值下层（Figure 3.33 蓝色通路定义 L161–164）逐元素复核
+  [注入已拦截] D3 synthesis 不 ×2 应重构失败（×2 倍率必要）
+#4 变体：低通直取原模糊图（L179–181+L197–199：less aliasing, not self-inverting）
+  [读数] 变体重构 max|I−Î| = 0.353（标准版 1.11e-16）
+  [PASS] 4-1 变体带通=本层−本层再模糊（piping 定义复核）
+  [PASS] 4-2 变体重构误差显著非零（不 self-inverting，L198–199）  err=0.353
+  [PASS] 4-3 变体带通与标准带通不同（低通定义差异在案）  max|Δ|=0.210
+  [PASS] 4-4 「less aliasing」原书为文字陈述未给度量——不作数值断言（申报通过）  见标头口径注记
+#5 DoG/LoG：式 3.70 线性性+DC 抵消+剖面相关（p.158 L200–221）
+  [PASS] 5-1 式 3.70 线性性：(Gσ1−Gσ2) 卷积 = Gσ1 卷积 − Gσ2 卷积
+  [PASS] 5-2 DoG 的 DC 增益=0（带通必要：两归一低通之差在 ω=0 抵消）  sum=-1.8e-17
+  [读数] DoG 与同尺度数值 LoG（G_σ1 平滑后 ∇²）剖面相关系数 = -0.9184（负值=反相）
+  [PASS] 5-3 DoG 与 LoG 剖面形状同族：|相关|>0.85（讲者口径；尺度配平——DoG(σ1,σ2) 对应 σ1 尺度 LoG，原书 Figure 3.34 图注 close fit；反相系约定——σ1<σ2 时 DoG 中心正、∇²G 中心负，原书未给符号约定，不作等式断言）  cc=-0.9184
+  [PASS] 5-4 DoG 主瓣两侧负瓣存在（带通形状特征：中心正、|x|=3 处为负）  center=0.1995 sides(x=±3)=-0.0603/-0.0603
+  [注入已拦截] D4 退化 DoG(σ1=σ2)≡0，『峰值>0』断言应 FAIL（检验断言非恒真）
+#6 重复卷积收敛 Gaussian：binomial vs box 对照（L92–94+脚注 14 Wells 1986）
+  [读数] binomial 核重复 2/6/12 次后与同方差 Gaussian 的 max|Δ| = 8.99e-03/1.69e-03/5.98e-04
+  [PASS] 6-1 binomial 核收敛：偏差随次数单调下降  8.99e-03→5.98e-04
+  [读数] box 核重复 2/6/12 次后与同方差 Gaussian 的 max|Δ| = 3.20e-02/6.26e-03/2.20e-03
+  [PASS] 6-2 box 核收敛：偏差随次数单调下降  3.20e-02→2.20e-03
+  [PASS] 6-3 方差可加性：binomial 单核 σ²=1.0（=4 次 (1+z⁻¹)/2 之和），8 次卷积 σ²=8.0  单核 σ²=1.000000，8 次 σ²=8.000000
+  [注入已拦截] D5 同一『σ²=8』断言用于 box 核应 FAIL（检验断言绑定核）
+#7 half-octave/quincunx 与 Figure 3.35b 像素账（p.159 L247–265）
+  [读数] 覆盖 64× 尺度范围（阶梯步数口径，每步尺度×步进）：octave 链=6 级，half-octave 链=12 级
+  [PASS] 7-1 half-octave 步进 √2<2 → 级数恰为两倍：octave 6 级、half-octave 12 级（L258–259 small scale change；round 取整，门A r1 P0-1 修）  6 vs 12
+  [PASS] 7-2 quincunx 采样格：(x+y)%2==0 恰保留一半像素（checkerboard，L260–261）
+  [PASS] 7-3 Figure 3.35b 像素账：3/4×(1+1/4+1/16+…)=1（total = original pixels，几何级数闭环）  Σ=1.000000
+  [PASS] 7-4 octave 金字塔 overcomplete 账：1+1/4+…=4/3×N>N（§3.5.4 对比句 L304 的前提，讲者预埋）  Σ=4/3
+#8 五图程序重绘（原书图未使用）
+  [PASS] 图 e030_gauss_pyramid.png 已生成且非空  219604 B
+  [PASS] 图 e030_laplacian_pyramid.png 已生成且非空  569016 B
+  [PASS] 图 e030_kernel_to_gauss.png 已生成且非空  97680 B
+  [PASS] 图 e030_dog_log.png 已生成且非空  96081 B
+  [PASS] 图 e030_halfoctave.png 已生成且非空  55880 B
+
+== E030 数值实验汇总：32 条 PASS / 0 条 FAIL；区分力注入 5/5 已拦截 ==
+DONE

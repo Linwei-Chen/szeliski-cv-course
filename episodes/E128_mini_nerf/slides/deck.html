@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>迷你 NeRF 试跑：从第 13 章习题到坐标 MLP</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验课+习题 · 第13/14章</div>
+  <h2>把 NeRF 压到一张小图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>把 NeRF 压到一张 40×40 的汉堡图。</li><li>先看最小闭环：坐标进，颜色出。</li><li>只问一件事：位置编码加不加，差在哪。</li><li>不写 CUDA，只用 numpy 和一张小图。</li></ul>
+      <div class="src">依据：原书第 833/906–907 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三问</div><div class="kline">位置编码有没有用</div><div class="kline">训练怎么收敛</div><div class="kline">频率组数怎么选</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 858–859 页 · 习题</div>
+  <h2>习题地图：13.3–13.8</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>13.3 配准，13.4 SDF 合并，13.5 表面简化。</li><li>13.6 建筑建模，13.7 人体跟踪，13.8 3D 摄影。</li><li>13.3–13.5 接前面重建链的三集。</li><li>13.6 和 13.8 是开放式大作业，只给拆解。</li></ul>
+      <div class="src">依据：原书第 858–859 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条线</div><div class="kline">习题：第 13 章几何重建</div><div class="kline">迷你 NeRF：第 14 章神经表示</div><div class="kline">先看地图，再挑一道做</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 833 页 · NeRF 桥接</div>
+  <h2>最小闭环：坐标、编码、MLP</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 833 页：NeRF 用射线方向作输入。</li><li>输出连续不透明度和辐射值，再做射线追踪。</li><li>压到二维：坐标 (x,y) 进网络，吐 RGB。</li><li>位置编码把坐标展开成正弦、余弦再送进 MLP。</li></ul>
+      <div class="src">依据：原书第 833 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">最小闭环四步</div><div class="kline">采样坐标</div><div class="kline">做位置编码</div><div class="kline">过 MLP</div><div class="kline">算损失</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 906 页 · 频谱偏置</div>
+  <h2>裸坐标：为什么画不出细节</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>裸坐标只有两个数，网络只看到低频。</li><li>汉堡的芝麻、生菜边、面包轮廓都是高频。</li><li>位置编码是正弦倍频，对 MLP 表示细节是必需的。</li><li>输入没有高频，网络再大也只能拟合低频。</li></ul>
+      <div class="src">依据：原书第 906 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">问题在输入</div><div class="kline">裸坐标：只有 L=0 一组</div><div class="kline">位置编码：多组正弦倍频</div><div class="kline">频率越高，正弦波越密</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 位置编码</div>
+  <h2>看图：同一张图的三个版本</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同一张 40×40 汉堡，同一个网络。</li><li>裸坐标 PSNR 21.68 分贝。</li><li>位置编码 L=4 是 34.35 分贝。</li><li>差 12.67 分贝，差在细节。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e128_burger.png" style="max-height:500px" alt="目标 / 裸坐标 / 位置编码：同一张汉堡｜程序生成，未用教材或论文原图"><figcaption>目标 / 裸坐标 / 位置编码：同一张汉堡｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 训练日志</div>
+  <h2>训练 500 步：损失降了多少</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>训练 500 步，位置编码损失从 0.1442 降到 0.0004。</li><li>降了九成以上。</li><li>裸坐标的曲线早早进入平台。</li><li>瓶颈不在优化器，在输入表示。</li></ul>
+      <div class="src">依据：本集实验（500 步，隐藏 48，学习率 0.01）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读曲线的顺序</div><div class="kline">先看有没有平台</div><div class="kline">再看是改数据、改模型还是改输入</div><div class="kline">改输入往往最便宜</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 训练曲线</div>
+  <h2>看图：位置编码学得快</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两条曲线从同一起点出发。</li><li>位置编码一路往上，前 100 步拉开差距。</li><li>裸坐标在 20 分贝附近就平了。</li><li>换编码比加训练步更划算。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e128_curve.png" style="max-height:500px" alt="训练步 vs PSNR：裸坐标与位置编码｜程序生成，未用教材或论文原图"><figcaption>训练步 vs PSNR：裸坐标与位置编码｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 906 页 + 实验二</div>
+  <h2>频率扫描：L=4 饱和</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>L=0 是 21.68，L=2 是 30.04，L=3 是 31.6。</li><li>L=4 是 34.35，L=5 是 33.98，不再涨。</li><li>频率不是越多越好，太少画不出细节。</li><li>太多会增加输入维度，还可能过拟合。</li></ul>
+      <div class="src">依据：原书第 906 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">频率扫描读数</div><div class="kline">L=0：21.68 分贝</div><div class="kline">L=4：34.35 分贝</div><div class="kline">L=5：33.98 分贝，接近饱和</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 频率扫描</div>
+  <h2>看图：不是越大越清楚</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>L=4 的柱子最高，L=5 反而略低。</li><li>L=2 到 L=4 是一段明显上升。</li><li>扫描时固定网络宽度、步数、学习率。</li><li>只动 L，柱子高低才能归因到频率。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e128_freq.png" style="max-height:500px" alt="频率组数 L vs PSNR：L=4 饱和｜程序生成，未用教材或论文原图"><figcaption>频率组数 L vs PSNR：L=4 饱和｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 906 页 · 多分辨率</div>
+  <h2>连续表示：40×40 训练，80×80 查询</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>坐标网络是连续表示，训练分辨率不等于查询分辨率。</li><li>80×80 查询 PSNR 还有 23.46 分贝。</li><li>参数只多输入层 768 个，等于 16×48。</li><li>隐藏层宽度没变；分辨率翻倍，误差也放大。</li></ul>
+      <div class="src">依据：原书第 906 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">参数账</div><div class="kline">输入：2 维变 18 维</div><div class="kline">第一层权重多 768 个</div><div class="kline">隐藏层完全没变</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 858–859/907 页 · 真 NeRF</div>
+  <h2>放回真 NeRF：还缺什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>真 NeRF 还需要体积渲染、视角方向、多张输入图。</li><li>书上第 907 页：需要大量受控均匀光照的静态物体图像。</li><li>习题 13.7 的人体跟踪接动态场景。</li><li>升级下一步：视角方向、射线采样、alpha 合成。</li></ul>
+      <div class="src">依据：原书第 858–859/907 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">迷你 lab 之外</div><div class="kline">体积渲染</div><div class="kline">视角方向</div><div class="kline">多张输入图</div><div class="kline">射线采样与 alpha 合成</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 下一集视图插值</div>
+  <h2>总结：先跑通最小闭环</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>迷你 NeRF 是二维坐标 MLP，不是完整 3D NeRF。</li><li>位置编码把 PSNR 从 21.68 拉到 34.35。</li><li>习题线把配准、融合、简化、建筑建模和 3D 摄影串起来。</li><li>下一集：两幅图像之间怎么生成新视角。</li></ul>
+      <div class="src">依据：原书第 833/857–859/906–907 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">二维坐标 MLP，不是完整 3D NeRF</div><div class="kline">位置编码 21.68→34.35</div><div class="kline">先跑通最小闭环，再谈完整系统</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

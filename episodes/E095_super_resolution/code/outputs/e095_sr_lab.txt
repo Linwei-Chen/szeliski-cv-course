@@ -1,0 +1,20 @@
+[lab] E095 SR 开始 2026-11-02T22:34:39
+[lab] 源码 sha256=ccea1e1b4978506fdcb0f94e386ce2377703c6277708d5d05b6c2db18db5cb2a
+[PASS] 观测噪声中位<0.01　| 0.0027
+[PASS] 四帧亚像素>双三次+2dB　| 24.17 vs 20.84 dB
+[PASS] 整数位移增益<2.8dB　| 23.29 vs 20.84 dB
+[PASS] 亚像素优于整数>0.5dB　| 24.17 vs 23.29 dB
+[PASS] 四帧优于单帧>0.3dB　| 24.17 vs 23.43 dB
+[PASS] 无前置低通混叠>2倍　| 0.1787 vs 0.0538
+[PASS] IBP 均方误差降>50%　| 51.9%
+[PASS] 四帧平均降噪>40%　| 49.2%
+[PASS] 模糊核偏大掉>1dB　| 20.52 vs 24.17 dB
+[PASS] 边缘能量提升>20%　| 2.12×
+[lab] PNG sha256(e095_model.png)=07b9a9c3f9a8adb56a1ed0207cc656ac433daa8118bbfcc7ec5e8436662d7c3e
+[lab] PNG sha256(e095_shifts.png)=198bf79cc28439d839991c74709b2217f995b0f83a56edca88c904ed0b10f3d6
+[lab] PNG sha256(e095_sr.png)=d125965b4bbe59d12835b2038a25cfc74c45e3974d73bcec271bc725f28c36c6
+[lab] readings → e095_sr_readings.json
+[lab] readings sha256=665beb093189228cf713a1792a1e4df9628e98b789ac7c2d47e91f2477fc3be3
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T22:34:41

@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>线性滤波与卷积：均值、锐化与找边</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 线性滤波</div>
+  <h2>从看一个像素，到看一片邻居</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集的直方图均衡，就是一个邻域算子。</li><li>邻域算子用一片像素，共同决定一个输出。</li><li>它能模糊、锐化、强化边缘、去除噪声。</li><li>本集走三段：卷积机制、边界补全、常用核。</li></ul>
+      <div class="src">依据：原书第 119 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三段</div><div class="kline">机制：相关、卷积、冲激响应</div><div class="kline">边界：六种补全模式</div><div class="kline">常用核：均值、锐化、找边</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十五集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3.2 节 · 加权和</div>
+  <h2>线性滤波：邻域里的加权和</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>输出像素等于邻域像素的加权和，式 3.12。</li><li>权重表叫核，也叫掩模；系数叫滤波系数。</li><li>相关记作 f⊗h，核不翻转，直接滑。</li><li>8×8 图配 0.1/0.2 核，输出 6×6。</li></ul>
+      <div class="src">依据：原书第 120 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e023_nbhd_operator.png" style="max-height:500px" alt="源图 3×3 邻域、核与输出像素｜程序生成，未用教材或论文原图"><figcaption>源图 3×3 邻域、核与输出像素｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十五集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3.2 节 · 相关与卷积</div>
+  <h2>卷积：先把核转半圈</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>卷积把输入偏移取反，式 3.14、3.15。</li><li>核转 180°；对称核下两者相同。</li><li>冲激信号卷积复现核，相关给镜像。</li><li>实验最大差 0.1200；八宫格只有模糊、锐化是线性。</li></ul>
+      <div class="src">依据：原书第 120–121 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e023_nonlin_gallery.png" style="max-height:500px" alt="邻域运算八宫格：原图、模糊、锐化、保边、二值化、膨胀、距离、连通域｜程序生成，未用教材或论文原图"><figcaption>邻域运算八宫格：原图、模糊、锐化、保边、二值化、膨胀、距离、连通域｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十五集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3.2 节 · 线性移不变</div>
+  <h2>两张名片：叠加与平移</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>叠加：先加再滤波，等于分别滤波再加，式 3.16。</li><li>平移不变：信号平移，输出跟着平移，式 3.17。</li><li>书上说算子 behaves the same everywhere。</li><li>图像拉直成向量，卷积写成 g=Hf，式 3.19。</li></ul>
+      <div class="src">依据：原书第 122 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条性质</div><div class="kline">叠加原理：式 3.16</div><div class="kline">平移不变：式 3.17</div><div class="kline">矩阵视角：g=Hf，H 稀疏</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十五集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3.2 节 · 边界补全</div>
+  <h2>核伸出图外，六种补法</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>补零、补常数、复制、绕回、镜像、外插。</li><li>四连断言：补零暗、复制内传、镜像保色、外插定住。</li><li>均匀图补零 61.11，镜像与复制保持 100。</li><li>归一化补零去暗角：角点 160、边中 140。</li></ul>
+      <div class="src">依据：原书第 123–124 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e023_padding_modes.png" style="max-height:500px" alt="六种补全模式与 5 点 box 模糊结果｜程序生成，未用教材或论文原图"><figcaption>六种补全模式与 5 点 box 模糊结果｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十五集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3.2.2 节 · 常用核</div>
+  <h2>从方块核到「高斯」</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>方块核：K×K 取平均，等于全一核再缩放。</li><li>K=15：直接法 225 次乘加，滑窗每趟 2 次。</li><li>帐篷核卷帐篷，得 [1,4,6,4,1]/16。</li><li>它们都是低通核：放行低频，衰减高频。</li></ul>
+      <div class="src">依据：原书第 125–126 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e023_kernels.png" style="max-height:500px" alt="box、tent、tent⋆tent「高斯」核的一维剖面｜程序生成，未用教材或论文原图"><figcaption>box、tent、tent⋆tent「高斯」核的一维剖面｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十五集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3.2.2 节 · 锐化</div>
+  <h2>非锐化掩模：两条路</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>式 3.22：gsharp=f+γ(f−hblur∗f)。</li><li>式 3.23：暗房负片叠印，g=f(1−γhblur∗f)。</li><li>γ 从 0 到 1，边缘强度提升 1.74 倍。</li><li>暗房版非线性：叠加违反量 0.7569。</li></ul>
+      <div class="src">依据：原书第 126 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e023_unsharp.png" style="max-height:500px" alt="式 3.22 锐化：原图、模糊图与锐化结果｜程序生成，未用教材或论文原图"><figcaption>式 3.22 锐化：原图、模糊图与锐化结果｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十五集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3.2.2 节 · 找边找角</div>
+  <h2>Sobel 与角点核</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Sobel：竖直帐篷 × 水平中心差分。</li><li>实测竖直边 4.00，水平边 0.00。</li><li>角点核找横竖二阶差分；角点 1.00、对角边 3.00。</li><li>作业 3.9 写补全公式；3.10 下集讲。</li></ul>
+      <div class="src">依据：原书第 126–127 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/figures/e023_sobel_corner.png" style="max-height:500px" alt="Sobel 与 corner 核及其在方块上的响应｜程序生成，未用教材或论文原图"><figcaption>Sobel 与 corner 核及其在方块上的响应｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十五集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">小结与移交</div>
+  <h2>本集清单：从机制到常用核</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相关不翻转，卷积转 180°；冲激一验便知。</li><li>六种补全：零暗、复制传、镜像保、外插定。</li><li>方块核滑窗快，帐篷卷出近似高斯。</li><li>锐化两条路；Sobel 找边，角点核初瞥。</li></ul>
+      <div class="src">依据：原书第 119–127 页；下集预告第 124/127/129–130 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">3.2.1 可分离滤波：SVD 判据</div><div class="kline">3.2.3 带通与转向滤波</div><div class="kline">求和面积表：方块核快算法</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十五集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

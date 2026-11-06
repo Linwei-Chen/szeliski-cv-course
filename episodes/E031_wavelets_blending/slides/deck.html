@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>小波与金字塔融合：把账算平，把图缝好</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 159–160 页 · 小波与金字塔</div>
+  <h2>小波和金字塔，账怎么算</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>小波在空间和频率上同时定域。</li><li>金字塔超完备：系数比像素多。</li><li>小波是紧框架：系数总数等于像素数。</li><li>128² 图：总数 16384，细节带占 3/4。</li></ul>
+      <div class="src">依据：原书第 159–160 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两笔账</div><div class="kline">金字塔：21824/16384≈1.33</div><div class="kline">小波：16384/16384=1.00</div><div class="kline">紧框架递归多少级都平</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十三集</span><span>01 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 161 页 · 二维小波</div>
+  <h2>先行后列，三个方向带</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一次分解：细节带 3/4，低频 1/4。</li><li>先沿行水平分解，再沿列垂直分解。</li><li>三个带：HH、HL、LH。</li><li>横条纹进 LH 43.9，竖条纹进 HL 43.9。</li></ul>
+      <div class="src">依据：原书第 161 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e031_wavelet2d.png" style="max-height:520px;width:108%;margin-left:-4%" alt="方向带语义对照：上排横/竖/斜条纹，下排斜条纹 LH/HL/HH 与随机图 HH｜程序生成，未用教材或论文原图"><figcaption>方向带语义对照：上排横/竖/斜条纹，下排斜条纹 LH/HL/HH 与随机图 HH｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十三集</span><span>02 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 162–163 页 · 提升</div>
+  <h2>拆开算，装得回</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>预测：奇数位减偶数位均值，得高通小波。</li><li>修正：偶数位加回 1/4 高通小波，变低通。</li><li>有效低通核 [−1/8, 1/4, 3/4, 1/4, −1/8]。</li><li>复算误差 1.11e-16，系数和 1，Nyquist 增益 0。</li></ul>
+      <div class="src">依据：原书第 162–163 页 + 本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">d = 奇 − 偶均值<br>e = 偶 + ¼(d<sub>左</sub> + d<sub>右</sub>)</div><div class="mnote">合成端反序、变号；两端系数对不上，误差 2.486</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十三集</span><span>03 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 164–165 页 · 可导向金字塔</div>
+  <h2>径向弧与方向扇</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>可导向：更旋转对称、更有方向选择性。</li><li>三个好处：超完备、方向选择、自逆。</li><li>应用：纹理分析与合成、图像去噪。</li><li>频域划分：径向弧加方向扇形。</li></ul>
+      <div class="src">依据：原书第 164–165 页</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e031_steerable.png" style="max-height:520px;width:108%;margin-left:-4%" alt="频域划分对照：左=可分离 2×2 方块，右=可导向径向弧与方向扇形｜程序生成，未用教材或论文原图"><figcaption>频域划分对照：左=可分离 2×2 方块，右=可导向径向弧与方向扇形｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十三集</span><span>04 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 165/167 页 · 图像融合</div>
+  <h2>低频慢混，高频快混</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每幅图各自分解成拉普拉斯金字塔。</li><li>每带乘平滑权重，低频慢混防重影。</li><li>直接拼接跳变 0.1231，融合后 0.0175。</li><li>遮罩过渡带逐级 0/4/8/16/32/64 列。</li></ul>
+      <div class="src">依据：原书第 165/167 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e031_blend.png" style="max-height:520px;width:108%;margin-left:-4%" alt="融合四联：源 A、源 B、直接拼接、金字塔融合｜程序生成，未用教材或论文原图"><figcaption>融合四联：源 A、源 B、直接拼接、金字塔融合｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十三集</span><span>05 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>账算平，缝收好，下一站几何变换</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>紧框架账平：16384 不变；金字塔多 1/3。</li><li>提升：完全重构 1e-16；两端失配 2.486。</li><li>融合：0.0433 对 0.4872，左区更像 A。</li><li>下一集：图像扭曲改的是定义域。</li></ul>
+      <div class="src">依据：原书第 159–168 页 + 本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三步</div><div class="kline">算账：紧框架 16384</div><div class="kline">构造：提升 + 可导向</div><div class="kline">融合：跳变 0.12→0.018</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十三集</span><span>06 / 6</span></div>
+</section>
+<div id="subbar"></div></body></html>

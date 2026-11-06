@@ -1,0 +1,94 @@
+[probe] 开始 2026-11-02T01:38:12
+[probe] 工具 overflow_probe.py sha256=b4921012180e7b3e015621ae8eab8788b519a788d3c2814e75124f8c70edbdc5
+[probe] 输入 shots.json sha256=3608071169e270c5eb82df6a6271a29ba26ee3bdfd2758651c917f76b52430b7
+[probe] 输入 deck.html   sha256=522f8490a0f8f20d0667c7ce94500ac8bae3bc36a969ad7de3d6b295a42de463
+[probe] PNG sha256(e063_captioning_clip.png)=fd84ce8e64f12e830cd49830828188b257844a85b1a302edd4257732a5519cf3
+[probe] PNG sha256(e063_text_to_image_vqa.png)=c80d86367fe9e1efa8b0ebf5bfb19c6006d2e3f7e058ecd2ad2e7e62b2628d51
+[probe] PNG sha256(e063_video_understanding.png)=b367f5d5d0477b1248cd5d2dad5e9a283f690e4b4067632db1f9f529ef516275
+[probe] figcaption small computed style 实测（getComputedStyle，≥12px 判定）
+[ok] p1/s1 col sh=342 ch=342
+    last-bottom=472 visible=subbar-top=789
+    steps=2
+    fcsmall=none
+    [fcsmall p1/s1] 本页无 figcaption small 元素
+[ok] p2/s1 col sh=384 ch=384
+    last-bottom=506 visible=subbar-top=789
+    steps=2
+    fcsmall=none
+    [fcsmall p2/s1] 本页无 figcaption small 元素
+[ok] p3/s1 col sh=292 ch=292
+    last-bottom=822 visible=subbar-top=835
+    steps=2
+    fcsmall=22px
+    [fcsmall p3/s1] figcaption small computed 22px（min 22.00px ≥12 达标）
+[ok] p4/s1 col sh=300 ch=300
+    last-bottom=506 visible=subbar-top=835
+    steps=2
+    fcsmall=none
+    [fcsmall p4/s1] 本页无 figcaption small 元素
+[ok] p5/s1 col sh=384 ch=384
+    last-bottom=605 visible=subbar-top=789
+    steps=2
+    fcsmall=none
+    [fcsmall p5/s1] 本页无 figcaption small 元素
+[ok] p6/s1 col sh=300 ch=300
+    last-bottom=506 visible=subbar-top=835
+    steps=2
+    fcsmall=none
+    [fcsmall p6/s1] 本页无 figcaption small 元素
+[ok] p7/s1 col sh=342 ch=342
+    last-bottom=506 visible=subbar-top=789
+    steps=2
+    fcsmall=none
+    [fcsmall p7/s1] 本页无 figcaption small 元素
+[ok] p8/s1 col sh=384 ch=384
+    last-bottom=539 visible=subbar-top=789
+    steps=2
+    fcsmall=none
+    [fcsmall p8/s1] 本页无 figcaption small 元素
+[ok] p9/s1 col sh=334 ch=334
+    last-bottom=782 visible=subbar-top=789
+    steps=2
+    fcsmall=22px
+    [fcsmall p9/s1] figcaption small computed 22px（min 22.00px ≥12 达标）
+[ok] p10/s1 col sh=342 ch=342
+    last-bottom=506 visible=subbar-top=835
+    steps=2
+    fcsmall=none
+    [fcsmall p10/s1] 本页无 figcaption small 元素
+[ok] p11/s1 col sh=413 ch=413
+    last-bottom=638 visible=subbar-top=742
+    steps=2
+    fcsmall=none
+    [fcsmall p11/s1] 本页无 figcaption small 元素
+[ok] p12/s1 col sh=342 ch=342
+    last-bottom=506 visible=subbar-top=789
+    steps=2
+    fcsmall=none
+    [fcsmall p12/s1] 本页无 figcaption small 元素
+[ok] p13/s1 col sh=399 ch=399
+    last-bottom=539 visible=subbar-top=742
+    steps=2
+    fcsmall=none
+    [fcsmall p13/s1] 本页无 figcaption small 元素
+[ok] p14/s1 col sh=291 ch=291
+    last-bottom=822 visible=subbar-top=835
+    steps=2
+    fcsmall=22px
+    [fcsmall p14/s1] figcaption small computed 22px（min 22.00px ≥12 达标）
+[ok] p15/s1 col sh=293 ch=293
+    last-bottom=539 visible=subbar-top=835
+    steps=2
+    fcsmall=none
+    [fcsmall p15/s1] 本页无 figcaption small 元素
+[ok] p16/s1 col sh=426 ch=426
+    last-bottom=572 visible=subbar-top=742
+    steps=2
+    fcsmall=none
+    [fcsmall p16/s1] 本页无 figcaption small 元素
+[ok] p17/s1 col sh=384 ch=384
+    last-bottom=506 visible=subbar-top=789
+    steps=2
+    fcsmall=none
+    [fcsmall p17/s1] 本页无 figcaption small 元素
+[probe] 结束 2026-11-02T01:39:06

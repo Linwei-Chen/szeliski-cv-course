@@ -1,0 +1,26 @@
+[lab] E114 PSM-Net 开始 2026-11-03T05:18:19
+[lab] 源码 sha256=6cd43bd897c734804b5098b7912ed1fa533c0540485a8554a86da44be4eb3d0b
+[lab] 320x192｜D 64｜通道 6｜弱纹理 1936 像素｜有效 44094 像素
+[PASS] 4D 成本体积形状　| (192, 320, 64, 6)
+[PASS] 有效体素占比超过 0.85　| 0.902
+[PASS] PSM-Net 裁剪体积 384 MiB　| 384
+[PASS] 朴素全分辨率体积 6 GiB、16 倍　| 6 / 16
+[PASS] 批量 12 张体积 4.5 GiB　| 4.5
+[PASS] 3D 卷积参数量约为 2D 的三倍　| 2.99 倍
+[PASS] 3D 聚合降低总体误差　| 7.43 → 4.16
+[PASS] 3D 聚合降低弱纹理误差　| 10.19 → 1.51
+[PASS] 3D 聚合降低九成位数误差　| 26.18 → 23.58
+[PASS] 未训练全局 softmax 回归更差　| 12.71 vs 4.16
+[lab] 原始 argmin 7.43｜2D 聚合 3.96｜3D 聚合 4.16｜弱纹理 10.19→1.51｜边界 9.59→9.37
+[lab] 2D 弱纹理 0.27 vs 3D 弱纹理 1.51（固定核的诚实对照）
+[lab] 全局 softmax 12.71｜局部 softmax 4.09｜整数 argmin 4.16
+[lab] PSM-Net 裁剪体积 384 MiB｜朴素全分辨率 6 GiB（16 倍）｜批量 12 张 4.5 GiB
+[lab] 3D 参数 27680｜2D 参数 9248｜比值 2.99
+[lab] PNG sha256(e114_lab.png)=88499c151a5e343d42c50eda094920662a7d722a1cf3902131bf7a9bacebe419
+[lab] PNG sha256(e114_taxonomy.png)=1ba7af0207cb8b7d81270835951be06ab2e4c4ee1f48fe367e0819649432b864
+[lab] PNG sha256(e114_volume.png)=ac5bc7733b46eca6ee7bfc52dae47e94308f8f8dede52066200f5091bce44d4c
+[lab] readings → e114_psmnet_readings.json
+[lab] readings sha256=0a4db781b1bd8aa1dfe5a99d84bf34b7e60aa593eabdefcf333985cab0705802
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T05:18:19

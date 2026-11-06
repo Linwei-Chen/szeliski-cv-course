@@ -1,0 +1,22 @@
+{
+ "n60": 9,
+ "n40": 10,
+ "n50": 11,
+ "phone_fov": 60.0,
+ "phone_step": 42.0,
+ "phone_cumul": 378.0,
+ "closure_margin": 18.0,
+ "end_overlap": 36.0,
+ "lens_fov": 190.0,
+ "lens_overlap": 20.0,
+ "total_cov": 360.0,
+ "f": 600.0,
+ "cyl_width": 3769.9111843077517,
+ "sph_height": 1884.9555921538758,
+ "mem_mb": 324.0,
+ "gain_true": 1.2,
+ "gain_est": 1.20048,
+ "gain_err": 0.00040000000000003,
+ "n_pass": 9,
+ "n_total": 9
+}

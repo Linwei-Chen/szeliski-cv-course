@@ -1,0 +1,21 @@
+[lab] E134 收官实验开始 2026-11-03T14:42:50
+[lab] 源码 sha256=f05e89691c5867c292f86ad2e9e197448d62fd285aa8de051b04ebaf5813b034
+[lab] 边界：合成球+背景平面；已知相机位姿/深度；点云泼溅不是 Poisson 重建；网格是平面 billboard 代理
+[PASS] 合成图像尺寸与相机数　| 8/320×180
+[PASS] 单视角点云有洞　| 78.7%
+[PASS] 八视角点云覆盖率>99%　| 100.0%
+[PASS] 覆盖率随视角数单调不降　| 78.7%→100.0%→100.0%→100.0%
+[PASS] 八视角 PSNR 比单视角高≥4dB　| 14.02→34.42
+[PASS] 八视角 PSNR≥28　| 34.42
+[PASS] 单视角 PSNR≤25　| 14.02
+[PASS] 平面代理覆盖率 100%　| 100.0%
+[PASS] 平面代理 PSNR 低于八视角点云　| 14.16<34.42
+[PASS] 点云数量随视角数增加　| 1<2<4<8
+[PASS] 所有 PSNR 有限　| finite
+[PASS] 边界声明为合成/非完整重建　| 已知位姿/深度；点云泼溅；平面代理
+[lab] LEDGER：断言 12 条，PASS 12
+[lab] readings sha256=185588aa94c19a797bec169b7906fe0f5e1677ab7606f0bec3d53192e494c3e1
+[lab] PNG sha256(e134_pipeline.png)=353591765953a735437d7da1742611f7d5d8308d1cb8d69ceaa4b01e087a5c16
+[lab] PNG sha256(e134_cloud.png)=1d14e41d0d7f5e9187f953d00556566148837be89d0a67c2d202f1a7a4b549a8
+[lab] PNG sha256(e134_tradeoff.png)=304bb81399420b9a8ab26b9618e4a4853f3faa2fd50fcc096312b4ed53b75c29
+[lab] E134 收官实验结束 2026-11-03T14:42:51

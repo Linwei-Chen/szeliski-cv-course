@@ -1,0 +1,21 @@
+[lab] E078 柱面/球面投影 开始 2026-11-02T08:54:43
+[lab] 源码 sha256=7ddcfd238c732b1c837ce6a5704a8403aa7c8006dc2add9311b2460d69778c22
+[PASS] 柱面往返横坐标　| 最大误差 2.27e-13
+[PASS] 柱面往返纵坐标　| 最大误差 5.68e-14
+[PASS] 球面往返横坐标　| 最大误差 2.27e-13
+[PASS] 球面往返纵坐标　| 最大误差 1.14e-13
+[PASS] 纯偏航=水平平移　| 偏差 8.53e-14
+[PASS] 纯偏航高度不变　| 偏差 5.68e-14
+[PASS] 柱面高度大于球面角度　| 全部样本 h>φ
+[PASS] 球面角度有界　| φ 始终小于九十度
+[PASS] 中心尺度 s=f　| 缩放 1.00
+[PASS] 宽视角平面拉伸更大　| 平面 1.65 对柱面 1.00
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e078_curves.png)=f01d0a59232bc46f10955cd494ef579c7c3087fe4cad9f0116b036ab6ca46bc5
+[lab] PNG sha256(e078_pipeline.png)=ed66e3bca180251d32c64d118950d8472a1fadc4c4646d75470f2eccb8977a4d
+[lab] PNG sha256(e078_stretch.png)=bfbfa2e410ec415f08186783cfcc396cdf86884fe56384fd9d95e34fcb73d239
+[lab] readings → e078_projection_readings.json
+[lab] readings sha256=2b8b43b86e66f229f969b257ec1cc090920c854d6167e6241d3b04deef29a2d1
+[lab] LEDGER：断言 11 条，PASS 11
+[lab] 汇总 PASS 11 / FAIL 0 / 共 11
+[lab] 结束 2026-11-02T08:54:43

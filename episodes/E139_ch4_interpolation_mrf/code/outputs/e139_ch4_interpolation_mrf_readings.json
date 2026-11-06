@@ -1,0 +1,84 @@
+{
+ "n_pass": 12,
+ "n_total": 12,
+ "rbf": {
+  "n_samples": 60,
+  "grid": 80,
+  "c": 0.25,
+  "clean_lambda": 1e-06,
+  "noisy_lambda": 1e-10,
+  "reg_lambda": 0.1,
+  "rmse": {
+   "clean": 0.03466723319564168,
+   "nearest": 0.22145582882801934,
+   "noisy": 0.9590577590618539,
+   "regularized": 0.14196845439579686
+  }
+ },
+ "regularization": {
+  "length": 256,
+  "noise_sigma": 0.12,
+  "tikhonov_lambda": 5.0,
+  "tv_lambda": 0.5,
+  "tv_iters": 30,
+  "mse": {
+   "noisy": 0.014929405722218105,
+   "tikhonov": 0.005753158174633307,
+   "tv": 0.0016890881762470008
+  },
+  "edge_error": {
+   "noisy": 0.18513434280422666,
+   "tikhonov": 0.5764236086277774,
+   "tv": 0.19261205879592116
+  },
+  "total_variation": {
+   "noisy": 37.841956539543574,
+   "tikhonov": 5.041764564440671,
+   "tv": 2.616873622679903
+  }
+ },
+ "mrf": {
+  "height": 64,
+  "width": 64,
+  "flip_probability": 0.18,
+  "w_data": 1.0,
+  "w_smooth": 1.0,
+  "accuracy": {
+   "unary": 0.8173828125,
+   "mrf": 0.983154296875
+  },
+  "energy": {
+   "unary": 2511.0,
+   "mrf": 913.0
+  },
+  "isolated": {
+   "unary": 326,
+   "mrf": 0
+  },
+  "iterations": 6,
+  "monotone": true,
+  "energy_trace": [
+   2511.0,
+   958.0,
+   920.0,
+   918.0,
+   916.0,
+   913.0,
+   913.0
+  ]
+ },
+ "protocol": {
+  "synthetic": true,
+  "machine": "local",
+  "general_benchmark": false,
+  "implements": "RBF interpolation + Tikhonov + TV-IRLS + binary MRF-ICM",
+  "not_implemented": [
+   "graph cuts",
+   "belief propagation",
+   "dense CRF"
+  ]
+ },
+ "versions": {
+  "numpy": "2.5.4"
+ }
+}

@@ -1,0 +1,20 @@
+[lab] E123 NeRF 表示开始 2026-11-03T08:51:14
+[lab] 源码 sha256=ad10449f4e9d1bd194b542c4ce393c77639b52f2d07ad130692361b39d55ddd9
+[lab] 边界：二维图像拟合+一维体积渲染切片；不是完整 NeRF 训练/渲染
+[PASS] 位置编码频率是倍频程 | 1π、2π、4π、8π、16π、32π
+[PASS] 裸坐标 MLP 能拟合低频图像 | MSE=2.95e-05
+[PASS] 裸坐标 MLP 拟合不了高频细节 | MSE=0.1133
+[PASS] 傅里叶特征显著改善高频细节 | 0.0004 < 0.25×0.1133
+[PASS] MLP 参数量小于 64³ 网格的 1% | 5955 / 786432 = 0.76%
+[PASS] 体积权重非负且总和 ≤1 | min=0.00e+00, Σw=0.9413
+[PASS] 常色射线的合成色等于色值×alpha | C=0.941335, A=0.941335
+[PASS] 近处高密度样本主导深度 | depth=0.1971
+[PASS] 空场景 alpha 接近 0 | alpha=0.00e+00
+[PASS] 两样本手算与代码一致 | 0.993262 vs 0.993262
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] PNG sha256(e123_nerf_fit.png)=903631e124e7effc82e976f36679eeb30db5a9cdedcab9ab303c86893700cc0b
+[lab] PNG sha256(e123_spectral.png)=3c47cfdda055f6a877cdc73e1d54f48b7b150afb3afd18049b90f1a5cf24ab7e
+[lab] PNG sha256(e123_volume.png)=2cb70785cd455e9b2ef852b569fbed52eccca3e36c0a03fea3d453a8b3925cce
+[lab] readings sha256=20803f1da001771b328d4bc17aacff5b9af2455c6c8fc812484777f068f32cfe
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T08:51:15

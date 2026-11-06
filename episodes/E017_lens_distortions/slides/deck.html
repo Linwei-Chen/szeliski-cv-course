@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>镜头的谎言：径向畸变与去畸变</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 2 章 · 镜头畸变</div>
+  <h2>镜头的谎言：直线为什么弯了</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>广角镜头把直线拍成弧线，叫径向畸变。</li><li>书上第 63 页叫它 visible curvature。</li><li>不校正，照片级重建会失准，拼接会发糊。</li><li>本集走三段：来源、模型、去畸变。</li></ul>
+      <div class="src">依据：原书第 63 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三段路线</div><div class="kline">承诺与裂缝</div><div class="kline">κ₁、κ₂ 多项式模型</div><div class="kline">鱼眼与去畸变</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">导览 · 范围与切点</div>
+  <h2>这一集吃 2.1.5 全节</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集移交：畸变从第 63 页起，留给本集。</li><li>范围是书上第 63 到 66 页，到 2.2 节之前。</li><li>下一节光度成像从第 66 页起，归下一集。</li><li>旧工具：齐次坐标与标定矩阵 K。</li></ul>
+      <div class="src">依据：原书第 63–66 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两件旧工具</div><div class="kline">齐次坐标：直线为何保持</div><div class="kline">K 矩阵：后半段出状况</div><div class="kline">范围：第 63–66 页</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">直觉 · 线性投影</div>
+  <h2>针孔承诺：直线还是直线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>线性投影：三维点乘矩阵，得到图像点。</li><li>齐次坐标上的线性运算，把直线映成直线。</li><li>书上第 63 页说，这是自然结果。</li><li>真实镜头有镜片，广角端开始弯。</li></ul>
+      <div class="src">依据：原书第 63 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">承诺</div><div class="kline">三维点 → 矩阵 → 图像点</div><div class="kline">世界直线 → 图像直线</div><div class="kline">径向畸变打破它</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">动机 · 代价</div>
+  <h2>不校正，会付出什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>照片级重建需要高精度，畸变会让建筑变歪。</li><li>全景拼接特征错位，融合后成片发糊。</li><li>书上把拼接问题归到 8.2 节。</li><li>色差等镜头光学在 2.2.3 节，本集只谈几何。</li></ul>
+      <div class="src">依据：原书第 63 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个代价</div><div class="kline">重建失准</div><div class="kline">拼接发糊</div><div class="kline">几何问题优先</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">严谨 · 插入位置</div>
+  <h2>畸变插在透视除法之后</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>式 2.77 定义 xc、yc：透视除法后、缩放前的坐标。</li><li>xc=(rx·p+tx)/(rz·p+tz)，yc 同理。</li><li>此时未乘 f，也未加主点 (cx, cy)。</li><li>畸变就插在这一步和最后一步之间。</li></ul>
+      <div class="src">依据：原书第 64 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">xc = (rx·p + tx) / (rz·p + tz)</div><div class="mnote">yc 同理；已含外参 R、t，未乘 f、未加 (cx, cy)。式 2.77，原书第 64 页</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">严谨 · 流水线</div>
+  <h2>线性投影中间，插进一段非线性</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>旋转平移 → 透视除法 → 多项式畸变。</li><li>最后乘 f、加主点偏移，得到像素。</li><li>畸变夹在两步之间。</li><li>这个位置后面会带来一个麻烦。</li></ul>
+      <div class="src">依据：原书第 64 页式 2.77–2.79</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/e017_pipeline.png" style="max-height:500px" alt="投影流水线与畸变插入位置｜程序生成，未用教材或论文原图"><figcaption>投影流水线与畸变插入位置｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">严谨 · 桶形与枕形</div>
+  <h2>拉向中心，还是推离中心</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>观测点拉向中心，叫桶形畸变。</li><li>推离中心，叫枕形畸变。</li><li>式 2.78：x̂c=xc(1+κ₁rc²+κ₂rc⁴)。</li><li>rc²=xc²+yc²；κ₁、κ₂ 是径向畸变参数。</li></ul>
+      <div class="src">依据：原书第 64–65 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/e017_fig2_13.png" style="max-height:500px" alt="桶形、枕形与鱼眼三联示意｜程序生成，未用教材或论文原图"><figcaption>桶形、枕形与鱼眼三联示意｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">严谨 · 模型名字</div>
+  <h2>Brown 1966 与切向分量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>模型最早出现在摄影测量文献。</li><li>Brown 1966 提出，也叫 Brown–Conrady 模型。</li><li>完整模型带切向分量，描述装配偏心。</li><li>书上引 Zhang 2000：切向会让估计不稳，通常忽略。</li></ul>
+      <div class="src">依据：原书第 64 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">参数怎么选</div><div class="kline">径向：κ₁、κ₂</div><div class="kline">切向：通常忽略</div><div class="kline">理由：估计更稳定</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">严谨 · 收尾</div>
+  <h2>式 2.79：回到像素坐标</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>xs=f·x̂c+cx，ys=f·ŷc+cy。</li><li>流水线三步：透视除法、畸变、缩放加主点。</li><li>旋转平移算在第一步里。</li><li>κ₁、κ₂ 的估计指向 11.1.4 节。</li></ul>
+      <div class="src">依据：原书第 64 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">xs = f·x̂c + cx</div><div class="mnote">ys = f·ŷc + cy；式 2.79，原书第 64 页。参数估计见 11.1.4 节</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">严谨 · 模型边界</div>
+  <h2>多项式不是全部</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>复杂镜头、大视角，简化模型可能不够准。</li><li>更完整的解析模型加切向和偏心，Slama 1980。</li><li>变形镜头不服从径向畸变模型。</li><li>它近似为横竖各自缩放，即非方形像素。</li></ul>
+      <div class="src">依据：原书第 64 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种例外</div><div class="kline">复杂镜头：切向与偏心</div><div class="kline">变形镜头：非方形像素</div><div class="kline">别把 κ 套到宽银幕</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">严谨 · 鱼眼</div>
+  <h2>鱼眼：一阶近似换 r=fθ</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>鱼眼视野横向接近 180°。</li><li>等距投影：像点到中心距离正比于入射角。</li><li>式 2.80：r=fθ。</li><li>f-theta 镜头由此得名；THETA 360 相机名字可能同源。</li></ul>
+      <div class="src">依据：原书第 65 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/e017_r_curve.png" style="max-height:500px" alt="畸变因子与鱼眼 r=fθ 对照｜程序生成，未用教材或论文原图"><figcaption>畸变因子与鱼眼 r=fθ 对照｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">严谨 · 两级后备</div>
+  <h2>样条与无单一投影中心</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>更大、更不规则的畸变，用样条参数化。</li><li>Goshtasby 1989。</li><li>没有单一投影中心，就逐像素建模三维直线。</li><li>Gremban 1988、Grossberg 与 Nayar 2001、Sturm 与 Ramalingam 2004。</li></ul>
+      <div class="src">依据：原书第 65 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两级后备</div><div class="kline">样条模型</div><div class="kline">逐像素三维直线</div><div class="kline">细节见 11.1.4 节</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">严谨 · 细微问题</div>
+  <h2>K 吸收失效，再安全着陆</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>透视投影与传感器之间插进非线性。</li><li>任意 3×3 的 K，一般不能再右乘旋转吸收。</li><li>上一集的 QR 分解与自由度分析，前提动摇。</li><li>校正到直线保持，传感器等效回到线性成像器。</li></ul>
+      <div class="src">依据：原书第 65–66 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先出状况，再着陆</div><div class="kline">K 不能吸收进全局旋转</div><div class="kline">式 2.59 对角形式仍常用</div><div class="kline">直线站直 → 线性成像器</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">落地 · 去畸变</div>
+  <h2>数值求逆与查表</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>式 2.78 带 κ₂，反解半径是五次方程。</li><li>一般无根式解，只能数值求逆。</li><li>脚注 7 是另一套约定，κ 不能混用。</li><li>实验：不动点迭代 23 次，恢复误差 8.9e-16。</li></ul>
+      <div class="src">依据：原书第 64 页脚注 7；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/e017_grid_undistort.png" style="max-height:500px" alt="网格观测与去畸变前后｜程序生成，未用教材或论文原图"><figcaption>网格观测与去畸变前后｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 五句话</div>
+  <h2>带走五句，认全这些词</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>线性投影承诺直线；径向畸变打破承诺。</li><li>畸变插在透视除法之后、缩放加主点之前。</li><li>κ₁ 主导时，负号桶形、正号枕形。</li><li>鱼眼 r=fθ；校正后传感器回到线性成像器。</li></ul>
+      <div class="src">依据：原书第 63–66 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">术语</div><div class="kline">radial / barrel / pincushion</div><div class="kline">κ₁、κ₂ 径向畸变参数</div><div class="kline">fisheye / equi-distance / f-theta</div><div class="kline">undistort：去畸变</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">NEXT · 光如何变成数</div>
+  <h2>回书、作业与下一集</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>读 2.1.5 节，书上第 63–66 页；式 2.77–2.80。</li><li>作业①：κ₁=−0.1、κ₂=0，算 r=1 处观测坐标。</li><li>作业②：同 κ 代脚注 7 反向式，看线是否更弯。</li><li>作业③：κ₂=0 反解是三次方程；κ₂≠0 是五次。</li></ul>
+      <div class="src">依据：原书第 63–66 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">下一集：光度成像</div><div class="kline">2.2 节从第 66 页起</div><div class="kline">光 → 表面 → 镜头 → 传感器</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

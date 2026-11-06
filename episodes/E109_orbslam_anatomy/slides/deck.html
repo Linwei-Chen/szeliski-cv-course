@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>ORB-SLAM：三个线程怎么一起建图</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">论文第 3 页 · 系统总览</div>
+  <h2>ORB-SLAM：三条线程一起跑</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>跟踪：每帧定位相机，挑关键帧。</li><li>局部建图：处理关键帧，三角化新点。</li><li>回环：发现回到老地方，修全局轨迹。</li><li>三条线程共享一套 ORB 特征和一张地图。</li></ul>
+      <div class="src">依据：Mur-Artal et al. 2015, pp.3–5</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条流水线</div><div class="kline">跟踪（前台）</div><div class="kline">局部建图（后台）</div><div class="kline">回环（后台）</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">论文第 4 页 · 跟踪线程</div>
+  <h2>跟踪：每一帧先站稳</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>用上一帧做特征匹配。</li><li>只优化当前位姿，叫 motion-only BA。</li><li>跟踪丢了，用地点识别做全局重定位。</li><li>跟踪稳，后面的建图和回环才有数据。</li></ul>
+      <div class="src">依据：论文 p.4</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">跟踪线程</div><div class="kline">输入：当前帧</div><div class="kline">输出：当前位姿</div><div class="kline">失败：重定位</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图1 · 三线程共享地图</div>
+  <h2>一张地图，三条线程各干一段</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>跟踪把新关键帧交给局部建图。</li><li>局部建图更新地图，交回跟踪和回环。</li><li>回环修正再作用到共享地图。</li><li>不是三套特征，是同一套 ORB 特征。</li></ul>
+      <div class="src">依据：程序生成示意，对照论文 pp.3–4</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e109_architecture.png" style="max-height:520px" alt="三线程（跟踪/局部建图/回环）共享一张地图｜程序生成，未用原书原图"><figcaption>三线程（跟踪/局部建图/回环）共享一张地图｜程序生成，未用原书原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">论文第 4 页 · 地图维护</div>
+  <h2>地图：先敢插，再敢删</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>地图点和关键帧先宽松创建。</li><li>之后严格裁剪：删冗余帧、错匹配、跟踪不到的点。</li><li>插入太保守，探索容易跟丢。</li><li>插入太随意，地图会爆。</li></ul>
+      <div class="src">依据：论文 p.4</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两步策略</div><div class="kline">宽松创建：探索时扩张</div><div class="kline">严格裁剪：维护时压规模</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">论文第 4 页 · 回环</div>
+  <h2>回环：用相似变换把漂移摊回去</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>检测到回环，先算一个相似变换。</li><li>对齐回路两侧，融合重复地图点。</li><li>在相似约束上做位姿图优化。</li><li>单目漂移含尺度，所以是七自由度。</li></ul>
+      <div class="src">依据：论文 p.4</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">回环三步</div><div class="kline">检测闭环</div><div class="kline">对齐 + 融合</div><div class="kline">位姿图优化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">论文第 4–5 页 · 图结构</div>
+  <h2>共视图与 Essential Graph</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>共视图：两个关键帧共同看到 ≥15 个点，就连边。</li><li>边权是共同点的数量。</li><li>Essential Graph 只留生成树、强共视边、回环边。</li><li>高共视阈值是 100。</li></ul>
+      <div class="src">依据：论文 pp.4–5</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两类图</div><div class="kline">共视图：谁和谁看得见同一批点</div><div class="kline">Essential Graph：保留强约束的稀疏骨架</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图2 · 图稀疏化实验</div>
+  <h2>79 条边 → 22 条边，骨架不断</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>20 个关键帧，200 个地图点。</li><li>每个点被连续 6 帧看到。</li><li>共视图 79 条边，生成树 19 条，Essential Graph 22 条。</li><li>合成阈值取 50，论文里是 100。</li></ul>
+      <div class="src">依据：程序生成实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e109_graph.png" style="max-height:520px" alt="共视图 79 条边 vs Essential Graph 22 条边（20 关键帧）｜程序生成，未用原书原图"><figcaption>共视图 79 条边 vs Essential Graph 22 条边（20 关键帧）｜程序生成，未用原书原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">论文第 5 页 · 地点识别</div>
+  <h2>回环先靠词袋找候选</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>DBoW2 把 ORB 描述子聚成视觉词。</li><li>在线查倒排索引，先找可能回到过的关键帧。</li><li>再做几何验证，确认是不是同一地点。</li><li>初始化要保守：视差足够才建第一张地图。</li></ul>
+      <div class="src">依据：论文 p.5</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">地点识别</div><div class="kline">词袋检索 → 候选</div><div class="kline">几何验证 → 确认</div><div class="kline">初始化：单应/基础矩阵并行</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图3 · 回环实验</div>
+  <h2>回环把终点误差降约 21 倍</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>20 个位姿走矩形回路。</li><li>不加回环：终点误差 0.227 米，ATE 0.163 米。</li><li>加回环：终点误差 0.0108 米，ATE 0.107 米。</li><li>ATE 只降到三分之二：误差摊到整条轨迹。</li></ul>
+      <div class="src">依据：程序生成二维实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e109_loop.png" style="max-height:520px" alt="二维位姿图回环：终点 0.227→0.0108 米，ATE 0.163→0.107 米｜程序生成，未用原书原图"><figcaption>二维位姿图回环：终点 0.227→0.0108 米，ATE 0.163→0.107 米｜程序生成，未用原书原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">关键帧裁剪 · 合成演示</div>
+  <h2>20 帧删到 15 帧，点仍全覆盖</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每四个关键帧删一个，保留 15 个。</li><li>200 个地图点仍被至少一个保留帧看到。</li><li>冗余帧可以删，地图覆盖不一定掉。</li><li>真实系统还看点的质量、视角和跟踪需求。</li></ul>
+      <div class="src">依据：程序生成演示</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">裁剪的边界</div><div class="kline">删冗余帧：地图更轻</div><div class="kline">删唯一观测点：地图会断</div><div class="kline">真实规则不是固定每四帧删一</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">论文第 5 页 · 局限</div>
+  <h2>ORB-SLAM 不是万能</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>单目尺度不可观，长距离仍有尺度漂移。</li><li>纯旋转、弱纹理、快速运动、动态物体会失败。</li><li>回环认错，整张地图会被假边拧歪。</li><li>稀疏特征地图适合定位，不适合稠密避障。</li></ul>
+      <div class="src">依据：论文 pp.3–5；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">适用边界</div><div class="kline">适合：定位、稀疏建图</div><div class="kline">不适合：稠密避障、精细 AR 遮挡</div><div class="kline">依赖：CPU 调度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 下一集</div>
+  <h2>三条线程，一张地图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>跟踪、局部建图、回环共享 ORB 特征和地图。</li><li>共视图建边，Essential Graph 做稀疏骨架。</li><li>回环用相似变换处理单目尺度。</li><li>下一集：COLMAP 上机，跑多视图重建。</li></ul>
+      <div class="src">依据：本集回顾</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">带走三句话</div><div class="kline">三线程共享一套特征/地图</div><div class="kline">Essential Graph 保留强约束</div><div class="kline">回环用七自由度相似变换</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零一集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

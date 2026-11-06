@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E015 · 3D 到 2D：相机投影的代数</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  figure.shot img { max-height: 480px; }
+  .fam { display: grid; grid-template-columns: 1.35fr 1.5fr 0.62fr 1.5fr; gap: 10px; margin-top: 26px; }
+  .fam .fh { font-size: 24px; font-weight: 700; color: var(--orange); padding: 8px 14px; }
+  .fam .fr { background: #fff; border: 1px solid #e6dcc8; border-radius: 12px; padding: 12px 16px;
+             font-size: 25px; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+  .fam .fr b { color: var(--blue); }
+  .fam .fr .dof { color: var(--orange); font-weight: 900; font-size: 30px; }
+  .fam .fr .keep { font-size: 23px; color: #4a5568; }
+  .vocab .cards { gap: 22px; margin-top: 30px; }
+  .vocab .card { padding: 24px 34px; }
+  .vocab .big { font-size: 42px; }
+  .vocab .cap { font-size: 24px; margin-top: 10px; line-height: 1.4; }
+  .vocab .cap small { font-size: 20px; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="2">
+  <div class="course step" data-step="1">正课 · 07 · 第 2 章 图像形成</div>
+  <h1 class="step" data-step="1">3D 到 2D：<span class="hl">相机投影的代数</span></h1>
+  <p class="ep step" data-step="1">三维旋转三表示 + 投影四模型 · §2.1.2–§2.1.4 前半</p>
+  <p class="lead dim step" data-step="2">四段路线（讲者安排）：① 3D 族谱与自由度阶梯 ② 3D 旋转的三种表示 ③ 投影四模型与消失点兑现 ④ 数值实验与下集切分</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>01 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">导览 · 切分宣布</div>
+  <h2>片尾承诺，<span class="hl">今天兑现</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">E014 留的悬念</div>
+      <div class="cap">上集片尾：三维族谱怎么切，「下集开头见分晓」<small>今天吃到 §2.1.2（第 43–45 页）+ §2.1.3（第 45–51 页）+ §2.1.4 前半（第 51–54 页）</small></div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big warn">E013 的伏笔</div>
+      <div class="cap">「透视把它搬进画面，投影那集再算」<small>今天 §2.1.4 就兑现：透视投影的消失点公式 + 数值验证</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="1">讲者按：内参 K/Ms 与相机矩阵 P=K[R|t] 留给 E016（原书第 55 页起），镜头畸变留 E017（第 63 页起）——切分是讲者安排：E015/E016 的切点在 §2.1.4 内部（逆深度段结束、内参段开始处），不是原书小节边界</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>02 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">族谱 · TABLE 2.2</div>
+  <h2>三维族谱，<span class="hl">五级阶梯</span></h2>
+  <div class="fam step" data-step="1">
+    <div class="fh">变换</div><div class="fh">矩阵</div><div class="fh">DoF</div><div class="fh">保住什么（含下行各条）</div>
+    <div class="fr"><b>平移</b></div><div>[I&nbsp;t]</div><div class="dof">3</div><div class="keep">定向 · 长度 · 角度 · 平行 · 直线</div>
+    <div class="fr"><b>刚体（欧氏）</b></div><div>[R&nbsp;t]</div><div class="dof">6</div><div class="keep">长度 · 角度 · 平行 · 直线</div>
+    <div class="fr"><b>相似</b></div><div>[sR&nbsp;t]</div><div class="dof">7</div><div class="keep">角度 · 平行 · 直线</div>
+    <div class="fr"><b>仿射</b></div><div>[A]<sub>3×4</sub></div><div class="dof">12</div><div class="keep">平行 · 直线</div>
+    <div class="fr"><b>射影</b></div><div>H̃（4×4）</div><div class="dof">15</div><div class="keep">直线</div>
+  </div>
+  <p class="note step" data-step="2">表 2.2 要点（原书第 44 页）：每行也保住下面各行的性质；3×4 矩阵补 [0ᵀ 1] 行即成 4×4；图标画在 2D 但示意 3D 立方体。与 E014 的 2D 表对照：3→6→7→12→15，逐级比 2D 的 2→3→4→6→8 多出 1、3、3、6、7 个自由度（讲者按：多出的是自由参数的个数——如刚体矩阵元从 6 个变 12 个，但 R 受正交约束，自由参数只多 3 个）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>03 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">前两级 · TRANSLATION / RIGID</div>
+  <h2>平移与刚体：<span class="hl">老朋友升维</span></h2>
+  <div class="formula step" data-step="1">x′ = x + t，即 x′ = [I&nbsp;t] x̄ —— 式(2.23)，原书第 44 页（I 为 3×3 单位阵；x̄ 是齐次 4 维写法，输出 x′ 是 3 维）</div>
+  <div class="formula step" data-step="2">x′ = Rx + t —— 式(2.24)；绕点 c 转：x′ = R(x−c) = Rx − Rc —— 式(2.25)，原书第 44 页</div>
+  <p class="note step" data-step="2">R 是 3×3 正交矩阵：RRᵀ=I 且 |R|=+1（实验：5 组随机 (n̂,θ) 全过）；刚体运动别名 SE(3)（第 44 页）；c 常取相机中心。原书提醒：紧凑地参数化 3D 旋转不是件平常事（第 44 页）——本集大半篇幅都在回答它</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>04 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">中间两级 · SIMILARITY / AFFINE</div>
+  <h2>相似与仿射：<span class="hl">一个保角、一个保平行</span></h2>
+  <div class="formula step" data-step="1">x′ = sRx + t —— 式(2.26)，原书第 45 页：保角——原书 angles between lines and planes（讲者读作线–线、面–面）</div>
+  <div class="formula step" data-step="2">x′ = A x̄，A 是任意 3×4 —— 式(2.27)，原书第 45 页：平行线与平行面经变换仍平行（实验：任意 A 下方向像叉积≈0）</div>
+  <p class="note step" data-step="2">与 2D 同构：A 从 2×3 升到 3×4、点从 2D 升到 3D，同样无除法（讲者对比，非原书内容；式 2.27 原文见第 45 页）。反例（讲者设计的实验）：A=[diag(2,1,1)|0] 保平行但把 45° 夹角压成 26.6°——「保平行」不等于「保角」</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>05 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">顶级 · PROJECTIVE</div>
+  <h2>射影：<span class="hl">只保直线</span></h2>
+  <div class="formula step" data-step="1">x̃′ = H̃ x̃，H̃ 任意 4×4 —— 式(2.28)，原书第 45 页；归一化后才得非齐次结果 x</div>
+  <p class="lead dim step" data-step="1">别称：3D 透视变换、单应 homography、共线变换 collineation（原书第 45 页）；只保证直线变换后仍是直线</p>
+  <p class="note step" data-step="1">尺度等价（讲者计算）：H̃ 与 2H̃ 归一化后是同一个变换（实验：随机点逐点一致）——15 个自由度 = 16 − 1 个尺度；更细的层级描述见 Hartley &amp; Zisserman (2004, §2.4)（原书第 43 页）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>06 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">旋转 ① · EULER ANGLES</div>
+  <h2>欧拉角：<span class="hl">书直言「坏主意」</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big warn">依赖顺序</div>
+      <div class="cap">三个绕坐标轴的旋转乘起来：x-y-z 或 x-y-x<small>先转谁后转谁，结果不同——generally a bad idea（原书第 45 页）</small></div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big warn">万向锁</div>
+      <div class="cap">旋转微变，某个欧拉角可能大幅跳变：参数空间不平滑<small>机器人学称 gimbal lock（脚注 3，第 45 页）</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="2">原书因此连公式都不给：感兴趣的读者另查（Faugeras 1993; Diebel 2006，这句话跨第 45–46 页，引文在第 46 页）；但特例反而直观——讲者按：云台 pan-tilt 头这类场景可能天然就是两个转轴（原书脚注 2，第 45 页只说 may be more intuitive）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>07 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">旋转 ② · AXIS / ANGLE</div>
+  <h2>轴角：<span class="hl">把 v 拆成三块</span></h2>
+  <div class="formula step" data-step="1">ω = θn̂（轴 n̂、角 θ，3 个数）；v∥ = n̂(n̂·v) = (n̂n̂ᵀ)v —— 式(2.29)：转不动的部分；v⊥ = v − v∥ —— 式(2.30)（原书第 46 页）</div>
+  <div class="formula step" data-step="2">v× = n̂ × v⊥ = n̂ × v = [n̂]× v —— 式(2.31)：叉积 = 转 90°；[n̂]× 的矩阵形式 = 式(2.32)（原书第 46 页）</div>
+  <p class="note step" data-step="2">再叉一次 90° 得 −v⊥：[n̂]²× v = −v⊥（原书第 46 页）——[n̂]× 作用下四个方向首尾循环，这是下面一切公式的积木（讲者按：Figure 2.5 下一页画给你看）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>08 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">旋转 ② · RODRIGUES</div>
+  <h2>几何拼出公式：<span class="hl">Rodrigues</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/e015_fig2_5.png" alt="重绘的绕轴旋转几何分解图">
+    <figcaption>据原书 Figure 2.5（第 46 页）重绘 · 原书图未使用 · 代码实跑输出</figcaption>
+  </figure>
+  <div class="formula step" data-step="1">u = v∥ + cosθ·v⊥ + sinθ·v× → R(n̂,θ) = I + sinθ[n̂]× + (1−cosθ)[n̂]²× —— 式(2.33)–(2.34)，原书第 47 页</div>
+  <p class="note step" data-step="2">实验：θ=2.39 时与逐点旋转一致；代价：表示不唯一——θ 可加 2πk，(n̂,θ) 与 (−n̂,−θ) 同解；存角度制则 90° 倍数可精确表示（第 47 页）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>09 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">旋转 ② · 小旋转与导数</div>
+  <h2>小旋转：<span class="hl">转得越小，线性越准</span></h2>
+  <div class="formula step" data-step="1">R(ω) ≈ I + [ω]× —— 式(2.35)，原书第 47 页（θ 用弧度；实验：误差/θ² → 1/√2≈0.707，θ: 0.1→0.001 逐步逼近——讲者推演）</div>
+  <div class="formula step" data-step="2">∂Rv/∂ωᵀ = −[v]× —— 式(2.36)，原书第 47 页（实验：‖ω‖=10⁻³ 中心差分 vs −[v]×，最大偏差 1.7e-3）</div>
+  <p class="note step" data-step="2">式(2.36) 是小旋转极限下 Rv 对 ω 的导数——以后做非线性优化、最小化重投影误差时，雅可比矩阵就是它（讲者按：§11 预告；原书第 47 页明说 this is handy when we want to compute the derivative）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>10 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">旋转 ② · 指数扭转</div>
+  <h2>有限角旋转 = <span class="hl">无穷小旋转的极限</span></h2>
+  <div class="formula step" data-step="1">R(n̂,θ) = lim<sub>k→∞</sub> (I + [θn̂]×/k)<sup>k</sup> = exp[ω]× —— 式(2.37)，原书第 47 页（Murray, Li, and Sastry 1994）</div>
+  <div class="formula step" data-step="2">exp[ω]× 展开，用 [n̂]<sup>k+2</sup>× = −[n̂]<sup>k</sup>×（k&gt;0）循环合并 → I + sinθ[n̂]× + (1−cosθ)[n̂]²× —— 式(2.38)：回到 Rodrigues（第 48 页）</div>
+  <p class="note step" data-step="2">实验（k=10⁶）：两条路与 Rodrigues 最大偏差 ≈2.1×10⁻⁶。名词落地（第 48 页）：旋转群叫 SO(3)；增量 ω 的李代数原书记作 se(3)——讲者按：标准是 so(3)，se(3) 属 SE(3)，按笔误理解</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>11 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">旋转 ③ · UNIT QUATERNIONS</div>
+  <h2>单位四元数：<span class="hl">住在球面上的旋转</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/e015_fig2_6.png" alt="重绘的单位四元数球面轨迹图">
+    <figcaption>据原书 Figure 2.6（第 48 页）重绘 · 原书图未使用 · 代码实跑输出</figcaption>
+  </figure>
+  <p class="note step" data-step="2">q = (v, w) = (x, y, z, w) 是单位 4 向量，‖q‖=1；对径点 −q 与 q 是同一个旋转（dual covering 双重覆盖，Figure 2.6，第 48 页）——除这层二对一，表示唯一且连续；来源：q = (sin(θ/2)n̂, cos(θ/2)) —— 式(2.39)；代回 Rodrigues 得 R = I + 2w[v]× + 2[v]²× —— 式(2.40)（原书第 49 页，实验：R(q) 与 Rodrigues 逐点一致）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>12 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">旋转 ③ · 四元数代数</div>
+  <h2>一套代数，<span class="hl">复合与插值都好算</span></h2>
+  <div class="formula step" data-step="1">q₂ = q₀q₁ = (v₀×v₁ + w₀v₁ + w₁v₀,&nbsp; w₀w₁ − v₀·v₁) —— 式(2.42)，原书第 49 页；且 R(q₂) = R(q₀)R(q₁)（实验：复合一致、交换顺序结果不同）</div>
+  <div class="formula step" data-step="2">slerp（Algorithm 2.1，原书第 50 页）：qr = q₁/q₀ → θ<sub>r</sub> = 2tan⁻¹(‖v<sub>r</sub>‖/w<sub>r</sub>) → q<sub>α</sub> = (sin(αθ<sub>r</sub>/2)n̂<sub>r</sub>, cos(αθ<sub>r</sub>/2)) → q₂ = q<sub>α</sub>q₀</div>
+  <p class="note step" data-step="2">求逆 = 只翻 w 的号：R(q⁻¹)=Rᵀ（式 2.43，第 49 页）；书另给可得相近结果（comparable results）的公式式(2.44)–(2.45)，q₀、q₁ 相近时须小心——书偏爱 arctangent 求角；若 w<sub>r</sub>&lt;0 先取 −qr（第 50 页）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>13 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">旋转 ④ · 怎么选</div>
+  <h2>表示没有最优，<span class="hl">只有合身</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">轴角 / ω</div>
+      <div class="cap">最小表示：免再归一化；角度制直观（90° 一听就懂）；弧度下导数好算——式(2.36)<small>原书第 51 页</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">四元数</div>
+      <div class="cap">连续无断点：跟拍平滑运动的相机不会跳变；插值、刚体链乘方便<small>原书第 51 页（Murray, Li, and Sastry 1994; Bregler and Malik 1998）</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="2">书作者的偏好：用四元数存姿态、用增量旋转做更新（§11.2.2，原书第 51 页）——讲者按：这是工程答案不是数学答案；讲者补充：欧拉角也有自留地——云台 pan-tilt 这类可能天然两轴的场景（原书脚注 2，第 45 页只说 may be more intuitive）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>14 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">投影 ① · ORTHOGRAPHY</div>
+  <h2>正交投影：<span class="hl">扔掉 z 就完事</span></h2>
+  <div class="formula step" data-step="1">x = [I<sub>2×2</sub>&nbsp;0] p —— 式(2.46)，原书第 51 页（p 记 3D 点，x 记 2D 点）；齐次版 x̃ = [1 0 0 0; 0 1 0 0; 0 0 0 1] p̃ —— 式(2.47)：扔 z、保 w（实验：3 组点两式一致）</div>
+  <p class="lead dim step" data-step="1">不做除法、平行线永远平行——最朴素的投影（讲者按：因此也没有灭点）</p>
+  <p class="note step" data-step="2">适用边界（第 51 页）：长焦（telephoto）镜头、物体深度相对物距很浅（Sawhney and Hanson 1991）时的近似；对 telecentric（远心）镜头才是精确模型（Baker and Nayar 1999, 2001）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>15 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">投影 ② · 六模型全景</div>
+  <h2>一张图看全：<span class="hl">谁保平行、谁相交</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/e015_fig2_7.png" alt="重绘的六种投影模型俯视图">
+    <figcaption>据原书 Figure 2.7（第 52 页）重绘 · 原书图未使用 · 代码实跑输出</figcaption>
+  </figure>
+  <p class="note step" data-step="1">原书图注（第 52 页）：地面平行线与方盒竖边在非透视投影里仍保持平行（讲者按：这张图就是「消失点出现与否」的分界线；面板 (e) 投影线汇于相机一点，像上平行线才会相交——下一页兑现；(f) 为图注名 object-centered，本集不展开）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>16 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">投影 ③ · SCALED ORTHO / PARA</div>
+  <h2>仿射家族：<span class="hl">补上尺度再补方向</span></h2>
+  <div class="formula step" data-step="1">x = [sI<sub>2×2</sub>&nbsp;0] p —— 式(2.48)，原书第 53 页：世界坐标（米）缩放到传感器（像素）；s 可逐帧变</div>
+  <div class="formula step" data-step="2">para-perspective：沿指向物体中心的视线，平行投到平行于像平面的参考面 → 常规透视缩放，合成仍是仿射</div>
+  <p class="note step" data-step="2">远距重建：pose 用最小二乘（§11.2.1）、结构运动用因式分解 SVD（Tomasi and Kanade 1992，§11.4.1）；para 更准又不破坏因式分解（Poelman and Kanade 1997）——式(2.49)，原书第 53 页（讲者按：参考面惯例取过物体中心，原书未指明位置）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>17 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">投影 ④ · PERSPECTIVE</div>
+  <h2>真透视：<span class="hl">除以自己的 z</span></h2>
+  <div class="formula step" data-step="1">x̄ = P<sub>z</sub>(p) = (x/z, y/z, 1) —— 式(2.50)，原书第 54 页；齐次版 x̃ = [1 0 0 0; 0 1 0 0; 0 0 1 0] p̃ —— 式(2.51)：扔 w</div>
+  <div class="formula step" data-step="2">消失点（式 2.50 推论）：3D 平行线方向 d（d<sub>z</sub> ≠ 0）时，像上收敛于 (d<sub>x</sub>/d<sub>z</sub>, d<sub>y</sub>/d<sub>z</sub>)——λ→∞ 像点 → 该极限（讲者推演；图注第 52 页只说非透视保平行，「只有透视破坏」是讲者归纳）</div>
+  <p class="note step" data-step="2">两条兑现（实验）：①透视保直线——相对叉积 1.02×10⁻¹⁶；②E013 伏笔——方向 (0,0,1) 的两条平行线像收敛于 vp=(0,0)：像距 0.250→1.7×10⁻⁴，像方向叉积 0.006——「投影那集再算」，今天算完了</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>18 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">投影 ⑤ · 图形学视角</div>
+  <h2>4×4 矩阵：<span class="hl">第三行藏着深度</span></h2>
+  <div class="formula step" data-step="1">先投到归一化设备坐标 (x,y,z)∈[−1,1]²×[0,1]，再 viewport 到像素；透视部分用 4×4 —— 式(2.52)，原书第 54 页</div>
+  <div class="formula step" data-step="2">z<sub>near</sub>=1、z<sub>far</sub>→∞、第三行翻号 → 第三元 = 1 − 1/z，是 disparity 的仿射函数（d = 1 − 第三元）——讲者推演</div>
+  <p class="note step" data-step="2">原书第 54 页称其 becomes the inverse depth（讲者：差一个仿射换算）；第三行留着是因 z-buffer 要深度；户外相机逆深度「通常」更良态（原书正文无引文；O–K 1993 只挂 disparity 定义）；已知深度/视差时，可用满秩 4×4 的逆直接映回 3D——式(2.64)（第 60 页，E016 讲）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>19 / 22</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">实验 · 数值验证</div>
+  <h2>24 条断言，<span class="hl">条条对数</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">族谱 + 旋转</div>
+      <div class="cap">5 级保性质（含反例）· Rodrigues 几何构造逐点一致 · 小旋转误差/θ² → 1/√2 · 导数差分 1.7e-3 · 指数扭转两路 ≈2.1e-6 · 四元数乘法/求逆/slerp<small>讲者设计，非原书内容</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">投影</div>
+      <div class="cap">正交两式一致 · 缩放正交与 para 保平行（透视不保）· 透视保直线 · 消失点收敛 · 逆深度 d = 1 − 第三元 = 1/z<small>3 张重绘图（Figure 2.5/2.6/2.7）入册；冷启动 PNG md5 与暖跑一致</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="2">三句话带走：①矩阵越自由，保的性质越少——E014 的主线在 3D 照样成立；②3D 旋转没有完美表示——优化用增量 ω、插值用四元数、云台这类场景可考虑欧拉角；③非透视的仿射族保平行，透视拿平行换真实——消失点就是那笔交易的价格（讲者归纳）</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>20 / 22</span></div>
+</section>
+
+<section class="slide vocab" data-steps="2">
+  <div class="kicker">词汇 · 本集新词</div>
+  <h2>今天入册的<span class="hl">词汇卡</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big">SE(3) / SO(3)</div><div class="cap">3D 刚体运动群 / 3D 旋转群<small>原书第 44 页 / 第 48 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big">se(3)（原书写法）</div><div class="cap">增量旋转 ω 的李代数；讲者按：标准记号 so(3)，se(3) 通常留给 SE(3) 刚体运动<small>原书第 48 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big">万向锁</div><div class="cap">gimbal lock：欧拉角参数化不平滑<small>脚注 3，原书第 45 页</small></div></div>
+    <div class="card step" data-step="2"><div class="big">双重覆盖</div><div class="cap">dual covering：q 与 −q 同一旋转<small>原书第 48 页</small></div></div>
+    <div class="card step" data-step="2"><div class="big">slerp</div><div class="cap">球面线性插值（Algorithm 2.1）<small>原书第 50 页</small></div></div>
+    <div class="card step" data-step="2"><div class="big">para-perspective</div><div class="cap">沿视线方向的平行投影 + 整体缩放<small>式(2.49)，原书第 53 页</small></div></div>
+  </div>
+  <p class="lead dim step" data-step="2">讲者归纳：本集公式都为两件事——物体在哪朝哪转写成矩阵，落在像上哪儿写成投影矩阵——透视再除以 z。下一集补下一块积木（畸变在 E017）。</p>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>21 / 22</span></div>
+</section>
+
+<section class="slide endcard" data-steps="2">
+  <div class="kicker">NEXT · 内参在门口</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§2.1.2–§2.1.4 前半（原书第 43–54 页），对照 Table 2.2（第 44 页）、Figure 2.5/2.6/2.7（第 46/48/52 页）与 Algorithm 2.1（第 50 页）</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>用式(2.41) 手算 q=(0, 0, sin45°, cos45°) 的 R(q)，验证它等于绕 z 轴 90° 的 Rodrigues 矩阵；再取方向不平行于像平面（d<sub>z</sub>≠0）的两条平行线，亲手算一次消失点 (d<sub>x</sub>/d<sub>z</sub>, d<sub>y</sub>/d<sub>z</sub>)</div>
+  <div class="row step" data-step="2"><span class="tag">下一集</span>E016 相机内参与外参：传感器齐次 M<sub>s</sub> → 标定矩阵 K → 相机矩阵 P=K[R|t]、上三角 K 的五个参数（原书第 55–63 页，至 §2.1.5 之前——切分为讲者安排）</div>
+  <div class="pagefoot"><span>E015 · 正课第七集</span><span>22 / 22</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

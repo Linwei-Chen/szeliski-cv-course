@@ -1,0 +1,45 @@
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+findfont: Failed to find font weight normal for Hiragino Sans GB, now using 300.
+#1 形态学统一框架与五操作（式 3.45+五操作定义，p.138 底–139）
+  [PASS] #1-1 统一框架 dilation θ(c,1)=集合定义并集（逐位）
+  [PASS] #1-2 统一框架 erosion θ(c,S)=集合定义交集（逐位）
+  [PASS] #1-3 opening 去亮小点/小块、大亮块原样保留 / closing 填暗小孔（图注极性机理）  亮点 opening 后=0（应 0）；暗孔 closing 后=0（应 0）；5×5 大亮块 opening 后存活 25/25（dot 至少容得下结构元素就啃不动——图注 fail 句机理面）
+  [PASS] #1-4 closing 填平 2×2 暗孔（f011 口播「2×2 的暗孔一闭就平」读数）  2×2 暗孔 f[6:8,6:8]=0 → closing 后孔区全 1（填充读数 4/4）；对照：同暗点 opening 后仍在（去亮读数 0，应 0——开闭极性对照面）
+  [PASS] #1-5 majority 圆化尖角（凸角删/直边留）+grows/shrinks 单调  凸角 majority=0（应 0）、直边=1（应 1）、暗点经 opening 消失数=0（应 0）
+#2 距离变换定义与两趟光栅（式 3.46–3.48，pp.139–140；Figure 3.23 语义）
+  [PASS] #2-1 city-block 两趟光栅=暴力定义（逐位，随机网格）  网格 20×20，两趟 vs 暴力差异像素 0/400
+  [PASS] #2-2 前向顺序忠实（北/西递推——唯一背景 (0,0)，前向即得精确曼哈顿 i+j）  前向 D[2,3]=5.0（应 5）
+  [PASS] #2-3 向量版两趟欧氏=暴力欧氏（逐位，斜边规则）  网格 20×20（随机），最大差 0.000e+00
+  [PASS] #2-5 向量版两趟欧氏在唯一背景 (0,0) 网格=暴力（f020「在这张图上」支撑）  11×11 唯一背景 (0,0) 网格，最大差 0.000e+00
+  [PASS] #2-4 标量两趟欧氏高估（原书「not sufficient」：对角步长已补仍不够）  高估像素数 90；D_scalar8(5,2)=5.828（=3+2√2≈5.828） vs 真欧氏 5.385（=√29≈5.385）
+#3 两度量对照（式 3.46/3.47）
+  [PASS] #3-1 点 (6,8)：d1=14、d2=10（勾股放大，比值 1.4）  d1=14 d2=10.0
+  [PASS] #3-2 对角方向：d1=2a vs d2=a√2——圆等值线更「胖」  d1=10 d2=7.0711
+#4 连通域与区域统计（N4/N8+式 3.49，pp.141–142）
+  [PASS] #4-1 斜对角相连：N8 连通数 1、N4 连通数 2  N4=2 N8=1
+  [PASS] #4-2 区域统计：面积/周长/质心（条带 1）  area=5 perim=5 centroid=(np.float64(3.0), np.float64(1.0))
+  [PASS] #4-3 式 3.49 M 矩阵逐项（3 点手工例）  M=
+[[2.         1.        ]
+ [1.         4.66666667]]
+  [PASS] #4-4 特征值分析主轴方向=条带方向（±1°）  主轴 26.58° vs 期望 26.57°
+#5 signed distance transform（p.140–141「negate one of them before combining」）
+  [PASS] #5-1 符号场：前景全正（≥1）/背景全负（≤−1），最简合并无 0 值像素  行5剖面 [-3.0, -2.0, -1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, -1.0, -2.0, -3.0]（边界两侧 +1/−1，0 值不出现——两参考集各自含 0 层使然）
+  [PASS] #5-2 平滑性：同侧相邻差 ≤1（各自 1-Lipschitz）、跨界恰为 2（1−(−1)）  同侧最大差 1.0、跨界最大差 2.0
+常数核对 C1–C4
+  [PASS] C1 式 3.44 边界语义（f=t 记 1）
+  [PASS] C2 d1(3,4)=|3|+|4|=7
+  [PASS] C3 d2(3,4)=√(3²+4²)=5（勾股数）
+  [PASS] C4 majority 阈值整数化（S=25：θ(c,12.5) ⇔ c≥13）  c=1（单像素在 5×5 窗口计数 1，12.5 阈值下 majority=0）
+  [PASS] #S 同步（5 张程序生成图，两处 md5 一致）  生成 5 张：['e026_morph_ops.png', 'e026_dt_raster.png', 'e026_dt_iso.png', 'e026_cc_stats.png', 'e026_signed_profile.png']
+区分力自检（注入错误实现，验证断言拦截）
+  [PASS] D-1 closing 冒充 opening → #1-3 拦截（真 opening 滤点、假的不滤）  假 opening 亮点=1（应 1 被拦截）
+  [PASS] D-2 标量两趟欧氏冒充精确欧氏 → #2-4 高估断言拦截  高估像素 90；D_scalar8(5,2)=5.828 vs √29=5.385，差 0.44
+  [PASS] D-3 两趟方向与邻居不配对（前向北东/后向南西）→ #2-1 拦截  配错方向后与精确街区距离差异像素 99/121（11×11 全网格口径，应 >0 被拦截）；未受影响 22 像素=第 [0, 1] 列全部（构成整列成立=True）
+
+汇总：26 条 PASS / 0 FAIL
+DONE

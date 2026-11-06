@@ -1,0 +1,24 @@
+[lab] E116 深度传感器开始 2026-11-05T21:40:39
+[lab] 源码 sha256=c951219545f1d49467e76708a9010a5e358f7e8fb9bf1c5ec8004b5c88359ee1
+[PASS] 结构光 2 米视差 30 像素　| 30 像素
+[PASS] 结构光误差随 Z² 增长　| 4.0 倍
+[PASS] 结构光 5 米误差超过 0.03 米　| 0.042 米
+[PASS] ToF 单频模糊距离约 5 米　| 5.00 米
+[PASS] ToF 单频 7 米折回约 2 米　| 2.00 米
+[PASS] ToF 双频解出 7 米　| 7.00 米
+[PASS] LiDAR 10 米往返 66.7 纳秒　| 66.7 纳秒
+[PASS] LiDAR 100 米往返 667.3 纳秒　| 667.1 纳秒
+[PASS] LiDAR 点云覆盖率低于 5%　| 3.2%
+[PASS] 镜子产生 2 米虚像误差　| 2.0 米
+[lab] 结构光 d(Z)=fB/Z｜2m 30px｜5m 误差 0.042m｜4m/2m 误差比 4.0
+[lab] ToF 30MHz 模糊 5.00m｜7m 折回 2.00m｜双频 7.00m（误差 0.000m）｜拍频量程 14.99m
+[lab] LiDAR 10m 66.7ns｜100m 667.1ns｜65536 点｜覆盖率 3.2%
+[lab] 镜子：真实 2.0m，虚像 4.0m，误差 2.0m
+[lab] PNG sha256(e116_range.png)=0ce08dfc5358f691b8087e6de0f86d532b6342d3c14b0d05ca6a3e3e836533b8
+[lab] PNG sha256(e116_tradeoff.png)=80f8eb56cfed82c4c0c4612977bafb2e1aa14ff094bf8c8544b42c3538e5be03
+[lab] PNG sha256(e116_triad.png)=75a56723033e37076da0dcd3e8052d39b12edf7ae58e0d51baf280fa4842993b
+[lab] readings → e116_sensors_readings.json
+[lab] readings sha256=1f8b0a4d5be961a967ff5f9d5756f29658dc1e425c346cf72b1ee6ca1998a7bd
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-05T21:40:39

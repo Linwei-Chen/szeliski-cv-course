@@ -1,0 +1,19 @@
+[lab] E102 two-view 开始 2026-11-03T01:49:27
+[lab] 源码 sha256=fb7a87815b5298925ec02421771d3901b02490b7cd01f0c4cf39ae4ef211a472
+[PASS] 极线约束残差小　| max 8.33e-17
+[PASS] E 秩为二　| det 9.78e-19
+[PASS] 极线过对应点　| max 1.08e-16
+[PASS] SVD 复原 R　| 0.0000°
+[PASS] t 方向复原　| cos 1.000000
+[PASS] cheirality 选对四解　| 四解前沿点数 [0, 60, 0, 0]
+[PASS] F 像素约束成立　| max 1.67e-16
+[PASS] 噪声使残差变大　| ×912527258
+[PASS] 三图在盘　| epipolar/ef/cheirality
+[lab] PNG sha256(e102_cheirality.png)=5857d39fb71e0ff5188b1963061d9cca6ccdd19382d50b9d94198f8c136cb6c5
+[lab] PNG sha256(e102_ef.png)=159b8501a278f1815405f060fb2553e952765a702effc31403548eec64f53833
+[lab] PNG sha256(e102_epipolar.png)=9d13511982c17b4362ea80aa5fc92323dae6fa8f5f23f9edfcf4b874f64c4cba
+[lab] readings → e102_twoview_readings.json
+[lab] readings sha256=28a4507b2118d2a2fa7596d436c279152e933127aedd80a26f0e0cf6ac0cda3b
+[lab] LEDGER：断言 9 条，PASS 9
+[lab] 汇总 PASS 9 / FAIL 0 / 共 9
+[lab] 结束 2026-11-03T01:49:27

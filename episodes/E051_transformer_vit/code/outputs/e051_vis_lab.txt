@@ -1,0 +1,36 @@
+[lab] E051 Transformer/ViT 数值演示档 开始 2026-11-01T08:02:54
+[lab] 源码 sha256=3605e285690a0efed90388a8b24927e3f9482da764486de20956a7b52e46707a（哨兵版本绑定数据源——E043 r5 P2-5 口径）
+[PASS] E1 式 5.77 两实现 allclose（逐步式 vs 矩阵式）　| maxabs=5.55e-17（N=4/D=8 单 query 前向）
+[PASS] E1 attention 权重行和==1（softmax 归一）　| Σα=1.000000000000
+[PASS] E1b var(q·k)≈D（方差随 D 增大）　| D=64 实测 var=64.60 vs D=64（M=20000）
+[PASS] E1b var(q·k/√D)≈1（除以 √D 方差不变——脚注 56 直证）　| 实测 var=1.009 vs 1
+[PASS] E1c 未缩放 softmax 近 one-hot（饱和——梯度近零）　| mean max prob=1.0000（匹配 logit≈D=64 压倒随机 logit~N(0,64)，200 query 均值）
+[PASS] E1c 除以 √D 后权重从饱和区回落（梯度通道恢复）　| mean max prob=0.8161（同一匹配场景缩放后读数——匹配仍最高但分布重携相对信息）
+[PASS] E1c 缩放后分布熵更高（信息不塌缩）　| H(scaled)=1.32 > H(unscaled)=0.00（nats；256 keys）
+[PASS] E2 式 5.78+5.77 全链两实现 allclose（逐步式 vs 矩阵批式）　| maxabs=4.44e-16（Wq/Wk/Wv 投影+N=4 前向）
+[PASS] E2 三权重参数量==3·D²==192 且与 N 无关　| 3·8·8=192（N=4 与 N=16 用同一组 8×8 矩阵——形状只随 D）
+[PASS] E2 同组权重复用两次调用 maxabs==0（reused with each call——Figure 5.56 caption 语义）　| maxabs=0.0e+00（同一 Wq/Wk/Wv 确定性复用）
+[PASS] E3 224²==50176（原书逐像素数值）　| 224×224=50176
+[PASS] E3 16²==256（单 patch 像素数）　| 16×16=256
+[PASS] E3 50176==196·256（patch 数数值链）　| 50176=196×256
+[PASS] E3 步幅卷积输出 (224−16)/16+1==14（strided 16×16 conv 互证）　| (224−16)/16+1=14
+[PASS] E3 14²==196（14×14 网格）　| 14×14=196
+[PASS] E4 N=50176 时 attention FLOPs 为卷积千倍以上（数量级口径）　| attn=7.553e+09 vs conv=4.064e+06（比值≈1858——系数 1 教学口径）
+[PASS] E4 N=1024（32×32）时差距收窄一个量级以上　| 比值≈37.9（Image Transformer 原书数值——N² 增长实证）
+[PASS] E4 N×49 → attention FLOPs ×2401（=49²）　| （整数精确——倍数关系见断言名）
+[PASS] E4 N×49 → 卷积 FLOPs ×49（线性增长）　| （线性增长实证）
+[PASS] E10 作业① 224×224 切 16×16 patch 共 196 个（E3 互证）　| 答案 196 个（14×14 网格）
+[PASS] E10 作业② N=50176/D=3 时 attention FLOPs≈卷积千倍以上（E4 互证）　| 比值≈1858（数量级口径——口播定性读「千倍以上」）
+[PASS] FG 图内文字内部记号零泄漏（FIG_MARK 零命中）　| 图内 Text 收割 316 条，命中 无
+[PASS] FG 程序生成图 3 张全落盘　| e051_fig1_attention.png+e051_fig2_patches.png+e051_fig3_flops.png（sha 见 [lab] PNG 行）
+[PASS] FG1 程序生成图落盘　| e051_fig1_attention.png 已落盘（全量 sha 自证见 [lab] PNG 行）
+[PASS] FG2 程序生成图落盘　| e051_fig2_patches.png 已落盘（全量 sha 自证见 [lab] PNG 行）
+[PASS] FG3 程序生成图落盘　| e051_fig3_flops.png 已落盘（全量 sha 自证见 [lab] PNG 行）
+[lab] readings → e051_vis_readings.json
+[lab] readings sha256=d63aebe8b423db59f83e59e516713d48c0661ccd9f983c6a11cd70c354b98eec
+[lab] PNG sha256(e051_fig1_attention.png)=7bfe565609c46fbea5a7d75cd1d097105c3363388e547d931c7483cbbb37b453
+[lab] PNG sha256(e051_fig2_patches.png)=2dba74009c6b467c6624ab5e91b8e16a1602ee2064dc61c10fbe5e366b993f53
+[lab] PNG sha256(e051_fig3_flops.png)=173419b49f3eca15b96137c61f24de1e5e826432c84e5e4992d98567b0fc15e8
+[lab] LEDGER：断言 26 条，PASS 26
+[lab] 汇总 PASS 26 / FAIL 0 / 共 26
+[lab] 结束 2026-11-01T08:02:54

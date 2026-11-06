@@ -1,0 +1,14 @@
+{
+ "chain_rmse": 2.5482407882088896,
+ "chain_only_rmse": 2.5482407882090254,
+ "global_rmse": 1.0431465540535225,
+ "outlier_rmse": 2.174498307855455,
+ "robust_rmse": 1.5625350509400349,
+ "closure_gap_chain_deg": 8.304300961250338,
+ "closure_gap_global_deg": 2.401487244844346,
+ "n_edges": 19,
+ "n_cameras": 8,
+ "n_unknown": 7,
+ "n_pass": 10,
+ "n_total": 10
+}

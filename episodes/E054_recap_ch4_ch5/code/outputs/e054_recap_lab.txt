@@ -1,0 +1,12 @@
+[lab] E054 复盘课回响核对档 开始 2026-11-06T00:46:47
+[lab] 源码 sha256=ebc55f68f5e061a5d8e7ec63d5bdde0deb5edc09bfb40e05521b336f79179340（哨兵版本绑定——E043 r5 P2-5 口径）
+[PASS] R1 台账 A2 主数独立重算==台账输出行（独立实现路径逐集扫描重加总）　| 复算 293（18 集）对照台账 293
+[PASS] R2 台账行数==18（模具链六站+学习链十二站）　| 18 行 = 模具链 6+学习链 12
+[PASS] R3 口播页码 chip 全数⊆台账回链页∪ToC 章界页（口播回链不脱离台账）　| 5/5 命中：191/235/337/927/930（191/235 系章头页、其余系 ROWS 回链）
+[PASS] R4 口播结构完整性：15 帧 9 页全非空+总字符合理带　| 15 帧 9 页 总字符 2407（带 [2250,2500]，学生版口径）
+[lab] PNG sha256(e054_recap_map.png)=cdc3bdceda247db07ab50fa01b17a5f75384d1bbaa7c0d0e10c08b1014407a03
+[lab] readings → e054_recap_readings.json
+[lab] readings sha256=5fb3b3c0f6d4afacec0e44eec1da393512dcf05740273c9a27be88217936fd7e
+[lab] LEDGER：断言 4 条，PASS 4
+[lab] 汇总 PASS 4 / FAIL 0 / 共 4
+[lab] 结束 2026-11-06T00:46:47

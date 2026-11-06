@@ -1,0 +1,18 @@
+{
+ "f": 500.0,
+ "s": 500.0,
+ "cyl_roundtrip_x": 2.2737367544323206e-13,
+ "cyl_roundtrip_y": 5.684341886080802e-14,
+ "sph_roundtrip_x": 2.2737367544323206e-13,
+ "sph_roundtrip_y": 1.1368683772161603e-13,
+ "yaw_dx_dev": 8.526512829121202e-14,
+ "yaw_dh_dev": 5.684341886080802e-14,
+ "h_minus_phi_min": 0.0030930347808261205,
+ "pole_phi": 1.5702963268365633,
+ "pole_h": 2000.0,
+ "center_scale": 1.0,
+ "planar_stretch_60": 1.6539866862653758,
+ "cyl_stretch_60": 1.0,
+ "n_pass": 11,
+ "n_total": 11
+}

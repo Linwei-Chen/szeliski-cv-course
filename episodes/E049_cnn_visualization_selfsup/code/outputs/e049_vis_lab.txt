@@ -1,0 +1,29 @@
+[lab] E049 vis/selfsup 数值演示档 开始 2026-11-01T06:21:06
+[lab] 源码 sha256=26c7a6f6b0e4f72aa75c0bb38d422d210a080b54a628cd3ce062614e83e4f039（哨兵版本绑定数据源——E043 r5 P2-5 口径）
+[PASS] E1 hinton 尺寸映射 闭式=逐元素实算　| max|w|=0.95 全 12 元素 allclose
+[PASS] E1 最大方块=最大绝对值权重　| argmax r2c1 w=-0.95 size=1.0
+[PASS] E1 正负零计数完备　| pos=6 neg=5 zero=1 total=12
+[PASS] E2 正对损失 闭式=数值　| closed=0.247658 num=0.247658
+[PASS] E2 负对损失 闭式=数值　| closed=1.522540 num=1.522540
+[PASS] E2 正对损失<负对损失　| pos=0.2477 < neg=1.5225
+[PASS] E2 总损失=两正对均值　| total=0.885099
+[PASS] E3 崩塌损失 解析=数值　| closed=ln2=0.693147 num=0.693147
+[PASS] E3 常数嵌入相似度恒1　| min=1.0000000000000002 max=1.0000000000000002
+[PASS] E3 随机嵌入相似度近零　| offdiag |max|=0.1792 (seed=49)
+[PASS] E4 攻击前预测类0 攻击后翻转类1　| w·x0=-0.09999999999999998 → pred=0；w·x_adv=0.39497474683058337 → pred=1
+[PASS] E4 扰动幅度==步长　| |x_adv-x0|=0.3500 == eps=0.35
+[PASS] E4 攻击方向与 w 同向　| cos=1.000000
+[PASS] E10 作业第一道 常数嵌入相似度==1（E3 互证）　| 两个一模一样的常数嵌入，各对相似度=1——对比目标无可学方向
+[PASS] E10 作业第一道 崩塌损失=常数（E3 互证）　| NT-Xent 退化为 ln2=0.693147（正负对全同分布）
+[PASS] FIG 内部记号零泄漏　| 3 张图全部 Text 对象 44 条、命中 0 条
+[PASS] FG1 程序生成图落盘　| e049_fig1_hinton.png 已落盘（全量 sha 自证见 [lab] PNG 行——短形态摘要系 readings 字段）
+[PASS] FG2 程序生成图落盘　| e049_fig2_lineage.png 已落盘（全量 sha 自证见 [lab] PNG 行——短形态摘要系 readings 字段）
+[PASS] FG3 程序生成图落盘　| e049_fig3_adversarial.png 已落盘（全量 sha 自证见 [lab] PNG 行——短形态摘要系 readings 字段）
+[lab] readings → e049_vis_readings.json
+[lab] readings sha256=1c712646b601ef47b6e687753906a2c8131ea7a1e8da4ae7575716b05d03467d
+[lab] PNG sha256(e049_fig1_hinton.png)=ae7d198bda08ba50796c6b1b24f5353d6368ab0c8862613ffa53847b95db7809
+[lab] PNG sha256(e049_fig2_lineage.png)=c15719b6809aa15143dc9c1113a9af6cb6ef4e32905d7fac147ac3640866ef67
+[lab] PNG sha256(e049_fig3_adversarial.png)=5ef07e90398da33e852f58c5925900b37fb744243a0b7e868eea70753c40faa5
+[lab] LEDGER：断言 19 条，PASS 19
+[lab] 汇总 PASS 19 / FAIL 0 / 共 19
+[lab] 结束 2026-11-01T06:21:06

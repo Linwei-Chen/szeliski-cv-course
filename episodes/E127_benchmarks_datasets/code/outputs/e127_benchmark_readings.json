@@ -1,0 +1,49 @@
+{
+ "n_pass": 12,
+ "n_total": 12,
+ "acc_random": 1.0,
+ "acc_disjoint": 0.5,
+ "leak_gap": 0.5,
+ "mean_A": 0.7150000000000001,
+ "mean_B": 0.7,
+ "med_A": 0.55,
+ "med_B": 0.7,
+ "worst_A": 0.55,
+ "worst_B": 0.7,
+ "wins_A": 3,
+ "wins_B": 5,
+ "ci_lo": -0.09499999999999992,
+ "ci_hi": 0.18000000000000005,
+ "score_A_50": 0.75,
+ "score_B_50": 0.775,
+ "score_A_75": 0.8250000000000001,
+ "score_B_75": 0.7625,
+ "cross_w": 0.5714285714285715,
+ "protocol": {
+  "split_by_scene": true,
+  "test_scenes": [
+   6,
+   7
+  ],
+  "n_scenes": 8,
+  "n_boot": 4000,
+  "metrics": [
+   "accuracy"
+  ],
+  "primary": "mean+median+worst"
+ },
+ "fig_sizes": {
+  "split": [
+   12.6,
+   4.7
+  ],
+  "uncertainty": [
+   12.6,
+   4.8
+  ],
+  "composition": [
+   11.6,
+   4.8
+  ]
+ }
+}

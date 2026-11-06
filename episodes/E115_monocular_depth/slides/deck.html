@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>单目深度的逆袭：从共指迷雾到 Depth Anything</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开篇 · 单张图</div>
+  <h2>单张图能推断深度吗</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>单目深度没有视差，也没有主动测距。</li><li>一张图可以被很多个三维世界解释。</li><li>所以它给的是合理解释，不是测量值。</li><li>书上第 796 页列了三维化、柔焦、导航等用途。</li></ul>
+      <div class="src">依据：原书第 796 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">单目与双目</div><div class="kline">双目：有基线和视差</div><div class="kline">单目：只能靠线索和先验</div><div class="kline">问题本身解不唯一</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">线索 · 三类</div>
+  <h2>一张图里的三类深度线索</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>透视：地面越远，在图像里越靠上。</li><li>纹理梯度：同样的地砖，远处更密。</li><li>已知尺寸：知道球多大，就能反推距离。</li><li>三类线索都依赖假设，假设破了就出错。</li></ul>
+      <div class="src">依据：原书第 796 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">各自的假设</div><div class="kline">地面要平</div><div class="kline">纹理要规则</div><div class="kline">物体尺寸要已知</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">2014 · 从手工到学习</div>
+  <h2>多尺度融合：从数据学深度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 797 页提到 2014 年的多尺度融合网络。</li><li>输入一张彩色图，直接回归整幅深度图。</li><li>训练数据主要是 NYU 室内和 KITTI 街道。</li><li>同页还列了 Make3D、Cityscapes、ScanNet。</li></ul>
+      <div class="src">依据：原书第 797 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个域</div><div class="kline">NYU：室内</div><div class="kline">KITTI：街道</div><div class="kline">两个域差别很大</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">风险 · 封闭世界</div>
+  <h2>封闭世界会学到捷径</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>在 NYU、KITTI 上训练和测试，分布很窄。</li><li>网络可能按像素在地面的位置猜深度。</li><li>也可能只对常见类别的物体弹出来。</li><li>换个相机高度或房间，捷径就失灵。</li></ul>
+      <div class="src">依据：原书第 797 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">捷径的代价</div><div class="kline">训练集里很灵</div><div class="kline">换场景就崩</div><div class="kline">高分不等于可靠</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 合成房间</div>
+  <h2>看图：地面先验</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>合成图里有地面、后墙、悬浮球和方块。</li><li>相机高 1.5 米，焦距 300 像素。</li><li>地面深度 Z = f·h / (y − cy)。</li><li>这个公式只看地面位置，不看物体。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e115_scene.png" style="max-height:500px" alt="合成单视图：地面、后墙、悬浮球、方块与真实深度｜程序生成，未用教材或论文原图"><figcaption>合成单视图：地面、后墙、悬浮球、方块与真实深度｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 同一先验</div>
+  <h2>看图：地面准，离开就崩</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>地面平均误差 0.00 米。</li><li>后墙 37.4 米，悬浮球 60.3 米。</li><li>同一个先验，离开地面就不再成立。</li><li>这就是按地面位置猜深度的捷径。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e115_shortcut.png" style="max-height:500px" alt="地面先验误差：地面 0.00 米、后墙 37.4 米、悬浮球 60.3 米｜程序生成，未用教材或论文原图"><figcaption>地面先验误差：地面 0.00 米、后墙 37.4 米、悬浮球 60.3 米｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 球半径</div>
+  <h2>尺寸线索：知道多大才可用</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>已知球半径 0.5 米，就能用像素半径反推。</li><li>球面积 1455 像素，半径约 21.5 像素。</li><li>反推距离 6.97 米，真实中心 7.00 米。</li><li>真实尺寸未知时，仍然有歧义。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">尺寸线索</div><div class="kline">需要已知半径</div><div class="kline">需要分割出轮廓</div><div class="kline">轮廓一糊就漂</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验四 · 相对深度</div>
+  <h2>尺度歧义：图像一样，深度差两倍</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>场景、相机高度、物体尺寸和距离都放大 2 倍。</li><li>两张图逐像素完全一样，最大差是 0。</li><li>深度图整体差 2 倍，相关仍是 1.000000。</li><li>单张图只能给相对深度，给不出绝对尺度。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e115_scale.png" style="max-height:500px" alt="原场景 vs 整体放大 2 倍：图像逐像素相同，深度整体 ×2｜程序生成，未用教材或论文原图"><figcaption>原场景 vs 整体放大 2 倍：图像逐像素相同，深度整体 ×2｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">走向泛化 · 光度与 MiDaS</div>
+  <h2>光度一致性、MiDaS 与零样本</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 797 页提到左右图像的光度一致性。</li><li>也用视频相邻帧来训练深度。</li><li>书上第 798 页提到 MiDaS 联合多个数据集。</li><li>零样本评测要求训练集和测试集分开。</li></ul>
+      <div class="src">依据：原书第 797–798 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">MiDaS 的关键</div><div class="kline">多数据集联合</div><div class="kline">仿射不变损失对齐尺度</div><div class="kline">跨数据集评测</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Depth Anything · 数据规模</div>
+  <h2>Depth Anything：数据与语义先验</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>论文第 1 页：约 6200 万张无标注图像。</li><li>论文第 2 页：150 万张有标注图像。</li><li>编码器用 DINOv2 初始化，继承语义先验。</li><li>教师模型打伪标签，再训练学生模型。</li></ul>
+      <div class="src">依据：Depth Anything 论文第 1–2 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两件事</div><div class="kline">数据覆盖</div><div class="kline">语义先验</div><div class="kline">教师-学生自训练</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">零样本 · 度量深度</div>
+  <h2>零样本与度量深度别混</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>论文第 1 页：零样本在六个公开数据集上评估。</li><li>随机拍摄的照片也纳入零样本评估。</li><li>用 NYUv2 和 KITTI 度量深度微调后刷新 SOTA。</li><li>零样本给相对深度，微调后才接近米。</li></ul>
+      <div class="src">依据：Depth Anything 论文第 1 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">零样本：相对深度</div><div class="kline">微调：度量深度</div><div class="kline">度量需要 LiDAR 或深度相机真值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 先验的边界</div>
+  <h2>收束：先验的边界</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 798 页：还能推断封闭三维形状。</li><li>单目深度是图像证据加先验的推断。</li><li>先验越强，越容易在封闭世界灵、开放世界崩。</li><li>工程上要问：相对还是度量，训练域是什么。</li></ul>
+      <div class="src">依据：原书第 798 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">深度相机硬件</div><div class="kline">直接测物理量</div><div class="kline">算法与硬件在应用汇合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零七集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

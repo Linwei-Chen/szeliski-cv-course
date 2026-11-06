@@ -1,0 +1,19 @@
+[lab] E080 手机/360 应用 开始 2026-11-02T16:15:31
+[lab] 源码 sha256=c3b012f837ccdd97fc1c2ca232833d095d54901e86929f786e5af38da6bab9bc
+[PASS] 60°视野/30%重叠要九张　| n=9
+[PASS] 40%重叠要十张　| n=10
+[PASS] 50°视野/30%重叠要十一张　| n=11
+[FAIL] 双190°覆盖超过360°　| 总覆盖 360°
+[PASS] 360°柱面宽度　| 宽 3770 像素
+[PASS] 180°球面高度　| 高 1885 像素
+[PASS] 九张12MP原始数据可控　| 324 MB
+[PASS] 1.2倍曝光增益可恢复　| 相对误差 0.0004
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e080_dual_fisheye.png)=02e85c53e92c78949120794792e488a4dcb5766c1fce665e6a16c25085d7ecbc
+[lab] PNG sha256(e080_phone_ring.png)=0d80fffc3ab0a7d68cc3b19254105dcae268cc159082cd941dec23948e38c373
+[lab] PNG sha256(e080_pipeline.png)=b0948e0a92f4264d7db7d4e9d5a4899109e790966a8ecf9c7497cebcf45bf123
+[lab] readings → e080_phone_readings.json
+[lab] readings sha256=13ea93e62b9a4a119f1b5a5564aac7994d53ffc454a40f236cd18fdd08f01eab
+[lab] LEDGER：断言 9 条，PASS 8
+[lab] 汇总 PASS 8 / FAIL 1 / 共 9
+[lab] 结束 2026-11-02T16:15:31

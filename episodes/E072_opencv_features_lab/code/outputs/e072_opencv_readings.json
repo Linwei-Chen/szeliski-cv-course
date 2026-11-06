@@ -1,0 +1,61 @@
+{
+ "generated_at": "2026-11-02T05:44:35",
+ "src_sha16": "d39b17fa4bdee601",
+ "cv2": "4.13.0",
+ "cv2_major": 4,
+ "numpy": "2.3.5",
+ "image": {
+  "w": 960,
+  "h": 640,
+  "scene_seed": 7
+ },
+ "params": {
+  "nfeatures": 1000,
+  "ratio": 0.75,
+  "ransac_px": 3.0
+ },
+ "orb": {
+  "kp1": 1000,
+  "kp2": 1000,
+  "desc_bytes": 32,
+  "raw": 1000,
+  "ratio": 431,
+  "mutual": 330,
+  "inliers": 317,
+  "inlier_ratio": 0.7355,
+  "inlier_pct": 73.5,
+  "med_err": 0.7669,
+  "p90_err": 1.8617,
+  "t_det": 0.2432,
+  "t_mat": 0.002
+ },
+ "sift": {
+  "kp1": 1000,
+  "kp2": 1001,
+  "desc_dim": 128,
+  "raw": 1000,
+  "ratio": 452,
+  "mutual": 407,
+  "inliers": 390,
+  "inlier_ratio": 0.8628,
+  "inlier_pct": 86.3,
+  "med_err": 0.2808,
+  "p90_err": 0.8047,
+  "t_det": 0.3034,
+  "t_mat": 0.0031
+ },
+ "figs": {
+  "detect": 1,
+  "funnel": 1,
+  "stitch": 1,
+  "min_fs": 12.0,
+  "max_fs": 16.0,
+  "texts": 50,
+  "leaked": 0
+ },
+ "pages": {
+  "ref_start": 422,
+  "ref_end": 482,
+  "episode_frames": 16
+ }
+}

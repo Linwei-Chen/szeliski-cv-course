@@ -1,0 +1,46 @@
+{
+ "generated_at": "2026-11-05T12:58:51",
+ "src_sha16": "0f6c192dcd5b8c11",
+ "fig1": {
+  "points": 120,
+  "vertices": 9,
+  "depth": 4,
+  "tolerance": 0.075,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "page": 477
+ },
+ "fig2": {
+  "points": 5,
+  "votes": 5,
+  "theta_deg": 116.56505117707799,
+  "r_peak": 0.8944271909999159,
+  "bins_theta": 180,
+  "bins_r": 200,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.46,
+  "page": 478
+ },
+ "fig3": {
+  "edgels": 60,
+  "inliers": 35,
+  "outliers": 25,
+  "regions": 3,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "page": 480
+ },
+ "scope": {
+  "page_start": 477,
+  "page_end": 482,
+  "frames": 16
+ },
+ "texts": {
+  "collected": 33,
+  "leaked": 0
+ },
+ "pngs": 3,
+ "n_pass": 10,
+ "n_total": 10
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>超分辨率：从插值人生到学习式放大</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 超分辨率</div>
+  <h2>超分：补回空间分辨率</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最常见做法是多张输入图对齐后合成更高分辨率的图。</li><li>书上第 637 页说，也有单图超分方法。</li><li>单图超分和去模糊密切相关。</li><li>超分的超指空间分辨率，不是把图变亮。</li></ul>
+      <div class="src">依据：原书第 637 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">多帧：采样相位不同，补回高频</div><div class="kline">单图：没有新信息，只能靠先验或学习</div><div class="kline">多帧靠补，单图靠猜</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>01 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">观测模型 · 第 637 页</div>
+  <h2>观测模型：平移、模糊、下采样</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>低分辨图 o_k = D(b ∗ s(h_k)) + n_k。</li><li>顺序是平移、模糊、下采样，最后加噪声。</li><li>模糊核可能是镜头 PSF、运动模糊或像素面积积分。</li><li>o_k 是低分辨，s 是高分辨。</li></ul>
+      <div class="src">依据：原书第 637 页式 10.25</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">各项含义</div><div class="kline">D：下采样</div><div class="kline">b：模糊核；h_k：第 k 帧平移</div><div class="kline">n_k：噪声，通常假设零均值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>02 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">反演 · 最小二乘</div>
+  <h2>反演：一个大稀疏最小二乘</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对所有帧求观测减低分辨模拟的平方和。</li><li>未知数是高分辨图 s。</li><li>D、b、h 已知时，这是线性最小二乘。</li><li>未知数几十万到几百万，矩阵大而稀疏。</li></ul>
+      <div class="src">依据：原书第 637 页式 10.26</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">求解与边界</div><div class="kline">直接解不现实</div><div class="kline">用迭代法或频域方法</div><div class="kline">重投影一致，不保证自然</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>03 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 观测模型</div>
+  <h2>看图：四帧差在采样相位</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>四帧都模糊，但采样相位错开。</li><li>低分辨帧来自高分辨真值。</li><li>对齐后才有互补信息。</li><li>这一步决定后面能不能补高频。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e095_model.png" style="max-height:440px" alt="观测模型：平移 → 模糊 → 下采样 → 噪声 | 低分辨帧来自高分辨真值｜程序生成，未用教材或论文原图"><figcaption>观测模型：平移 → 模糊 → 下采样 → 噪声 | 低分辨帧来自高分辨真值｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>04 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">模糊核 · 第 638 页</div>
+  <h2>模糊核估错，超分越做越糊</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 638 页说，b_k 可以从成像知识推断。</li><li>也可以用测试图或观测图标定。</li><li>核和高分辨图都未知，就是盲反卷积。</li><li>PSF 可能空间不变，也可能空间变化。</li></ul>
+      <div class="src">依据：原书第 638 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">核与标定</div><div class="kline">运动、离焦、传感器光学</div><div class="kline">边缘结构或稀疏先验打破循环</div><div class="kline">广角、大光圈要分块估核</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>05 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">求解 · 第 638 页</div>
+  <h2>求解：共轭梯度与迭代反投影</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 638 页把最小二乘写成大稀疏矩阵。</li><li>可以用预处理共轭梯度。</li><li>更早的 Irani–Peleg 方法用普通梯度下降，也就是 IBP。</li><li>IBP 把当前高分辨图模拟成低分辨，再反投影误差。</li></ul>
+      <div class="src">依据：原书第 638 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">IBP 的注意事项</div><div class="kline">步长太大发散，太小收敛慢</div><div class="kline">实际还要加平滑或约束</div><div class="kline">多轮迭代才稳</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>06 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">混叠 · 第 638 页</div>
+  <h2>混叠：可恢复高频的来源</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 638 页说，模糊越少、混叠越多，可恢复的高频越多。</li><li>最大似然没有图像先验，会把高频噪声放大。</li><li>没有混叠、没有新采样，信息就是没有。</li><li>硬解只会得到振铃或噪点。</li></ul>
+      <div class="src">依据：原书第 638 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">混叠</div><div class="kline">混叠来自采样率不足</div><div class="kline">它带着高频的影子</div><div class="kline">先问有没有可恢复的混叠</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>07 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 多帧重建</div>
+  <h2>看图：误差补回高频</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>双三次 20.8 dB，四帧 IBP 24.2 dB。</li><li>双三次边缘发软。</li><li>四帧 IBP 更锐。</li><li>误差集中在边缘和纹理。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e095_sr.png" style="max-height:440px" alt="多帧超分：双三次 20.8 dB 对四帧 IBP 24.2 dB | 右为误差图｜程序生成，未用教材或论文原图"><figcaption>多帧超分：双三次 20.8 dB 对四帧 IBP 24.2 dB | 右为误差图｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>08 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">先验 · 第 638–639 页</div>
+  <h2>先验：用假设换稳定</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 638–639 页说，经典超分要加图像先验。</li><li>最简单是对图像导数加二次惩罚。</li><li>二次惩罚等价于 Tikhonov 正则。</li><li>它得到高斯马尔可夫随机场（GMRF）。</li></ul>
+      <div class="src">依据：原书第 638–639 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">λ 的取舍</div><div class="kline">假设：相邻像素应该接近</div><div class="kline">λ 太大图糊，太小噪声回来</div><div class="kline">二次惩罚会让边缘变软</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>09 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">鲁棒先验与示例学习</div>
+  <h2>鲁棒先验与示例学习</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 639–640 页说，稀疏/鲁棒导数先验能减振铃、增边缘锐度。</li><li>它不能凭空造出高频纹理。</li><li>示例学习用训练图学低分辨块到缺失高频的映射。</li><li>并用 MRF 或置信传播保证重叠块一致。</li></ul>
+      <div class="src">依据：原书第 639–640 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">示例学习</div><div class="kline">它是合理猜测</div><div class="kline">人脸、文字这类强结构可能很惊艳</div><div class="kline">训练集决定它能编什么</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>10 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 采样相位与混叠</div>
+  <h2>看图：相位越多，补得越多</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>整数位移 23.3 dB，亚像素 24.2 dB。</li><li>无前置低通的高频能量 0.179。</li><li>有低通时只剩 0.054。</li><li>相位越多、混叠越足，能补的高频越多。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e095_shifts.png" style="max-height:440px" alt="采样相位 / 混叠 / PSNR：亚像素 24.2 对整数 23.3 dB｜程序生成，未用教材或论文原图"><figcaption>采样相位 / 混叠 / PSNR：亚像素 24.2 对整数 23.3 dB｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>11 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">学习式 · 第 641 页</div>
+  <h2>学习式：退化分布才是关键</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 641 页说，现在主流是用深度网络直接预测高分辨图。</li><li>RealSR 用变焦镜头拍真实退化。NTIRE 挑战用它比较算法。</li><li>只用 bicubic 下采样训练，遇到真实退化常常失败。</li><li>真实退化包括噪声、模糊、压缩、去马赛克。</li></ul>
+      <div class="src">依据：原书第 641 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">退化建模</div><div class="kline">网络结构不是全部</div><div class="kline">训练退化分布决定上限</div><div class="kline">配对不准，网络会学错方向</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>12 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">手机相机 · 第 643 页</div>
+  <h2>手机相机：联合处理更实用</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 643 页说，多帧超分可以直接做进手机相机。</li><li>还可以和去马赛克联合处理。</li><li>视频可以做时空超分。</li><li>手机夜景是多帧对齐、超分、去噪、去马赛克一起做。</li></ul>
+      <div class="src">依据：原书第 643 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">联合的代价</div><div class="kline">每一步误差会互相放大</div><div class="kline">联合处理让误差不来回传</div><div class="kline">功耗和延迟限制迭代次数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>13 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>收束：先对齐，再谈重建</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>做多帧超分，先把对齐做到亚像素。</li><li>没有混叠，就别指望补高频。</li><li>四帧平均把噪声降 49.2%。</li><li>模糊核偏大时掉到 20.5 dB。</li></ul>
+      <div class="src">依据：本集实验；原书第 637–643 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">超分 = 对齐多帧 + 反演观测模型</div><div class="kline">亚像素相位和混叠是高频来源</div><div class="kline">先验能补细节，不能造真相</div><div class="kline">模糊核、噪声、压缩，假设错会反噬</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十七集</span><span>14 / 14</span></div>
+</section>
+<div id="subbar"></div></body></html>

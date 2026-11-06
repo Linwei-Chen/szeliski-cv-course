@@ -1,0 +1,19 @@
+[lab] 开始 2026-11-02T00:14:29
+[lab] 源码 sha256=1474dab0436ce2dec3c7a8d48e8bd8f800eb6014eddbec956ec15f38b5752567
+[PASS] 图1 度量流水线词在档　| 提议框/IoU/NMS/查准查全/P-R 曲线/AP-mAP 全命中
+[PASS] 图1 IoU 两框示意词在档　| 交集/并集 全命中
+[PASS] 图2 谱系五节点词在档　| R-CNN/Fast R-CNN/Faster R-CNN/FPN/DETR/RPN 全命中
+[PASS] 图3 单阶段四检测器词在档　| SSD/YOLO/RetinaNet/YOLOv4/焦点损失/neck 全命中
+[PASS] 主文本字号≥11.5pt+程序生成注记在档×3　| 图一 最小 11.5pt/图二 最小 11.5pt/图三 最小 11.5pt
+[PASS] 图内文字内部记号零泄漏（红线 5）　| 图内 Text 收割 47 条，命中 无
+[PASS] FG1 程序生成图落盘　| e061_detection_metrics.png
+[PASS] FG2 程序生成图落盘　| e061_rcnn_family.png
+[PASS] FG3 程序生成图落盘　| e061_single_stage.png
+[lab] readings → e061_general_object_detection_readings.json
+[lab] readings sha256=0121b610e302339b0f2ee7c12e01989cdcd9ca20792d90b5a190c5a414c3cd95
+[lab] PNG sha256(e061_detection_metrics.png)=3a6cae6b533f6afb86cbbd8444c76970948d26f07b0d2a38e88a236ae4da0370
+[lab] PNG sha256(e061_rcnn_family.png)=b24990b7e9f56ad3e6fc137c23123efd6c115bb52fd13049fba4f0f5e23f41da
+[lab] PNG sha256(e061_single_stage.png)=4630287fa002e3af3f07283562b25fb1d68c278029a71177fad61b3299ea20fc
+[lab] LEDGER：断言 9 条，PASS 9
+[lab] 汇总 PASS 9 / FAIL 0 / 共 9
+[lab] 结束 2026-11-02T00:14:29

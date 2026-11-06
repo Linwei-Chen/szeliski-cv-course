@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>直方图均衡与 CLAHE：灰扑扑照片的救星</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 直方图均衡</div>
+  <h2>直方图均衡：自动定映射</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上集承诺：下节讲直方图均衡。</li><li>增益、偏置、伽马都要人来调。</li><li>书上第 116 页给出热门自动方案。</li><li>从图像自己身上算出映射。</li></ul>
+      <div class="src">依据：原书第 115–119 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三步</div><div class="kline">全局均衡：一条曲线</div><div class="kline">两个代价：发灰、噪声</div><div class="kline">局部升级：AHE 与 CLAHE</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十四集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 明暗分布</div>
+  <h2>先看清明暗分布</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 115 页问：怎么自动定最好的值。</li><li>两条路：最暗最亮拉到纯黑纯白。</li><li>或者把平均值推向中间灰，再铺满范围。</li><li>直方图逐级计数，八位图备 256 格。</li></ul>
+      <div class="src">依据：原书第 115–116 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e022_histogram_demo.png" style="max-height:500px" alt="三峰直方图：暗端堆积、中段凹陷、亮端堆积｜程序生成，未用教材或论文原图"><figcaption>三峰直方图：暗端堆积、中段凹陷、亮端堆积｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十四集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 累积分布</div>
+  <h2>累积分布：查百分位</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>热门答案：找映射 f(I)，让直方图变平。</li><li>借概率技巧：先算累积分布函数。</li><li>式 3.9：逐级累加，再除以 N。</li><li>N 是像素数，也是比喻里的全班人数。</li></ul>
+      <div class="src">依据：原书第 116–117 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e022_cdf_equalize.png" style="max-height:500px" alt="累积分布 c(I) 与均衡映射 f(I)=c(I)｜程序生成，未用教材或论文原图"><figcaption>累积分布 c(I) 与均衡映射 f(I)=c(I)｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十四集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 全均衡</div>
+  <h2>全均衡的代价：发灰</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>f(I)=c(I) 就是全均衡。</li><li>直方图平了，图也平了：缺对比度、发灰。</li><li>暗区噪声被放大，更显眼。</li><li>实测噪声 3.0 升到 6.24，α=0.5 为 4.60。</li></ul>
+      <div class="src">依据：原书第 117 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e022_he_result.png" style="max-height:500px" alt="全均衡与部分均衡 α=0.5 的输出直方图｜程序生成，未用教材或论文原图"><figcaption>全均衡与部分均衡 α=0.5 的输出直方图｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十四集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 部分均衡</div>
+  <h2>部分均衡：α 混合</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>补救：只部分补偿直方图的不均。</li><li>映射写成 αc(I)+(1−α)I。</li><li>α=0 是原图，α=1 是全均衡。</li><li>实测 α=0.5 落在两者之间，噪声更轻。</li></ul>
+      <div class="src">依据：原书第 117 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">f(I) = α·c(I) + (1−α)·I</div><div class="mnote">CDF 与恒等变换的线性混合；α 在 0 到 1 之间连续可调</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十四集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 局部均衡</div>
+  <h2>一条曲线不够：切块</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>有些图，一条全局曲线不够。</li><li>切成 M×M 块，各做各的均衡。</li><li>块边界亮度跳变，叫块效应。</li><li>滑动窗口更好，但逐像素重算太慢。</li></ul>
+      <div class="src">依据：原书第 117–118 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三级跳</div><div class="kline">切块：块效应</div><div class="kline">滑动窗口：太慢</div><div class="kline">块间平滑插值：AHE</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十四集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · AHE 与 CLAHE</div>
+  <h2>AHE 与 CLAHE：块间插值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>块间平滑插值，就是 AHE。</li><li>限制增益版本叫 CLAHE，Pizer 1987。</li><li>式 3.10：四张查找表按双线性权重混合。</li><li>权重 (1−s)(1−t)、s(1−t)、(1−s)t、st。</li></ul>
+      <div class="src">依据：原书第 118–119 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e022_clahe_grid.png" style="max-height:500px" alt="块中心与角点两种查找表布局，黑星为待处理像素｜程序生成，未用教材或论文原图"><figcaption>块中心与角点两种查找表布局，黑星为待处理像素｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十四集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 实现诀窍</div>
+  <h2>两个实现诀窍</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>诀窍一：先过四邻表，再混合结果。</li><li>线性混合下，两种做法逐点相等。</li><li>诀窍二：把查找表放到块的角点。</li><li>式 3.11 软直方图：计数按权重拆给四顶点。</li></ul>
+      <div class="src">依据：原书第 118 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e022_bilinear_blend.png" style="max-height:500px" alt="双线性权重 w00=(1−s)(1−t) 曲面｜程序生成，未用教材或论文原图"><figcaption>双线性权重 w00=(1−s)(1−t) 曲面｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十四集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 应用与小结</div>
+  <h2>色调调整与小结</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>点算子常用于对比度与色调调整。</li><li>全均衡发灰、放大噪声；部分均衡折中。</li><li>AHE 块间插值，限制对比度即 CLAHE。</li><li>作业 3.6/3.7；下集：线性滤波。</li></ul>
+      <div class="src">依据：原书第 115–119 页；习题第 181 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">CDF 定映射</div><div class="kline">α 混合折中</div><div class="kline">AHE/CLAHE 块间插值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十四集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

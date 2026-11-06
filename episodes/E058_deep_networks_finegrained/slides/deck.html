@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>深度网络来了：AlexNet、细粒度识别与视觉相似检索</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 6 章 · 深度网络登场</div>
+  <h2>深度网络来了</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>手工特征：词袋、空间金字塔、部件模型。</li><li>书上第 358 页转入深度网络。</li><li>这一节的标题就叫「深度网络」。</li><li>识别更多交给网络自己学特征。</li></ul>
+      <div class="src">依据：原书第 358 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条线</div><div class="kline">手工特征：人来设计</div><div class="kline">深度网络：自己学</div><div class="kline">本集从 AlexNet 讲到检索</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">深度网络 · 一张战报</div>
+  <h2>一张战报：从 AlexNet 开始</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>2012 年 AlexNet 在 ImageNet 挑战赛上翻盘。</li><li>之后识别精度持续提升。</li><li>更深的网络、更好的训练算法。</li><li>更高效的网络，更大的无标注数据。</li></ul>
+      <div class="src">依据：原书第 358–359 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">工具与门槛</div><div class="kline">Classy Vision 开源框架</div><div class="kline">训练、微调自己的模型</div><div class="kline">网页上传照片可现场比模型</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">细粒度识别 · 实验一</div>
+  <h2>细粒度：把一类再切细</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>子类差别很细，样本又很少。</li><li>例子：花、猫狗、鸟、汽车。</li><li>认出大类不难，分清子类才难。</li><li>图：大类→细粒度子类→个体。</li></ul>
+      <div class="src">依据：原书第 359 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e058_finegrained_ladder.png" style="max-height:500px" alt="三类识别粒度阶梯：大类→细粒度子类→个体｜程序生成，未用教材或论文原图"><figcaption>三类识别粒度阶梯：大类→细粒度子类→个体｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">细粒度识别 · 公民科学</div>
+  <h2>公民科学：人人标物种</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>iNaturalist 让专家和公众一起拍物种、标物种。</li><li>细粒度系统给新照片自动贴标签。</li><li>大类识别问「这是鸟」。</li><li>细粒度要答「这是北红尾鸲」。</li></ul>
+      <div class="src">依据：原书第 359 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">难在哪</div><div class="kline">物种差别小</div><div class="kline">标注靠公众</div><div class="kline">模型要能自动贴标</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">细粒度识别 · 属性与零样本</div>
+  <h2>属性：把认类别变成比特征</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>用属性描述图像和类别。</li><li>比如喙形、羽色、体型。</li><li>属性组合能解锁零样本学习。</li><li>没见过的类别，也能靠属性认。</li></ul>
+      <div class="src">依据：原书第 359 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">零样本</div><div class="kline">训练时没见过这个类别</div><div class="kline">用属性组合描述类别</div><div class="kline">靠特征清单对上号</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">细粒度识别 · 伪相关警示</div>
+  <h2>小心伪相关</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>属性总一起出现，容易被误当绑定。</li><li>物体和常见场景也会被捆在一起。</li><li>换个场景，模型就可能认不出。</li><li>出路：度量学习、最近邻相似检索。</li></ul>
+      <div class="src">依据：原书第 359–360 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条暗沟</div><div class="kline">属性互绑</div><div class="kline">物体与场景互绑</div><div class="kline">换场景就失灵</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视觉相似检索 · 三种搜索</div>
+  <h2>让图自己开口：三种视觉搜索</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>分类打标签，让图库找图更容易。</li><li>关键词搜索：用词找图。</li><li>实例检索：找同一件东西或地点。</li><li>相似检索：找看起来像的图。</li></ul>
+      <div class="src">依据：原书第 360 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种问法</div><div class="kline">哪一类</div><div class="kline">同一个</div><div class="kline">像不像</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视觉相似检索 · QBIC 与 CBIR</div>
+  <h2>两个老名字：QBIC 与 CBIR</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>QBIC：按图像内容查询。</li><li>CBIR：基于内容的图像检索。</li><li>早期只比整图相似度。</li><li>特征就是颜色、纹理。</li></ul>
+      <div class="src">依据：原书第 361 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">那时的问题</div><div class="kline">只会比整图</div><div class="kline">说不清哪一块像</div><div class="kline">内容像不像靠碰运气</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视觉相似检索 · 关键词重排</div>
+  <h2>先粗筛，再精排</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Fergus 等人用特征学习给关键词结果重排。</li><li>关键词负责粗筛，视觉负责精排。</li><li>后续用概率潜在语义分析聚类。</li><li>排名最高那簇，当作类别代表图。</li></ul>
+      <div class="src">依据：原书第 361 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e058_retrieval_rerank.png" style="max-height:500px" alt="关键词粗筛→视觉重排两级流水线｜程序生成，未用教材或论文原图"><figcaption>关键词粗筛→视觉重排两级流水线｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视觉相似检索 · 标注库</div>
+  <h2>标准答案库：LabelMe</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>LabelMe 是精心标注的图像数据库。</li><li>给查询图，能找出相似的标注图。</li><li>也能把特征对应和标注库结合。</li><li>识别与分割可以同时做。</li></ul>
+      <div class="src">依据：原书第 361 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种用法</div><div class="kline">找相似标注图</div><div class="kline">特征对应</div><div class="kline">同时识别与分割</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视觉相似检索 · 整图描述子</div>
+  <h2>一张图，一个紧凑描述子</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Fisher 核、VLAD、池化卷积激活。</li><li>一张图压成一个描述向量。</li><li>描述子要和度量学习搭配。</li><li>像的图在向量空间里挨得近。</li></ul>
+      <div class="src">依据：原书第 361 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">整图描述子</div><div class="kline">Fisher 核</div><div class="kline">VLAD</div><div class="kline">池化卷积激活</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视觉相似检索 · 组合与综述</div>
+  <h2>拼成端到端系统</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>深度网络可以和 VLAD 结合。</li><li>广义均值池化、动态均值池化。</li><li>拼成端到端可调的系统。</li><li>Gordo 等人做了综述和实验对比。</li></ul>
+      <div class="src">依据：原书第 361–362 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一条光路</div><div class="kline">各部件可组合</div><div class="kline">端到端调参</div><div class="kline">第 7 章还有大规模检索</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视觉相似检索 · 商业案例</div>
+  <h2>GrokNet：长尾商品怎么办</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>输入照片和购物搜索词。</li><li>输出库里相似的商品。</li><li>商品太长尾，分类表列不完。</li><li>毛皮水槽、电动擦狗器、汽油动力高领毛衣。</li></ul>
+      <div class="src">依据：原书第 362 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么用检索</div><div class="kline">分类列不全</div><div class="kline">直接比像不像</div><div class="kline">商品库随时增长</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视觉相似检索 · GrokNet 训练 · 实验二</div>
+  <h2>GrokNet 怎么训练</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>弱标注、无标注的图都用。</li><li>先在物体上检特征，再度量学习。</li><li>改造 ArcFace 损失+成对间隔损失。</li><li>ResNeXt101 主干，83 个损失函数。</li></ul>
+      <div class="src">依据：原书第 362–363 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e058_groknet_arch.png" style="max-height:500px" alt="GrokNet 训练架构：弱标注/无标注→ResNeXt101→多损失｜程序生成，未用教材或论文原图"><figcaption>GrokNet 训练架构：弱标注/无标注→ResNeXt101→多损失｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视觉相似检索 · 商业系统全景</div>
+  <h2>同一把尺子，也量风险</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>亚马逊、Pinterest、Facebook 都有商品搜索。</li><li>大规模相似检索还能排查有害内容。</li><li>Facebook 的 SimSearchNet 是例子。</li><li>同一套检索，用途不同。</li></ul>
+      <div class="src">依据：原书第 363 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种用途</div><div class="kline">找想买的商品</div><div class="kline">找有害内容</div><div class="kline">底层都是相似检索</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集人脸识别</div>
+  <h2>本集两件事，下一集人脸</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>深度网络登场：AlexNet 到细粒度与属性。</li><li>视觉检索：QBIC 到 VLAD 与 GrokNet。</li><li>特征从手工走向学习。</li><li>下一集：人脸识别。</li></ul>
+      <div class="src">依据：原书第 363 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">交棒</div><div class="kline">书上第 363 页</div><div class="kline">人脸识别最成功</div><div class="kline">下一集专讲</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

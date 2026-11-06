@@ -1,0 +1,24 @@
+[lab] 开始 2026-11-02T05:08:14
+[lab] 源码 sha256=2b529630f165c1264ee191a6f32546688550c370b8b195d472a5635e270577ec
+[lab] 图1 文本：学习型描述子：固定块 vs 学出来的权重 / 手工设计：固定权重 / 学习权重：数据决定 / 训练数据从哪来 / 互联网照片 / 运动恢复结构 / 可靠匹配点 / 采样图像块 / 训练权重 / 学习对象：权重 · 投影 · 池化位置 / 训练库：真实图像块（鲁棒匹配后采样） / 目标：超过手工调参 / 左：人设计格子；中：数据学权重；右：训练数据流水线 / 程序生成，未用原书原图 · 对应原书 p.438 图 7.18，布局自绘
+[lab] 图2 文本：二进制描述子：三种采样模式，一样按位比较 / BRIEF 比亮度得 1 位；BRISK 加尺度与方向；FREAK 用 log-polar 级联 / 程序生成，未用原书原图 · 对应原书 p.438–439 图 7.19，布局自绘 / 128 对，图中示意 40 对 / BRIEF：随机像素对 / 采样点分布在同心圆上 / BRISK：同心圆径向采样 / 越靠外，感受野越大 / FREAK：视网膜 log-polar
+[lab] 图3 文本：两代深度描述子：先裁块，还是整图端到端 / patch-based：先检测再裁块 / 输入图像 / 检测子定中心 / 裁固定 32×32 块 / CNN 描述子网络 / 128 维描述子 / 检测/描述分开；块大小超参数 / full-image：整图端到端 / 整张输入图像 / CNN（检测+描述一体） / 特征图：关键点 + 描述子 / 无需指定块尺寸 / 感受野可学；检测描述一起训 / 代表：LIFT/HardNet/Key.Net（左）　vs　SuperPoint/D2-Net/R2D2（右） / 程序生成，未用原书原图 · 对应原书 p.439–440 正文，布局自绘
+[lab] 图内字号：图1 [12.0, 14.0] / 图2 [12.0, 15.0] / 图3 [12.0, 14.0]
+[PASS] 图 1 手工/学习两栏与 16 格在档　| cells=16
+[PASS] 图 1 学习权重非均匀（std>0 且 max/min>1.5）　| hand_std=0.0000, learned_std=0.2670, ratio=3.7937
+[PASS] 图 1 训练数据流水线五步在档　| steps=5
+[PASS] 图 2 BRIEF 128 对、图中示意 40 对、位长 128　| pairs=128, drawn=40, bits=128
+[PASS] 图 2 BRISK/FREAK 采样模式在档　| brisk_rings=3, freak_rings=4
+[PASS] 图 2 Hamming 示例按位异或=逐位比较（9 位）　| hamming=9, explicit=9
+[PASS] 图 3 patch-based 五步与固定 32×32 块在档　| patch=32, steps=5
+[PASS] 图 3 full-image 四步与无需指定块尺寸在档　| steps=4, grid=8, count=64
+[PASS] 图 3 两代代表方法在档　| representatives=6
+[PASS] 三图字号≥12pt、程序生成注记×3、内部记号零泄漏、PNG 落盘×3　| min_fs=12.0, notes=3, pngs=3
+[lab] readings → e071_learned_descriptors_readings.json
+[lab] readings sha256=fa7456ca0936fc9b784bbd5955f24a283eab9681b362c498862076f3484f8296
+[lab] PNG sha256(e071_learned_blocks.png)=028722fee36563f27c8e126863656cfd2503ca27ce634c16ef892b0a9f580f6d
+[lab] PNG sha256(e071_binary_patterns.png)=b0d3f6a5b5ea01144b372f3b3d7cabe07cc0a2d6ca89646faf92e769c358f4ed
+[lab] PNG sha256(e071_deep_pipeline.png)=bec60da81968f1125c76d7ee818fc0f3b237f7cae81a69628adecca87b61a0bc
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T05:08:14

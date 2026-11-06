@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E026_binary/code/e026_binary.py", line 804, in <module>
+    main()
+    ~~~~^^
+  File "/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E026_binary/code/e026_binary.py", line 789, in main
+    exp2()
+    ~~~~^^
+  File "/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E026_binary/code/e026_binary.py", line 482, in exp2
+    vec_diag = dt_two_pass_vector_euclid(diag)
+                                         ^^^^
+UnboundLocalError: cannot access local variable 'diag' where it is not associated with a value

@@ -1,0 +1,26 @@
+[lab] E142 环境蒙版/暗角/PSF 实验开始 2026-11-03T23:11:29
+[lab] 源码 sha256=252f1d540b7177b5687a5e2a4a487414fdcaadbbfd86719516bff67da2f4fe17
+[lab] OpenCV 5.0.0 / NumPy 2.5.4
+[lab] 边界：合成折射物体 + 合成白墙/斜边；单位移环境蒙版、Telea 无关、Richardson–Lucy 去卷积；不是真实相机标定
+[lab] readings sha256=8b4f86a9be116caa61d174cbc58cc0aaec2e900ea61f297b26e5194b17e6ecd8
+[PASS] 环境蒙版 alpha 误差 <1e-6：1.79e-17
+[PASS] 环境蒙版位移误差 <3px：1.901px
+[PASS] 折射权重误差 <0.05：0.0291
+[PASS] 环境蒙版重渲染 > 朴素抠图 +10dB：57.52 vs 38.29
+[PASS] 暗角角落亮度 <0.5：0.450
+[PASS] 暗角 profile RMSE <0.01：0.00035
+[PASS] 暗角校正 PSNR>40 且增益>30dB：69.73 / +51.39
+[PASS] 暗角校正值域 [0,1]：[0.195,0.855]
+[PASS] PSF 核相关 >0.9：0.966
+[PASS] PSF 核归一化：1.000000
+[PASS] 模糊降低边缘梯度：0.232 vs 0.343
+[PASS] 去卷积提升边缘梯度：0.514 vs 0.232
+[lab] LEDGER：断言 12 条，PASS 12
+[lab] PNG sha256(e142_environment.png)=e5d507133affeb9d8c3d1daed7a7e763d117203a23ffde79aa1c37d5d7075525
+[lab] PNG sha256(e142_vignetting.png)=11fbf1b2f9346d7a02c6842909fde2e46d34249ac54af7df458c8549a7c47d56
+[lab] PNG sha256(e142_psf.png)=14f74363957887ee8691bb03b8e9394e3cc7c7e7df548b7a54bfae11112662c4
+[lab] 汇总：12/12 断言通过
+[lab] 环境蒙版：alpha MAE=1.79e-17，d=1.901px，r=0.0291；PSNR 57.52 vs 朴素 38.29
+[lab] 暗角：角/中心 0.450，profile RMSE 0.00035；PSNR 18.34→69.73
+[lab] PSF：核相关 0.966，核 MSE 0.000132；边缘梯度 0.343→0.232→0.514
+[ok] E142 lab：环境蒙版 + 暗角 + PSF

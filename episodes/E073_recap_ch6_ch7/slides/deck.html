@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>从认得出到找得准：识别与特征的合流</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘课 · 第 6 章识别 + 第 7 章特征</div>
+  <h2>从认得出到找得准</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集跑通了 OpenCV 的提点、配对、互检、RANSAC、叠图。</li><li>这一集不进新章，把第 6、7 章接起来。</li><li>第 6 章回答这是什么，从第 343 页开始。</li><li>第 7 章回答怎么对上，从第 417 页开始。</li></ul>
+      <div class="src">依据：原书第 343/417 页；上一集实验课</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条线</div><div class="kline">认得出：把整图或区域变成标签</div><div class="kline">找得准：在两张图之间建立对应</div><div class="kline">前者要语义，后者要几何</div><div class="kline">难的识别，两样都要</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十五集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">两章总览 · 识别链十站 + 特征链八站</div>
+  <h2>十八个主题，三条连接</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左列第 6 章识别链十个主题。</li><li>右列第 7 章特征链八个主题。</li><li>三条虚线：实例识别靠匹配，人脸靠向量。</li><li>检测与匹配都依赖空间一致性。</li></ul>
+      <div class="src">依据：本集程序生成图；各集回链台账</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e073_recap_map.png" style="max-height:520px" alt="识别链十站与特征链八站：三条虚线相连｜程序生成，未用教材或论文原图"><figcaption>识别链十站与特征链八站：三条虚线相连｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十五集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 6 章 · 实例识别 · 原书第 346 页起</div>
+  <h2>实例识别：先找特征，再验几何</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 6 章从实例识别开始。</li><li>先找有辨识度的局部特征。</li><li>再验证特征的空间关系是否一致。</li><li>难点是同一个物体、不同角度。</li></ul>
+      <div class="src">依据：原书第 346–349 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一条路线</div><div class="kline">检测特征</div><div class="kline">描述特征</div><div class="kline">匹配</div><div class="kline">用几何变换验证</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十五集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 6 章 · 分类与深度网络 · 原书第 349/358 页</div>
+  <h2>分类：瓶颈先卡在表示</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>手工特征把图变成一组全局描述子。</li><li>再交给分类器判断类别。</li><li>光照、遮挡、细粒度差异常不够用。</li><li>深度网络改成端到端学习特征。</li></ul>
+      <div class="src">依据：原书第 349/358 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两次变化</div><div class="kline">手工特征：人造表示</div><div class="kline">深度网络：端到端学习</div><div class="kline">表示更厚、更可调</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十五集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 6 章 · 人脸、检测、分割 · 原书第 363/370/387 页</div>
+  <h2>从是谁到在哪里</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>人脸识别要认同一人的不同光照和角度。</li><li>做法是把人脸压成向量，比向量距离。</li><li>检测给物体框，分割给每像素类别。</li><li>输出不同，背后都在找局部证据。</li></ul>
+      <div class="src">依据：原书第 363/370/387 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种输出</div><div class="kline">人脸：向量距离</div><div class="kline">检测：物体框</div><div class="kline">分割：逐像素类别</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十五集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 6 章收尾 + 第 7 章开章 · 原书第 396/400/417/419 页</div>
+  <h2>换问题：哪些点值得信任</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视频理解把动作放到时间上看。</li><li>视觉语言模型把图像和文字放进同一空间。</li><li>第 7 章先问哪些点值得信任。</li><li>特征分成点、边缘、轮廓、直线。</li></ul>
+      <div class="src">依据：原书第 396/400/417/419 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">特征家族</div><div class="kline">点：角点、关键点、局部块</div><div class="kline">边缘</div><div class="kline">轮廓</div><div class="kline">直线</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十五集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 7 章 · 四步流程 · 原书第 422/429/434/441/477 页</div>
+  <h2>找得准：四步与三项校验</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>流程是检测、描述、匹配、验证。</li><li>SIFT 关键点带尺度，描述子带方向直方图。</li><li>匹配后做比率测试、互检和几何校验。</li><li>第 477 页把点推广到直线和消失点。</li></ul>
+      <div class="src">依据：原书第 422–441/477 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三项校验</div><div class="kline">比率测试：看像不像</div><div class="kline">互检：是不是彼此唯一</div><div class="kline">RANSAC：几何上说不说得通</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十五集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 7 章 · 学习型描述子 · 原书第 437–440 页</div>
+  <h2>描述子：按场景选</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>BRIEF、ORB、BRISK、FREAK 之后有 SuperPoint。</li><li>实验课量过：ORB 内点率略低，速度更快。</li><li>SIFT 内点更多，误差更小。</li><li>低纹理、大视角的图，排序可能反过来。</li></ul>
+      <div class="src">依据：原书第 437–440 页；上一集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实验读数</div><div class="kline">ORB：快，内点率略低</div><div class="kline">SIFT：慢，内点更多、误差更小</div><div class="kline">换场景，排序可能反转</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十五集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘 · 两句话 · 移交第 8 章</div>
+  <h2>两条线合流</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>认得出，是给图像以名字。</li><li>找得准，是给图像以对应。</li><li>名字靠表示，对应靠几何。</li><li>下一章讲图像对齐与拼接。</li></ul>
+      <div class="src">依据：原书第 343/417 页；移交下一集</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两句话</div><div class="kline">认得出：给图像以名字</div><div class="kline">找得准：给图像以对应</div><div class="kline">名字靠表示，对应靠几何</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十五集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,61 @@
+== 1. figcaption class 分布（deck.html 全文件，7 个 figcaption）==
+   7 <figcaption class="figcap">
+
+== 2. 死 CSS 检查 ==
+figcaption.speak 命中数: 0
+figcap 内 <small> 命中数: 0
+
+== 3. run7 读数完整性（脚本检查：detail 区含数值/等式；多行续行计入）==
+PASS 行共 26 条：
+  detail 读数区带数值 22 条
+  detail 空但断言标题自带数值（恒等式核对）4 条：
+    #1-1 统一框架 dilation θ(c,1)=集合定义并集（逐位）
+    #1-2 统一框架 erosion θ(c,S)=集合定义交集（逐位）
+    C2 d1(3,4)=|3|+|4|=7
+    C3 d2(3,4)=√(3²+4²)=5（勾股数）
+  完全无数值 0 条
+
+== 4. 字符计数（shots.json 全帧口播）==
+帧数 28，口播总 2398 字符（含标点），单帧最大 124（f020）
+超 130 字符帧：无
+f009 = 94 字符
+f010 = 121 字符
+f020 = 124 字符
+
+== 5. deck 与口播漂移清单（diff 机器生成；deck 剥 HTML 标签与空白规范化后 diff 口播）==
+--- f009 口播 vs deck「j 字头上的点…」行 ---
+  insert: 口播[''] vs deck['原书']
+  replace: 口播['专门交代了两句。第一句'] vs deck['说']
+  insert: 口播[''] vs deck['地']
+  replace: 口播['第二'] vs deck['还有一']
+  replace: 口播['更有意思：'] vs deck['——']
+  replace: 口播['——也就是'] vs deck['（即']
+  replace: 口播['里'] vs deck['中']
+  insert: 口播[''] vs deck['）']
+  replace: 口播['为什么去不掉，下句细说。'] vs deck['原书第 138 页·图 3.22 图注']
+
+--- f010 口播 vs deck「讲者按：图注里的…」行 ---
+  delete: 口播['讲者按：图注里的「它」指结构元素。开运算先腐蚀，吃掉容不下结构元素的亮特征。实验里 1 个像素的亮点，5×5 开运算一下就没了；原书图 3.22 里 j 的点至少容得下 5×5 的结构元素，腐蚀啃不动——去不去得掉，看特征容不容得下结构元素。'] vs deck['']
+
+--- f020 口播 vs deck「高估实锤…」行 ---
+  replace: 口播['：'] vs deck[' ']
+  replace: 口播['。'] vs deck['：']
+  replace: 口播['根号二'] vs deck[' √2 ']
+  delete: 口播['到 '] vs deck['']
+  replace: 口播['也会'] vs deck['处仍']
+  delete: 口播['出'] vs deck['']
+  delete: 口播['的'] vs deck['']
+  delete: 口播['的'] vs deck['']
+  delete: 口播['根号'] vs deck['']
+  insert: 口播[''] vs deck['√']
+  replace: 口播['，约 '] vs deck['≈']
+  replace: 口播['与'] vs deck['跟']
+  delete: 口播['。'] vs deck['']
+
+--- f010 口播 vs deck 页4 step2（修正 key；deck 剥标签=讲者按 图注里的「它」指结构元素。「去不掉」正说到了点子上：开运算先腐蚀，吃掉容…）---
+  replace: 口播['：'] vs deck[' ']
+  insert: 口播[''] vs deck['「去不掉」正说到了点子上：']
+  insert: 口播[''] vs deck['但']
+  insert: 口播[''] vs deck['它']
+  replace: 口播['看'] vs deck['取决于']
+  delete: 口播['。'] vs deck['']

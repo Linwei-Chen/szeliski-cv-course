@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>相机姿态恢复与三角化：第一批 3D 点诞生</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 11 章 · 外参标定</div>
+  <h2>位姿恢复：相机在哪里</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>已知 3D 点和图像的 2D 位置，反推相机。</li><li>三对点叫 P3P，点更多叫 PnP。</li><li>上一集估 F 或 E，这一集恢复位姿。</li><li>还能用于增强现实和位置识别。</li></ul>
+      <div class="src">依据：原书第 693 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条任务</div><div class="kline">相机怎么动：外参</div><div class="kline">点在哪里：三角化</div><div class="kline">输入：3D-2D 对应</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">位姿估计 · 五步管线</div>
+  <h2>五步管线：从对应到三维点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先把 3D 点和图像点归一化。</li><li>DLT 解 3×4 的相机矩阵 P。</li><li>RQ 分解拆出 K 和 R。</li><li>精化后，用多视角三角化出点。</li></ul>
+      <div class="src">依据：原书第 693–694 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e104_pipeline.png" style="max-height:500px" alt="位姿与三角化五步：归一化→DLT→RQ→精化→三角化｜程序生成，未用教材或论文原图"><figcaption>位姿与三角化五步：归一化→DLT→RQ→精化→三角化｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">线性解 · 十二个未知量</div>
+  <h2>DLT：十二个未知量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每对 3D-2D 点给两个线性方程。</li><li>相机矩阵有 12 个未知量，差一个尺度。</li><li>六对点是 DLT 的最小配置。</li><li>点多了用 SVD 取最小奇异向量。</li></ul>
+      <div class="src">依据：原书第 693–694 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">另一种写法</div><div class="kline">图像点与三维射线叉乘</div><div class="kline">最小化夹角的正弦平方</div><div class="kline">先解矩阵，再拆参数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">拆矩阵 · 位姿</div>
+  <h2>拆矩阵：RQ 与 P3P</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>P 等于 K 乘 R 和 t，K 是上三角。</li><li>对 P 的前 3×3 做 RQ 分解。</li><li>K 已知时，三对点就够，叫 P3P。</li><li>最小解怕噪声，还有 bas-relief 歧义。</li></ul>
+      <div class="src">依据：原书第 694–695 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">还要处理</div><div class="kline">对角线取正、尺度归一</div><div class="kline">检查 R 的行列式为正一</div><div class="kline">第四个点用来选解</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">非线性 · 重投影</div>
+  <h2>精化：把初值推到可用</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最准的做法是直接最小化重投影误差。</li><li>对 R、t 和可选的 K 做非线性最小二乘。</li><li>残差是预测像素减观测像素。</li><li>旋转用增量更新，别直接对矩阵求导。</li></ul>
+      <div class="src">依据：原书第 695–697 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四步链式求导</div><div class="kline">平移 → 旋转 → 透视除法 → 内参</div><div class="kline">估相机中心 c 比估 t 更自然</div><div class="kline">有外点用鲁棒核，有协方差就加权</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合成位姿 · 6 对点</div>
+  <h2>实验：精化前后差多少</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6 对点，加 1 像素噪声。</li><li>DLT 旋转误差 0.226 度，重投影 20.2 像素。</li><li>精化后降到 0.035 度和 0.96 像素。</li><li>30 次随机试验取中位数。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么差这么多</div><div class="kline">6 对点刚够定解</div><div class="kline">噪声被 12 个未知量放大</div><div class="kline">0.96 像素已接近噪声地板</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合成位姿 · 多组中位数</div>
+  <h2>实验：点数和噪声的影响</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6 对 0.035 度，12 对 0.016 度。</li><li>50 对再降到 0.003 度。</li><li>噪声 0.5 到 1.5 到 4 像素：0.004、0.011、0.028 度。</li><li>点越多越稳，但收益递减。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e104_pose.png" style="max-height:500px" alt="点数 6/12/50 与噪声 0.5/1.5/4：精化后旋转误差｜程序生成，未用教材或论文原图"><figcaption>点数 6/12/50 与噪声 0.5/1.5/4：精化后旋转误差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">外点 · 鲁棒损失</div>
+  <h2>外点：让鲁棒损失降权</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>30 个点，20% 外点，偏移 50 像素。</li><li>普通最小二乘：0.048 度，内点 5.28 像素。</li><li>soft-L1：0.010 度，内点 1.54 像素。</li><li>阈值要按内点噪声设。</li></ul>
+      <div class="src">依据：原书第 695 页（鲁棒核）；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">工程顺序</div><div class="kline">RANSAC 先粗筛</div><div class="kline">鲁棒核再精修</div><div class="kline">最后抽查重投影图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">光线 · 最小二乘</div>
+  <h2>三角化：找离光线最近的点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>已知位姿和图像点，求三维点。</li><li>最直接的做法：找离所有光线最近的点。</li><li>光线方向是归一化的 R^T K^-1 x。</li><li>平方距离堆成 3×3 线性最小二乘。</li></ul>
+      <div class="src">依据：原书第 701–702 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">条件</div><div class="kline">两个视角就能解</div><div class="kline">视角越多越稳</div><div class="kline">前提是位姿已经知道</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合成三角化 · 2/3 视角</div>
+  <h2>实验：多视角更稳</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>干净数据上，误差接近机器精度。</li><li>1 像素噪声：两视角中位 0.032 世界单位。</li><li>三个视角降到 0.016，差不多减半。</li><li>远点条件数从 9.9 涨到 1000.6。</li></ul>
+      <div class="src">依据：本集实验；原书第 703 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e104_tri.png" style="max-height:560px" alt="三角化几何：多视角约束、远点条件数与镜后点｜程序生成，未用教材或论文原图"><figcaption>三角化几何：多视角约束、远点条件数与镜后点｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">cheirality · 深度符号</div>
+  <h2>失败边界：先看深度符号</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>重建点必须在所有相机前方。</li><li>光线发散或点在背后，就放到无穷远。</li><li>真点深度 +4.81，镜后点 -5.39。</li><li>诊断看误差、深度符号、条件数。</li></ul>
+      <div class="src">依据：原书第 703 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">常见失败</div><div class="kline">对应点错、点太少</div><div class="kline">纯旋转、基线太短</div><div class="kline">外点没处理</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>位姿与三角化收束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>DLT 加 RQ：从对应恢复位姿。</li><li>重投影精化把初值推到可用精度。</li><li>三角化找离所有光线最近的点。</li><li>做完还要检查深度符号。</li></ul>
+      <div class="src">依据：原书第 693–703 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">束调整</div><div class="kline">相机和点都有初值</div><div class="kline">一起优化重投影误差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十六集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

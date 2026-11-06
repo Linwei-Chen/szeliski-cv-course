@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>消失的它：图像修补 inpainting</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 图像修补</div>
+  <h2>修补：把洞补得像原来就在</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>移除物体或缺陷会留下洞。</li><li>把洞补上叫 inpainting。</li><li>补出的结构、纹理、颜色都要像。</li><li>洞大时，要借图像别处的纹理。</li></ul>
+      <div class="src">依据：原书第 665 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">修补是什么</div><div class="kline">不是恢复唯一真值</div><div class="kline">是有条件地编造</div><div class="kline">方法看洞的大小和背景</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验图 · 两种方法</div>
+  <h2>扩散与示例块</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>扩散把周围颜色平均进洞。</li><li>示例块从已知区搬小块纹理。</li><li>扩散 26.8 dB，示例块 19.9 dB。</li><li>PSNR 高，不代表纹理对。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e098_methods.png" style="max-height:500px" alt="图像修补：真值、带洞输入、扩散 26.8 dB、示例块 19.9 dB｜程序生成，未用教材或论文原图"><figcaption>图像修补：真值、带洞输入、扩散 26.8 dB、示例块 19.9 dB｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 扩散修补</div>
+  <h2>沿等照度线传播</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>可以去掉人物、划痕和钢丝。</li><li>等照度线就是亮度相同的线。</li><li>沿它传播，边缘不会被抹断。</li><li>Telea 用快速行进法加速。</li></ul>
+      <div class="src">依据：原书第 666 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">适用与局限</div><div class="kline">小洞和平滑区够用</div><div class="kline">不会生成纹理</div><div class="kline">强边缘会被接成圆弧</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 纹理修补</div>
+  <h2>onion-peel：从外向内填</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>在修补区域加合成纹理。</li><li>示例块可以从外向内填。</li><li>这种顺序可能传不好强方向结构。</li><li>适合纹理均匀的大洞。</li></ul>
+      <div class="src">依据：原书第 666 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">顺序的代价</div><div class="kline">一圈圈往里面补</div><div class="kline">长边缘容易被带歪</div><div class="kline">置信度更新不等于结构对</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · Criminisi</div>
+  <h2>先补结构最强的位置</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Criminisi 用示例块纹理合成。</li><li>顺序由边界上的梯度强度决定。</li><li>优先级等于置信度乘数据项。</li><li>每补一块，置信度往下传。</li></ul>
+      <div class="src">依据：原书第 666 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">优先级</div><div class="kline">数据项：结构有多强</div><div class="kline">置信度：周围已知像素多少</div><div class="kline">顺序错，结构会被切断</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 大图库</div>
+  <h2>从图库里整块搬</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>有大图像库时，可以复制整块区域。</li><li>Hays 和 Efros 用上下文选源图。</li><li>还要看边界兼容性。</li><li>图割接缝，泊松融合颜色。</li></ul>
+      <div class="src">依据：原书第 666 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">难点</div><div class="kline">语义和光照都要匹配</div><div class="kline">接缝靠融合藏</div><div class="kline">没有图库就在本图找</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 深度网络</div>
+  <h2>学习式：partial convolution</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>现在主流方法用深度网络。</li><li>partial conv 只对已知像素卷积。</li><li>掩码随层传播。</li><li>还有边缘传播和多分辨率结构。</li></ul>
+      <div class="src">依据：原书第 667 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">能编，也可能编错</div><div class="kline">学洞周围该长什么样</div><div class="kline">掩码边界仍可能出伪影</div><div class="kline">评测要看感知质量</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">本集实验 · 指标</div>
+  <h2>PSNR 与纹理指标</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>常数填充 21.58 dB。</li><li>扩散 26.83 dB，示例块 19.86 dB。</li><li>纹理能量真值 0.0734，示例块 0.0605。</li><li>边缘相关扩散 0.823，示例块 0.720。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两组读数</div><div class="kline">PSNR 偏爱扩散</div><div class="kline">纹理能量偏爱示例块</div><div class="kline">边缘相关也偏高</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验图 · 洞大小</div>
+  <h2>洞越大，越容易编错</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>小洞 28.01 dB。</li><li>大洞 16.19 dB。</li><li>patch=11 是 25.6 dB。</li><li>与 patch=7 差 5.77 dB。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e098_params.png" style="max-height:500px" alt="洞大小与 patch：小洞 28.01 dB，大洞 16.19 dB，patch=11 25.6 dB｜程序生成，未用教材或论文原图"><figcaption>洞大小与 patch：小洞 28.01 dB，大洞 16.19 dB，patch=11 25.6 dB｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验图 · 简化优先级</div>
+  <h2>简化实现没有赢</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>这一集实现了简化的 Criminisi 优先级。</li><li>结果没有赢过简单的 onion-peel。</li><li>场景纹理均匀，结构也简单。</li><li>负结果保留，不冒充论文结论。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e098_priority.png" style="max-height:500px" alt="扩散 26.8 dB 与示例块 19.9 dB；洞内纹理能量 0 与 0.0605｜程序生成，未用教材或论文原图"><figcaption>扩散 26.8 dB 与示例块 19.9 dB；洞内纹理能量 0 与 0.0605｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程选型</div>
+  <h2>怎么选修补方法</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>小洞和平滑背景，用扩散，快且稳。</li><li>大洞或有纹理，用示例块或学习式。</li><li>长边缘和栏杆，先补结构。</li><li>PSNR 只是参考。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">交付前检查</div><div class="kline">放大看接缝和重复</div><div class="kline">看方向有没有断</div><div class="kline">修补前备份原图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 收束</div>
+  <h2>修补：填洞、保结构、看效果</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>修补是用邻域或别处纹理填洞。</li><li>扩散保平滑，示例块保纹理。</li><li>填充顺序决定结构。</li><li>PSNR 不等于看起来真。</li></ul>
+      <div class="src">依据：原书第 665–667 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">手机夜景模式的管线</div><div class="kline">HDR、超分、去噪、去雾</div><div class="kline">下一集：应用综合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

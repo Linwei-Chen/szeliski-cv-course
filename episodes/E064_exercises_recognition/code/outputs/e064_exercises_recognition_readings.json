@@ -1,0 +1,32 @@
+{
+ "generated_at": "2026-11-02T02:16:24",
+ "src_sha16": "e2d68732dedd8061",
+ "fig1": {
+  "lanes": 6,
+  "min_fs": 12.0,
+  "max_fs": 14.0
+ },
+ "fig2": {
+  "exercises": 13,
+  "groups": 4,
+  "diag": 2,
+  "train": 6,
+  "task": 4,
+  "analysis": 1,
+  "ex_min": 6.1,
+  "ex_max": 6.13,
+  "ex_span": 7,
+  "min_fs": 12.0,
+  "max_fs": 14.0
+ },
+ "fig3": {
+  "stations": 6,
+  "min_fs": 12.0,
+  "max_fs": 14.0
+ },
+ "texts": {
+  "collected": 56,
+  "leaked": 0
+ },
+ "pngs": 3
+}

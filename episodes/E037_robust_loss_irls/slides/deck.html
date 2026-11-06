@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>数据也会撒谎：加权、鲁棒损失与 IRLS</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 4 章鲁棒拟合 + 附录 B.3</div>
+  <h2>数据也会撒谎</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集留下话头：数据也会撒谎。</li><li>这一集把鲁棒拟合和鲁棒统计接起来。</li><li>先看外点怎么拉偏平方损失。</li><li>再换损失尺子，最后用 IRLS 求解。</li></ul>
+      <div class="src">依据：原书第 202/945 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三步</div><div class="kline">看见外点拉偏平方</div><div class="kline">换一把鲁棒损失尺子</div><div class="kline">IRLS 化回最小二乘</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十九集</span><span>01 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">外点 · 原书第 945–946 页</div>
+  <h2>外点与平方的软肋</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>高斯噪声是许多小误差叠加的结果。</li><li>外点是测量过程的大故障。</li><li>来源有三类：坏匹配、双目遮挡、平滑图断裂。</li><li>一个外点把斜率 0.5071 拉到 0.7057。</li></ul>
+      <div class="src">依据：原书第 945–946 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e037_outlier_pull.png" style="max-height:420px" alt="无外点 / 有外点：平方损失被一个外点拉歪｜程序生成，未用教材或论文原图"><figcaption>无外点 / 有外点：平方损失被一个外点拉歪｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十九集</span><span>02 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">损失函数族 · 原书第 202–203 页</div>
+  <h2>换尺子：一族鲁棒损失</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>M 估计把平方罚换成罚函数。</li><li>α=2 平方，1 沙博尼耶，0 柯西。</li><li>α=−1 韦尔施，−2 杰曼-麦克卢尔。</li><li>r=5 时，12.5 降到 2.6027，再到 1.7241。</li></ul>
+      <div class="src">依据：原书第 202–203/946 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e037_loss_family.png" style="max-height:420px" alt="五种损失：α 越小，大残差越被打折｜程序生成，未用教材或论文原图"><figcaption>五种损失：α 越小，大残差越被打折｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十九集</span><span>03 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">影响函数与 IRLS · 原书第 946–947 页</div>
+  <h2>把手劲折成权重</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对罚函数求导，得到影响函数。</li><li>影响函数除以残差，就是权重。</li><li>固定权重解加权最小二乘，再更新权重。</li><li>17 轮收敛到 0.4987，外点权重 0.014。</li></ul>
+      <div class="src">依据：原书第 946–947 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e037_irls_trace.png" style="max-height:500px" alt="IRLS 轨迹：斜率回到 0.4987，外点权重落到 0.014｜程序生成，未用教材或论文原图"><figcaption>IRLS 轨迹：斜率回到 0.4987，外点权重落到 0.014｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十九集</span><span>04 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">定尺度 · 2×2 网格 · 原书第 947 页</div>
+  <h2>尺度交给中位数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>尺度 c 该设成内点噪声的标准差。</li><li>直接估会被外点污染。</li><li>MAD：残差绝对值中位数乘 1.4。</li><li>实验 0.3454 收敛到 0.1639，真值 0.15。</li></ul>
+      <div class="src">依据：原书第 947 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">网格读数</div><div class="kline">韦尔施四终点：0.5066 / 0.4784 / 0.4631 ×2</div><div class="kline">柯西四终点都在好解 0.02 内</div><div class="kline">极差：韦尔施 0.0436，柯西 0.0265</div><div class="kline">更狠的尺子，终点不一定更准</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十九集</span><span>05 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">作业与移交 · 原书第 510 页起</div>
+  <h2>作业两道，下一集 RANSAC</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>作业一：推沙博尼耶的影响函数与权重。</li><li>作业二：换韦尔施重跑，比较起点与尺度。</li><li>下一集 RANSAC：随机抽子集，试一轮投一轮。</li><li>阈值和轮数，书里都有讨论。</li></ul>
+      <div class="src">依据：原书第 510 页起；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">原书第 510 页起</div><div class="kline">RANSAC：随机抽小子集</div><div class="kline">试一轮，投一轮</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十九集</span><span>06 / 6</span></div>
+</section>
+<div id="subbar"></div></body></html>

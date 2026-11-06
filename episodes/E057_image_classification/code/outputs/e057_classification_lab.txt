@@ -1,0 +1,17 @@
+[lab] 开始 2026-11-01T19:08:39
+[lab] 源码 sha256=f9f4f9cd9ebf07cd8e007f3aa4c1b553d734aefdba32f1c4c436df34766614c3
+[PASS] 图1 两卡文本==口播 f003/f008 词面（逐格比对）　| 词袋侧 3 格+空间金字塔侧 3 格全命中
+[PASS] 图2 五档主名序列==口播 f013 五档（锚 §25 照录句直证词序）　| 词袋→树和星形→有向无环图→k 扇形→星座模型，字号最小 10.5pt
+[PASS] 图2 副注词面逐档命中（f013 口播逐字词面）　| 5 档副注全命中
+[PASS] 箭头端点贴框缘/贯穿五档（数据坐标常数自证）　| 图1 直方图箭头 1 支贴缘+图二 复杂度轴箭头 1 支贯穿五档
+[PASS] 主文本字号≥10pt+程序生成注记在档×2　| 图1 卡文本最小 10.5pt/图二 档主名副注最小 10.5pt（全图字号档统一 10.5/11.5——E056 破线判例预防，display 缩放核算随 display_check）
+[PASS] 图内文字内部记号零泄漏（红线 5——E044–E056 同款收割断言）　| 图内 Text 收割 20 条，命中 无
+[PASS] FG1 程序生成图落盘　| e057_bow_vs_pyramid.png 已落盘（sha 自证见 [lab] PNG 行）
+[PASS] FG2 程序生成图落盘　| e057_topology_ladder.png 已落盘（sha 自证见 [lab] PNG 行）
+[lab] readings → e057_classification_readings.json
+[lab] readings sha256=c3b3abf35fdb7c4715423198f4cfdc4d6d188ae31c47340d08bd37e1c3f64105
+[lab] PNG sha256(e057_bow_vs_pyramid.png)=85b70d3970aa991d45056637b93be0c4e67d78101ae5b5f23dce52b152f146e1
+[lab] PNG sha256(e057_topology_ladder.png)=313e0a11439f89bfb29b98074d03102ebd38b240ae4de3774d6442ad19b366c5
+[lab] LEDGER：断言 8 条，PASS 8
+[lab] 汇总 PASS 8 / FAIL 0 / 共 8
+[lab] 结束 2026-11-01T19:08:39

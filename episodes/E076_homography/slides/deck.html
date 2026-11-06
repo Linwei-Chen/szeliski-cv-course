@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>从平移到单应：层次化运动模型与矩阵参数化</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 三个数字</div>
+  <h2>先看九个、八个、四个</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三乘三矩阵，九个元素，八个自由比值。</li><li>四个不共线点，给出一组初值。</li><li>先讲矩阵和方程，再讲怎么解。</li><li>本集只讲单应参数化与 DLT。</li></ul>
+      <div class="src">依据：原书第 508–509 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集路线</div><div class="kline">矩阵怎么排</div><div class="kline">方程怎么写</div><div class="kline">初值怎么拿</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">层次运动模型</div>
+  <h2>从平移到投影，参数越来越多</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平移 2 个参数，欧氏 3 个。</li><li>相似 4 个，仿射 6 个，投影 8 个。</li><li>单应多出的分母随位置变化。</li><li>其他二维模型的导数更直接。</li></ul>
+      <div class="src">依据：原书第 508 页；表 8.1</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">参数个数</div><div class="kline">平移 2</div><div class="kline">欧氏 3</div><div class="kline">相似 4</div><div class="kline">仿射 6</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">齐次坐标与尺度</div>
+  <h2>九个元素，八个比值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>齐次坐标先补 1，乘完再除。</li><li>九个元素整体乘常数，映射不变。</li><li>通常把右下角固定为 1。</li><li>剩下八个未知量。</li></ul>
+      <div class="src">依据：原书第 508 页式 8.19</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">H 是 3×3，8 个自由度</div><div class="mnote">右下角固定为 1 只是尺度约定</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 四对点</div>
+  <h2>四对点确定一个单应</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个对应点给两行方程。</li><li>八个未知量，至少要四对点。</li><li>四个点不能有三个共线。</li><li>点越多、分布越开，解越稳。</li></ul>
+      <div class="src">依据：原书第 508 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e076_four_points.png" style="max-height:500px" alt="四个不共线点确定一个单应｜程序生成，未用教材或论文原图"><figcaption>四个不共线点确定一个单应｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">矩阵三行</div>
+  <h2>第三行决定透视强弱</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>前两行负责平移、旋转、缩放、剪切。</li><li>第三行负责透视强弱。</li><li>第三行越大，近大远小越明显。</li><li>平面海报和纯旋转都能用它描述。</li></ul>
+      <div class="src">依据：原书第 508 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三行分工</div><div class="kline">前两行：仿射部分</div><div class="kline">第三行：透视部分</div><div class="kline">分母 D：位置和参数的函数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">参数形式</div>
+  <h2>两个分式共用一个分母</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>横坐标和纵坐标各是一个分子。</li><li>两个分子除以同一个分母 D。</li><li>D = h20 x + h21 y + 1。</li><li>D 随位置和参数变化。</li></ul>
+      <div class="src">依据：原书第 508 页式 8.19</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">x′ = X / D，y′ = Y / D</div><div class="mnote">D = h20 x + h21 y + 1</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">雅可比</div>
+  <h2>分母进了雅可比</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>雅可比每行都除以当前分母。</li><li>分子里带着当前预测坐标。</li><li>每次更新参数都要重算。</li><li>单应的迭代比仿射贵。</li></ul>
+      <div class="src">依据：原书第 508 页式 8.20</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么贵</div><div class="kline">分母随参数变</div><div class="kline">雅可比不能预先算死</div><div class="kline">换来的是真实透视</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">线性初值</div>
+  <h2>同乘分母，方程变线性</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>分式两边同乘分母 D。</li><li>八个未知量，一堆线性方程。</li><li>这就是直接线性变换 DLT。</li><li>先线性拿初值，再非线性精修。</li></ul>
+      <div class="src">依据：原书第 508 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">A h = 0</div><div class="mnote">每对点两行；h 是 H 的九个元素</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 求解</div>
+  <h2>堆起矩阵，做奇异值分解</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每对点写两行方程。</li><li>所有点堆成一个大矩阵。</li><li>最小奇异值对应的向量就是 H。</li><li>排成三乘三，再除以右下角。</li></ul>
+      <div class="src">依据：原书第 508–509 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e076_dlt_pipeline.png" style="max-height:500px" alt="DLT 管线：至少四对→两行方程→奇异值分解｜程序生成，未用教材或论文原图"><figcaption>DLT 管线：至少四对→两行方程→奇异值分解｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">统计最优</div>
+  <h2>线性解不是统计最优</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>乘分母时，各点被放大的倍数不同。</li><li>远离中心的点误差被放大。</li><li>按 1/D 给每行方程重加权。</li><li>DLT 是好初值，不是最终答案。</li></ul>
+      <div class="src">依据：原书第 509 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两步走</div><div class="kline">DLT 拿初值</div><div class="kline">重投影误差迭代</div><div class="kline">1/D 重加权补公平</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">数值条件</div>
+  <h2>先归一化，再解 DLT</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>质心移到原点，平均距离缩到根号二。</li><li>坐标动辄上千像素，数值条件差。</li><li>归一化只改数值，不改几何。</li><li>解完把变换还原回去。</li></ul>
+      <div class="src">依据：原书第 509 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">归一化三步</div><div class="kline">平移质心到原点</div><div class="kline">缩放到平均距离根号二</div><div class="kline">解完再乘回去</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">退化</div>
+  <h2>三点共线就解不出来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三个点共线，少一个独立约束。</li><li>解不唯一，或者数值病态。</li><li>选点要覆盖平面，面积尽量大。</li><li>条件数比残差更早报警。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">选点四不要</div><div class="kline">不要三点共线</div><div class="kline">不要挤在一个角</div><div class="kline">不要只排成一条线</div><div class="kline">不要只用四对点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">适用场景</div>
+  <h2>平面，或者相机原地转</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>场景本身是一个平面：海报、白板、桌面。</li><li>相机绕光心纯旋转，不看场景深度。</li><li>满足一个就够用。</li><li>两个都不满足，硬套会出重影。</li></ul>
+      <div class="src">依据：原书第 508 页；8.2 节应用</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种场景</div><div class="kline">世界是平的</div><div class="kline">相机没挪窝</div><div class="kline">不满足就别硬套</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 误差对照</div>
+  <h2>透视的差距有多大</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>四点 DLT 精确复原。</li><li>二十点带噪声，平均误差约零点零零二。</li><li>同一组数据，仿射误差约零点零九六。</li><li>三点共线，次小奇异值接近零。</li></ul>
+      <div class="src">依据：本集实验；读数见 readings</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e076_error_compare.png" style="max-height:500px" alt="误差对照：仿射 0.096，单应近零，噪声 0.002｜程序生成，未用教材或论文原图"><figcaption>误差对照：仿射 0.096，单应近零，噪声 0.002｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程流程</div>
+  <h2>选点、DLT、迭代、RANSAC</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先选四对以上、分布好的点。</li><li>用归一化 DLT 拿初值。</li><li>用重投影误差迭代精修。</li><li>有外点，前面加 RANSAC。</li></ul>
+      <div class="src">依据：原书 8.1.3/8.1.4；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">顺序</div><div class="kline">RANSAC 挑一致集</div><div class="kline">归一化 DLT 拿初值</div><div class="kline">重投影误差迭代精修</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>下一集：多图一起对齐</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三乘三、八自由度、四对不共线点。</li><li>分母导致非线性，先用 DLT 拿初值。</li><li>归一化和 RANSAC 是工程保险。</li><li>下一集讲多图捆扎调整。</li></ul>
+      <div class="src">依据：原书第 508–509 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集四件事</div><div class="kline">矩阵参数化</div><div class="kline">分母与雅可比</div><div class="kline">DLT 初值</div><div class="kline">退化与适用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十八集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

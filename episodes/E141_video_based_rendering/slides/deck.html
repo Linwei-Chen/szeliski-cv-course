@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>视频纹理与静态图动画：重排、分层与补洞</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 视频渲染</div>
+  <h2>旧视频，怎么重新生成</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视频渲染把拍到的视频重排成新序列。</li><li>一条线是视频纹理，一条线是静态图动画。</li><li>核心是从素材里找可复用的片段。</li><li>本集用合成数据演示，不拍真实视频。</li></ul>
+      <div class="src">依据：原书第 887 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条线</div><div class="kline">视频纹理：重排旧视频</div><div class="kline">静态图动画：分层动起来</div><div class="kline">合成数据，边界清楚</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">配音 · Video Rewrite</div>
+  <h2>Video Rewrite：按音素拼嘴型</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>把原视频帧重排，匹配新说出的句子。</li><li>先做语音识别，提取音素和三音素。</li><li>到素材里找匹配的三音素，剪下嘴部。</li><li>贴到目标视频，还要做头部几何变换。</li></ul>
+      <div class="src">依据：原书第 888 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两阶段</div><div class="kline">分析：跟踪嘴唇、下巴、头</div><div class="kline">合成：形变融合相邻嘴形</div><div class="kline">三音素带前后文</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">表演驱动</div>
+  <h2>face transfer：用视频驱动视频</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>用新源视频驱动以前拍好的视频。</li><li>重渲染时带上视觉语音、表情、头姿。</li><li>全身运动可以匹配两段的光流场。</li><li>也可把表面纹理展开成稳定图像再贴回。</li></ul>
+      <div class="src">依据：原书第 888–889 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">关键都是对应</div><div class="kline">嘴型 → 整张脸 → 全身</div><div class="kline">对应准，换脸才不飘</div><div class="kline">对应错，表情头姿会打架</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视频纹理 · 外观</div>
+  <h2>外观一样，方向可能相反</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>把短片段重排，保持视觉连续。</li><li>最简做法是用 L2 距离比外观。</li><li>运动不同会出现伪影，视频会卡住。</li><li>钟摆外观一样，跳过去就倒着摆。</li></ul>
+      <div class="src">依据：原书第 889 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">只看外观不够</div><div class="kline">光流在无纹理区不可靠</div><div class="kline">视觉与运动的权重难定</div><div class="kline">要接外观，也要接运动</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 外观与运动</div>
+  <h2>看图：同位置反方向，外观满分</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>100 帧、160×120 的合成往返小球。</li><li>第 99 帧在 x = 62，只看外观。</li><li>最近邻第 21 帧，MSE 0.0000，方向翻转。</li><li>加运动项后第 95 帧，MSE 0.002884。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e141_similarity.png" style="max-height:500px" alt="外观 vs 外观+运动：第 99 帧的两个候选｜程序生成，未用教材或论文原图"><figcaption>外观 vs 外观+运动：第 99 帧的两个候选｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">运动匹配</div>
+  <h2>匹配运动：三元组、矩阵、跳转表</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>可以匹配相邻帧的三元组或更大邻域。</li><li>就像 Video Rewrite 匹配三音素。</li><li>所有帧的相似度堆成 n×n 矩阵。</li><li>再用 FIR 强调匹配得好的子序列。</li></ul>
+      <div class="src">依据：原书第 889–891 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三层</div><div class="kline">相似度矩阵：谁像谁</div><div class="kline">FIR：连续几帧都像</div><div class="kline">跳转表 / HMM：下一步去哪</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 剪辑点</div>
+  <h2>看图：方向对了，位置差还在</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>加运动项跳到第 95 帧，方向对了。</li><li>位置从 x = 62 到 x = 70。</li><li>硬切最大相邻帧 MSE 0.002884。</li><li>cross-dissolve 到 L=16 降 99.65%。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e141_loop.png" style="max-height:500px" alt="剪辑点、三帧对照与 cross-dissolve 单步误差｜程序生成，未用教材或论文原图"><figcaption>剪辑点、三帧对照与 cross-dissolve 单步误差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">过渡 · 多物体</div>
+  <h2>过渡与多物体：溶解、图割、精灵</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>找不到完全匹配，可以用形变。</li><li>混乱运动，简单交叉溶解就够。</li><li>更好的过渡，在时空体上做 3D 图割。</li><li>多物体要先分区域，再分别动画。</li></ul>
+      <div class="src">依据：原书第 891 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">扩展</div><div class="kline">慢速摇摄：全景视频纹理</div><div class="kline">鱼缸的鱼：视频精灵</div><div class="kline">动态纹理：三维时空体</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 静态图动画</div>
+  <h2>看图：分层、软边、补洞</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>240×160 合成图，背景、云、树、船四层。</li><li>软 alpha MSE 0.000000，硬边 0.001491。</li><li>硬边 PSNR 28.27 dB，软边像素 1344 个。</li><li>船右移 22 像素，补洞后误差降 93.6%。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e141_animation.png" style="max-height:560px" alt="静态图分层、软 alpha、挖洞与修补合成｜程序生成，未用教材或论文原图"><figcaption>静态图分层、软 alpha、挖洞与修补合成｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">静态图动画 · 五步</div>
+  <h2>静态图动画：分层、抠图、补洞</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第一步分层，每层用同一种运动纹理。</li><li>每层要有颜色图、matte 和合成顺序。</li><li>层移动会露背景，要用修补把洞填上。</li><li>前向映射有洞和走样，改用逆向映射。</li></ul>
+      <div class="src">依据：原书第 892 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">运动与参数</div><div class="kline">树摇、水波、云移、船晃、静止</div><div class="kline">全局参数：虚拟风的速度和方向</div><div class="kline">修补只需管洞边界附近</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">边界 · 深度方法</div>
+  <h2>边界：这一集不做什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>实验用合成数据，不是真实视频。</li><li>只演示一个剪辑点，不做完整 loop。</li><li>运动项用光流方向，不是三元组加 FIR。</li><li>alpha 是图形羽化，补洞用 Telea 示意。</li></ul>
+      <div class="src">依据：原书第 893 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">深度方法一瞥</div><div class="kline">从静态照片猜运动场</div><div class="kline">多尺度特征双向推进</div><div class="kline">解码成循环流体视频</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>外观加运动，分层加补洞</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视频纹理的关键是外观加运动。</li><li>只看外观会跳错方向。</li><li>方向对了，还要用混合藏位置差。</li><li>静态图动画的关键是分层、matte、补洞。</li></ul>
+      <div class="src">依据：原书第 887–893 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">收束</div><div class="kline">旧视频重新剪</div><div class="kline">旧照片分层动</div><div class="kline">下一集：environment mattes 与暗角</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十三集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

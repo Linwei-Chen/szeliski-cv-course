@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>人脸检测与行人检测：从滑窗到级联与 HOG</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 对象检测</div>
+  <h2>对象检测：先找位置再认人</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>识别回答“是谁”，检测先回答“在哪、多大”。</li><li>最笨的办法：每个可能的子窗口都跑一遍识别。</li><li>又慢又容易错，所以要造专门的检测器。</li><li>本集看人脸检测、行人检测，最后交棒给多类检测。</li></ul>
+      <div class="src">依据：原书第 370 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三站</div><div class="kline">人脸检测：从特征到级联</div><div class="kline">行人检测：HOG 与部件模型</div><div class="kline">下一集：通用对象检测</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">找脸 · 三分类法</div>
+  <h2>找脸，先定位置和大小</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>认脸之前，先要知道脸在哪、多大。</li><li>逐像素、逐尺度地跑识别，实际太慢。</li><li>人脸检测分成三派：特征法、模板法、外观法。</li><li>三派的区别在于怎么表示一张脸。</li></ul>
+      <div class="src">依据：原书第 371 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三派一句话</div><div class="kline">特征法：找五官，再看排布</div><div class="kline">模板法：拿整张脸去套</div><div class="kline">外观法：分类器判断像不像脸</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三条路线 · 外观法流水线</div>
+  <h2>三条路线各有脾气</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>特征法：先找眼睛、鼻子、嘴巴，再查排布。</li><li>模板法：能应付姿态和表情，但初始位置要好。</li><li>外观法：扫小矩形块，先粗筛再级联细判。</li><li>为对付尺度，还要建图像金字塔，每层扫一遍。</li></ul>
+      <div class="src">依据：原书第 371–372 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e060_face_detection_taxonomy.png" style="max-height:520px" alt="人脸检测三条路线与外观法流水线：特征法、模板法、外观法对照｜程序生成，未用教材或论文原图"><figcaption>人脸检测三条路线与外观法流水线：特征法、模板法、外观法对照｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">最早两套外观法 · 数据增强</div>
+  <h2>教它认脸，也教它认非脸</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最早两套外观法：Sung–Poggio 与 Rowley。</li><li>收集标注好的脸块，也收集确定没脸的块。</li><li>脸图做镜像、旋转、缩放、平移，造更多样本。</li><li>图 6.20：57 个真阳性里混着 1 个假阳性。</li></ul>
+      <div class="src">依据：原书第 372 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">训练样本</div><div class="kline">正样本：标注好的脸块</div><div class="kline">负样本：航拍图、植被图等</div><div class="kline">增强：镜像、旋转、缩放、平移</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">聚类与 PCA</div>
+  <h2>十二簇，先量距离再判断</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>脸块和非脸块各聚六簇，共十二簇。</li><li>每簇拟合一个 PCA 子空间。</li><li>DIFS 和 DFFS 各算一条马氏距离。</li><li>十二簇共二十四条，送进多层感知器。</li></ul>
+      <div class="src">依据：原书第 373 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种度量</div><div class="kline">DIFS：投进子空间后离中心多远</div><div class="kline">DFFS：投影丢下的误差多大</div><div class="kline">输出交给多层感知器判断</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Rowley 神经网络</div>
+  <h2>二十乘二十，直接喂网络</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不用聚类，直接把 20×20 灰度块喂给网络。</li><li>大小不一的手工感受野，同时抓大结构和小细节。</li><li>金字塔每层的重叠块都输出“这里是脸”的概率。</li><li>再加一个合并网络，把重叠检测揉成一个。</li></ul>
+      <div class="src">依据：原书第 373 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个网络</div><div class="kline">检测网络：逐块给出概率</div><div class="kline">合并网络：重叠框合成一个</div><div class="kline">手工感受野：窗口大小由人设计</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">支持向量机</div>
+  <h2>SVM：分开，还要分得宽</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Osuna 等人用 SVM 分类同样的预处理块。</li><li>在特征空间里找一组最大间隔分界面。</li><li>线性边界不够，就用核把特征升到更高维。</li><li>边界两边留出缓冲带，新样本进来更稳。</li></ul>
+      <div class="src">依据：原书第 374 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">最大间隔</div><div class="kline">目标：把脸和非脸分开</div><div class="kline">还要：分界面两边留出余量</div><div class="kline">线性不够：用核升到高维</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Boosting</div>
+  <h2>Boosting：一群简单分类器</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Viola 和 Jones 把 Boosting 引进视觉。</li><li>训练一串越来越挑的简单分类器，再混合输出。</li><li>强分类器＝弱学习器加权投票，符号定类别。</li><li>弱学习器常是阈值函数，也叫决策树桩。</li></ul>
+      <div class="src">依据：原书第 374 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">决策树桩</div><div class="kline">只看一个特征</div><div class="kline">一个阈值、一个方向</div><div class="kline">一群树桩加权投票</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">矩形特征与积分图</div>
+  <h2>矩形差分：一次算四个角</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不比单个像素，比矩形区域的亮度差。</li><li>两到四个矩形，白色减灰色。</li><li>图 6.22 两例：眼睛—脸颊、眼睛—鼻梁。</li><li>预计算积分图后，任意矩形差分只要 4r 次加减。</li></ul>
+      <div class="src">依据：原书第 374–375 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e060_viola_jones_features.png" style="max-height:520px" alt="Viola–Jones 矩形差分、积分图与三级级联｜程序生成，未用教材或论文原图"><figcaption>Viola–Jones 矩形差分、积分图与三级级联｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">AdaBoost 与级联</div>
+  <h2>级联：每级只做少量测试</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Boosting 逐步挑弱学习器，每阶段后重新加权。</li><li>AdaBoost 按分对与否调权重，阶段误差定票权。</li><li>级联每级少量测试，把大量非脸挡在门外。</li><li>同时尽量放行所有可能的脸。</li></ul>
+      <div class="src">依据：原书第 375 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">级联的顺序</div><div class="kline">第一级：只查最明显的特征</div><div class="kline">多数非脸在前几级被拒</div><div class="kline">可疑的候选才进下一道</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">深度时代</div>
+  <h2>手工特征换成学出来的本事</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>后来有特征级联、可变形部件模型、聚合通道特征。</li><li>神经网络也加入人脸检测的路线。</li><li>WIDER FACE 基准汇集了更多新结果。</li><li>RetinaFace 把特征金字塔和 RetinaNet 的想法合在一起。</li></ul>
+      <div class="src">依据：原书第 375–376 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">套路没变</div><div class="kline">还是粗筛加精判</div><div class="kline">每一级的本事换成学出来的</div><div class="kline">基准负责把结果排在一起</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">行人检测 · 两条路线</div>
+  <h2>镜头转到行人检测</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>早期检测研究盯着脸，行人和车辆同样受关注。</li><li>有的方法延续快和省，有的转向准。</li><li>准的路线要尽可能精确地定出位置和范围。</li><li>只靠人脸会漏人，加上头发和衣服才找全。</li></ul>
+      <div class="src">依据：原书第 371/376 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">快和省：先保证跑得动</div><div class="kline">准：精确的位置与范围</div><div class="kline">图 6.19：人脸加头发衣服才找全</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">HOG 与 SVM</div>
+  <h2>HOG：在规则网格上数方向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Dalal 和 Triggs 用重叠的 HOG 描述子送进 SVM。</li><li>梯度按方向投票，按幅值加权。</li><li>与 SIFT 不同：规则重叠网格、单尺度、固定朝向。</li><li>方向桶用得多，中央差分不做平滑。</li></ul>
+      <div class="src">依据：原书第 376–377 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e060_hog_pipeline.png" style="max-height:520px" alt="HOG+SVM 流水线：规则网格、方向直方图、SVM 权重｜程序生成，未用教材或论文原图"><figcaption>HOG+SVM 流水线：规则网格、方向直方图、SVM 权重｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">HOG 权重</div>
+  <h2>权重图：头、躯干、脚</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>高维连续描述子送进 SVM 训练。</li><li>图 6.23 画出最强的正权重和负权重。</li><li>头、躯干、脚附近正响应多。</li><li>毛衣中间和脖子附近负响应多。</li></ul>
+      <div class="src">依据：原书第 377 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读这张图</div><div class="kline">正响应：像人的部位</div><div class="kline">负响应：这些地方别太当真</div><div class="kline">头、躯干、脚是三处关键</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">可变形部件模型</div>
+  <h2>可变形部件：整体加零件</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Felzenszwalb 在 HOG 行人检测器上加可变形部件。</li><li>部件在整体模型下两层金字塔上训练和检测。</li><li>部件相对父框的位置也学出来。</li><li>父框真值当隐变量，部件位置也隐，能半监督地练。</li></ul>
+      <div class="src">依据：原书第 377 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">成绩与做法</div><div class="kline">父框位置：训练和识别时都推断</div><div class="kline">部件位置：隐变量，不需要标注</div><div class="kline">扩展版进 2008 年 VOC 检测挑战前两名</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">姿态、基准与交棒</div>
+  <h2>从有没有人，到姿态与去向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Rogez、Rihan 等人 2008 年用随机森林算姿态。</li><li>在 HOG 上算行走相位和各个关节位置。</li><li>Caltech 基准盘点了 2012 年前的算法。</li><li>之后 CityPersons 等数据集继续刷新。</li></ul>
+      <div class="src">依据：原书第 378–379 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">基准里的名字</div><div class="kline">积分通道特征</div><div class="kline">号称“西部最快”的行人检测器</div><div class="kline">Poselets 与 CityPersons</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十二集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

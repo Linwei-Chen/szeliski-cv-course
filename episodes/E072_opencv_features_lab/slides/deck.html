@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>实验课：OpenCV 特征全流程</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 7 章 · 上机</div>
+  <h2>六步流水线：把名字变成代码</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 7 章讲特征检测与匹配。</li><li>本集把它们串成一条能跑的流水线。</li><li>读图、提点、配对、筛匹配、估单应、叠图。</li><li>每一环都能单独换。</li></ul>
+      <div class="src">依据：原书第 417 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">六步</div><div class="kline">读图：转灰度</div><div class="kline">提点：ORB / SIFT</div><div class="kline">配对：KNN 两个候选</div><div class="kline">筛选：比率、互检、RANSAC</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 环境</div>
+  <h2>先过环境：版本对，数字才对</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>运行环境：Python 3.11、OpenCV 4.13、NumPy 2.3。</li><li>SIFT 和 ORB 都能用，随机种子能固定。</li><li>版本不对，后面的数字就对不上。</li><li>跑之前先确认 cv2 能导入。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先记三件事</div><div class="kline">Python 3.11</div><div class="kline">OpenCV 4.13</div><div class="kline">NumPy 2.3</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 读图</div>
+  <h2>读图：先转灰度，再提特征</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两张图都是 960×640，程序生成，单应已知。</li><li>先转灰度，ORB 和 SIFT 都在灰度图上找特征。</li><li>灰度图只有一层通道，画图时再转回彩色。</li><li>像素坐标系从头到尾保持同一尺度。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读图要点</div><div class="kline">尺寸：960×640</div><div class="kline">单应：已知</div><div class="kline">dtype：八位无符号</div><div class="kline">灰度：先排除颜色干扰</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · ORB</div>
+  <h2>ORB：二进制、带方向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>ORB 给 FAST 角点加上方向。</li><li>描述子是带方向的 BRIEF，32 字节。</li><li>上限设 1000，两张图各提 1000 个点。</li><li>32 字节就是 256 位。</li></ul>
+      <div class="src">依据：原书第 438 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">ORB 的参数</div><div class="kline">检测子：FAST</div><div class="kline">方向：灰度质心</div><div class="kline">尺度：图像金字塔</div><div class="kline">描述子：32 字节</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · SIFT 对照</div>
+  <h2>SIFT：浮点、128 维</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同样设 1000 上限，原图提 1000 个。</li><li>变换图提 1001 个，多的一个在边缘。</li><li>圆的大小是尺度，半径方向是主方向。</li><li>128 维浮点，存储和比较都更重。</li></ul>
+      <div class="src">依据：原书第 436 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e072_detect.png" style="max-height:400px" alt="两图 ORB 特征点与 SIFT 计数对照：圆大小=尺度，半径=主方向｜程序生成，未用教材或论文原图"><figcaption>两图 ORB 特征点与 SIFT 计数对照：圆大小=尺度，半径=主方向｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · KNN 候选</div>
+  <h2>配对：每个点留两个候选</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>匹配第一步是选距离：ORB 用 Hamming。</li><li>SIFT 用欧氏距离。</li><li>两张图各 1000 个描述子。</li><li>KNN 给每个点留两个候选。</li></ul>
+      <div class="src">依据：原书第 441–443 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么留两个</div><div class="kline">最近的不一定是真匹配</div><div class="kline">第二近的当参照物</div><div class="kline">crossCheck 先关掉</div><div class="kline">k 等于二，才有次近邻</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 比率测试</div>
+  <h2>第一刀：比值不够就扔</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最近邻距离除以次近邻距离。</li><li>比值小于 0.75 才留下。</li><li>ORB 剩 431 条，SIFT 剩 452 条。</li><li>阈值是超参数，不是定理。</li></ul>
+      <div class="src">依据：原书第 444 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">d₁ / d₂ &lt; 0.75</div><div class="mnote">d₁：最近邻距离；d₂：次近邻距离；比值不够小就扔掉</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 互检</div>
+  <h2>第二刀：必须双向指认</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>A 到 B 和 B 到 A 的最近邻要互相指认。</li><li>互检后 ORB 剩 330 条，SIFT 剩 407 条。</li><li>比率管像不像，互检管是不是唯一。</li><li>会误杀真匹配，但假匹配掉得更多。</li></ul>
+      <div class="src">依据：原书第 445 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">互检的代价</div><div class="kline">反向 KNN 再跑一遍</div><div class="kline">计算量翻倍</div><div class="kline">RANSAC 会轻松很多</div><div class="kline">双向都认，才算稳定</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · RANSAC</div>
+  <h2>第三刀：几何上说得通</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>单应阈值 3 像素。</li><li>ORB 从 330 条里留 317 个内点。</li><li>SIFT 从 407 条里留 390 个。</li><li>绿线是内点，红线是淘汰。</li></ul>
+      <div class="src">依据：原书第 447–448 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e072_match_funnel.png" style="max-height:395px" alt="ORB 互检匹配与四道筛子：绿线=内点，红线=淘汰｜程序生成，未用教材或论文原图"><figcaption>ORB 互检匹配与四道筛子：绿线=内点，红线=淘汰｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 误差与内点率</div>
+  <h2>看两个数：误差、内点率</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>ORB 中位重投影误差 0.77 像素。</li><li>SIFT 中位重投影误差 0.28 像素。</li><li>ORB 内点率 73.5%，SIFT 86.3%。</li><li>中位数比平均值更抗离群。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么读</div><div class="kline">误差单位是像素</div><div class="kline">内点率高不等于匹配多</div><div class="kline">绝对数和比例一起看</div><div class="kline">换一张图，数字会变</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 对齐叠加</div>
+  <h2>前哨：把第二张搬回来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>用单应把第二张图搬回第一张的坐标系。</li><li>五五叠加，看对齐得准不准。</li><li>右表列出特征点、比率后、互检后、内点。</li><li>拼接还要处理曝光、接缝和融合。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e072_stitch.png" style="max-height:400px" alt="单应逆变换搬回原图并五五叠加，右表为两法指标｜程序生成，未用教材或论文原图"><figcaption>单应逆变换搬回原图并五五叠加，右表为两法指标｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 速度与精度</div>
+  <h2>两组数：谁快，谁准</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>本机单次运行，ORB 检测耗时更短。</li><li>两者匹配耗时都在毫秒级。</li><li>SIFT 在这组图上内点更多、误差更小。</li><li>ORB 描述子更短、检测更快。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">别急着宣布谁赢</div><div class="kline">这组图是平面场景</div><div class="kline">纹理足、重叠大</div><div class="kline">换图排序可能反过来</div><div class="kline">单次耗时不能当基准</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 三类翻车</div>
+  <h2>最怕三件事：重复、遮挡、非平面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>重复纹理：一排一样的窗户会错配。</li><li>重叠太小或遮挡太多，内点不够。</li><li>场景不是平面，前后景会错位。</li><li>本集故意加了右下遮挡和亮度变化。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么兜底</div><div class="kline">低纹理先加纹理</div><div class="kline">或换检测子</div><div class="kline">放宽比率、增加迭代</div><div class="kline">再逐步收紧</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 复现清单</div>
+  <h2>复现：先固定，再改一项</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>四道筛子：匹配策略、比率、互检、RANSAC。</li><li>本集参数：1000、0.75、3 像素。</li><li>复现时先固定这三项，再改一项。</li><li>内点和外点画图时分开颜色。</li></ul>
+      <div class="src">依据：原书第 441–448 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">打印每步数量</div><div class="kline">特征数</div><div class="kline">比率后</div><div class="kline">互检后</div><div class="kline">内点数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 六集回指</div>
+  <h2>串起来：一条链，不是六个名词</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>角点、尺度空间、128 维描述子。</li><li>匹配、直线、学习型描述子。</li><li>本集没有新算法，只是把旧名字接起来。</li><li>一条链比六个缩写更有用。</li></ul>
+      <div class="src">依据：第 7 章前六集已讲页段</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">这条链</div><div class="kline">角点：在哪</div><div class="kline">尺度：多大</div><div class="kline">描述子：长什么样</div><div class="kline">匹配与几何：对不对</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">上机 · 小结与移交</div>
+  <h2>收束：带着基线进下一章</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>基线：1000 个特征、400 多条比率匹配。</li><li>内点 300 多个，重投影误差在亚像素级。</li><li>下一集复盘第 6、7 章。</li><li>再往后进入第 8 章对齐与拼接。</li></ul>
+      <div class="src">依据：本集实验；下一集预告</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">保存基线</div><div class="kline">特征上限：1000</div><div class="kline">比率：0.75</div><div class="kline">RANSAC：3 像素</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十四集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

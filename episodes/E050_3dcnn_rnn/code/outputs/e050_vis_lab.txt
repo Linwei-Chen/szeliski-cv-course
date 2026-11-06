@@ -1,0 +1,40 @@
+[lab] E050 3D CNN/RNN 数值演示档 开始 2026-11-05T16:23:00
+[lab] 源码 sha256=8890b34cdbd8bc375d47bc277ee857dd77ff38f4635917aea0796c62016117bf（哨兵版本绑定数据源——E043 r5 P2-5 口径）
+[PASS] E1 手算 vs numpy 计数一致（3D 核）　| 闭式 1312 vs 实算 1312
+[PASS] E1 手算 vs numpy 计数一致（逐帧独立）　| 闭式 7168 vs 实算 7168
+[PASS] E1 3D 核体==2D 核体×K_t（时间维共享申报）　| 二维核体 432 三维核体 1296 K_t=3（偏置 16 不随核缩放——核体对比申报）
+[PASS] E1 逐帧独立参数==2D×T（无共享申报）　| 独立=7168 = 二维×16（整层含偏置逐帧复制）
+[PASS] E1 核体共享比==T/K_t　| 6912/1296=5.3333 vs 16/3
+[e1] 2D 核参数 448；3D 核参数 1312（核体=2D×K_t 时间维共享）；逐帧独立 7168（=2D×T）；核体共享比 5.33
+[PASS] E2 early conv1 核体==single 核体×T（通道堆叠申报）　| early 核体 5184 = single 核体 1728×T3（偏置不随通道变——核体对比申报）
+[PASS] E2 3D conv1 核体==single 核体×K_t（时间维共享申报）　| 3D 核体 5184 = single 核体×K_t3
+[PASS] E2 early 与 3D conv1 参数量相同（教学点——差别在等变性）　| 均 5248（late=5952 系双支半宽+融合层教学设定）
+[PASS] E2 时间核卷积移位等变（temporal shift invariance 读数级实证）　| 输入移 1 步→输出同移 1 步（allclose，max|Δ|=0.00e+00）
+[PASS] E2 early 通道拼接不移位等变（正文教学点数值互证）　| 摊平通道序变化后输出不保序（max|Δ|=4.2260）
+[e2] conv1 参数：single 1792/early 5248/late 5952/3D 5248；时间核等变 PASS、early 不等变 PASS
+[PASS] E3 RNN 参数量==d·d+d·d+d==36 且与 T 无关（共享申报）　| (4×4+4×4+4)=36（T=8 步共用同组权重）
+[PASS] E3 同权重两次前向一致（权重跨时复用确定性）　| max|Δ|=0.00e+00
+[PASS] E3 隐藏状态范数序列非退化（信息沿时间流动）　| min=0.8981 max=1.7029 std=0.2513
+[PASS] E3 展开节点数==T（Figure 5.55 展开视图语义）　| 展开 8 步、共享 1 组权重（滚动视图=同函数复用）
+[e3] 参数 36（与 T 无关）；范数 0.898→1.256
+[PASS] E4 缩放 0.5 档 T=12 梯度衰减 <0.01（vanish 实证）　| |dh_12/dh_0|=0.000244
+[PASS] E4 缩放 1.8 档 T=12 梯度 >10（explode 实证）　| |dh_12/dh_0|=1153.8667
+[PASS] E4 缩放 1.0 档 T=12 临界不增不爆（正交阵谱半径 1 申报）　| |dh_12/dh_0|=0.9974
+[e4] T=12 读数：0.5 档 0.000244/1.0 档 0.9974/1.8 档 1153.8667
+[PASS] E10 题1 互证：展开图 T=10 步权重组数==1（E3 参数量与 T 无关）　| E3 实测 36 参数与 T=8 无关——T=10 同理 1 组 (W_x,W_h,b)
+[PASS] E10 题2 互证：0.5 档传 12 步读数==E4 实测　| E4 实测 0.000244（不足一成的百分之一量级——白名单见 META）
+[e10] 题1 答 1 组权重（共享）；题2 答 E4 衰减读数（readings 为准）
+[PASS] FIG 内部记号零泄漏　| 4 张图全部 Text 对象 376 条、零命中
+[PASS] FG1 程序生成图落盘　| e050_fig1_fusion.png 已落盘（全量 sha 自证见 [lab] PNG 行——短形态摘要系 readings 字段）
+[PASS] FG2 程序生成图落盘　| e050_fig2_kernel.png 已落盘（全量 sha 自证见 [lab] PNG 行——短形态摘要系 readings 字段）
+[PASS] FG3 程序生成图落盘　| e050_fig3_unroll.png 已落盘（全量 sha 自证见 [lab] PNG 行——短形态摘要系 readings 字段）
+[PASS] FG4 程序生成图落盘　| e050_fig4_gradient.png 已落盘（全量 sha 自证见 [lab] PNG 行——短形态摘要系 readings 字段）
+[lab] readings → e050_vis_readings.json
+[lab] readings sha256=9da505310792ff55d116a09f75cf1a3da453ddfe3f02e982a18c5f81c5482026
+[lab] PNG sha256(e050_fig1_fusion.png)=21d0e886ef75f89bc6510474be679f394cb00887128d344a4623a8decbeea279
+[lab] PNG sha256(e050_fig2_kernel.png)=15ef0f6bb902db17ed06041d0efcd59f597cd518bbc8b3935ac0dc8c4cd05a04
+[lab] PNG sha256(e050_fig3_unroll.png)=252b8e2e23b856d00f45351b955e9c2a546700a5abcea72a4d5160838456d145
+[lab] PNG sha256(e050_fig4_gradient.png)=65d4220a04722f5295ebf41b59cd13eef76d3c442b304f4113d6f17e5b7e0771
+[lab] LEDGER：断言 24 条，PASS 24
+[lab] 汇总 PASS 24 / FAIL 0 / 共 24
+[lab] 结束 2026-11-05T16:23:07

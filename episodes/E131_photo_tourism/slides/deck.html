@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>互联网相册的空间漫游：Photosynth 一脉</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 照片漫游</div>
+  <h2>上千张游客照，能走进去吗</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>网上有成千上万张游客照。</li><li>不用重新建模，直接在照片之间走。</li><li>每张照片有位置和姿态，邻近照片连边。</li><li>本集用 15 张合成照片做最小演示。</li></ul>
+      <div class="src">依据：原书第 867–868 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个系统</div><div class="kline">Photo Tourism：在照片之间导航</div><div class="kline">Photosynth：平面代理与过渡</div><div class="kline">本集不是完整 Photo Tourism</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">基础 · SfM</div>
+  <h2>照片从哪拍：SfM 位姿</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SfM 求每台相机的三维位置和姿态。</li><li>再配一个稀疏三维点云。</li><li>位姿是照片图和虚拟路径的基础。</li><li>本集直接给定 5×3 相机网格，不跑 SfM。</li></ul>
+      <div class="src">依据：原书第 867 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个输出</div><div class="kline">相机位姿：每张照片从哪拍</div><div class="kline">稀疏点云：场景的大致形状</div><div class="kline">没有位姿，照片只是散图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">基础 · 3D 代理</div>
+  <h2>每幅图配一个 3D 代理</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>代理是每张照片的简化几何。</li><li>主导平面常常比三角网格更稳。</li><li>网格容易冒出错误的连接和面片。</li><li>可信区用深度图，不可信区用点云。</li></ul>
+      <div class="src">依据：原书第 867 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">主导平面</div><div class="kline">便宜、稳定，不会突然长面</div><div class="kline">一个平面管不了前后两个深度</div><div class="kline">前景一近就会错位</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">导航 · 标注</div>
+  <h2>怎么在照片之间走</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从俯视图选相机，跳到邻近视角。</li><li>也可以点相关的缩略图。</li><li>在图上选兴趣区域，看想看的部分。</li><li>标注可以自动传播到别的照片。</li></ul>
+      <div class="src">依据：原书第 867–868 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">导航方式</div><div class="kline">俯视图：给全局</div><div class="kline">缩略图：给细节</div><div class="kline">兴趣区域：看这扇窗</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 照片图</div>
+  <h2>看图：相册是一张可走的图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左边 15 张照片，红线是 A→B 路径。</li><li>右边照片图，边表示可以切换。</li><li>15 个节点全连通，最短 6 步。</li><li>每一步最大距离 0.5。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e131_graph.png" style="max-height:500px" alt="15 张照片墙 + 照片图 A→B 路径｜程序生成，未用教材或论文原图"><figcaption>15 张照片墙 + 照片图 A→B 路径｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">伪影 · 稳定轴</div>
+  <h2>翻页与稳定轴</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平面代理切换时会出现“翻页”感。</li><li>过渡不真实，像把卡片翻过去。</li><li>给所有平面选一个稳定的 3D 轴。</li><li>稳定轴减少游动，不能消除重影。</li></ul>
+      <div class="src">依据：原书第 868 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">优缺点</div><div class="kline">简单、稳定、便宜</div><div class="kline">前景视差会滑、会重影</div><div class="kline">后转向深度、分层、神经渲染</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 平面代理</div>
+  <h2>看图：背景对齐，前景错位</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平面代理整图 PSNR 17.05 分贝。</li><li>背景平面内区 PSNR 45.0 分贝。</li><li>前景柱子错位 40 像素，MSE 0.0733。</li><li>重影 4,480 像素，误差图有两条柱子。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e131_proxy.png" style="max-height:500px" alt="目标 / 平面代理 / 误差图，前景重影 4,480px｜程序生成，未用教材或论文原图"><figcaption>目标 / 平面代理 / 误差图，前景重影 4,480px｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">虚拟路径 · Photo Tours</div>
+  <h2>从照片图到虚拟路径</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>自动检测多视角物体，生成环绕视角。</li><li>邻近照片连成 virtual path。</li><li>可以在任意两张照片之间走。</li><li>后来成为 Google Maps 的 Photo Tours。</li></ul>
+      <div class="src">依据：原书第 868 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个词</div><div class="kline">orbit：绕物体一圈</div><div class="kline">virtual path：两点路线</div><div class="kline">Photo Tours：自动铺路</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 密度与覆盖</div>
+  <h2>看图：照片越密，路越顺</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左边是 A→B 的 6 个中间视角。</li><li>4 个角点最大最近距离 1.070。</li><li>15 张网格是 0.349。</li><li>密度收益 3.07 倍。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e131_path.png" style="max-height:500px" alt="A→B 路径 6 个中间视角 + 4 角点 vs 15 网格覆盖｜程序生成，未用教材或论文原图"><figcaption>A→B 路径 6 个中间视角 + 4 角点 vs 15 网格覆盖｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视频漫游 · sea of images</div>
+  <h2>从照片到视频漫游</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相机穿过环境，视频回放成 walkthrough。</li><li>四向观看，最好用全景视频相机。</li><li>二维水平面铺网格，采成 sea of images。</li><li>也可沿预设路径走，像博物馆导览。</li></ul>
+      <div class="src">依据：原书第 896 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">sea of images：密网格</div><div class="kline">预设路径：省数据、限自由</div><div class="kline">源头可追到 Aspen MovieMap</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">拼接 · 曝光 · 定位</div>
+  <h2>视频漫游的三件事</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Ladybug 用六路同步视频拼 360 度全景。</li><li>相机中心不共点，重叠区有视差鬼影。</li><li>用多视角平面扫描逐列估深度。</li><li>曝光包围、运动补偿、地图对齐。</li></ul>
+      <div class="src">依据：原书第 896–898 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个问题</div><div class="kline">拼接：视差鬼影</div><div class="kline">曝光：窗户和强阴影</div><div class="kline">定位：map correlation</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>位姿、代理、路径</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SfM 位姿加稀疏点云，把照片变成图。</li><li>平面代理便宜稳定，但前景会翻页、重影。</li><li>照片越密、路径越顺，漫游越连续。</li><li>下一集：生成模型的 IBR。</li></ul>
+      <div class="src">依据：原书第 867–868、896–898 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个词</div><div class="kline">位姿：照片在哪拍</div><div class="kline">代理：每张图的简化几何</div><div class="kline">路径：照片之间怎么走</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十三集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

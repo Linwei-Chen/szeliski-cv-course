@@ -1,0 +1,36 @@
+{
+ "e1_params_macs": {
+  "c1": 6,
+  "c2": 4,
+  "kernel": 3,
+  "input_hw": 10,
+  "output_hw": 8,
+  "conv_weights": 216,
+  "conv_bias": 4,
+  "macs": 13824,
+  "macs_formula": 13824,
+  "allclose": true,
+  "seed": 2042
+ },
+ "e0_fc_vs_conv": {
+  "input_units": 600,
+  "output_units": 256,
+  "fc_weights": 153600,
+  "conv_weights": 216,
+  "ratio": 711.1
+ },
+ "e10_homework": {
+  "kw": 5,
+  "kh": 5,
+  "c1": 3,
+  "c2": 8,
+  "weights": 600,
+  "bias": 8
+ },
+ "fig1": {
+  "text_objects": 7,
+  "invisible_objects": 44,
+  "mark_hits": 0,
+  "png": "e046_fig1_conv_diagram.png"
+ }
+}

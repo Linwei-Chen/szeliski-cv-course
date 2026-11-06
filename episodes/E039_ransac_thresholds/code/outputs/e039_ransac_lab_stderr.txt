@@ -1,0 +1,4 @@
+/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E039_ransac_thresholds/code/e039_ransac_lab.py:313: UserWarning: Glyph 7503 (\N{MODIFIER LETTER SMALL K}) missing from font(s) Songti SC, PingFang SC, Arial Unicode MS.
+  fig.tight_layout(rect=[0, 0.06, 1, 1])
+/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E039_ransac_thresholds/code/e039_ransac_lab.py:341: UserWarning: Glyph 1013 (\N{GREEK LUNATE EPSILON SYMBOL}) missing from font(s) Songti SC, PingFang SC, Arial Unicode MS.
+  fig.tight_layout(rect=[0, 0.06, 0.80, 0.88])

@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>直线也有脾气：LSD 直线检测与边缘连接</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 7 章 · 直线</div>
+  <h2>人造世界，到处是直线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>边缘和曲线适合描述自然物体的轮廓。</li><li>人造环境里，直线是最常见的结构线索。</li><li>建筑建模、城市位姿、文档版面都要用直线。</li><li>找直线的性价比常常高于找角点。</li></ul>
+      <div class="src">依据：原书第 477 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">直线用在哪</div><div class="kline">建筑建模</div><div class="kline">城市环境里的位姿估计</div><div class="kline">印刷文档的版面分析</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">本节路线</div>
+  <h2>三步：压折线、投票、收消失点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先把曲线近似成分段折线。</li><li>再用 Hough 把边缘点分组成线段，跨过缺口和遮挡。</li><li>最后把共享消失点的三维直线分组。</li><li>消失点能帮相机标定和确定朝向。</li></ul>
+      <div class="src">依据：原书第 477 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条路线</div><div class="kline">折线：把曲线压直</div><div class="kline">Hough：让边缘点投票</div><div class="kline">消失点：把平行线收拢</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">折线简化 · 程序生成示意图</div>
+  <h2>在最远点递归下刀</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>折线简化也叫直线简化，Ramer 与 Douglas-Peucker 提出。</li><li>递归找离两端点连线最远的点，在那里细分。</li><li>最远点不够远就停止。</li><li>Hershberger 与 Snoeyink 后来给了更高效的实现。</li></ul>
+      <div class="src">依据：原书第 477 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e070_douglas_peucker.png" style="max-height:420px" alt="折线简化：原曲线、端点连线、最远点递归、最终折线｜程序生成，未用教材或论文原图"><figcaption>折线简化：原曲线、端点连线、最远点递归、最终折线｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">样条平滑</div>
+  <h2>要更光滑，就再套样条</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>折线可以直接近似原曲线。</li><li>要更光滑的表示或可视化，可以用逼近或插值样条。</li><li>匹配和计算用折线更省事。</li><li>展示时再套一层样条。</li></ul>
+      <div class="src">依据：原书第 477 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">折线与样条</div><div class="kline">折线：省事、好算</div><div class="kline">样条：光滑、好看</div><div class="kline">按用途选表示</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Hough 的动机</div>
+  <h2>线断了，让边缘点投票接起来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>真实世界的线常常断成几段。</li><li>或者由很多共线小段组成。</li><li>我们希望把共线小段合并成更长的直线。</li><li>Hough 让边缘点给可能的直线位置投票。</li></ul>
+      <div class="src">依据：原书第 478 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">Hough 解决什么</div><div class="kline">线断成多段</div><div class="kline">共线小段要合并</div><div class="kline">投票跨过缺口</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原始 Hough</div>
+  <h2>一个点扫出一条正弦</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个边缘点给所有经过它的直线投票。</li><li>累计值高的格子拿去做直线拟合。</li><li>在 (r,θ) 空间里，一个点扫出一条正弦曲线。</li><li>同一条直线上的点，正弦交于同一点，交点给出直线方程。</li></ul>
+      <div class="src">依据：原书第 478 页图 7.46</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">参数空间</div><div class="kline">点 → 一条正弦</div><div class="kline">同线各点 → 正弦交于一点</div><div class="kline">交点 → 直线方程</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">定向 Hough · 程序生成示意图</div>
+  <h2>知道方向，就只投一个格</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>线上点不够稀疏时，用局部方向只投一个累计格。</li><li>边缘点先做极坐标重参数化，再在 (r,θ) 累计数组投票。</li><li>也可以围绕估计方向投少数相邻格，作为折中。</li><li>少投无用票，速度和抗噪都会好一些。</li></ul>
+      <div class="src">依据：原书第 478 到 479 页图 7.46/7.47</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e070_hough.png" style="max-height:420px" alt="Hough 投票：边缘点、正弦、交点与峰值｜程序生成，未用教材或论文原图"><figcaption>Hough 投票：边缘点、正弦、交点与峰值｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">线表示与分箱</div>
+  <h2>先定表示：法向、距离、角度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>投票前先选直线的表示。</li><li>图 7.48 用法向 n 和原点到直线的距离 d。</li><li>法向和图像梯度同向，再转成角度 θ。</li><li>每个轴分多少格，最好拿样例图实验定。</li></ul>
+      <div class="src">依据：原书第 479 页图 7.48</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个参数</div><div class="kline">n：法向，和梯度同向</div><div class="kline">d：原点到直线的距离</div><div class="kline">θ：法向转成的角度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Hough 实操</div>
+  <h2>能不能用，全在细节</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>投票时可以用边缘段的长度或强度。</li><li>累计数组里保留组成该格的边缘点列表，方便后处理。</li><li>也可以把不同极性的边缘合并到同一条线段。</li><li>这些细节不改变原理，却决定实现能不能用。</li></ul>
+      <div class="src">依据：原书第 479 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个细节</div><div class="kline">按边长或强度投票</div><div class="kline">累计格保留成员边缘点</div><div class="kline">不同极性可以合并</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">立方图</div>
+  <h2>升到三维，把线投到立方体面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>完整的三维 (n,d) 线方程可以投到单位球。</li><li>立方图改成投到单位立方体的六个面。</li><li>最大分量选面，另外两个坐标做索引。</li><li>限制 d 非负，半立方只留三个面。</li></ul>
+      <div class="src">依据：原书第 479 到 480 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么用立方图</div><div class="kline">避开球坐标的三角函数</div><div class="kline">选面只看最大分量</div><div class="kline">半立方：只留三个面</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">RANSAC 直线</div>
+  <h2>随便猜一条线，看谁站队</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>随机取两个边缘点，形成一条直线假设。</li><li>数有多少其他边缘点落在这条线上。</li><li>边缘方向足够准时，一个边缘点也能产生假设。</li><li>内点数足够多的直线，就选为要找的线段。</li></ul>
+      <div class="src">依据：原书第 480 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">RANSAC 三步</div><div class="kline">随机两点成线</div><div class="kline">数内点</div><div class="kline">内点够多就留下</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">RANSAC 取舍</div>
+  <h2>省内存，费猜测</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不需要累计数组，所以更省空间。</li><li>也不那么受分箱大小影响。</li><li>缺点是要生成和测试的假设可能多得多。</li><li>Hough 费内存，但一次投票就能聚出峰。</li></ul>
+      <div class="src">依据：原书第 480 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">和 Hough 比</div><div class="kline">RANSAC：省空间、多假设</div><div class="kline">Hough：费空间、靠累计</div><div class="kline">按场景取舍</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">自底向上分组 · 程序生成示意图</div>
+  <h2>把同方向的边缘抱成团</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>把方向相近的边缘点迭代聚成定向矩形，叫线支持区。</li><li>这些区域是否成立，用统计分析判断，LSD 论文就这么做。</li><li>LSD 很快，能把线段和纹理区分开。</li><li>它开源，所以在实践中很常用。</li></ul>
+      <div class="src">依据：原书第 480 到 481 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e070_lsd_ransac.png" style="max-height:400px" alt="两条路线：RANSAC 数内点；LSD 定向矩形线支持区｜程序生成，未用教材或论文原图"><figcaption>两条路线：RANSAC 数内点；LSD 定向矩形线支持区｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">深度线段</div>
+  <h2>网络把线段和交点一起给</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>近几年有深度神经网络，同时提取线段和交点。</li><li>传统方法只给线段，交点要另外算。</li><li>有了交点，后面的线框重建更省事。</li></ul>
+      <div class="src">依据：原书第 481 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">多出来的信息</div><div class="kline">线段</div><div class="kline">交点</div><div class="kline">线框重建更省事</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">没有共识</div>
+  <h2>没有全能冠军，多试几种</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>哪种直线估计技术最好，书上说没有明确共识。</li><li>最好先想清楚问题，再实现几种方法做对比。</li><li>折线简化、Hough、RANSAC 都可以当候选。</li><li>数据一变，赢家可能就换人。</li></ul>
+      <div class="src">依据：原书第 481 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种候选</div><div class="kline">折线简化</div><div class="kline">Hough 投票</div><div class="kline">RANSAC 假设</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">消失点 · 小结</div>
+  <h2>平行线收进同一个消失点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三维里平行的直线，在图上共享同一个消失点。</li><li>建筑边、斑马线、铁轨、家具边都是例子。</li><li>消失点能精化直线位置，有时还能定相机内外参。</li><li>图 7.51 用矩形检测做走廊、立面；下一集讲图像分割。</li></ul>
+      <div class="src">依据：原书第 481 到 482 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">消失点用在哪</div><div class="kline">精化直线位置</div><div class="kline">估计相机内外参</div><div class="kline">矩形检测与三维线框</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十二集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

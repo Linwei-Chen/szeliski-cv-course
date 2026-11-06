@@ -1,0 +1,20 @@
+[lab] E105 bundle adjustment 开始 2026-11-03T02:58:24
+[lab] 源码 sha256=18460b71a27a64806becdd6d32c8f82cd5a0133dc9e0c7295d2d666198d70a13
+[PASS] 干净 BA 降误差　| 42.7 → 1.02 px
+[PASS] 代价单调下降　| 155766 → 95
+[PASS] 稠密=Schur　| 最大差 2.2e-14
+[PASS] 规范零空间 7 维　| 秩亏 7
+[PASS] 点块严格对角　| 非对角最大 0.0e+00
+[PASS] Schur 产生相机填充　| Hcc 180 → S 900 非零
+[PASS] Hessian 稀疏　| 非零率 24.9%
+[PASS] 鲁棒损失压外点　| 25.93 → 10.60 px（内点）
+[PASS] 鲁棒仍收敛　| 42.7 → 10.60 px
+[PASS] 三图在盘　| pipeline/sparsity/cost
+[lab] PNG sha256(e105_cost.png)=4d785a0c0aba7f85fbab131150dfd523d40d8e7a7454221b7b8860ba06f1d74f
+[lab] PNG sha256(e105_pipeline.png)=9758b6acfc5de3b2ad9f98dc20daa2bd41d3fae8b998cf2e7613a93cc74e1b44
+[lab] PNG sha256(e105_sparsity.png)=8783c6f287907cf84b9afcb0a1ea834ae3598995f10cfacd4863472eddc06ceb
+[lab] readings → e105_bundle_adjustment_readings.json
+[lab] readings sha256=3ade5756fb946c48678130c1ca8d3c938c1a284afd14530734640e49b123d6a6
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T02:58:24

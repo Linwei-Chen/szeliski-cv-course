@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>光如何变成数：光照、反射与 BRDF 入门</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开篇 · 光度成像</div>
+  <h2>光如何变成像素里的数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>照片由离散的颜色或强度值组成。</li><li>常见 8 位图像，取值 0 到 255。</li><li>这集追问：这些数值从哪里来。</li><li>光照、表面、相机、传感器共同决定。</li></ul>
+      <div class="src">依据：原书第 66 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四件事</div><div class="kline">环境光照</div><div class="kline">表面性质与几何</div><div class="kline">相机光学</div><div class="kline">传感器特性</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全景 · 简化模型</div>
+  <h2>一条完整的光度成像链路</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>光源发光，照到物体表面。</li><li>表面把一部分光反射向相机。</li><li>这是简化模型，忽略多次反射。</li><li>现实里光常在墙面之间来回弹。</li></ul>
+      <div class="src">依据：原书第 66 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e018_fig2_14.png" style="max-height:500px" alt="光度成像简化模型：光源→表面反射→相机｜程序生成，未用教材或论文原图"><figcaption>光度成像简化模型：光源→表面反射→相机｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">光源 · 点光源</div>
+  <h2>点光源：位置、光谱与衰减</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>点光源在一个位置发光，比如小灯泡。</li><li>也可以放到无穷远，比如太阳。</li><li>两样参数：强度和颜色光谱 L(λ)。</li><li>强度随距离平方衰减。</li></ul>
+      <div class="src">依据：原书第 66–67 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">点光源</div><div class="kline">位置：一点或无穷远</div><div class="kline">光谱：能量随波长的分布</div><div class="kline">衰减：距离平方反比</div><div class="kline">软阴影：太阳按面光源</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">光源 · 面光源与环境</div>
+  <h2>面光源与环境贴图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>荧光顶灯可建模成有限矩形。</li><li>方向性强的分布用四维光场。</li><li>环境贴图把入射方向映射成颜色。</li><li>三种表示：立方体面、经纬图、反射球。</li></ul>
+      <div class="src">依据：原书第 67 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">环境贴图</div><div class="kline">式 2.81：L(v̂; λ)</div><div class="kline">等价于光源都在无穷远</div><div class="kline">拍镜面球照片可粗略获取</div><div class="kline">有时配暗球捕捉高光</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">反射 · BRDF</div>
+  <h2>BRDF：表面如何分配反射光</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>BRDF 描述入射光朝各方向反射多少。</li><li>以表面局部坐标架为参照。</li><li>四个角度加波长，共五个量。</li><li>角度占四个，所以是四维函数。</li></ul>
+      <div class="src">依据：原书第 68 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">fᵣ(θᵢ, φᵢ, θᵣ, φᵣ; λ)</div><div class="mnote">式 2.82：入射天顶角、入射方位角、出射天顶角、出射方位角，再加波长</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">BRDF · 两条性质</div>
+  <h2>互易性与各向同性</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>互易：入射、出射方向对调，答案不变。</li><li>这来自光传播的物理，也叫 Helmholtz 互易。</li><li>各向同性：两个方向一起绕法线转，性质不变。</li><li>四个角度可压成三个，式 2.83。</li></ul>
+      <div class="src">依据：原书第 68 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条性质</div><div class="kline">互易：f(vi, vr) = f(vr, vi)</div><div class="kline">本集 200 组随机方向验证</div><div class="kline">各向同性：只依赖相对方位差</div><div class="kline">拉丝铝是各向异性例外</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">反射 · 反射方程</div>
+  <h2>把所有入射方向积分起来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个方向的光强乘 BRDF，再乘余弦。</li><li>对所有入射方向积分，得式 2.84。</li><li>余弦因子叫前缩，斜照会摊薄。</li><li>背光取零，写成 max(0, cos θᵢ)。</li></ul>
+      <div class="src">依据：原书第 69–70 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">Lᵣ(v̂ᵣ; λ) = ∫ Lᵢ(v̂ᵢ; λ) fᵣ(v̂ᵢ, v̂ᵣ, n̂; λ) cos⁺θᵢ dv̂ᵢ</div><div class="mnote">式 2.84；cos⁺θᵢ = max(0, cos θᵢ)，式 2.85。单位面积接收的光功率叫辐照度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">反射 · 离散光源</div>
+  <h2>有限个点光源：积分变求和</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>光源是有限个点光源时，积分变求和。</li><li>每个光源贡献光强乘 BRDF 乘余弦。</li><li>BRDF 可来自物理建模或启发式建模。</li><li>也可以来自测量采样，比如 CURET。</li></ul>
+      <div class="src">依据：原书第 69 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">Lᵣ(v̂ᵣ; λ) = Σᵢ Lᵢ(λ) fᵣ(v̂ᵢ, v̂ᵣ, n̂; λ) cos⁺θᵢ</div><div class="mnote">式 2.86；物理建模如微面元，启发式如 Phong，测量如 CURET</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">漫反射 · 朗伯</div>
+  <h2>漫反射：均匀散光与体色</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>漫反射把光均匀散向四面八方。</li><li>雕像表面平滑的明暗过渡就是它。</li><li>光钻进材料内部，被选择性吸收再射出。</li><li>所以白光照红塑料，反射出来是红光。</li></ul>
+      <div class="src">依据：原书第 70 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e018_lambert_sphere.png" style="max-height:500px" alt="朗伯球亮度与两条经线剖面：亮侧分界 120°，背光侧 60°｜程序生成，未用教材或论文原图"><figcaption>朗伯球亮度与两条经线剖面：亮侧分界 120°，背光侧 60°｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">镜面反射 · 高光</div>
+  <h2>镜面反射：绕法线翻转 180°</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>镜面反射把入射光绕法线翻转 180°。</li><li>反射方向 ŝ = (2n̂n̂ᵀ − I)vᵢ，式 2.90。</li><li>法向分量保留，切向分量取反。</li><li>指数越大，高光越小越锐利。</li></ul>
+      <div class="src">依据：原书第 70–71 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">ŝᵢ = v∥ − v⊥ = (2n̂n̂ᵀ − I)vᵢ</div><div class="mnote">式 2.90；θs 是视线与镜面方向的夹角，式 2.91–2.92 给高光分布</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">着色 · Phong 模型</div>
+  <h2>环境 + 漫反射 + 镜面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>环境光不随表面朝向变。</li><li>它代表墙面互反射、蓝天这类弱光。</li><li>漫反射项是 kd 乘 max(0, v·n)。</li><li>镜面项是 ks 乘 (v̂r·ŝ)^ke。</li></ul>
+      <div class="src">依据：原书第 72 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e018_phong_profile.png" style="max-height:500px" alt="Phong 三分量剖面：环境与漫反射水平，镜面峰随指数收窄｜程序生成，未用教材或论文原图"><figcaption>Phong 三分量剖面：环境与漫反射水平，镜面峰随指数收窄｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">颜色 · 三条规律</div>
+  <h2>Phong 模型里的三条颜色规律</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>环境系数 ka 和漫反射系数 kd 同谱。</li><li>两者都来自材料内部的体反射。</li><li>镜面系数 ks 常白，界面反射不染色。</li><li>铜这类金属例外；阴影常因天空光偏蓝。</li></ul>
+      <div class="src">依据：原书第 72 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条规律</div><div class="kline">ka 与 kd：同一条材质谱</div><div class="kline">ks 常白：高光呈光源色</div><div class="kline">铜：有色镜面反射</div><div class="kline">阴影偏蓝：天空环境光</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">双色 · 光谱乘几何</div>
+  <h2>双色反射：两路之和</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>均匀材质在单光源下的表观颜色。</li><li>等于界面反射加体反射。</li><li>每一项都是光谱乘几何。</li><li>颜色只看波长，强弱只看角度。</li></ul>
+      <div class="src">依据：原书第 73 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e018_dichromatic.png" style="max-height:500px" alt="双色反射：界面反射与体反射两路，逐波长相加｜程序生成，未用教材或论文原图"><figcaption>双色反射：界面反射与体反射两路，逐波长相加｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全局光照 · 两条路线</div>
+  <h2>光不只弹一次：两条经典路线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>现实里光源会被遮挡，光会多次反弹。</li><li>镜面为主：用光线追踪，从相机出发。</li><li>反照率均匀、几何简单：用辐射度。</li><li>辐射度算形状因子，解大型线性方程组。</li></ul>
+      <div class="src">依据：原书第 73–74 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">光线追踪：玻璃、镜面球</div><div class="kline">辐射度：面片 + 形状因子</div><div class="kline">近场变暗与部分遮挡可被利用</div><div class="kline">一定条件下可从照片恢复全局光照</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 四句话</div>
+  <h2>把这一集收成四句话</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>四件事决定像素数值：光照、表面、相机、传感器。</li><li>点光源平方反比；环境贴图设光源在无穷远。</li><li>BRDF 四维、互易；各向同性可压三维。</li><li>Phong 三项；双色模型拆成光谱乘几何。</li></ul>
+      <div class="src">依据：原书第 66–73 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">词汇卡</div><div class="kline">光度成像 / 点面光源</div><div class="kline">环境贴图 / BRDF / 互易性</div><div class="kline">漫反射 / 镜面反射 / 环境光</div><div class="kline">双色反射 / 光线追踪 / 辐射度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">回书 · 作业与下一集</div>
+  <h2>翻回第 66–74 页</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>本集范围：2.2 开篇加 2.2.1、2.2.2。</li><li>公式 2.81–2.96，页码 66–74。</li><li>作业：推导平方反比，算朗伯球亮度。</li><li>作业：证明式 2.90 等价于绕法线翻转。</li></ul>
+      <div class="src">依据：原书第 66–74 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">薄透镜与对焦</div><div class="kline">曝光与渐晕</div><div class="kline">像差</div><div class="kline">然后落到传感器</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

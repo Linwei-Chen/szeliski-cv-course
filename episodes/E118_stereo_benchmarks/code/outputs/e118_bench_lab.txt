@@ -1,0 +1,26 @@
+[lab] E118 榜单沙盘开始 2026-11-05T19:38:36
+[lab] 源码 sha256=74646cec74dddf39fc32f55a7352b86a1686d8c6ab98cdb1ef154433408bb946
+[lab] 边界：合成误差图；Table 12.1 规模=书页事实，真值覆盖率=沙盘假设
+[PASS] 稠密沙盘真值覆盖 100.0%
+[PASS] 稀疏沙盘真值覆盖 30.0%
+[PASS] 阈值 1 像素：B 9.8% 优于 A 29.4%
+[PASS] 阈值 2 像素：A 0.0% 优于 B 9.8%（排名翻转）
+[PASS] RMSE：A 0.672 优于 B 1.572
+[PASS] 去边界：B 4.4% 优于 A 23.9%
+[PASS] 去遮挡：B 6.3% 优于 A 21.6%
+[PASS] 稀疏预测 C：有效区 bad1 0.0%，覆盖 30.0%，全图缺失 70.0%
+[PASS] 测试集调阈值 1.5：A 0.0% vs B 9.8%；换域后 B 9.8% vs A 29.4%
+[PASS] 跨域误差放大 6.0 倍 | 0.20 → 1.20
+[lab] 图1 规模：Middlebury 33｜KITTI 200+200｜DTU 124×49–64｜ETH3D 13+12｜SceneFlow 39k
+[lab] 指标：bad1 A 29.4% / B 9.8%；bad2 A 0.0% / B 9.8%；RMSE A 0.672 / B 1.572
+[lab] 掩码：去边界 A 23.9% / B 4.4%；去遮挡 A 21.6% / B 6.3%
+[lab] 稀疏 C：有效区 bad1 0.0%｜覆盖 30.0%｜全图缺失 70.0%
+[lab] 换域：测试 A 0.0% vs B 9.8%｜同阈值 holdout B 9.8% vs A 29.4%｜放大 6.0×
+[lab] PNG sha256(e118_benchmarks.png)=d21cea353a80f864c61c1bac0e52d27b44077ced42b71f794e8613c15d9f020c
+[lab] PNG sha256(e118_metrics.png)=c45cac2ce80785fdf505e9de83aba0a0cbb57c1fcdb4a5a0c035690173687065
+[lab] PNG sha256(e118_reader.png)=64405e1b53ddd2831397e13b0892177b888519aa3e86f4aaa14ee40d254d28b6
+[lab] readings → e118_bench_readings.json
+[lab] readings sha256=25a62c34e38bd2d51ca75b783dffb19153e89384db75dae8020d24dc9f18edd4
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-05T19:38:40

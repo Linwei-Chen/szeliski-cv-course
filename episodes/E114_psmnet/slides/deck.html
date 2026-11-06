@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>PSM-Net：端到端立体匹配</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 12 章 · 深度立体匹配</div>
+  <h2>PSM-Net：从手工到端到端</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>深度网络和端到端学习改变了立体匹配。</li><li>教材把方法分成三类。</li><li>本集重点讲第三类：三维端到端。</li><li>PSM-Net 把特征堆成带视差维的体积。</li></ul>
+      <div class="src">依据：原书第 778–779 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三类路线</div><div class="kline">在传统管线里学一环</div><div class="kline">二维网络端到端</div><div class="kline">三维网络端到端</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三类路线 · 分类</div>
+  <h2>三条路线：只学一环、二维、三维</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第一类只替换传统管线里的一环。</li><li>第二类输入左右图，直接输出整幅视差。</li><li>第三类显式保留视差维。</li><li>越往右越吃数据和算力，内存也更大。</li></ul>
+      <div class="src">依据：原书第 778–780 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e114_taxonomy.png" style="max-height:480px" alt="端到端立体匹配的三条路线：传统管线加学习 / 二维端到端 / 三维端到端｜程序生成，未用教材或论文原图"><figcaption>端到端立体匹配的三条路线：传统管线加学习 / 二维端到端 / 三维端到端｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">路线一 · 管线内学习</div>
+  <h2>路线一：只换管线中的一环</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>2016 年，兹邦塔尔和勒昆第一次用学习做匹配代价。</li><li>他们用训练出来的特征优化成对匹配代价。</li><li>SGM-Net 用卷积网络调整 SGM 的转移代价。</li><li>学到的匹配代价至今仍用于 Middlebury。</li></ul>
+      <div class="src">依据：原书第 779 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">这类方法的特点</div><div class="kline">不改传统管线</div><div class="kline">只换某一环</div><div class="kline">聚合和后处理仍手工</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">路线二 · DispNet-C</div>
+  <h2>路线二：二维端到端</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最早的二维端到端模型是 DispNet-C。</li><li>它用相关层计算左右图像层的相似度。</li><li>编码器解码器把整幅图压小再放大。</li><li>旧网络缺少利用上下文的手段。</li></ul>
+      <div class="src">依据：原书第 779 页；PSM-Net 论文第 1 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">难在哪</div><div class="kline">遮挡、重复纹理</div><div class="kline">无纹理、反光区域</div><div class="kline">需要更大范围的区域支持</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">PSM-Net · 总览</div>
+  <h2>PSM-Net：SPP 加四维体积</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左右图各自过 CNN 和 SPP。</li><li>得到四分之一分辨率的特征。</li><li>按视差 d 拼出四维体积。</li><li>再用三维卷积做正则化。</li></ul>
+      <div class="src">依据：PSM-Net 论文第 1、4 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e114_volume.png" style="max-height:480px" alt="PSM-Net 结构：SPP → 四维体积 → 三维卷积｜程序生成，未用教材或论文原图"><figcaption>PSM-Net 结构：SPP → 四维体积 → 三维卷积｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">SPP · 多尺度</div>
+  <h2>SPP：四个尺度的上下文</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SPP 用四个固定尺寸的平均池化块。</li><li>尺寸分别是 64、32、16、8。</li><li>再经过 1×1 卷积和上采样拼回。</li><li>小尺度看细节，大尺度看布局。</li></ul>
+      <div class="src">依据：PSM-Net 论文第 4 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">它改变了什么</div><div class="kline">不改变分辨率</div><div class="kline">改变每个位置能看到多大范围</div><div class="kline">比单纯堆卷积省算力</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">内存 · 四维体积</div>
+  <h2>代价：一张体积 384 兆字节</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>论文裁剪 256×512，特征图 64×128。</li><li>视差 192，左右各 32 通道拼成 64 通道。</li><li>一个体积约 384 兆字节。</li><li>不下采样，单张就是 6 吉字节，正好 16 倍。</li></ul>
+      <div class="src">依据：PSM-Net 论文第 4 页；原书第 780 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">再乘批量</div><div class="kline">训练批量 12 张</div><div class="kline">光体积 4.5 吉字节</div><div class="kline">还没算特征图和梯度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三维卷积 · 正则化</div>
+  <h2>三维卷积：沙漏反复压体积</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>基础版有十二层 3×3×3 卷积。</li><li>堆叠沙漏版有三个沙漏，各输出一张视差图。</li><li>三维卷积参数量约三倍。</li><li>三个输出都加损失，做中间监督。</li></ul>
+      <div class="src">依据：PSM-Net 论文第 4 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种版本</div><div class="kline">基础版只堆残差块</div><div class="kline">沙漏先下采样再上采样</div><div class="kline">基础版适合消融，沙漏更贵</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视差回归 · 结果</div>
+  <h2>回归：softmax 加权求和</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不用分类，而是做视差回归。</li><li>对每个视差算 softmax 概率。</li><li>再把视差按概率加权求和。</li><li>分类只能选整数，回归能出连续值。</li></ul>
+      <div class="src">依据：PSM-Net 论文第 5–6 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">训练与结果</div><div class="kline">平滑 L1 损失</div><div class="kline">三个沙漏输出加权求和</div><div class="kline">KITTI 2015 验证 1.83%，测试 2.32%</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验实测 · 320×192</div>
+  <h2>沙盘：弱纹理被拉回</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>合成 320×192 的双目图。</li><li>弱纹理块有 1936 个有效像素。</li><li>逐像素取最小，弱纹理块成片出错。</li><li>加固定三维聚合后，基本被拉回。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e114_lab.png" style="max-height:520px" alt="合成双目沙盘：真值视差 / 逐像素取最小 / 固定三维聚合；弱纹理块 10.19 到 1.51 像素｜程序生成，未用教材或论文原图"><figcaption>合成双目沙盘：真值视差 / 逐像素取最小 / 固定三维聚合；弱纹理块 10.19 到 1.51 像素｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验实测 · 对照</div>
+  <h2>对照：固定核不等于学会</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>总体误差从 7.43 降到 4.16 像素。</li><li>弱纹理从 10.19 降到 1.51。</li><li>九成位数从 26.18 降到 23.58。</li><li>二维聚合总体 3.96、弱纹理 0.27，反而更好。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">其他对照</div><div class="kline">边界误差 9.59 到 9.37</div><div class="kline">全局 softmax 12.71</div><div class="kline">局部 softmax 4.09，整数取最小 4.16</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">开放挑战 · 泛化</div>
+  <h2>边界：泛化与分辨率</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>有专门训练集的基准上，深度方法领先。</li><li>跨域泛化仍不好。</li><li>两个开放挑战：跨域泛化和高分辨率。</li><li>Middlebury 上深度方法仍然缺席。</li></ul>
+      <div class="src">依据：原书第 781 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">工程取舍</div><div class="kline">四维体积随视差线性增长</div><div class="kline">按分辨率、视差范围、算力取舍</div><div class="kline">训练域外性能会掉</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百零六集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

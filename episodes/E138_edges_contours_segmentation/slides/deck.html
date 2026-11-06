@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>边缘、轮廓与分割：第7章补遗</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">补遗课 · 第7章缺口</div>
+  <h2>第7章补遗：边缘、轮廓、分割</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第7章已讲特征点、直线和消失点。</li><li>边缘、轮廓跟踪、分割三节没排主线。</li><li>这一集把这三节一次补齐。</li><li>三个问题：边缘、连轮廓、分像素。</li></ul>
+      <div class="src">依据：原书第 455 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条线</div><div class="kline">边缘是线</div><div class="kline">轮廓是把线串起来</div><div class="kline">分割是把画面分块</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">基础 · 边缘与梯度</div>
+  <h2>边缘：亮度或颜色快速变化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>边缘在颜色、亮度或纹理的边界。</li><li>局部梯度指向亮度上升最陡方向。</li><li>求导放大噪声，先平滑再求梯度。</li><li>平滑、求梯度、找极值三步。</li></ul>
+      <div class="src">依据：原书第 456–457 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">尺度选择</div><div class="kline">平滑太强：弱边缘丢</div><div class="kline">平滑太弱：噪声冒出</div><div class="kline">没有一套参数通吃所有图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">经典检测 · Canny</div>
+  <h2>Canny：细化、双阈值、滞后</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>非极大值抑制只留梯度局部极大。</li><li>双阈值：高阈值起步，低阈值续接。</li><li>低阈值弱边多，噪声也多。</li><li>高阈值干净，但容易断线。</li></ul>
+      <div class="src">依据：原书第 457、463 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">调参顺序</div><div class="kline">先低阈值看召回</div><div class="kline">再高阈值看精度</div><div class="kline">方向差太多的点不要连</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">表示 · 从边缘到轮廓</div>
+  <h2>轮廓：把边缘点连成链</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>孤立边缘连成连续轮廓更有用。</li><li>弧长参数化把轮廓写成 x(s)。</li><li>链码按八个方向记步数。</li><li>链码适合存，弧长适合匹配。</li></ul>
+      <div class="src">依据：原书第 461、463 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">分组依据</div><div class="kline">闭合性：看首尾距离</div><div class="kline">长度：短链先筛掉</div><div class="kline">平滑度：拐得太急不要</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图1 · 边缘检测</div>
+  <h2>看图：高阈值更干净，也更保守</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>360×270 合成图，三个形状颜色分明。</li><li>低阈值 50/150：1007 像素，F1 1.00。</li><li>高阈值 180/350：348 像素，F1 0.508。</li><li>高阈值精度 1.00，召回只有 0.340。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e138_edges.png" style="max-height:450px" alt="边缘检测：低/高阈值与 F1｜程序生成，未用教材或论文原图"><figcaption>边缘检测：低/高阈值与 F1｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">活动轮廓 · snake</div>
+  <h2>snake：能量最小的光滑曲线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>能量最小化的二维样条，朝强边缘走。</li><li>图像能量：线项、边缘项、端点项。</li><li>内部保持光滑，外部贴住边缘。</li><li>依赖初始化，容易卡局部极小。</li></ul>
+      <div class="src">依据：原书第 466–468 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个问题</div><div class="kline">容易收缩：从外侧初始化</div><div class="kline">或者加一个向外的气球力</div><div class="kline">形状变化大：加形状先验</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图2 · 轮廓提取</div>
+  <h2>看图：轮廓提出来，要拿数说话</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>低阈值边缘闭合，提取 3 个外轮廓。</li><li>面积误差 0.012、0.007、0.017，都小于 2%。</li><li>圆度 4πA/P²：圆 0.893，矩形 0.787，三角 0.562。</li><li>轮廓越碎，面积和圆度越不稳。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e138_contours.png" style="max-height:500px" alt="轮廓提取：面积、圆度与闭合筛选｜程序生成，未用教材或论文原图"><figcaption>轮廓提取：面积、圆度与闭合筛选｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">轮廓跟踪 · 水平集</div>
+  <h2>水平集：让拓扑自己变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>参数化曲线演化时很难改变拓扑。</li><li>水平集用零等值线表示曲线。</li><li>分裂和合并只是函数在变。</li><li>只更新零等值线附近的窄带。</li></ul>
+      <div class="src">依据：原书第 474、476 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种工具</div><div class="kline">智能剪刀：Dijkstra 找最低成本路径</div><div class="kline">rotoscoping：关键帧加传播</div><div class="kline">用户画大概，路径吸到边缘</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图3 · 分割基线</div>
+  <h2>看图：颜色分开，聚类几乎满分</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Lab 颜色 k-means，K 取 4。</li><li>像素准确率 1.0000。</li><li>三个类别的 IoU 都是 1.0000。</li><li>合成图颜色分得开，换自然图像会掉分。</li></ul>
+      <div class="src">依据：本集实验；原书第 483 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e138_segmentation.png" style="max-height:500px" alt="颜色聚类分割：准确率与每类 IoU｜程序生成，未用教材或论文原图"><figcaption>颜色聚类分割：准确率与每类 IoU｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图分割 · 区域合并</div>
+  <h2>图分割：看相对差异，不看固定阈值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>全局准则：区内一致，区间边界短。</li><li>Felzenszwalb 与 Huttenlocher 用相对差异合并。</li><li>像素当节点，相邻差异当边权。</li><li>最小割容易切出孤立小区域。</li></ul>
+      <div class="src">依据：原书第 484–486 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">常用预处理</div><div class="kline">分水岭：按地形分水</div><div class="kline">超像素：先切小碎片</div><div class="kline">碎片上再处理，省算力</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">两种思路 · mean shift 与归一化割</div>
+  <h2>mean shift 找峰，归一化割切弱边</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>mean shift 沿密度上升，爬到峰。</li><li>峰就是模式，同峰归一类。</li><li>归一化割看跨组连接有多弱。</li><li>最优归一化割是 NP-complete。</li></ul>
+      <div class="src">依据：原书第 487–490 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">参数与代价</div><div class="kline">颜色和位置联合空间，核分别调</div><div class="kline">窗口半径 h 太大合并、太小碎</div><div class="kline">特征值松弛：慢，但弱边界敏感</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 第7章闭环</div>
+  <h2>一条边缘到分割的流水线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>边缘：平滑、梯度、抑制、滞后。</li><li>轮廓：连链，再按面积和圆度筛选。</li><li>分割：图合并、mean shift、归一化割。</li><li>作业：换阈值，记录精度、召回、IoU。</li></ul>
+      <div class="src">依据：原书第 455 页；第7章闭环</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三件事</div><div class="kline">边缘给候选边界</div><div class="kline">轮廓把候选串起来</div><div class="kline">分割把区域填起来</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

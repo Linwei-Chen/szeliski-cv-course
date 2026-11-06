@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>全景大战役 Ⅱ：柱面/球面投影与投影函数选型</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 §8.2.6 · 柱面/球面投影</div>
+  <h2>对齐之后，往哪放</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集把多张图的姿态对齐了。</li><li>这一集把图投到同一曲面，再展开。</li><li>柱面像一圈纸，球面像一个球。</li><li>选哪个，决定能拍多大、边缘会不会拉。</li></ul>
+      <div class="src">依据：原书第 523 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两件事</div><div class="kline">对齐：谁对谁</div><div class="kline">投影：往哪放</div><div class="kline">投影决定边缘变形</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 §8.2.6 · 原书第 523 页</div>
+  <h2>先投影，再对齐</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不直接估单应，先把图投到柱面坐标。</li><li>再用纯平移模型对齐。</li><li>只适用于相机水平，或倾角已知。</li><li>相机歪了，竖线在柱面上也会弯。</li></ul>
+      <div class="src">依据：原书第 523 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">前提</div><div class="kline">相机保持水平</div><div class="kline">或者倾角已知</div><div class="kline">否则竖线会弯</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">规范位置 · 原书第 523 页</div>
+  <h2>把相机摆正</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>规范位置：旋转矩阵是单位阵。</li><li>光轴对准 z 轴，y 轴竖直向上。</li><li>像素 (x, y) 对应射线 (x, y, f)。</li><li>f 是焦距。</li></ul>
+      <div class="src">依据：原书第 523 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">(x, y, f)</div><div class="mnote">像素 (x, y) 过光心；f 为焦距；投影把射线方向换成角度与高度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">投影管线 · 程序生成</div>
+  <h2>四步走：把方向记到曲面上</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>像素射线先投到曲面。</li><li>柱面记角度 θ 和高度 h。</li><li>球面记 θ 和 φ。</li><li>展开后做纯平移、接缝和曝光。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e078_pipeline.png" style="max-height:440px" alt="投影管线：像素射线、柱面或球面、展开、对齐与融合｜程序生成，未用教材或论文原图"><figcaption>投影管线：像素射线、柱面或球面、展开、对齐与融合｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 §8.2.6 · 原书第 524 页</div>
+  <h2>柱面：角度管左右，高度管上下</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>单位半径柱面，点用 θ 和 h 表示。</li><li>三维方向正比于 (sinθ, h, cosθ)。</li><li>横坐标 s·θ，θ = arctan(x/f)。</li><li>纵坐标 s·h，h = y/√(x²+f²)。</li></ul>
+      <div class="src">依据：原书第 524 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">θ = arctan(x/f)<br>h = y / √(x² + f²)</div><div class="mnote">横坐标 s·θ，纵坐标 s·h；s 是柱面半径</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 §8.2.6 · 原书第 524 页</div>
+  <h2>半径 s：把柱面卷多大</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>s 是任意缩放因子，也叫柱面半径。</li><li>设 s = f，中心附近畸变或缩放最小。</li><li>逆变换：横坐标用 f·tan，纵坐标乘 sec。</li><li>正反成对，图能投过去，也能查回来。</li></ul>
+      <div class="src">依据：原书第 524 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么选</div><div class="kline">s=f：中心最接近原图</div><div class="kline">s 越大，展开图越宽</div><div class="kline">不是越小越好，看输出分辨率</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 §8.2.6 · 原书第 524 页</div>
+  <h2>球面：把天和地也包进来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>全景要包含完整球面或半球，柱面就不够。</li><li>球面用两个角度：θ 管经度，φ 管纬度。</li><li>三维方向是 (sinθcosφ, sinφ, cosθcosφ)。</li><li>展开后越靠近极点，横向越挤。</li></ul>
+      <div class="src">依据：原书第 524 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">何时用</div><div class="kline">全球或半球视野</div><div class="kline">不只是一条柱面条带</div><div class="kline">代价：极点附近横向挤</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">映射曲线 · 程序生成</div>
+  <h2>曲线：柱面压边，球面有界</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左边横轴是像素 x。</li><li>蓝线柱面按角度走，边缘压紧。</li><li>绿虚线平面按像素走，边缘拉出去。</li><li>右边：柱面 h 越拉越长，球面 φ 有界。</li></ul>
+      <div class="src">依据：本集实验；公式见原书第 524 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e078_curves.png" style="max-height:440px" alt="柱面与平面横向展开对比；柱面高度与球面角度的纵向对比｜程序生成，未用教材或论文原图"><figcaption>柱面与平面横向展开对比；柱面高度与球面角度的纵向对比｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 §8.2.6 · 原书第 525 页</div>
+  <h2>水平转动：二维降成一维</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相机保持水平，只绕竖直轴转动。</li><li>不同转角的图，在柱面上只差水平平移。</li><li>小量竖直倾斜，可用竖直平移补偿。</li><li>前提仍是水平，歪了就不是纯平移。</li></ul>
+      <div class="src">依据：原书第 525 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">常用条件</div><div class="kline">相机水平</div><div class="kline">只绕竖轴转</div><div class="kline">配准降成一维平移</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 §8.2.6 · 原书第 526 页</div>
+  <h2>专业设备：把未知变已知</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>全景云台能控制俯仰，在特定角度卡住。</li><li>电动转头常用于大范围拍摄。</li><li>设备保证覆盖均匀、重叠合适。</li><li>已知角度能把搜索范围缩小很多。</li></ul>
+      <div class="src">依据：原书第 526 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">云台的价值</div><div class="kline">控制俯仰与转角</div><div class="kline">覆盖均匀、重叠合适</div><div class="kline">把未知角度变成已知</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 §8.2.6 · 原书第 526 页</div>
+  <h2>极坐标：另一种投影函数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>北极在光轴上，不在竖直方向。</li><li>用半径 r 和角度 θ、φ 表示。</li><li>x、y 很小时，近似为 x 方向乘 s 除以 z。</li><li>中心接近透视，越往边缘越卷。</li></ul>
+      <div class="src">依据：原书第 526 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">鱼眼模型</div><div class="kline">北极沿光轴</div><div class="kline">中心接近透视</div><div class="kline">边缘越卷</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">十一项断言 · 程序生成</div>
+  <h2>实验：公式自洽，拉伸算得出</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>柱面、球面正反变换往返误差在 1e−13 量级。</li><li>纯偏航后，柱面横坐标整体平移，偏差在机器精度。</li><li>半视角 60 度，平面整体距离比约 1.65。</li><li>柱面保持 1；这不是局部放大率。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e078_stretch.png" style="max-height:440px" alt="边缘拉伸：半视角 30、45、60 度时平面约 1.10、1.27、1.65 倍，柱面保持 1.00｜程序生成，未用教材或论文原图"><figcaption>边缘拉伸：半视角 30、45、60 度时平面约 1.10、1.27、1.65 倍，柱面保持 1.00｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">柱面/球面/平面 · 选型归纳</div>
+  <h2>选型：假设最匹配</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>水平一圈，用柱面。</li><li>要包天包地，用球面。</li><li>视野窄、又想保留直线，用平面。</li><li>相机乱晃或有近物，回单应或全局对齐。</li></ul>
+      <div class="src">依据：原书第 523–526 页；选型为本集归纳</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种面</div><div class="kline">柱面：长卷</div><div class="kline">球面：全球或半球</div><div class="kline">平面：普通照片</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程归纳 · 非原书列举</div>
+  <h2>工程五步：顺序别反</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>确认相机水平，或记录倾角。</li><li>留足重叠，别让相邻图擦边。</li><li>估焦距，f 不准会整体伸缩。</li><li>选柱面或球面，再定 s。</li></ul>
+      <div class="src">依据：本集归纳；公式见原书第 524–526 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">顺序</div><div class="kline">先正相机</div><div class="kline">再投影、对齐</div><div class="kline">最后才修接缝与曝光</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">适用范围 · 第 8 章 §8.2.6</div>
+  <h2>边界：视差它管不了</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>柱面、球面加纯平移，靠相机只转不平移。</li><li>相机走动，近处和远处相对位置会变。</li><li>纯平移解释不了，画面出现视差重影。</li><li>不满足水平或已知倾角，就别硬套。</li></ul>
+      <div class="src">依据：原书第 523 页；视差回退为本集归纳</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">回退路线</div><div class="kline">视差重影：别硬套</div><div class="kline">回单应、分层或三维重建</div><div class="kline">先认清假设，再选工具</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">移交 · 曝光补偿与多频段混合</div>
+  <h2>收束：投影放对位置</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>柱面用 θ 和 h，球面用 θ 和 φ。</li><li>水平转动在柱面上变成纯平移。</li><li>s 设成 f，中心畸变最小。</li><li>极坐标还能解释鱼眼。</li></ul>
+      <div class="src">依据：原书第 524–526 页；下一集为曝光与融合</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">相邻图亮度不一样</div><div class="kline">接缝看得见</div><div class="kline">曝光补偿 + 多频段混合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

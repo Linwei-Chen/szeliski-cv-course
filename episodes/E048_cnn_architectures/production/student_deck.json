@@ -1,0 +1,184 @@
+{
+  "title": "架构演进史：AlexNet、VGG、GoogLeNet、ResNet 的接力",
+  "pagefoot": "正课第四十集",
+  "total": 9,
+  "pages": [
+    {
+      "kicker": "第 5 章 · 5.4.3 网络架构",
+      "h2": "十年接力：从 AlexNet 到 ResNet",
+      "bullets": [
+        "卷积网络上世纪九十年代末就有。",
+        "2012 年 AlexNet 点火。",
+        "错误率 25.8% → 16.4%。",
+        "四件套：dropout、增广、动量、权重衰减。"
+      ],
+      "right": {
+        "type": "keybox",
+        "title": "本集路线",
+        "lines": [
+          "5.4.3：四代架构",
+          "5.4.4：工程生态",
+          "精度、深度、效率、部署"
+        ]
+      },
+      "src": "依据：原书第 299–300 页"
+    },
+    {
+      "kicker": "ILSVRC 接力 · 程序生成图",
+      "h2": "看图：五年五棒，误差一路降",
+      "bullets": [
+        "2013 Zeiler & Fergus 加宽，误差降约 30%。",
+        "2014 VGG 堆 3×3，16–19 层。",
+        "误差再降 40%；两层 3×3 省 28%。",
+        "代价是计算量大幅增加。"
+      ],
+      "right": {
+        "type": "figure",
+        "src": "code/outputs/figures/e048_fig1_relay.png",
+        "cap": "五棒接力：AlexNet→Zeiler & Fergus→VGG→GoogLeNet→ResNet，数字取自原书正文｜程序生成，未用教材或论文原图",
+        "style": "max-height:500px"
+      },
+      "src": "依据：原书第 300 页"
+    },
+    {
+      "kicker": "GoogLeNet · 效率",
+      "h2": "效率路线：先压图，再做分支",
+      "bullets": [
+        "主干网把 224×224 压到 28×28。",
+        "Inception：多路卷积后拼接。",
+        "1×1 瓶颈：先压通道再做卷积。",
+        "删全连接，改全局平均池化。"
+      ],
+      "right": {
+        "type": "keybox",
+        "title": "两个省钱招",
+        "lines": [
+          "1×1 瓶颈：约 8.5 倍",
+          "GAP：约 49 倍",
+          "先投影再卷积：Perona 1995",
+          "性能与 VGG 相当"
+        ]
+      },
+      "src": "依据：原书第 300–301 页"
+    },
+    {
+      "kicker": "ResNet · 程序生成图",
+      "h2": "残差块：让梯度抄近道",
+      "bullets": [
+        "跳跃连接让信息和梯度绕路。",
+        "网络学进出激活之间的差值。",
+        "瓶颈块：1×1 → 3×3 → 1×1。",
+        "18/34/50/101/152 层；2015 五项第一。"
+      ],
+      "right": {
+        "type": "figure",
+        "src": "code/outputs/figures/e048_fig2_residual.png",
+        "cap": "残差块：basic 与 bottleneck 对照，红色弧线=skip connection｜程序生成，未用教材或论文原图",
+        "style": "max-height:500px"
+      },
+      "src": "依据：原书第 302–303 页"
+    },
+    {
+      "kicker": "Mobile networks",
+      "h2": "第五棒：给手机省算力",
+      "bullets": [
+        "反向潮流：给移动设备做小网络。",
+        "MobileNets：深度可分离卷积。",
+        "宽度、分辨率两个倍率可调。",
+        "MobileNetV2 倒残差；ShuffleNet 洗牌。"
+      ],
+      "right": {
+        "type": "keybox",
+        "title": "轻量化名单",
+        "lines": [
+          "MobileNetV2：倒残差",
+          "ShuffleNet：通道洗牌",
+          "ShuffleNet V2：通道拆分",
+          "ESPNet 系列也在名单里"
+        ]
+      },
+      "src": "依据：原书第 303 页"
+    },
+    {
+      "kicker": "5.4.4 模型动物园",
+      "h2": "模型动物园：下载、换头、微调",
+      "bullets": [
+        "从 TorchVision 等动物园下权重。",
+        "名字出自 Caffe 主开发 Shelhamer。",
+        "主干 + 头：末尾几层叫头。",
+        "微调：用更贴近应用的数据训练。"
+      ],
+      "right": {
+        "type": "keybox",
+        "title": "迁移学习",
+        "lines": [
+          "数据少：接线性模型",
+          "数据多：接整段网络",
+          "微调主干：学习率调小",
+          "一处预训练，搬到另一处"
+        ]
+      },
+      "src": "依据：原书第 304–305 页"
+    },
+    {
+      "kicker": "尺子与 NAS",
+      "h2": "两个尺子，一种自动设计",
+      "bullets": [
+        "参数量量大小，FLOPs 量计算负载。",
+        "低精度算术、权重压缩能省。",
+        "XNOR-Net：二值权重，开或关。",
+        "NAS 让算法试拓扑，省研究者时间。"
+      ],
+      "right": {
+        "type": "keybox",
+        "title": "效率趋势",
+        "lines": [
+          "FBNet/EfficientNet/RegNet",
+          "新一代少 10× 参数",
+          "甚至能做无监督搜索"
+        ]
+      },
+      "src": "依据：原书第 305–306 页"
+    },
+    {
+      "kicker": "深度学习软件",
+      "h2": "工具箱：框架与生态",
+      "bullets": [
+        "十年间出现二十多个框架。",
+        "Caffe 基本被 PyTorch、TensorFlow 取代。",
+        "教材：Keras、MXNet、CS231n。",
+        "TensorBoard、Visdom、Classy Vision。"
+      ],
+      "right": {
+        "type": "keybox",
+        "title": "训练指南",
+        "lines": [
+          "Karpathy 写了实用指南",
+          "帮你避开常见的坑",
+          "高层封装少写代码"
+        ]
+      },
+      "src": "依据：原书第 306–307 页"
+    },
+    {
+      "kicker": "收束 · 作业 · 移交",
+      "h2": "接力跑完，留下两道题",
+      "bullets": [
+        "口算：两层 3×3 替一层 5×5，省几成？",
+        "思考：参数量之外还有什么区别？",
+        "提示：数一数激活函数出现几次。",
+        "下一集：5.4.5 可视化权重与激活。"
+      ],
+      "right": {
+        "type": "keybox",
+        "title": "交接",
+        "lines": [
+          "AlexNet → ResNet：152 层",
+          "模型动物园与工具箱",
+          "下一集看网络内部学到什么"
+        ]
+      },
+      "src": "依据：原书第 299–307 页"
+    }
+  ]
+}

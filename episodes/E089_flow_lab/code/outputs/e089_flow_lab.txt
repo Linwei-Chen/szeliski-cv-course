@@ -1,0 +1,20 @@
+[lab] E089 光流/LK 开始 2026-11-02T20:25:45
+[lab] 源码 sha256=0e1d02a61a6609b86d8dd413cd2fbc820b2a538c7cbf1d5e42f33730413838bb
+[PASS] 颜色轮方向往返　| 最大 7.63e-14°
+[PASS] 一次线性化误差大　| EPE=1.872px
+[PASS] 迭代 5 次到亚像素　| EPE=0.106px
+[PASS] 单层大位移失败　| EPE=15.52px
+[PASS] 五层金字塔可估大位移　| EPE=0.542px
+[PASS] 孔径法向流准确　| 法向误差=0.001px
+[PASS] 孔径切向不可观　| 完整 EPE=5.10px
+[PASS] 局部 Hessian 近奇异　| λmin/λmax=0.00e+00
+[PASS] 平坦区 LK 失效　| EPE=6.02px
+[PASS] 大窗在噪声下更稳　| 1.85→0.65px
+[lab] PNG sha256(e089_aperture.png)=45185de2eb5d2da9bd6fd9948cfe93c6a2b4fc2854954c9fda32efe5d1475408
+[lab] PNG sha256(e089_flow.png)=a08b2b2bab8415a4771c5914e54746f2373988ffbe59a07e73c534ab5db18df1
+[lab] PNG sha256(e089_pyramid.png)=4eb58f2572fc1d218f428661b5766fbc4ca0f34218f238c5a228328b3f29be7f
+[lab] readings → e089_flow_readings.json
+[lab] readings sha256=192ca601c45ed1584fada79281079466b265ba0b393b128a153b08c3eadbc755
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T20:25:46

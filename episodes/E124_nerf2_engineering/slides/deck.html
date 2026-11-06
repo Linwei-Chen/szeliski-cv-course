@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>NeRF Ⅱ：公式、编码与工程化</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 工程开场</div>
+  <h2>NeRF 好用，为什么难用</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>训练要大量已定位图像。</li><li>渲染一像素要多次查 MLP。</li><li>原始假设静止、光照受控。</li><li>场景一大，远处采样稀。</li></ul>
+      <div class="src">依据：原书第 906–908 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四笔账</div><div class="kline">训练：图像要多</div><div class="kline">渲染：查询要少</div><div class="kline">鲁棒：光照要稳</div><div class="kline">范围：远近都要密</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">体积渲染</div>
+  <h2>沿射线把颜色积起来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每段透明度 α = 1 − exp(−σδ)。</li><li>像素颜色 C = Σ T α c。</li><li>深度是权重加权的期望。</li><li>近处先占权重，远处被衰减。</li></ul>
+      <div class="src">依据：原始 NeRF 标准写法；原书第 906–908 页为背景</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">C = Σ Tᵢ αᵢ cᵢ</div><div class="mnote">T：累计透过率；α：分段透明度；c：颜色；σ：密度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">采样预算</div>
+  <h2>先粗后细，把点放对地方</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>64 个粗样本估权重。</li><li>64 个细样本放高密度窗。</li><li>总预算还是 128 个。</li><li>窗口太窄漏峰，太宽退回均匀。</li></ul>
+      <div class="src">依据：本集实验；原始 NeRF 标准流程</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">分层采样</div><div class="kline">粗：找哪里有东西</div><div class="kline">细：把那里看清</div><div class="kline">计算量 = 像素 × 射线 × 样本</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 906 页 · 训练加速</div>
+  <h2>元学习与锥形追踪</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>元学习预训练，加速新图像优化。</li><li>锥形追踪加积分位置编码。</li><li>减少混叠，处理多分辨率。</li><li>像素是有面积的锥，不是细线。</li></ul>
+      <div class="src">依据：原书第 906 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条做法</div><div class="kline">预训练：类别更广</div><div class="kline">锥形追踪：半径随距离变大</div><div class="kline">积分编码：先低通再采样</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 906 页 · 无界场景</div>
+  <h2>NeRF++ 与 NSVF 各改一处</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>NeRF++：1/r 反转球处理无界。</li><li>NSVF：非空八叉树单元放网络。</li><li>1/r 让近处密、远处疏。</li><li>建树也有成本，不是白拿的加速。</li></ul>
+      <div class="src">依据：原书第 906 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种思路</div><div class="kline">改坐标：u = 1/r</div><div class="kline">改结构：跳过空单元</div><div class="kline">目标：算力花在有内容处</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 907 页 · 数据条件</div>
+  <h2>照片不干净，照片也不够</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>原始 NeRF 要静态、受控光照。</li><li>NeRF-W 建模天气时间，去游客。</li><li>pixelNeRF 用单图或少图条件化。</li><li>一个分外观，一个补先验。</li></ul>
+      <div class="src">依据：原书第 907 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两类问题</div><div class="kline">脏：外观与瞬时物分开</div><div class="kline">少：类别先验补视角</div><div class="kline">否则游客会被烤进场景</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 907 页 · 动态与重光照</div>
+  <h2>从看颜色到看材质、光照、运动</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>动态工作吃手持视频，建非刚性形变。</li><li>NeRV 返回法向、BRDF、可见性。</li><li>NeRD 与 PhySG 用球面高斯建模光照。</li><li>BRDF 让高光和粗糙度可解释。</li></ul>
+      <div class="src">依据：原书第 907 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">补哪一笔账</div><div class="kline">运动：形变场或时间输入</div><div class="kline">材质：BRDF 参数化</div><div class="kline">光照：球面高斯近似</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 积分与分层采样</div>
+  <h2>同样预算，放对地方更准</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>8 样本误差 0.30。</li><li>256 样本误差 1.19e-05。</li><li>64 粗加 64 细：8.82e-06。</li><li>128 个均匀样本：4.78e-05。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e124_quadrature.png" style="max-height:500px" alt="均匀积分 / 分层采样：误差收敛与采样位置｜程序生成，未用教材或论文原图"><figcaption>均匀积分 / 分层采样：误差收敛与采样位置｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 频率取舍</div>
+  <h2>位置编码不是越多越好</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>L = 0：测试误差 2.28e-02。</li><li>L = 4：测试误差 4.72e-04。</li><li>L = 7：训练更低，测试反弹 8.60e-03。</li><li>编码维度 2L，不含原始坐标。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e124_encoding.png" style="max-height:500px" alt="训练 / 测试 MSE：位置编码 L 的取舍｜程序生成，未用教材或论文原图"><figcaption>训练 / 测试 MSE：位置编码 L 的取舍｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 无界场景</div>
+  <h2>1/r：近处细，远处粗</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>10 倍距离对应 100 倍分辨率差。</li><li>100 倍距离对应 10000 倍。</li><li>64 个均匀 u 样本，间隔比 3828 倍。</li><li>前景普通 NeRF，背景反转球。</li></ul>
+      <div class="src">依据：本集实验；原书第 906 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e124_unbounded.png" style="max-height:500px" alt="1/r / r²：无界场景的距离压缩与分辨率｜程序生成，未用教材或论文原图"><figcaption>1/r / r²：无界场景的距离压缩与分辨率｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 908 页 · 实时化</div>
+  <h2>从论文走向产品</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>体积采样加 MLP 查询很慢。</li><li>八叉树、稀疏网格、MPI 存不透明度和基色。</li><li>分解近似建模视角相关。</li><li>烘焙或蒸馏，常快 1000 倍。</li></ul>
+      <div class="src">依据：原书第 908 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">速度的代价</div><div class="kline">1000 倍只引原书，本 lab 不复现</div><div class="kline">表示更固定</div><div class="kline">编辑和重训练更麻烦</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 移交下一集</div>
+  <h2>公式、编码、工程</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>公式管怎么积。</li><li>编码管看多细。</li><li>工程管跑得动。</li><li>下一集：3D 高斯泼溅。</li></ul>
+      <div class="src">依据：原书第 906–908 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种表示</div><div class="kline">NeRF：把场景写进网络</div><div class="kline">3DGS：把场景撒成高斯</div><div class="kline">目标一样，开销不同</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十六集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

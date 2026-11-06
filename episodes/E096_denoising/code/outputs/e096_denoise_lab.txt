@@ -1,0 +1,20 @@
+[lab] E096 denoise 开始 2026-11-02T22:49:33
+[lab] 源码 sha256=6f9be8c8c5bc94e61da828a517eaa275a8815efe855eed83e28b19013c69203a
+[PASS] 高斯降噪>2dB　| 23.09 vs 20.43 dB
+[PASS] 椒盐中值>高斯+3dB　| 26.82 vs 22.37 dB
+[PASS] 双边保边>高斯+5%　| 0.647 vs 0.591
+[PASS] NLM>高斯+0.4dB　| 23.59 vs 23.09 dB
+[PASS] 八帧平均降噪>50%　| 63.7%
+[PASS] 未对齐连拍更差>1dB　| 20.62 vs 29.37 dB
+[PASS] Wiener 正确核>2dB　| 21.63 vs 19.03 dB
+[PASS] 错误核掉>1dB　| 12.86 vs 21.63 dB
+[PASS] 去模糊放大噪声>1.2×　| 2.69×
+[PASS] NLM 保边>高斯+8%　| 0.678 vs 0.591
+[lab] PNG sha256(e096_deblur.png)=4f2143ee5f6a9fcd5f01584e7fd46cf67533d0505eb4ee0fa842f8eec237980b
+[lab] PNG sha256(e096_denoise.png)=d3f4ed2129c54294d620f33e5b266d483c7564de24cc80304c30954455ee7a1f
+[lab] PNG sha256(e096_tradeoff.png)=360496e6b0924ed462dd14df9e5d38f3658d9ecd6498c90c8493ccea7cb6fc04
+[lab] readings → e096_denoise_readings.json
+[lab] readings sha256=1a8e0466092c0d96cf19eeef1eb2b838741c9f3e695abb3af52ca6d74d6b5065
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T22:49:34

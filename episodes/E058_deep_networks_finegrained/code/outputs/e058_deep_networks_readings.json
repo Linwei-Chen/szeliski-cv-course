@@ -1,0 +1,24 @@
+{
+ "generated_at": "2026-11-01T21:15:41",
+ "src_sha16": "b550dc34983165dc",
+ "fig1": {
+  "stages": 3,
+  "terms": 5,
+  "min_fs": 15.0
+ },
+ "fig2": {
+  "stages": 2,
+  "terms": 4,
+  "min_fs": 15.0
+ },
+ "fig3": {
+  "paths": 3,
+  "terms": 6,
+  "min_fs": 15.0
+ },
+ "arrows": 4,
+ "texts": {
+  "collected": 28,
+  "leaked": 0
+ }
+}

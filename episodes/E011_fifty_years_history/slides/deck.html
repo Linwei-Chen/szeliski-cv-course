@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E011 · 计算机视觉五十年简史</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  figure.shot img { max-height: 500px; }
+</style>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="2">
+  <div class="course step" data-step="1">正课 · 03 · 第 1 章 绪论</div>
+  <h1 class="step" data-step="1">计算机视觉<span class="hl">五十年简史</span></h1>
+  <p class="ep step" data-step="1">从方块世界到大模型时代 · 含讲者前瞻</p>
+  <p class="lead dim step" data-step="2">四段：① 七十年代起步 ② 八十年代数学化 + 九十年代重建与图形联姻 ③ 两千年代特征与学习 ④ 一零年代海啸</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>01 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">起点 · THE SUMMER OF 1966</div>
+  <h2>「花一个暑假，让电脑<span class="hl">描述它看到的</span>」</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">1966 · 夏</div>
+      <div class="cap">MIT 的明斯基给本科生萨斯曼布置了一个暑期任务<small>据一则流传很广的故事：把相机连上电脑，让它描述看到的东西（Boden 2006 第 781 页 · 转引自第 11 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big warn">结局</div>
+      <div class="cap">这个问题，远比一个夏天难<small>原书脚注：备忘录实际作者是帕普特，动用了一整批学生（第 11 页）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="2">当时的一些先驱相信：解决「视觉输入」，只是通往推理与规划路上顺手的一步——讲者按：正是这个误判，定义了这个领域的起点。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>02 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">地图 · TIMELINE</div>
+  <h2>五十年，<span class="hl">三十三</span>个主题一张图</h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/timeline_fig1_6.png" alt="重绘的计算机视觉五十年时间线">
+    <figcaption>据原书 Figure 1.6（第 11 页）重绘 · 条带起止为讲者读图估计 · 横轴 1960–2022（原书 1970–2020）· 代码实跑输出</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>03 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">1970s · THE BEGINNING</div>
+  <h2>初心：从图像<span class="hl">恢复三维结构</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">宏大议程</div>
+      <div class="cap">视觉感知，是「模拟人类智能」议程的一环<small>持此议程的先驱，如 MIT、斯坦福、CMU（第 11 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big warn">分野</div>
+      <div class="cap">与数字图像处理的区别<small>视觉要恢复三维世界结构，走向完整场景理解（原书第 11 页）</small></div>
+    </div>
+  </div>
+  <p class="lead step" data-step="1">讲者按：这个初心，贯穿了后面五十年的每一章。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>04 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">1970s · BLOCKS WORLD</div>
+  <h2>方块世界：<span class="hl">给棱线贴标签</span></h2>
+  <p class="lead step" data-step="1">最早的场景理解：从线条的拓扑结构推断多面体的三维结构——线段标注算法（原书第 12 页 · Figure 1.7a）。「凹、凸、遮挡」的标注类别为讲者补充背景。</p>
+  <p class="lead step" data-step="1">非多面体物体用<b>广义圆柱</b>拼——旋转体与扫掠闭合曲线的组合（Figure 1.7c）；这种「零件弹性排布」得名<b>图画结构</b>（Fischler and Elschlager 1973）——三十多年后的识别算法仍在用这个名字（第 19 页）。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>05 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">1970s · TWO TRACKS</div>
+  <h2>两条线并进：<span class="hl">定性 + 定量</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">内在图像</div>
+      <div class="cap">把明暗变化解释成表面朝向与阴影的成像效应<small>Barrow and Tenenbaum 1981 · 马尔 2½-D 草图（第 12 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big warn">定量路线</div>
+      <div class="cap">第一批特征立体匹配与强度光流<small>还有 3D 结构 + 相机运动的开端（第 13 页）</small></div>
+    </div>
+  </div>
+  <p class="lead step" data-step="1">立体、光流、结构与运动，第 9、11、12 章都会回来（章号见第 13、16–17 页）。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>06 / 21</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="kicker">1970s · MARR'S LEVELS</div>
+  <div class="qmark step" data-step="1">“</div>
+  <blockquote class="step" data-step="1">计算理论 · 表示与算法 · 硬件实现——马尔的三个层次，今天框定问题依然好用。</blockquote>
+  <p class="attrib step" data-step="1">David Marr (1982) 信息处理系统三层次；原书作者评价（转述）：as good a guide today as it was 25 years ago（第 13 页）· 讲者推测：此句或沿用原书早期版本的措辞；自 1982 年起算至 2021 年成书已近四十年</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>07 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">1980s · MATH</div>
+  <h2>八十年代：<span class="hl">数学化</span></h2>
+  <div class="cards c4">
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">金字塔</div><div class="cap">融合 + 由粗到细<small>scale-space · 小波接踵（§3.5）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">从 X 恢复形状</div><div class="cap">明暗 · 光度立体 · 纹理 · 焦点<small>§13.1（原书第 14 页）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">Canny</div><div class="cap">边缘检测 + 蛇形曲线<small>snakes（原书第 14–15 页）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">物理模型</div><div class="cap">三维 physically based models<small>Figure 1.8d（第 14 页）</small></div></div>
+  </div>
+  <p class="lead dim step" data-step="1">八十年代的主旋律：为定量的图像与场景分析，发展更精细的数学技术（原书第 13 页）。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>08 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">1980s · UNIFICATION</div>
+  <h2>更深的发现：<span class="hl">统一</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big" style="font-size:46px">正则化</div><div class="cap">很多可统一、至少可描述于同一变分框架<small>§4.2（原书第 15 页）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:46px">MRF</div><div class="cap">同样可用离散 MRF 表述 + 模拟退火<small>Geman and Geman 1984 · §4.3（第 15 页）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:46px">Kalman</div><div class="cap">在线更新不确定性<small>Matthies, Kanade, and Szeliski 1989（第 15 页）</small></div></div>
+  </div>
+  <p class="lead step" data-step="1">讲者注：第 4 章正则化与 MRF 两节（§4.2–4.3）的源头就在这十年（依据：第 15 页指向 §4.2/§4.3）。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>09 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">1990s · 3D RECONSTRUCTION</div>
+  <h2>从运动<span class="hl">恢复结构</span></h2>
+  <p class="lead step" data-step="1">投影不变量的热潮，演变成对「从运动恢复结构」的集体攻关：不需要标定的投影重建，与在正交近似下解得飞快的<b>因子分解法</b>（Tomasi and Kanade 1992）同时推进，随后走向全局优化。</p>
+  <p class="lead step" data-step="1">大家后来发现：这就是摄影测量学传统的<b>光束法平差</b>（bundle adjustment）。全自动三维建模系统由此诞生——直到 2010 年代初，都还有新系统问世（原书第 15–16 页）。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>10 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">1990s · MANY FRONTS</div>
+  <h2>同期的<span class="hl">四条战线</span></h2>
+  <div class="cards c4">
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">图割</div><div class="cap">稠密立体或许最大突破<small>global optimization（第 17 页；Figure 1.9b 见第 16 页）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">分割</div><div class="cap">归一化割 · 均值漂移<small>Shi and Malik 2000（第 17 页）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">特征脸</div><div class="cap">统计学习起步<small>eigenfaces（第 17 页 · §5.2.3）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">联姻图形</div><div class="cap">变形 · 插值 · 拼接 · 光场<small>image-based rendering（第 17–18 页）</small></div></div>
+  </div>
+  <p class="lead dim step" data-step="1">十年间或许最重要的变化：与计算机图形学的深度联姻（原书第 16–18 页）。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>11 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">2000s · COMPUTATIONAL PHOTOGRAPHY</div>
+  <h2>改名<span class="hl">计算摄影</span></h2>
+  <p class="lead step" data-step="1">数据驱动与学习方法成为核心。前一十年的那套技术——图像拼接、光场采集、<b>包围曝光合成高动态范围</b>——被重新命名为<b>计算摄影</b>：越来越多地用于日常数码摄影；色调映射、纹理合成、图像修补也归入这个门类（原书第 18–19 页）。</p>
+  <p class="lead step" data-step="2">两条趋势：特征加学习做识别（星座模型）；图割之后<b>置信传播</b>再提速全局优化。最显著的趋势——机器学习大举进入视觉（原书第 19–20 页）。讲者按：海啸之前，先是涨潮。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>12 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">2010s · DEEP LEARNING TSUNAMI</div>
+  <h2>2012：<span class="hl">AlexNet 时刻</span></h2>
+  <p class="lead step" data-step="1">大标注数据集的浪潮变成海啸，以 <b>ImageNet、微软 COCO、LVIS</b> 为代表——既提供评测指标，更提供发展完整机器学习方案所需的足量标注数据（原书第 20–21 页）。</p>
+  <p class="lead step" data-step="2">突破点是 2012 年的 SuperVision（"AlexNet"）：<b>第一个赢得 ImageNet 挑战的神经网络</b>，靠 GPU 训练。此后深度卷积架构狂奔——如今是识别与语义分割唯一被考虑的架构，光流、去噪、单目深度推断也以它为首选（原书第 21 页）。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>13 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">2010s · DEPLOYMENT</div>
+  <h2>落地：<span class="hl">从客厅到天空</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big" style="font-size:46px">Kinect</div><div class="cap">2010 发布的深度相机<small>3D 建模 + 人体跟踪（第 21 页）</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:46px">手机计算摄影</div><div class="cap">全景 · HDR · 弱光降噪 · 光场虚化<small>全景、HDR 已成标配；弱光降噪、光场虚化正在普及（第 21 页）</small></div></div>
+    <div class="card step" data-step="2"><div class="big" style="font-size:46px">SLAM / VIO</div><div class="cap">实时三维地图<small>无人机森林自主飞行（第 22 页）</small></div></div>
+  </div>
+  <p class="lead step" data-step="2">原书总结：难以置信的进步，一部分来自机器学习与大规模真实数据；广泛使用本身，也带来新挑战（第 22 页）。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>14 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">讲者前瞻 · BEYOND §1.2</div>
+  <h2>时间线的<span class="hl">下一格</span></h2>
+  <div class="formula step" data-step="1" style="border-left-color:var(--sand)">
+    <div style="font-family:var(--serif);font-weight:900;color:var(--ink-strong);font-size:48px">§1.2 的历史叙述止于深度学习的十年；把视觉接进大模型，是正在书写的历史。</div>
+    <div class="note">Figure 1.6 最后两项：Deep learning 与 Vision and language（第 11 页）；vision-language 大模型为讲者前瞻，§1.2（2021 定稿）未展开</div>
+  </div>
+  <p class="lead dim step" data-step="1">讲者注：过去几年，视觉正从专用任务走向通用基础模型——这段历史还在书写。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>15 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">讲者归纳 · FOUR LESSONS</div>
+  <h2>五十年的<span class="hl">四个启示</span></h2>
+  <ul class="big step" data-step="1">
+    <li>「一个夏天」的乐观换来五十多年的深水区——<b>低估问题难度是常态</b></li>
+    <li>问题分析与约束，必须和高效鲁棒的算法<b>联姻</b>——原书作者信条（第 13 页）· 讲者注：马尔的哲学至 2021 年成书已近四十年，依然适用</li>
+    <li>范式会被<b>数据与算力</b>改写——2010 年代的海啸（第 20–21 页）</li>
+    <li>老想法会复兴——如 2005、2012 年的内在图像（第 13 页）</li>
+  </ul>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>16 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">动手 · CODE</div>
+  <h2>实验：亲手<span class="hl">重绘时间线</span></h2>
+  <div class="cards c4">
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">①</div><div class="cap">取标签<small>人工誊录 Figure 1.6 的 33 个主题标签</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">②</div><div class="cap">读年代<small>讲者按图估计每个条带的起止</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">③</div><div class="cap">画条带<small>水平条带图，按五个十年配色</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">④</div><div class="cap">跑断言<small>数量 · 范围 · 十年分段</small></div></div>
+  </div>
+  <p class="lead step" data-step="1">讲者设计实验：原书没给数据表——条带起止是读图估计，已在图上标注。</p>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>17 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验结果 · OUTPUT</div>
+  <h2>五十年，<span class="hl">一眼看尽</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/timeline_fig1_6.png" alt="重绘时间线：33 主题条带">
+    <figcaption>据原书 Figure 1.6（第 11 页）重绘 · 条带起止为讲者读图估计 · 最早在上 · 断言 17/17 全过</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>18 / 21</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">讲者归纳 · RECAP</div>
+  <h2>带走<span class="hl">三句话</span></h2>
+  <ul class="big step" data-step="1">
+    <li>五十年是一部「从图像恢复三维结构、走向完整场景理解」<b>初心的展开史</b>——数学在换，初心没变</li>
+    <li>范式被<b>数据与算力</b>改写：2012 年 AlexNet 之后，深度学习接管识别</li>
+    <li>历史是最好的地图——讲者按：时间线上多数主题，<b>后面都有章节展开</b></li>
+  </ul>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>19 / 21</span></div>
+</section>
+
+<section class="slide endcard" data-steps="2">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§1.2 历史（原书第 10–22 页），对照 Figure 1.6 时间线（第 11 页）读</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>从时间线挑三个主题，翻回正文找它们首现的年代与页码</div>
+  <div class="row step" data-step="2"><span class="tag">下一集</span>E012 本书地图：三大模块、章节依赖与符号约定（§1.3–1.6）</div>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>20 / 21</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">正课 · 03 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E011 · 正课第三集</span><span>21 / 21</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

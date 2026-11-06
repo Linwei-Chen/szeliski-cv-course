@@ -1,0 +1,35 @@
+{
+ "generated_at": "2026-11-01T22:45:43",
+ "src_sha16": "07ae23bc6de1a1a9",
+ "fig1": {
+  "datasets": 5,
+  "pie_terms": 3,
+  "bars": 5,
+  "max_bar_units": 2.52,
+  "min_fs": 12.0,
+  "max_fs": 14.0
+ },
+ "fig2": {
+  "channels": 2,
+  "arrows": 4,
+  "min_fs": 12.0,
+  "max_fs": 14.0
+ },
+ "fig3": {
+  "clusters": 2,
+  "dots": 20,
+  "rays": 3,
+  "ray_solid": 2,
+  "ray_dashed": 1,
+  "circle_radius": 1.25,
+  "tolerance": 0.012,
+  "angle_distance_deg": 58.0,
+  "margin_deg": 16.0,
+  "min_fs": 12.0,
+  "max_fs": 14.0
+ },
+ "texts": {
+  "collected": 37,
+  "leaked": 0
+ }
+}

@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>全景拼接 Ⅰ：特征匹配与全局捆扎</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 · 全景拼接 Ⅰ</div>
+  <h2>多张图，怎么连成一张</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先找重叠，再估每张图的姿态，最后一起压误差。</li><li>一张一张接，错误会越传越偏。</li><li>一起算，才压得住。</li><li>下一集再讲柱面投影与接缝。</li></ul>
+      <div class="src">依据：原书第 514–529 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">上半场</div><div class="kline">从两两对齐</div><div class="kline">走到全局对齐</div><div class="kline">再认识捆扎调整</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">拼接为什么老</div>
+  <h2>几十年的老方法，骨架没变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对齐、拼成无缝马赛克，是最古老、最常用的视觉算法之一。</li><li>老不等于简单：手机一键出片，是前面问题都被踩过。</li><li>骨架：提特征、找匹配、估变换、再融合。</li><li>后面每集都在骨架上加零件。</li></ul>
+      <div class="src">依据：原书第 514 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四步骨架</div><div class="kline">特征</div><div class="kline">匹配</div><div class="kline">变换</div><div class="kline">融合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">核心问题</div>
+  <h2>先问对问题，再谈算法</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>哪些图之间有重叠？</li><li>重叠处怎么对齐？</li><li>对齐后怎么接得看不出缝？</li><li>前两件本集讲，第三件留给后面两集。</li></ul>
+      <div class="src">依据：原书第 515 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个问题</div><div class="kline">重叠：靠匹配</div><div class="kline">对齐：靠几何</div><div class="kline">接缝：靠投影与融合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全景四步</div>
+  <h2>先连图，再一起算</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每张图提特征、写描述。</li><li>只给有重叠的图对做匹配。</li><li>所有姿态放到一起做全局对齐。</li><li>选投影面、找接缝、做混合。</li></ul>
+      <div class="src">依据：原书第 514–515 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e077_pipeline.png" style="max-height:500px" alt="全景四步：本集重点是全局对齐｜程序生成，未用教材原图"><figcaption>全景四步：本集重点是全局对齐｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全局优化</div>
+  <h2>整体一致，还要发现重叠</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>整体一致：不让每对图各说各话。</li><li>发现重叠：让匹配结果自己长出关系图。</li><li>不是把所有图硬塞进一个平均。</li><li>找一个让所有重叠对都尽量满意的折中。</li></ul>
+      <div class="src">依据：原书第 515 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个关键词</div><div class="kline">整体一致</div><div class="kline">发现重叠</div><div class="kline">关系图决定方程</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">逐对串联的漂移</div>
+  <h2>局部漂亮，不等于整体正确</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对齐的图对越多，解越会漂。</li><li>每对误差沿着链子累积，链越长末端越飘。</li><li>相邻两张几乎完美，一闭合才发现首尾对不上。</li><li>别拿相邻误差当全局误差。</li></ul>
+      <div class="src">依据：原书第 519 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">误差怎么累积</div><div class="kline">每对只错一点</div><div class="kline">串起来偏得离谱</div><div class="kline">闭合边暴露问题</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">八台相机的关系图</div>
+  <h2>边越多，误差越没有地方躲</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>灰线：相邻链边。</li><li>蓝线：隔一张、隔两张的跳边。</li><li>还有一条首尾闭合边。</li><li>全局对齐：在这张网上让每条边的矛盾尽量小。</li></ul>
+      <div class="src">依据：原书第 526 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e077_graph.png" style="max-height:500px" alt="八台相机、十九对重叠：链边 + 跳边 + 闭合边｜程序生成，未用教材原图"><figcaption>八台相机、十九对重叠：链边 + 跳边 + 闭合边｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">同时对齐</div>
+  <h2>误差要分给每台相机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>逐对串联：误差全推给后面。</li><li>同时求解：每台相机承担一点。</li><li>最小二乘：残差平方和最小。</li><li>不保证每条边完美，保证整体矛盾最小。</li></ul>
+      <div class="src">依据：原书第 527 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">min Σ ‖r<sub>ij</sub>‖²</div><div class="mnote">r<sub>ij</sub>：边 (i,j) 的错配残差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">链式 vs 全局</div>
+  <h2>误差从 2.55 度降到 1.04 度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>八台相机，间隔 45°；十九条边各加 2° 噪声。</li><li>链式解 RMSE 2.55°，全局解 1.04°。</li><li>首尾闭合缺口 8.30° → 2.40°。</li><li>只用链边做全局解，结果仍 2.55°：约束不够。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e077_error.png" style="max-height:500px" alt="链式、全局、含外点与鲁棒解的误差对比｜程序生成，未用教材原图"><figcaption>链式、全局、含外点与鲁棒解的误差对比｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">捆扎调整</div>
+  <h2>姿态和三维点一起调</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同时调整相机姿态和三维点位置。</li><li>点的位置和相机姿态互相牵制。</li><li>一起调，才能让重投影误差整体最小。</li><li>姿态图是轻量版，捆扎是完整版。</li></ul>
+      <div class="src">依据：原书第 527 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两件事一起解</div><div class="kline">相机姿态</div><div class="kline">三维点</div><div class="kline">重投影误差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">初值从哪来</div>
+  <h2>串联给起点，全局来收尾</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>逐对配准串联，得到初始姿态和焦距。</li><li>串联会漂，但便宜、稳，能给出大致起点。</li><li>初值太差，迭代可能跑到歪解。</li><li>不是取代，是接力。</li></ul>
+      <div class="src">依据：原书第 528 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两阶段</div><div class="kline">串联：便宜、稳</div><div class="kline">全局：精化</div><div class="kline">初值决定收敛</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">代价</div>
+  <h2>全局最优也要算得起</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>变量更多：相机数 × 姿态 + 三维点数 × 3。</li><li>每轮都要算所有观测的残差。</li><li>图多就分块、分层，或先固定一部分。</li><li>先看规模和时间预算，再选解法。</li></ul>
+      <div class="src">依据：原书第 529 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">规模策略</div><div class="kline">小规模：全捆</div><div class="kline">大规模：分块/分层</div><div class="kline">先固定一部分</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">错边与鲁棒</div>
+  <h2>一条离谱的边能拽动全局</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>故意把一条边偏 25°。</li><li>全局 RMSE 从 1.04° 涨到 2.17°。</li><li>鲁棒重加权后回到 1.56°。</li><li>先筛外点，再用鲁棒损失兜底。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">顺序</div><div class="kline">匹配后先筛一致性</div><div class="kline">求解时用鲁棒损失</div><div class="kline">先筛外点，再求精</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程清单</div>
+  <h2>排查也有顺序</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>连图：只给有重叠的图对建边。</li><li>冗余：多加跳边和闭合边。</li><li>鲁棒：筛外点 + 鲁棒损失。</li><li>初值：串联给起点；规模：图多就分块。</li></ul>
+      <div class="src">依据：本集实验 + 原书第 526–529 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先查什么</div><div class="kline">1 边连对没有</div><div class="kline">2 有没有错边</div><div class="kline">3 再怀疑优化器</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">数学骨架</div>
+  <h2>每台相机一个姿态</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每条重叠边给一个相对姿态观测。</li><li>未知量：各台相机的绝对姿态。</li><li>固定一台，消除整体旋转自由度。</li><li>姿态图只解姿态；捆扎再加上三维点。</li></ul>
+      <div class="src">依据：原书第 527–529 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">姿态图</div><div class="kline">节点：相机姿态</div><div class="kline">边：相对观测</div><div class="kline">固定一台：定基准</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>先对齐，再投影</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>逐对串联会漂，全局最小二乘把误差压平。</li><li>捆扎调整连三维点一起解。</li><li>实验：2.55°→1.04°，闭合缺口 8.30°→2.40°。</li><li>下一集：柱面、球面还是平面？投影选错会变形。</li></ul>
+      <div class="src">依据：原书第 514–529 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两件事</div><div class="kline">对齐：谁对谁</div><div class="kline">投影：往哪放</div><div class="kline">都做对，全景才站得住</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十九集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

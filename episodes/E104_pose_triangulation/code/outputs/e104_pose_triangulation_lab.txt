@@ -1,0 +1,20 @@
+[lab] E104 pose/triangulation 开始 2026-11-03T02:37:04
+[lab] 源码 sha256=d6f76689525580b12a4b030eaae0cf535eab00b6e08f52e36684bc96c1587de6
+[PASS] 干净 DLT 恢复位姿　| R 误差 1.21e-06°，相机中心 4.86e-15
+[PASS] 精化降低旋转误差　| 0.226° → 0.035°
+[PASS] 精化降低重投影误差　| 20.17 → 0.96 px
+[PASS] 点越多旋转越准　| 0.035/0.016/0.003°
+[PASS] 噪声越大旋转越差　| 0.004/0.011/0.028°
+[PASS] 鲁棒损失压住外点　| R 0.048°→0.010°，内点 RMS 5.28→1.54 px
+[PASS] 三角化干净且多视角更准　| 干净 2.13e-14；2→3 视角 0.0320→0.0164
+[PASS] 远点条件数变大　| 9.9 → 1000.6
+[PASS] cheirality 正负分明　| 真点 +4.81，镜后点 -5.39
+[PASS] 三图在盘　| pipeline/pose/tri
+[lab] PNG sha256(e104_pipeline.png)=b6b827e291d36f43c0c979d13e154ad0192b137e53c5dce721f87c4d285fd9c5
+[lab] PNG sha256(e104_pose.png)=087a32d2da203c19d8a3e08f3673444158f5c334e002aaa269082ee4922aed3b
+[lab] PNG sha256(e104_tri.png)=1d97df776b74a69c59a67d9a3bdd7ae84d4f7406e4b70abebd37d6070b52613b
+[lab] readings → e104_pose_triangulation_readings.json
+[lab] readings sha256=fd69bdb36f5d8448943fdea613cd54878fc58b69fe406e46cc17413264d62685
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T02:37:04

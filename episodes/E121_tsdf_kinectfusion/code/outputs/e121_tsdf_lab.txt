@@ -1,0 +1,20 @@
+[lab] E121 TSDF/深度图融合开始 2026-11-03T08:07:17
+[lab] 源码 sha256=470c915b2d2c539c18c70ffb8c43837a975ae66558c48e6c38c68f39865385ae
+[lab] 边界：2D 合成圆；TSDF 截断/加权公式=讲者按通行定义整理，不是原书完整算法
+[PASS] 精确 SDF：圆心为负、远处为正 | -0.491 / 1.197
+[PASS] TSDF 被截断在 ±τ 内 | max|TSDF|=0.120
+[PASS] 单视角只覆盖前半圈 | 33/72 vs 72/72
+[PASS] 四视角覆盖整圈 | 72/72
+[PASS] 四视角零交叉半径误差 <0.005 | 0.001375
+[PASS] 表面体素至少被一条视线看到 | weight=1.0
+[PASS] 远处未观测体素权重为 0 | weight=0.0
+[PASS] 20 帧带噪融合比单帧稳 | 0.0236 < 0.8×0.0339
+[PASS] 权重封顶：重复 10 次仍为 5 | w=5
+[PASS] 符号翻转把零交叉推到带外 | 半径误差=0.0495
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] PNG sha256(e121_tsdf_slices.png)=627c2b3f2ecda9e7b1122108af8124ae3157cc5fbe1b34fc0a8c447bd7f557bc
+[lab] PNG sha256(e121_fusion.png)=cb2ab22175d810c9ae9cd92704861a3936ee55e1123974f09bca8b045f6e07e4
+[lab] PNG sha256(e121_pipeline.png)=97ce89317c1c0a9635dff69a9468c8b0fe3cd0a94a4321ee41d68b4511ed5a91
+[lab] readings sha256=6edbf037511ebcad85e8a0945d7422d46980266c7a6cb0cfad30accc1dfcd0cf
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T08:07:18

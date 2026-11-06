@@ -1,0 +1,16 @@
+[lab-stdout-regression] 开始 2026-11-02T01:40:55
+[lab-stdout-regression] 输入 lab.txt sha256=9f619a3c670e894952f494d39a169bfded37caaab02e1e514019f10b138b57d0 readings sha256=e395ee6e3e33e51f30e48e54e4cdedfd119f6547616e28c159a0e4d3f20849f3（版本绑定存证头，r7 P2-3 修复 3：首行补开始时间使申报属实）
+[lab-stdout-regression] 绑定 工具 sha256 regression=bd787daf70b253ed2abbf9312a7ce6d70c3c6ddaefba86e5d47d0be04e0a81b7 make_script=25968a3096ec52abd2309aa981ec78db3ce724743f4e3cf3b98e228d165d2d7d display_check=5004e0b7447529d071063dcdfb63f4ed883cd5233185b23f4efefd96c53064aa（r11 P1-2 工具版本绑定——down-sha 逐一比对盘面）
+[lab-stdout-regression] 绑定 申报层 status.json sha256=bfbf29e0a068ef3283b51f165dfd1134ad8edc37e2478603ee95d35d896465ac README.md sha256=ce419c3ceacd51f8d9826907701fc9a9c68951a002e56161173089c2e73ce440（r12 P2-3——申报层定稿后才跑回归，改动后必须重跑）
+[ok] 基线：7 个受检 token 全部命中（叶值 19 个）
+[ok] m1 外值注入 99999 被拦截：无同值出处 ['99999']
+[ok] m2 汉字贴数 实观测99999 被拦截：无同值出处 ['99999']
+[ok] m3 注入 实线 3 条 如实预期 PASS（弱一致性边界）——3 与 readings 叶值碰撞于 fig1.views、fig1.architectures、fig2.concepts、pngs：无字段级绑定测不出，r5 P1-1 已申报降级
+[ok] m4 跨行 戳收/收割 11.5↔52 互换 如实预期 PASS（弱一致性边界）——互换值均在叶集：弱一致性测不出错位绑定，r5 P1-1 已申报降级
+[ok] m5 篡改源码 sha 行 被哨兵拦截：存证内记源码 sha 0000000000000000… 与盘面 e063_video_language_lab.py 现值不符
+[ok] m6 删一条 PNG sha 行 被哨兵拦截：PNG sha 自证行 2 条 ≠ 盘面 PNG 3 张——输出截断或图未同步（r6 P2-4 强化）
+[ok] m7 截掉一条 [PASS] 行 被哨兵拦截：LEDGER 计数与 [PASS]/[FAIL] 行数不符（LEDGER=LEDGER：断言 10 条，PASS 10，行数 9
+[ok] m10 PNG 行文件名改不存在 被哨兵拦截：存证内记 ghost_missing.png sha 与盘面现值不符或文件缺失——图已变未重跑 lab（r5 P2-5/r6 P
+[FAIL] down-sha 自测前置：display/probe/锚存证缺一（本回归须在三者之后运行）
+[lab-stdout-regression] 2 FAIL 侧 + 2 申报侧 + 4 哨兵侧 + 0 down-sha 侧 + 0 numeric 侧 + 0 display 侧 + 0 stage 门控侧 + 0 申报层扫描侧 + 0 batch_chain 侧（行为与申报不符！）
+[lab-stdout-regression] 结束 2026-11-02T01:40:55（起 2026-11-02T01:40:55）

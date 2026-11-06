@@ -1,0 +1,43 @@
+{
+ "generated_at": "2026-11-02T02:55:46",
+ "src_sha16": "410544a2087cd1df",
+ "fig1": {
+  "families": 5,
+  "point": 1,
+  "edge": 1,
+  "contour": 1,
+  "line": 1,
+  "region": 1,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.1,
+  "page": 418
+ },
+ "fig2": {
+  "use_cases": 4,
+  "chain": 4,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.2,
+  "page": 420
+ },
+ "fig3": {
+  "patches": 3,
+  "easy": 1,
+  "hard": 2,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "fig_no": 7.3,
+  "page": 421
+ },
+ "scope": {
+  "page_start": 417,
+  "page_end": 421,
+  "frames": 16
+ },
+ "texts": {
+  "collected": 47,
+  "leaked": 0
+ },
+ "pngs": 3
+}

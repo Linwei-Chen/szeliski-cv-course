@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>从一堆照片到一座三维城市：SFM 问题总览</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 11 章 · SFM 开场</div>
+  <h2>从照片到三维城市</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从图像重建三维模型，是核心题目。</li><li>输入是照片和它们之间的对应点。</li><li>输出是相机位姿加稀疏点云。</li><li>虚拟旅游、自动驾驶、AR 都用得上。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">输入与输出</div><div class="kline">输入：照片 + 对应点</div><div class="kline">输出：位姿 + 稀疏点云</div><div class="kline">是一连串几何估计</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>01 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">管线 · 程序生成</div>
+  <h2>一条六步管线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>输入照片，做特征匹配。</li><li>双视图几何，三角化与位姿。</li><li>束调整，最后得到稀疏点云。</li><li>误差大就回到前面重修。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e101_pipeline.png" style="max-height:500px" alt="SFM 六步：照片→匹配→几何→三角化→BA→点云｜程序生成，未用教材或论文原图"><figcaption>SFM 六步：照片→匹配→几何→三角化→BA→点云｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>02 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章节结构 · 课程边界</div>
+  <h2>第 11 章地图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>11.1 标定相机内参，选读。</li><li>11.2 位姿与三角化。</li><li>11.3 双视图与对极几何。</li><li>11.4 多帧与束调整；11.5 SLAM。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e101_map.png" style="max-height:500px" alt="第 11 章地图：11.1 选读，11.2–11.5 主线｜程序生成，未用教材或论文原图"><figcaption>第 11 章地图：11.1 选读，11.2–11.5 主线｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>03 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">输入 · 对应点</div>
+  <h2>输入是匹配，不是像素</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同一个三维点在两张图里的位置。</li><li>好匹配：描述子像、几何一致。</li><li>跨多张图串成 track。</li><li>匹配质量决定 SFM 上限。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">好匹配三件事</div><div class="kline">描述子像</div><div class="kline">几何一致</div><div class="kline">跨图串成 track</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>04 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">双视图 · 对极约束</div>
+  <h2>双视图：对极约束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同一点在右图只能落在一条极线上。</li><li>极线来自左相机视线与右图的交线。</li><li>基线越大，视差越大，深度越稳。</li><li>基线太小，深度病态。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个词</div><div class="kline">极线：右图的候选直线</div><div class="kline">基线：两相机光心连线</div><div class="kline">视差：同一点的位置差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>05 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">11.2 · 位姿与三角化</div>
+  <h2>位姿与三角化是一对</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>PnP：已知三维点求相机位姿。</li><li>三角化：已知位姿求三维点。</li><li>位姿和三角化互相约束。</li><li>重投影误差是共同目标。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个方向</div><div class="kline">PnP：3D 点 → 相机位姿</div><div class="kline">三角化：位姿 → 3D 点</div><div class="kline">重投影误差：投回去差多少</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>06 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">11.4 · 多帧</div>
+  <h2>多帧：用冗余压噪声</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两张图只给一个相对位姿。</li><li>track 把同一个点串过多帧。</li><li>因子分解在正交投影下估结构与运动。</li><li>更通用的是束调整；冗余抗单点错误。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">因子分解：正交投影近似</div><div class="kline">束调整：透视相机通用</div><div class="kline">track：同一点串多帧</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>07 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">11.4.2 · 束调整</div>
+  <h2>束调整：一起压误差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>所有相机参数和三维点一起优化。</li><li>目标是最小化重投影误差。</li><li>每个观测只连一台相机和一个点。</li><li>雅可比矩阵非常稀疏。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么叫束</div><div class="kline">相机中心发出一束光线</div><div class="kline">光线穿过图像点，打到结构</div><div class="kline">调整光束，让它贴住观测</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>08 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程流水线</div>
+  <h2>增量式：一张张加图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>选基线合适、匹配多的图初始化。</li><li>加新图，PnP 估位姿，三角化新点。</li><li>每步局部束调整，最后全局束调整。</li><li>初始化错会全歪，漂移会累积。</li></ul>
+      <div class="src">依据：原书第 684 页；工程实践</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">风险与兜底</div><div class="kline">初始化选错，后面全歪</div><div class="kline">漂移累积，回环接不上</div><div class="kline">几何验证 + 回环兜底</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>09 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">大规模 SFM</div>
+  <h2>全局：万张照片一起算</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>增量式精度好但慢。</li><li>全局先估所有旋转，再估位置和结构。</li><li>适合几万张互联网照片。</li><li>分布式切块重建，再对齐合并。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条大规模路线</div><div class="kline">全局：先旋转，后位置</div><div class="kline">分布式：切块，再合并</div><div class="kline">共同目标：误差不随数量滚大</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>10 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">11.5 · SLAM</div>
+  <h2>SLAM：实时版 SFM</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SLAM 在移动中实时定位并建图。</li><li>前端跟踪、后端优化、回环检测。</li><li>怕纯旋转、快速运动、弱纹理。</li><li>比 SFM 约束更强，容错更低。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三层结构</div><div class="kline">前端：跟踪相机</div><div class="kline">后端：优化位姿与地图</div><div class="kline">回环：认出走过的路</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>11 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 200 个合成点</div>
+  <h2>实验：深度靠视差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>200 个合成三维点，两个相机。</li><li>近处视差 0.411，远处 0.134。</li><li>基线 0.5 误差 0.0163，2.0 降到 0.0046。</li><li>噪声加大，误差升到 0.0429。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e101_parallax.png" style="max-height:500px" alt="视差实验：近 0.411/远 0.134；基线 0.5→2.0 误差 0.0163→0.0046｜程序生成，未用教材或论文原图"><figcaption>视差实验：近 0.411/远 0.134；基线 0.5→2.0 误差 0.0163→0.0046｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>12 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程诊断</div>
+  <h2>五种常见失败</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视差太小：纯旋转、远距离、基线不足。</li><li>匹配错：重复纹理、反光、动态物体。</li><li>退化运动：相机共线或共面。</li><li>漂移累积；单目尺度不确定。</li></ul>
+      <div class="src">依据：原书第 684 页；工程实践</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">工程监控</div><div class="kline">重投影误差</div><div class="kline">track 长度、三角化角度</div><div class="kline">内点率；异常先回退</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>13 / 14</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>三句话收束</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SFM 从对应点同时估位姿和结构。</li><li>深度靠视差，视差靠基线。</li><li>束调整一起优化，怕错匹配和退化。</li><li>下一集：双视图几何。</li></ul>
+      <div class="src">依据：原书第 684 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">对极约束</div><div class="kline">本质矩阵与基础矩阵</div><div class="kline">八点法与位姿恢复</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十三集</span><span>14 / 14</span></div>
+</section>
+<div id="subbar"></div></body></html>

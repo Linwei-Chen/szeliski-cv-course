@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>局部特征的学习时代：从 BRIEF 到 SuperPoint</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 7 章 · 描述子学习</div>
+  <h2>参数从数据里学</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Winder 与 Brown 把 SIFT 和 GLOH 收进一个框架。</li><li>框架允许从数据里学参数。</li><li>学出来的描述子超过手工调参版本。</li><li>这一集分三大步，展开成五级台阶。</li></ul>
+      <div class="src">依据：原书第 437–438 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三大步</div><div class="kline">学参数</div><div class="kline">压成比特</div><div class="kline">交给深度网络</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">描述子学习 · 学什么</div>
+  <h2>学习型描述子学什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>学低维投影，把描述子投到判别力强的空间。</li><li>连池化区放在哪里也一起学。</li><li>训练数据是互联网照片里可靠匹配的块。</li><li>DAISY 用稠密立体匹配真值优化参数。</li></ul>
+      <div class="src">依据：原书第 438 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四个要点</div><div class="kline">投影：降维</div><div class="kline">池化：位置</div><div class="kline">数据：真实图像块</div><div class="kline">DAISY：立体真值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">描述子学习 · 固定块与学习权重</div>
+  <h2>同一张格子，权重可以学</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图 7.18 画的是空间求和块。</li><li>块的位置和权重可以从训练库学。</li><li>训练块来自互联网照片的可靠匹配。</li><li>数据偏了，学出的描述子也会偏。</li></ul>
+      <div class="src">依据：原书第 438 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e071_learned_blocks.png" style="max-height:520px" alt="学习型描述子：手工固定权重、数据学权重、训练数据五步｜程序生成，未用教材或论文原图"><figcaption>学习型描述子：手工固定权重、数据学权重、训练数据五步｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">描述子学习 · 通用与专用</div>
+  <h2>通用之外，也能做专用</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>通用检测子追求跨类别可重复。</li><li>类别专用检测子最大化与其他类的判别力。</li><li>知道平面朝向，可提视角不变图像块。</li><li>专用检测子在自己那一类上更准。</li></ul>
+      <div class="src">依据：原书第 438 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种检测子</div><div class="kline">通用：跨类别可重复</div><div class="kline">专用：最大化类间判别力</div><div class="kline">视角不变：已知平面朝向</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">二进制描述子 · 动机</div>
+  <h2>压成比特：匹配按位算</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>二进制位串描述子利用 Hamming 距离。</li><li>BRIEF 比较 128 对像素亮度。</li><li>结果存成 128 位向量，也就是 16 字节。</li><li>异或后数 1 的个数，就是差异。</li></ul>
+      <div class="src">依据：原书第 438 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">BRIEF 三个数</div><div class="kline">128 对像素</div><div class="kline">128 位向量</div><div class="kline">16 字节</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">二进制描述子 · 三种采样</div>
+  <h2>三家都在挑像素对</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>ORB 给 FAST 加方向，再算 BRIEF。</li><li>BRISK 加尺度空间和径向对称采样。</li><li>FREAK 用视网膜式 log-polar 采样。</li><li>差别在怎么挑、要不要转方向、跨不跨尺度。</li></ul>
+      <div class="src">依据：原书第 438–439 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种二进制</div><div class="kline">ORB：方向 + BRIEF</div><div class="kline">BRISK：尺度 + 径向</div><div class="kline">FREAK：log-polar + 级联</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">二进制描述子 · 采样模式</div>
+  <h2>采样模式决定位的质量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>BRIEF：散落的像素对。</li><li>BRISK：同心圆上的径向采样。</li><li>FREAK：视网膜式 log-polar 采样。</li><li>采样前先高斯平滑，免得噪声带偏。</li></ul>
+      <div class="src">依据：原书第 438–439 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e071_binary_patterns.png" style="max-height:520px" alt="二进制采样：BRIEF 随机像素对、BRISK 同心圆、FREAK 视网膜 log-polar｜程序生成，未用教材或论文原图"><figcaption>二进制采样：BRIEF 随机像素对、BRISK 同心圆、FREAK 视网膜 log-polar｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">深度描述子 · patch 路线</div>
+  <h2>2015 之后，深度网络上场</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>大多数新描述子用深度学习构造。</li><li>LIFT、TFeat、L2-Net、HardNet 都以块为输入。</li><li>还需检测子定中心，再裁固定尺寸块。</li><li>检测和描述还是分开的。</li></ul>
+      <div class="src">依据：原书第 439 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">patch 路线</div><div class="kline">输入：固定尺寸图像块</div><div class="kline">先检测，再描述</div><div class="kline">代表：LIFT / HardNet / Key.Net</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">深度描述子 · 整图路线</div>
+  <h2>另一条路：整图端到端</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>DELF、SuperPoint、D2-Net 直接吃整张图。</li><li>感受野可以从数据里学。</li><li>不用事先指定图像块多大。</li><li>实践中常学出类似高斯的感受野。</li></ul>
+      <div class="src">依据：原书第 439–440 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">full-image 路线</div><div class="kline">输入：整张图</div><div class="kline">检测与描述一起学</div><div class="kline">代表：SuperPoint / D2-Net / R2D2</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">深度描述子 · 两代路线</div>
+  <h2>两代路线：先裁块还是整图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>patch-based：检测子定中心，固定块大小。</li><li>full-image：整图进网络，检测描述一起学。</li><li>前者更像经典 SIFT 的流程。</li><li>后者省掉块尺寸这个超参数。</li></ul>
+      <div class="src">依据：原书第 439–440 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e071_deep_pipeline.png" style="max-height:520px" alt="两代深度描述子：patch-based 先裁块，full-image 整图端到端｜程序生成，未用教材或论文原图"><figcaption>两代深度描述子：patch-based 先裁块，full-image 整图端到端｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">评测 · HPatches</div>
+  <h2>排行榜：换个数据集就换冠军</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>HPatches 专门评图像块匹配。</li><li>Balntas 等人结果：HardNet、L2-Net 平均最好。</li><li>另一篇说 CAPS、R2D2 最好。</li><li>WISW 认为加强版 SIFT 最好。</li></ul>
+      <div class="src">依据：原书第 440 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三份榜单</div><div class="kline">HPatches：HardNet / L2-Net</div><div class="kline">另一文：CAPS / R2D2</div><div class="kline">WISW：加强版 SIFT</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">评测 · 宽基线与昼夜</div>
+  <h2>宽基线：结果强依赖任务</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>HardNet、Key.Net、D2-Net 名列前茅。</li><li>D2-Net 找到的地标点最多。</li><li>DoG 检测子仍然是最好的检测子。</li><li>跨昼夜大光照差异也有专门研究。</li></ul>
+      <div class="src">依据：原书第 440 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个结论</div><div class="kline">结果强依赖任务</div><div class="kline">没有一种描述子通吃</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">趋势 · 无检测子</div>
+  <h2>最新趋势：干脆不要检测子</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>宽基线匹配开始直接稠密提特征。</li><li>提完再匹配，并精化对应关系。</li><li>Mishkin 2021 年做过评测。</li><li>代价是计算量和几何校验更重。</li></ul>
+      <div class="src">依据：原书第 440 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">无检测子</div><div class="kline">稠密提特征</div><div class="kline">匹配后精化</div><div class="kline">省掉检测子这一环</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">选型 · 三条路线</div>
+  <h2>怎么选：算力、精度、复杂度</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>二进制描述子按位匹配，适合端上。</li><li>patch 路线要检测子和固定块。</li><li>整图路线不用指定块尺寸。</li><li>深度描述子适合难场景，算力更贵。</li></ul>
+      <div class="src">依据：原书第 438–440 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条路线</div><div class="kline">二进制：快、省</div><div class="kline">patch：好替换</div><div class="kline">full-image：精度优先</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘 · 五级台阶</div>
+  <h2>五级台阶：人退一步，数据进一步</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>手工设计描述子。</li><li>从数据学参数和池化布局。</li><li>压成二进制位串。</li><li>深度网络学块描述子，再到整图端到端。</li></ul>
+      <div class="src">依据：本集主线</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五级</div><div class="kline">手工 → 学参数</div><div class="kline">→ 二进制</div><div class="kline">→ 深度 patch</div><div class="kline">→ full-image / 无检测子</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">小结 · 移交实验课</div>
+  <h2>收束：下一集上机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>无检测子稠密提取是最新趋势。</li><li>这些技术已经被 Mishkin 评测过。</li><li>下一集用 OpenCV 串起检测、描述、匹配。</li><li>看看这些名字在代码里长什么样。</li></ul>
+      <div class="src">依据：原书第 440 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">移交</div><div class="kline">本集：描述子的学习时代</div><div class="kline">下一集：OpenCV 特征全流程</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十三集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,18 @@
+[lab] 开始 2026-11-01T23:13:25
+[lab] 源码 sha256=46c1739a62a491939a1d75e15b326bd2ed63a0e82e3926cbdcb73368a805eb79
+[PASS] 图1 三路线+流水线词在档　| 特征法/模板法/外观法/滑窗/金字塔/级联 全命中
+[PASS] 图2 三件套词在档　| 矩形差分/积分图/三级级联/拒非脸/候选脸 全命中
+[PASS] 图3 四段词在档　| 规则网格/方向直方图/SVM 权重/头躯干脚 全命中
+[PASS] 主文本字号≥10pt+程序生成注记在档×3　| 图一 最小 11.5pt/图二 最小 11.5pt/图三 最小 10.0pt
+[PASS] 图内文字内部记号零泄漏（红线 5）　| 图内 Text 收割 39 条，命中 无
+[PASS] FG1 程序生成图落盘　| e060_face_detection_taxonomy.png
+[PASS] FG2 程序生成图落盘　| e060_viola_jones_features.png
+[PASS] FG3 程序生成图落盘　| e060_hog_pipeline.png
+[lab] readings → e060_face_detection_readings.json
+[lab] readings sha256=97a25b28b9ec1d0f1afa0d0121a9129beff1d8f2c27638a8deac8785196f57c0
+[lab] PNG sha256(e060_face_detection_taxonomy.png)=166194cba0e2acb97fcbb2bb805d326491c404f5abb60204dfd75d59db00ddb4
+[lab] PNG sha256(e060_hog_pipeline.png)=5b3ece584f2cca05acb6f351baf9f97c51400d4a3ac12b0927095d638245c3a0
+[lab] PNG sha256(e060_viola_jones_features.png)=98c80e7208f7a073d81d6f54340854f6cdaaf913447ba2c6b1e354728fa8e516
+[lab] LEDGER：断言 8 条，PASS 8
+[lab] 汇总 PASS 8 / FAIL 0 / 共 8
+[lab] 结束 2026-11-01T23:13:26

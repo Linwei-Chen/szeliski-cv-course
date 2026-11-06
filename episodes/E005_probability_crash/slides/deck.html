@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E005 · 概率速通：噪声的语言</title>
+<link rel="stylesheet" href="../../../assets/shared/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<style>
+  /* E005 集内微调：公式卡压缩 KaTeX display 边距与卡片内边距（E003/E004 formula-tight 方案） */
+  .formula-tight .katex-display { margin: .12em 0; }
+  .formula-tight { padding: 18px 44px; }
+</style>
+<script defer src="../../../assets/shared/vendor/katex/katex.min.js"></script>
+<script defer src="../../../assets/shared/vendor/katex/contrib/auto-render.min.js"></script>
+<script defer src="../../../assets/shared/deck.js"></script>
+<script>
+window.addEventListener("load", () => {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    });
+  }
+});
+</script>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 05</div>
+  <h1 class="step" data-step="1">概率速通：<br><span class="hl">噪声的语言</span></h1>
+  <p class="ep step" data-step="1">随机变量、期望、方差、似然 —— 附录 B 开篇，给不确定性装上标尺</p>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>01 / 16</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">开场 · INVERSE PROBLEM</div>
+    <h2>视觉是<span class="hl">逆问题</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:10px">原书第 940 页（大意）：图形学是<b>正向</b>问题——给定物体、相机、光照，模拟出图像；计算机视觉通常相反——<b>从图像恢复产生它的场景</b>。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:20px">原书第 940 页直译（节选）：除非对可能的<b>误差来源建模</b>，否则不能确信算法合理。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">讲者补：这门语言，叫<span class="hl">概率</span>。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="正向建模与逆问题">
+      <g font-family="PingFang SC, sans-serif">
+        <text x="70" y="70" font-size="24" fill="#009E73" font-weight="700">图形学 · 正向</text>
+        <rect x="70" y="90" width="280" height="90" rx="14" fill="#ffffff" stroke="#009E73" stroke-width="3"></rect>
+        <text x="210" y="128" font-size="25" fill="#2b2b33" text-anchor="middle">物体 + 相机 + 光照</text>
+        <text x="210" y="162" font-size="20" fill="#8a8378" text-anchor="middle">（全部已知）</text>
+        <line x1="360" y1="135" x2="440" y2="135" stroke="#009E73" stroke-width="5"></line>
+        <path d="M452,135 l-24,-13 M452,135 l-24,13" stroke="#009E73" stroke-width="5" fill="none"></path>
+        <rect x="460" y="90" width="120" height="90" rx="14" fill="#ffffff" stroke="#009E73" stroke-width="3"></rect>
+        <text x="520" y="145" font-size="25" fill="#009E73" text-anchor="middle" font-weight="700">图像</text>
+        <text x="70" y="270" font-size="24" fill="#1e3a5f" font-weight="700">计算机视觉 · 逆向</text>
+        <rect x="70" y="290" width="280" height="90" rx="14" fill="#ffffff" stroke="#1e3a5f" stroke-width="3"></rect>
+        <text x="210" y="328" font-size="25" fill="#2b2b33" text-anchor="middle">观测（永远带噪声）</text>
+        <text x="210" y="362" font-size="20" fill="#8a8378" text-anchor="middle">如：标定图像中的特征点</text>
+        <line x1="360" y1="335" x2="440" y2="335" stroke="#1e3a5f" stroke-width="5"></line>
+        <path d="M452,335 l-24,-13 M452,335 l-24,13" stroke="#1e3a5f" stroke-width="5" fill="none"></path>
+        <rect x="460" y="290" width="120" height="90" rx="14" fill="#ffffff" stroke="#1e3a5f" stroke-width="3"></rect>
+        <text x="520" y="328" font-size="25" fill="#1e3a5f" text-anchor="middle" font-weight="700">场景</text>
+        <text x="520" y="362" font-size="20" fill="#8a8378" text-anchor="middle">/ 参数 x</text>
+        <text x="320" y="440" font-size="23" fill="#8a8378" text-anchor="middle">例：已知三维点，反推相机矩阵 P（式 B.1–B.4）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>02 / 16</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">词汇 ① · RANDOM VARIABLE</div>
+  <h2>随机变量：<span class="hl">还没发生的数</span></h2>
+  <p class="lead step" data-step="1" style="margin-top:6px">讲者解释：把还没发生的测量打包成变量，用<b>分布</b>描述取值与机会。</p>
+  <div class="cards c2 step" data-step="1" style="margin-top:36px">
+    <div class="card">
+      <div class="big">离散型</div>
+      <div class="cap">骰子 \(X \in \{1,\dots,6\}\)
+        <small>每个取值各 1/6，概率直接列清单</small></div>
+    </div>
+    <div class="card">
+      <div class="big">连续型</div>
+      <div class="cap">噪声电压 \(n \in \mathbb{R}\)
+        <small>用密度 p(x) 描述；附录 B 的噪声 n 就是它</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1" style="margin-top:18px">伏笔：两枚<b>独立</b>骰子点数之和的分布 = 两个分布的卷积——第七集见（讲者补充）。</p>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>03 / 16</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">词汇 ② · EXPECTATION</div>
+  <h2>期望：<span class="hl">长期平均</span></h2>
+  <div class="formula formula-tight step" data-step="1" style="margin-top:14px">
+    $$\mathbb{E}[X] \;=\; \sum_x x\,p(x) \quad\text{或}\quad \int x\,p(x)\,dx$$
+    <div class="note">左＝离散求和，右＝连续积分｜讲者补充（标准概率论）｜线性性：和的期望 = 期望的和（E[aX+b] = aE[X]+b 同理）</div>
+  </div>
+  <p class="lead step" data-step="1">均匀骰子的期望是 <b>3.5</b>——不在任何取值上，但抛一万次，平均值会稳稳收敛到它：<b>大数定律</b>。</p>
+  <p class="lead dim step" data-step="1" style="margin-top:16px">对噪声最要紧：零均值——单次随机，长期归零（式 B.7）。</p>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>04 / 16</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">词汇 ③ · VARIANCE</div>
+  <h2>方差：<span class="hl">散得多开</span></h2>
+  <div class="formula formula-tight step" data-step="1" style="margin-top:14px">
+    $$\mathrm{Var}(X) = \mathbb{E}\big[(X-\mu)^2\big], \qquad \sigma = \sqrt{\mathrm{Var}(X)}$$
+    <div class="note">偏差先平方再取期望｜为什么平方：正负偏差直接相加会抵消，平方才留得住散开程度｜讲者补充</div>
+  </div>
+  <p class="lead step" data-step="1">经验读法（正态近似）：约 <b>68%</b>（近七成）落在 ±1σ 内、<b>95%</b> 在 ±2σ 内——σ 就是不确定性的标尺。</p>
+  <p class="lead dim step" data-step="1" style="margin-top:16px">多维版：协方差矩阵 Σ——各向同性 σ²I（B.9），胖瘦可随方向变（B.10）。</p>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>05 / 16</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">主角 · GAUSSIAN</div>
+    <h2>高斯：误差的<span class="hl">默认形状</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px;font-size:44px">
+      $$n_i \sim \mathcal{N}(0, \Sigma_i)$$
+      <div class="note">式 B.7：均值定为零，协方差 Σ 定胖瘦（第 942 页）</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:14px">原书第 945 页：<b>若</b>噪声源于大量微小误差叠加（如热噪声），高斯就是合适模型。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">讲者补：独立小扰动叠加，趋向钟形。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="高斯钟形曲线与西格玛标尺">
+      <g font-family="PingFang SC, sans-serif">
+        <path d="M60,390 C190,390 230,100 320,100 C410,100 450,390 580,390" fill="none" stroke="#2b2b33" stroke-width="5"></path>
+        <line x1="40" y1="390" x2="600" y2="390" stroke="#8a8378" stroke-width="3"></line>
+        <line x1="320" y1="100" x2="320" y2="390" stroke="#c9bfae" stroke-width="2" stroke-dasharray="7 7"></line>
+        <line x1="260" y1="352" x2="260" y2="390" stroke="#1e3a5f" stroke-width="3" stroke-dasharray="8 6"></line>
+        <line x1="380" y1="352" x2="380" y2="390" stroke="#1e3a5f" stroke-width="3" stroke-dasharray="8 6"></line>
+        <line x1="200" y1="315" x2="200" y2="390" stroke="#e8590c" stroke-width="3" stroke-dasharray="8 6"></line>
+        <line x1="440" y1="315" x2="440" y2="390" stroke="#e8590c" stroke-width="3" stroke-dasharray="8 6"></line>
+        <path d="M260,378 L380,378" stroke="#1e3a5f" stroke-width="0"></path>
+        <text x="320" y="424" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">±1σ ≈ 68%（讲者补）</text>
+        <text x="320" y="456" font-size="22" fill="#e8590c" text-anchor="middle" font-weight="700">±2σ ≈ 95%</text>
+        <text x="320" y="70" font-size="25" fill="#2b2b33" text-anchor="middle">n 的概率密度：钟形</text>
+        <text x="308" y="378" font-size="20" fill="#8a8378" text-anchor="end">0</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>06 / 16</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">正向模型 · MEASUREMENT EQ</div>
+    <h2>一行写尽测量：<span class="hl">信号 + 噪声</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$y_i = f_i(x) + n_i$$
+      <div class="note">式 B.5（第 941 页）｜<b>ỹ</b> 带噪观测（波浪≈近似）、<b>ŷ</b> = fᵢ(x) 预测值（戴帽）——记号出自第 943 页｜干扰参数 = nuisance parameter（第 942 页）</div>
+    </div>
+    <p class="lead dim step" data-step="1" style="margin-top:16px">噪声若不独立——如同乘一个增益——原书：并进状态向量当<b>干扰参数</b>，需要的话再丢。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="测量方程信号流">
+      <g font-family="PingFang SC, sans-serif">
+        <rect x="40" y="100" width="140" height="90" rx="14" fill="#ffffff" stroke="#e8590c" stroke-width="3"></rect>
+        <text x="110" y="138" font-size="27" fill="#e8590c" text-anchor="middle" font-weight="700">x</text>
+        <text x="110" y="172" font-size="20" fill="#8a8378" text-anchor="middle">未知状态</text>
+        <line x1="185" y1="145" x2="245" y2="145" stroke="#2b2b33" stroke-width="5"></line>
+        <path d="M257,145 l-24,-13 M257,145 l-24,13" stroke="#2b2b33" stroke-width="5" fill="none"></path>
+        <rect x="262" y="100" width="180" height="90" rx="14" fill="#ffffff" stroke="#1e3a5f" stroke-width="3"></rect>
+        <text x="352" y="138" font-size="26" fill="#1e3a5f" text-anchor="middle" font-weight="700">fᵢ(x)</text>
+        <text x="352" y="172" font-size="20" fill="#8a8378" text-anchor="middle">测量模型 → ŷ</text>
+        <line x1="447" y1="145" x2="500" y2="145" stroke="#2b2b33" stroke-width="5"></line>
+        <path d="M512,145 l-24,-13 M512,145 l-24,13" stroke="#2b2b33" stroke-width="5" fill="none"></path>
+        <circle cx="527" cy="145" r="17" fill="#ffffff" stroke="#2b2b33" stroke-width="3"></circle>
+        <text x="527" y="155" font-size="27" fill="#2b2b33" text-anchor="middle">+</text>
+        <line x1="527" y1="308" x2="527" y2="170" stroke="#d8a13c" stroke-width="5"></line>
+        <path d="M527,158 l-13,24 M527,158 l13,24" stroke="#d8a13c" stroke-width="5" fill="none"></path>
+        <rect x="455" y="308" width="145" height="90" rx="14" fill="#ffffff" stroke="#d8a13c" stroke-width="3"></rect>
+        <text x="527" y="346" font-size="26" fill="#d8a13c" text-anchor="middle" font-weight="700">nᵢ</text>
+        <text x="527" y="380" font-size="20" fill="#8a8378" text-anchor="middle">噪声（随机）</text>
+        <rect x="40" y="255" width="180" height="90" rx="14" fill="#ffffff" stroke="#2b2b33" stroke-width="3"></rect>
+        <text x="130" y="293" font-size="26" fill="#2b2b33" text-anchor="middle" font-weight="700">yᵢ（= ỹ）</text>
+        <text x="130" y="327" font-size="20" fill="#8a8378" text-anchor="middle">带噪观测</text>
+        <path d="M510,172 C470,245 340,300 232,300" stroke="#2b2b33" stroke-width="4" fill="none"></path>
+        <path d="M220,300 l24,-12 M220,300 l24,12" stroke="#2b2b33" stroke-width="4" fill="none"></path>
+        <text x="320" y="446" font-size="23" fill="#2b2b33" text-anchor="middle">式 B.5：观测 yᵢ = 预测 ŷ + 噪声 nᵢ</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>07 / 16</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">视角翻转 · LIKELIHOOD</div>
+  <h2>似然：反过<span class="hl">问 x</span></h2>
+  <div class="formula formula-tight step" data-step="1" style="margin-top:14px">
+    $$L = p(y\,|\,x) = \prod_i p(y_i\,|\,x) = \prod_i p(n_i)$$
+    <div class="note">式 B.6（第 942 页）｜噪声相互独立 ⇒ 总似然 = 连乘｜同一公式两种读法：固定 x 看 y = 观测的分布；固定 y 看 x = 似然</div>
+  </div>
+  <p class="lead step" data-step="1">讲者类比：箭已经中靶（观测到手），<b>反推射手站在哪个位置</b>最可能射成这样。</p>
+  <p class="lead dim step" data-step="1" style="margin-top:16px">这一步反转，是从概率通向估计的桥——后面每一集都踩它过河。</p>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>08 / 16</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">代入 · GAUSSIAN LIKELIHOOD</div>
+  <h2>高斯噪声：<span class="hl">指数上的碗</span></h2>
+  <div class="formula formula-tight step" data-step="1" style="margin-top:14px">
+    $$L = \prod_i \big|2\pi\Sigma_i\big|^{-1/2} \exp\!\Big(-\tfrac{1}{2}\,\big\|y_i - f_i(x)\big\|^2_{\Sigma_i^{-1}}\Big)$$
+    <div class="note">式 B.8（第 942 页）｜<b>马氏距离</b> = ‖v‖<sub>A</sub>（不带平方）；指数上是其平方 ‖v‖²<sub>A</sub> ≡ vᵀAv（同式 5.32）｜等距线 = 等概率椭球：特征向量定方向、√λ 定半轴（式 B.10）</div>
+  </div>
+  <p class="lead step" data-step="1">各向同性（Σ = σ²I）时退化为平方距离 ÷ σ²——式 B.9。前置系数与 x 无关：<b>比似然大小，只看指数上的平方残差</b>。</p>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>09 / 16</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">负对数似然 · ENERGY</div>
+  <h2>取负对数：<span class="hl">乘法变加法</span></h2>
+  <div class="formula formula-tight step" data-step="1" style="margin-top:10px;font-size:42px;padding:12px 44px">
+    $$E = -\log L = \tfrac{1}{2}\sum_i \big\|\tilde y_i - \hat y_i\big\|^2_{\Sigma_i^{-1}} + k$$
+    <div class="note">式 B.11–B.13（第 942–943 页）｜log：连乘→连加、指数→二次型｜k：与 x 无关，可丢</div>
+  </div>
+  <p class="lead step" data-step="1" style="margin-top:10px">眼熟吗？高斯噪声下，这是<b>加权最小二乘</b>（等方差时 = 上一集的最小二乘）——平方和目标是<b>高斯假设下的推论</b>。让 L 最大 = 让 E 最小：<b>最大似然 MLE</b>。</p>
+  <p class="lead dim step" data-step="1" style="margin-top:8px">原书第 944 页提醒：分布多峰时要小心——可能得推迟决策、等更多测量（如 §7.3.1 的 CONDENSATION，粒子滤波一例）。</p>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>10 / 16</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">权重 · INFORMATION</div>
+  <h2>方差越小，<span class="hl">话语权越大</span></h2>
+  <div class="cards c3 step" data-step="1">
+    <div class="card">
+      <div class="big">权重</div>
+      <div class="cap">C = Σ⁻¹ 乘在每个残差上（式 B.13）
+        <small>残差被自己的噪声倒数缩放</small></div>
+    </div>
+    <div class="card">
+      <div class="big">信息</div>
+      <div class="cap">Fisher 信息矩阵
+        <small>一个测量含多少信息、多强地约束估计（第 943 页）</small></div>
+    </div>
+    <div class="card">
+      <div class="big">置信</div>
+      <div class="cap">置信度
+        <small>字母 C 的来历（第 943 页原话）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">原书第 943 页：信息矩阵可<b>奇异甚至为零</b>——缺失的测量不约束解。原书例（§9.1.3）：边测量的沿边方向分量方差<b>无穷大或极大</b>——约束只在垂直方向。</p>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>11 / 16</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 两台传感器</div>
+  <h2>真值 3.0：A 读 2.20，<span class="hl">B 读 −2.30</span></h2>
+  <p class="lead step" data-step="1" style="margin-top:6px">A 陡（σ=1）、B 缓（σ=4）；联合能量 = 相加，谷底被准的 A 拉到 <b>1.93</b>（式 B.20）。</p>
+  <figure class="shot step" data-step="1">
+    <img src="figures/probability_crash_demo.png" alt="似然能量曲线与蒙特卡洛误差直方图" style="max-height:350px">
+  </figure>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>12 / 16</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 两万次重复</div>
+  <h2>加权更窄：<span class="hl">2.05 对 0.98</span></h2>
+  <p class="lead step" data-step="1" style="margin-top:6px">直觉：B 的一票只有 A 的 1/16——<b>糊传感器不是扔掉，是降权</b>。理论 \(\hat x = (\sum_i C_i)^{-1}\sum_i C_i \tilde y_i\)（式 B.20）。</p>
+  <figure class="shot step" data-step="1">
+    <img src="figures/probability_crash_demo.png" alt="简单平均与信息加权平均的误差分布对照" style="max-height:350px">
+  </figure>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>13 / 16</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="qmark step" data-step="1">「</div>
+  <blockquote class="step" data-step="1">似然，是观测投给参数 x 的票；<br>方差的倒数，决定每张票的分量。</blockquote>
+  <div class="attrib step" data-step="1">—— 本集记忆锚 ｜ 三条暗线贯穿附录 B：噪声零均值、独立连乘、高斯平方惩罚</div>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>14 / 16</span></div>
+</section>
+
+<section class="slide endcard" data-steps="1">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>附录 B 开篇第 939–945 页：逆问题 → 式 B.5 测量方程 → 式 B.6–B.9 似然与马氏距离 → 式 B.10 椭球（第 942–943 页）→ 式 B.11–B.13 能量与信息矩阵 → 式 B.20 信息加权平均（第 945 页）</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>把 code/probability_crash_demo.py 里 SIGMA_B 从 4.0 改成 0.5（B 反而更准），重跑：谷底偏向谁？加权平均的方差变成多少？（参考：偏向 B；1/(1+4) = 0.2）</div>
+  <div class="row step" data-step="1"><span class="tag">下一集</span>E006 贝叶斯思维：先验、后验与 MAP</div>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>15 / 16</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 05 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E005 · 数学工具箱</span><span>16 / 16</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

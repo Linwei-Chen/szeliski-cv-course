@@ -1,0 +1,54 @@
+==============================================================================
+E035 · 一枚镜头一张图：成像与图像处理全景串联 —— S2 串联台账（程序生成）
+==============================================================================
+回链口径：status.scope.citation_policy——页码锚回链各集 shots.json refs/narration
+（E013–E020 老集无页码引用，锚以 E035 自有证据 e035_book_ch2_ch3_anchors.txt 承担）
+注：回链页=该集实引页，可非节首页（金字塔实引 p.155、节首 p.154；锚列以节首页计）
+
+── 一枚镜头（第 2 章 Image formation，印刷 p.33 起）──
+  几何基元与变换（E013+E014）｜ §2.1 Geometric primitives p.36（2.1.2 3D p.43） ｜ 回链页=43 ｜ 回响：变换家族一图流（E013 与 E014 同站）（E013+E014）
+  相机投影与内参（E015+E016）｜ §2.1.4 3D to 2D projections p.51 ｜ 回链页=—（own 锚） ｜ 回响：投影方程手推（E015+E016）
+  镜头畸变（E017）｜ §2.1.5 Lens distortions p.63 ｜ 回链页=—（own 锚） ｜ 回响：畸变模型演示（E017）
+  光度成像（E018）｜ §2.2 Photometric image formation p.66 ｜ 回链页=—（own 锚） ｜ 回响：反射模型演示（E018）
+  光学（E019）｜ §2.2.3 Optics p.74 ｜ 回链页=74 ｜ 回响：薄透镜与 f 数（E019）
+  相机与色彩（E020）｜ §2.3 The digital camera p.79（2.3.2 Color p.87） ｜ 回链页=87 ｜ 回响：Bayer 与伽马（E020）
+── 一张图（第 3 章 Image processing，印刷 p.107 起）──
+  点操作（E021）｜ §3.1 Point operators p.109 ｜ 回链页=109 ｜ 回响：增益偏置≡1×1 卷积（E021）
+  直方图均衡（E022）｜ §3.1.4 Histogram equalization p.115 ｜ 回链页=115 ｜ 回响：累计直方图映射（E022）
+  线性滤波（E023）｜ §3.2 Linear filtering p.119（3.2.3 steerable p.127） ｜ 回链页=119 ｜ 回响：锐化核与转向滤波（E023）
+  可分离滤波（E024）｜ §3.2.1 Separable filtering p.124 ｜ 回链页=124 ｜ 回响：两趟卷积等价（E024）
+  非线性滤波（E025）｜ §3.3 More neighborhood operators p.131 ｜ 回链页=131 ｜ 回响：中值/双边去噪（E025）
+  二值与形态（E026）｜ §3.3.3 Binary image processing p.138 ｜ 回链页=138 ｜ 回响：形态学链（E026）
+  傅里叶变换（E027+E028）｜ §3.4 Fourier transforms p.142 ｜ 回链页=142 ｜ 回响：频域去噪与 PSNR（E027+E028）
+  插值与抽取（E029）｜ §3.5 Pyramids and wavelets p.149 ｜ 回链页=149 ｜ 回响：双线性插值核（E029）
+  金字塔（E030）｜ §3.5.3 Multi-resolution representations p.154 ｜ 回链页=155 ｜ 回响：高斯/拉普拉斯金字塔（E030）
+  小波（E031）｜ §3.5.4 Wavelets p.159 ｜ 回链页=159 ｜ 回响：小波阈值去噪与融合演示（E031）
+  几何变换（E032）｜ §3.6 Geometric transformations p.168 ｜ 回链页=168 ｜ 回响：射影变换演示（E032）
+
+── 断言 ──
+  [PASS] A1 页码锚：回链 13 行+自有 4 行（E014 行兼有实引 p.43——可见列 14 个数字+3 个横杠「—（own 锚）」）
+  [PASS] A2 回响存档：12 集含 PASS 汇总行（E021+ 口径）
+      E013: — —— 演示集（老形态，无数值 run 存档口径）
+      E014: — —— 演示集（老形态，无数值 run 存档口径）
+      E015: — —— 演示集（老形态，无数值 run 存档口径）
+      E016: — —— 演示集（老形态，无数值 run 存档口径）
+      E017: — —— 演示集（老形态，无数值 run 存档口径）
+      E018: — —— 演示集（老形态，无数值 run 存档口径）
+      E019: — —— 演示集（老形态，无数值 run 存档口径）
+      E020: — —— 演示集（老形态，无数值 run 存档口径）
+      E021: e021_pointops_stdout.txt —— 汇总：29/29 数据断言 PASS · 常数核对 4/4 · 区分力自检 8/8 拦截 · 同步检查 PASS —— 全部通过
+      E022: e022_histequal_stdout.txt —— 汇总：35 条断言 PASS（31 数据+4 常数）· 区分力自检 2/2 拦截 · 同步检查 PASS —— 全部通过
+      E023: e023_linfilter_stdout.txt —— 34 条断言 PASS（30 数据+4 常数）＋同步 1 项＋区分力自检 2/2 拦截
+      E024: e024_separable_stdout.txt —— 32 条 PASS（31 断言=27 数据+4 常数，含同步 1 项）＋区分力自检 2/2 拦截
+      E025: e025_nonlinear_run1.txt —— 汇总：30 条 PASS / 0 FAIL
+      E026: e026_binary_run1.txt —— 汇总：23 条 PASS / 0 FAIL
+      E027: e027_fourier_run1.txt —— 汇总：27 条 PASS / 0 FAIL
+      E028: e028_ft2d_run1.txt —— 汇总：33 条 PASS / 0 FAIL＋区分力 4/4（注入自检，不计数）
+      E029: e029_interp_decim_run1.txt —— 汇总：38 条 PASS / 0 FAIL＋区分力 4/4（注入自检，不计数）
+      E030: e030_pyramid_run1.txt —— 汇总：32 条 PASS / 0 条 FAIL；区分力注入 5/5 已拦截 ==
+      E031: e031_wavelets_blending_run1.txt —— 汇总：19 条 PASS / 0 条 FAIL；区分力注入 3/3 已拦截 ==
+      E032: e032_geometric_transform_run1.txt —— 汇总：26 条 PASS / 0 条 FAIL
+  [PASS] A3 章界：Ch2 集⊆[33,106]、Ch3 集⊆[107,190]（例外：E028 p.101=PSNR 定义跨页（§2.3 末，章界例外预登记，E035 不引用该条））
+
+台账行数：17（成像链 6+处理链 11）；断言错误 0 项
+LEDGER-DONE

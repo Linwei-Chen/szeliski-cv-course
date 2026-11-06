@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>八点法：用 8 个点解出一个矩阵</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">线性解 · 八点法</div>
+  <h2>八点法：用 8 个点解矩阵</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>给定至少 8 对匹配点，解 F 或 E。</li><li>每对匹配写一个方程，堆成线性系统。</li><li>用 SVD 取零空间，差一个尺度。</li><li>不要求初值，可作粗解再精化。</li></ul>
+      <div class="src">依据：原书第 705 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个矩阵</div><div class="kline">F：基础矩阵</div><div class="kline">E：本质矩阵</div><div class="kline">都可差一个尺度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">流程 · 五步</div>
+  <h2>五步管线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>归一化两幅图的点。</li><li>每对匹配堆一行，得到 N×9 的 A。</li><li>SVD 取最小奇异向量，重组 F。</li><li>秩二投影后，再反归一化。</li></ul>
+      <div class="src">依据：原书第 705–706 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e103_pipeline.png" style="max-height:440px" alt="八点法五步：归一化→堆 A→SVD→秩二→反归一化｜程序生成，未用教材或论文原图"><figcaption>八点法五步：归一化→堆 A→SVD→秩二→反归一化｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">归一化 · Hartley</div>
+  <h2>归一化：数值能不能用的关键</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>像素乘积项会放大噪声，尺度很差。</li><li>Hartley：平移到质心，方差归一。</li><li>未归一化时，大坐标点主导 SVD。</li><li>归一化后，条件数从几十万降到几十。</li></ul>
+      <div class="src">依据：原书第 705–706 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两步</div><div class="kline">先归一化</div><div class="kline">解完再反归一化</div><div class="kline">工业实现都做</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">堆方程 · 九未知</div>
+  <h2>堆方程：九未知与零空间</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每对匹配给一行关于 E 九元素的方程。</li><li>N 对点堆成 N×9 矩阵，解是零空间。</li><li>9 个未知量、尺度任意，自由度是 8。</li><li>点多时取最小奇异向量，等价最小二乘。</li></ul>
+      <div class="src">依据：原书第 705 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">未知量</div><div class="kline">3×3 矩阵 9 个元素</div><div class="kline">整体尺度任意</div><div class="kline">解的是矩阵，不是相机</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">秩二 · 投影</div>
+  <h2>秩二：把解投影回去</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>理论上 F/E 的秩是 2。</li><li>噪声让矩阵满秩，第三个奇异值非零。</li><li>再做 SVD，把最小奇异值置零。</li><li>投影后极点仍是零空间向量。</li></ul>
+      <div class="src">依据：原书第 706 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">秩二投影</div><div class="kline">极点不漂</div><div class="kline">极线关系成立</div><div class="kline">三角化更稳</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">七点 · 三次方程</div>
+  <h2>七点法：三次方程</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E 秩亏，7 对点就够。</li><li>解空间二维：E = αE0 + (1−α)E1。</li><li>再用 det(E)=0 得三次方程，最多三根。</li><li>多解要拿额外点验证。</li></ul>
+      <div class="src">依据：原书第 706–707 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">七点法</div><div class="kline">少一个点</div><div class="kline">采样组合更少</div><div class="kline">数值更娇气</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">五点 · 十次多项式</div>
+  <h2>五点法：十次多项式</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>五点法要求十次多项式的根。</li><li>5 对点就能出解，假设相机已标定。</li><li>外点很多、匹配很贵时更合适。</li><li>实现要处理数值稳定性和 cheirality。</li></ul>
+      <div class="src">依据：原书第 707 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五点法</div><div class="kline">解的是 E</div><div class="kline">适合 RANSAC 最小解</div><div class="kline">之后还要精化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">RANSAC · 采样预算</div>
+  <h2>RANSAC：采样预算</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>迭代次数由样本大小、内点率、成功率决定。</li><li>内点率 50%、成功率 99%：k8=1177。</li><li>七点法 588 次，五点法 146 次。</li><li>少点让采样更便宜，外点率越高差距越大。</li></ul>
+      <div class="src">依据：原书第 707 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">采样预算</div><div class="kline">k8 1177</div><div class="kline">k7 588</div><div class="kline">k5 146</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 条件数与点数</div>
+  <h2>看图：归一化与点数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>未归一化条件数 23.4 万，归一化后 24.3。</li><li>中位极线误差 0.539 降到 0.488 像素。</li><li>点数 8/20/100，留出集误差 1.57/0.37/0.16。</li><li>条件数降四个数量级，误差降得不多。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e103_condition.png" style="max-height:440px" alt="条件数 23.4 万→24.3；点数 8/20/100 误差 1.57/0.37/0.16 px｜程序生成，未用教材或论文原图"><figcaption>条件数 23.4 万→24.3；点数 8/20/100 误差 1.57/0.37/0.16 px｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 30% 外点</div>
+  <h2>看图：外点与 RANSAC</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>30% 外点：普通八点中位误差 12.9 像素。</li><li>RANSAC 采样 600 次、内点重估后 0.32 像素。</li><li>阈值按像素噪声设，通常 1 到 3 像素。</li><li>采样次数按内点率算，不能固定 100 次。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e103_ransac.png" style="max-height:440px" alt="30% 外点：普通八点 12.9 px，RANSAC 0.32 px｜程序生成，未用教材或论文原图"><figcaption>30% 外点：普通八点 12.9 px，RANSAC 0.32 px｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失败边界 · 五种坑</div>
+  <h2>失败边界：五种情况</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>点太少或共面、共线，A 秩不足。</li><li>纯旋转视差为零，E 退化。</li><li>外点多不做 RANSAC 必崩。</li><li>不归一化条件数爆炸，解被远点绑架。</li></ul>
+      <div class="src">依据：原书第 705–707 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">诊断五看</div><div class="kline">奇异值谱</div><div class="kline">秩与极点</div><div class="kline">极线图与内点率</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>收束：从矩阵到相机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>八点法：堆线性方程，SVD 取零空间。</li><li>归一化和秩二投影决定能不能用。</li><li>RANSAC 挑外点，内点重估保精度。</li><li>下一集：位姿恢复与三角化。</li></ul>
+      <div class="src">依据：原书第 705–707 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">分解 R 和 t</div><div class="kline">三角化第一批点</div><div class="kline">重投影误差评估</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十五集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

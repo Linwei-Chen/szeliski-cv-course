@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>生成模型：自编码器、VQ-VAE 与 GAN 谱系</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 判别式与生成式</div>
+  <h2>让机器自己画图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>判别式模型只判断，不建模数据怎么生成。</li><li>生成模型能看假设、用缺失数据、给多个结果。</li><li>图形学把这类技术叫图像合成。</li><li>纹理、风格迁移、分形地形都是老例子。</li></ul>
+      <div class="src">依据：原书第 328 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三步走</div><div class="kline">压缩再解压：自编码器</div><div class="kline">造假与鉴别：GAN</div><div class="kline">图变图：pix2pix 与 CycleGAN</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十四集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 自编码器</div>
+  <h2>自编码器：压紧再还原</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图像压成紧凑编码，再解码还原原图。</li><li>训练目标：解码输出对回输入图。</li><li>隐向量一一对应输入，空间不好采样。</li><li>戈什 2019 注入噪声；历史比前馈网络老。</li></ul>
+      <div class="src">依据：原书第 329 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e052_fig1_autoencoder.png" style="max-height:500px" alt="自编码器瓶颈示意：编码器→隐向量→解码器｜程序生成，未用教材或论文原图"><figcaption>自编码器瓶颈示意：编码器→隐向量→解码器｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十四集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">变分自编码器</div>
+  <h2>VAE：把点压成一片云</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个输入先生成均值与协方差。</li><li>由参数定分布，再从分布里采样。</li><li>正则项防止协方差缩成零矩阵。</li><li>采样让隐空间好探索，解码器不易过拟合。</li></ul>
+      <div class="src">依据：原书第 329–330 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">与自编码器的差别</div><div class="kline">点 → 云</div><div class="kline">确定性 → 概率性</div><div class="kline">软肋：分布不好还得另想办法</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十四集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · VQ-VAE</div>
+  <h2>VQ-VAE：把隐空间离散化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个位置换成码本里最近的向量。</li><li>码本 K=512，隐变量 32×32×1。</li><li>能表示的图有 512 的 1024 次方，2775 位。</li><li>隐变量另训生成模型，PixelCNN 逐个采样。</li></ul>
+      <div class="src">依据：原书第 330–331 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e052_fig2_vqvae.png" style="max-height:500px" alt="码本量化示意：隐向量→最近码本向量→解码｜程序生成，未用教材或论文原图"><figcaption>码本量化示意：隐向量→最近码本向量→解码｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十四集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · GAN 博弈</div>
+  <h2>GAN：造假者与鉴别者</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>手写不出真假损失，就训练一个评论家。</li><li>式 5.79：真图取 log D，假图取 log(1−D)。</li><li>生成器压第二项，判别器抬高两项。</li><li>这里的对抗指博弈，不是对抗样本。</li></ul>
+      <div class="src">依据：原书第 331–332 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e052_fig3_gan.png" style="max-height:500px" alt="GAN 博弈框图：随机噪声→生成器→假图→判别器→真/假｜程序生成，未用教材或论文原图"><figcaption>GAN 博弈框图：随机噪声→生成器→假图→判别器→真/假｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十四集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">GAN 家族</div>
+  <h2>卷积化与条件化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最初全连接网络只能画 32×32 小图。</li><li>DCGAN 用反卷积，能画任意尺寸。</li><li>LAPGAN 用拉普拉斯金字塔串对抗网络。</li><li>cGAN 喂类别向量；InfoGAN 加互信息项。</li></ul>
+      <div class="src">依据：原书第 332–333 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种控制</div><div class="kline">插值：隐空间有了旋钮</div><div class="kline">条件：指定画什么</div><div class="kline">解耦：形状与风格分开</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十四集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图到图翻译</div>
+  <h2>pix2pix 与 CycleGAN</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>pix2pix 把草图、语义图翻译成照片。</li><li>判别器逐块判真伪，反馈更细。</li><li>没有随机向量，用 dropout 注入噪声。</li><li>CycleGAN 要求来回映射一致，不用配对。</li></ul>
+      <div class="src">依据：原书第 333–334 页；GAN Zoo 2014–2018 中 500+ 篇</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">配对：pix2pix</div><div class="kline">不配对：CycleGAN、DualGAN、DiscoGAN</div><div class="kline">BicycleGAN：控制输出模式</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十四集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">谱系与收束</div>
+  <h2>二零一七年后的名号</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Wasserstein、Progressive、StyleGAN、BigGAN。</li><li>UNIT、MUNIT、SPADE、GANSpace、VQGAN。</li><li>超分辨率、照片级合成、图到图、交互编辑。</li><li>金字塔按语义层级改图；交换自编码器分纹理。</li></ul>
+      <div class="src">依据：原书第 335 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">这条线的收束</div><div class="kline">画得真</div><div class="kline">画得可控</div><div class="kline">仍是活跃方向</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十四集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>四件事与两道题</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>四件事：自编码器、VAE、VQ-VAE、GAN。</li><li>题一：512^(32×32×1)，2775 位。</li><li>题二：256 见方图、70 见方块，144 块。</li><li>5.6 是书单；下一集 5.7 实验课。</li></ul>
+      <div class="src">依据：原书第 336–337 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四句话</div><div class="kline">自编码器：压紧再还原</div><div class="kline">VAE：点变云</div><div class="kline">VQ-VAE：查码本</div><div class="kline">GAN：造假对鉴别</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十四集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,20 @@
+[lab] E084 三条加速路 开始 2026-11-02T18:03:22
+[lab] 源码 sha256=fd1e70779af2226924fa4d0a54d78f267407a3f40135aaa7dc541ffe8809fd93
+[PASS] 金字塔整数位移正确　| best=(23, -17)/真值 (23, -17)
+[PASS] 金字塔评估数远少于全搜索　| 108 vs 2401
+[FAIL] 相位相关峰在真值附近　| peak=(-23, 17)
+[PASS] 相位相关峰足够尖　| peak=0.233
+[FAIL] 增量细化到亚像素　| err=0.1034px
+[PASS] 细化误差单调下降　| ['0.313', '0.228', '0.172', '0.126', '0.103']
+[PASS] 细化不超过五步　| iters=5
+[PASS] 全搜索命中真值　| best=(23, -17)
+[PASS] 全搜索成本高　| evals=2401
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e084_phase.png)=2a1442f625ae3258145476f72dc3facad4e0c5aa13f079ea49e613cb49d6843b
+[lab] PNG sha256(e084_pyramid.png)=c8a73e2ca8466c7c5d154e88e0c0466f4e9c80adabe5d3dc94fc75455956bc4a
+[lab] PNG sha256(e084_refine.png)=e006e3afd94b3cd94b714ea3046c4755ef5f93f31b8d0f07f4553c7cc4be9878
+[lab] readings → e084_motion_readings.json
+[lab] readings sha256=63b35a81c0b1d46b779f664df4fcea8614b55969aeb02f86926be8b1fa5faf1d
+[lab] LEDGER：断言 10 条，PASS 8
+[lab] 汇总 PASS 8 / FAIL 2 / 共 10
+[lab] 结束 2026-11-02T18:03:22

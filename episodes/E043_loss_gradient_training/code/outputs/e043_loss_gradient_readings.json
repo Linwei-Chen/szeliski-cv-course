@@ -1,0 +1,174 @@
+{
+ "data": {
+  "n": 40,
+  "x_range": [
+   -3,
+   3
+  ],
+  "noise": 0.05,
+  "seed": 2042
+ },
+ "e1_numeric_vs_analytic": {
+  "max_rel": 4.263254898723271e-11,
+  "eps": 1e-06,
+  "D": 13
+ },
+ "e2_ce_grad_p_minus_t": {
+  "p": [
+   0.23870337601690594,
+   0.027499962925737646,
+   0.7337966610573564
+  ],
+  "t": [
+   0.0,
+   0.0,
+   1.0
+  ],
+  "n_classes": 3,
+  "max_rel": 2.570150746523861e-10
+ },
+ "e3_gd_vs_ols": {
+  "eta": 0.25,
+  "steps": 2000,
+  "steps_to_conv": 11,
+  "E_gd": 0.1389698075655818,
+  "E_ols": 0.1389698075655818,
+  "rel": 0.0,
+  "lam_max": 2.0000000000000004,
+  "w_gd": [
+   0.576431401040891,
+   -0.07323608519453523
+  ],
+  "w_ols": [
+   0.5764314010408911,
+   -0.07323608519453521
+  ]
+ },
+ "e4_monotone": {
+  "strict_descent_steps": 11,
+  "max_increase": 2.7755575615628914e-17,
+  "max_single_decrease": -0.25322751321043946,
+  "ulp_note": "max_increase≈2.78e-17=E≈0.139 处一个 ulp 的浮点底噪（r2 P1-2 整改申报）",
+  "E_start": 0.47660649184616766,
+  "E_end": 0.1389698075655818
+ },
+ "e5_divergence": {
+  "eta_big": 1.5,
+  "E_0": 0.47660649184616766,
+  "E_last": 3.79354468380555e+306,
+  "cross_1000x_step": 6,
+  "nonfinite_step": 511,
+  "threshold_1000x": 1000,
+  "loop_limit": 2000,
+  "stop_rule": "非有限即停"
+ },
+ "e7_half_step": {
+  "eta": 0.5,
+  "E_after_1": 0.1389698075655818,
+  "rel": 0.0,
+  "claim": "一步到谷底（收缩因子 1−ηλ_max=0）"
+ },
+ "e8_critical": {
+  "eta": 0.9999999999999998,
+  "E_const": 0.47660649184616766,
+  "max_drift": 1.1102230246251565e-16,
+  "steps": 20,
+  "n_flip": 20,
+  "pairs": 20,
+  "osc_flip": true,
+  "claim": "临界能量恒定（参数谷底两侧来回跳）——r4 P1-1：翻转计数改程序计算入存证"
+ },
+ "e8_literal": {
+  "eta": 1.0,
+  "E_const": 0.47660649184616766,
+  "max_drift": 4.440892098500626e-15,
+  "steps": 20,
+  "n_flip": 20,
+  "pairs": 20,
+  "claim": "口播「一点零」的字面输入 η=1.0（ETA_LIT 变量引用——r5 P2-3）——与 e8_critical 的 2/λ_max 实算值相差 2e-16，存证单独覆盖口播值（r4 P2-4 立项；r5 P2-3 申报更正：numeric 机检为存档同值命中，未做字段绑定）"
+ },
+ "fig2_eta_tiers": {
+  "etas": [
+   0.0002,
+   0.25,
+   1.5
+  ],
+  "E_end": [
+   0.2071156624873578,
+   0.1389698075655818,
+   "发散（clip 到 1e8 绘图）"
+  ],
+  "labels": [
+   "太慢",
+   "合适",
+   "发散"
+  ],
+  "note": "deck 页7 图2 caption 三档 η 的存证（r2 P2-4）；E_end 对应 2000 步终点"
+ },
+ "e6_figtext": {
+  "scanned_all": 80,
+  "scanned_visible": 47,
+  "inv_total": 33,
+  "inv_label2": 33,
+  "inv_other": 0,
+  "per_fig_all": [
+   34,
+   27,
+   19
+  ],
+  "per_fig_visible": [
+   20,
+   15,
+   12
+  ],
+  "hits": 0,
+  "method": "fig.findobj(Text) 运行时收割（r3 P1-2——含刻度/批注/标题全部 Text 对象；r4 P2-3 计数分全部/visible 标志两档；r7 P2-4 改口：scanned_visible/per_fig_visible=get_visible() 标志为真计数，含视图外未绘制刻度（MultipleLocator 向两端各外扩一档的刻度 label1 visible=True 但不在视图内、不绘制），不等于图上实际呈现数；r5 P2-2 立项+r6 P1-1 更正：不可见构成以「对象 is Tick.label2」身份实测（label2=每刻度对侧默认隐藏的同文本标签），v6 孤儿副本归因删除，其余只计数不归因）"
+ },
+ "fig1_traj": {
+  "start": [
+   3.0,
+   2.2
+  ],
+  "eta": 0.25,
+  "steps_to_conv": 14,
+  "note": "图1 轨迹自身首达步数（rel<1e-6）——deck 图1 caption 引本值，与 E3 零点起跑的 steps_to_conv 不同源（r3 P2-1 整改：旧 caption「11 步」错挂 E3 读数）"
+ },
+ "f1a_geometry": {
+  "argmin": [
+   0.55,
+   -0.019999999999999796
+  ],
+  "argmin_dist": 0.05943651846991249,
+  "grid_pitch": 0.1100000000000001,
+  "grad_angle_deg": 0.1034685350334297,
+  "aspect": 1.0,
+  "bbox_overflow": 0,
+  "anns_bboxed": 2,
+  "marker_hit": 0,
+  "axes_intersect": 0,
+  "arrow_missing": 0,
+  "arrow_hit": 0,
+  "converged_idx": [
+   4,
+   6,
+   8,
+   10
+  ],
+  "converged_dist_px": [
+   10.440917758964469,
+   2.6102294397411128,
+   0.6525573599352581,
+   0.16313933998378405
+  ],
+  "unboxed_texts": 1,
+  "unboxed_out": 0,
+  "unboxed_axes_violation": 0,
+  "unboxed_title_hit": 0,
+  "unboxed_ann_hit": 0,
+  "unboxed_marker_hit": 0,
+  "unboxed_title_gap_px": 5.4972,
+  "note": "F1a/F1b 断言读数（r3 P1-1+r4 P2-2 立项+r5 P1-2/P2-1 强化+r6 P2-1 converged_idx/converged_dist_px 豁免集入存证（全局步位=traj 下标，距离=圆心距星心显示 px）+r6 P2-2 无框文字检查字段）——make_script lab-stdout 数值命中机检数据源；申报只引字段不手写数字"
+ },
+ "n_pass": 11,
+ "n_total": 11
+}

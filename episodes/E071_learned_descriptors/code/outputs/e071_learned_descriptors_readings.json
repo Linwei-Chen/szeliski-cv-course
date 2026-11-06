@@ -1,0 +1,47 @@
+{
+ "generated_at": "2026-11-02T05:08:14",
+ "src_sha16": "2b529630f165c126",
+ "fig1": {
+  "cells": 16,
+  "steps": 5,
+  "hand_std": 0.0,
+  "learned_std": 0.267001,
+  "learned_ratio": 3.793668,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "page": 438
+ },
+ "fig2": {
+  "brief_pairs": 128,
+  "brief_drawn": 40,
+  "bit_len": 128,
+  "hamming": 9,
+  "brisk_rings": 3,
+  "freak_rings": 4,
+  "min_fs": 12.0,
+  "max_fs": 15.0,
+  "page": 439
+ },
+ "fig3": {
+  "patch_size": 32,
+  "patch_count": 16,
+  "grid": 8,
+  "full_count": 64,
+  "left_steps": 5,
+  "right_steps": 4,
+  "representatives": 6,
+  "min_fs": 12.0,
+  "max_fs": 14.0,
+  "page": 440
+ },
+ "scope": {
+  "page_start": 437,
+  "page_end": 440,
+  "frames": 16
+ },
+ "texts": {
+  "collected": 39,
+  "leaked": 0
+ },
+ "pngs": 3
+}

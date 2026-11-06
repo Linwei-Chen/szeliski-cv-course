@@ -1,0 +1,101 @@
+{
+ "n_pass": 15,
+ "n_total": 15,
+ "sizes": [
+  128,
+  256,
+  512,
+  1024
+ ],
+ "repeats": 3,
+ "times": {
+  "OpenCV": [
+   5.237502045929432e-05,
+   0.00019808299839496613,
+   0.0009980419999919832,
+   0.005798750033136457
+  ],
+  "SciPy": [
+   0.0004015840240754187,
+   0.001846750034019351,
+   0.02455441700294614,
+   0.04197470797225833
+  ],
+  "NumPy": [
+   0.003450582968071103,
+   0.022973958984948695,
+   0.20466766704339534,
+   0.607746166002471
+  ]
+ },
+ "speedup": {
+  "opencv": 104.80640871387074,
+  "scipy": 14.478865854269646
+ },
+ "psnr": {
+  "scipy": 120.0,
+  "numpy": 120.0
+ },
+ "mse": {
+  "scipy": 1.05115571144397e-15,
+  "numpy": 6.658722086493344e-15
+ },
+ "slopes": {
+  "OpenCV": 1.1352576590529995,
+  "SciPy": 1.1927972931397344,
+  "NumPy": 1.2768333336864515
+ },
+ "route": [
+  {
+   "task": "识别",
+   "dataset": "ImageNet / COCO",
+   "tool": "PyTorch / TorchVision"
+  },
+  {
+   "task": "检测/分割",
+   "dataset": "COCO",
+   "tool": "Detectron2"
+  },
+  {
+   "task": "特征匹配",
+   "dataset": "HPatches",
+   "tool": "OpenCV Features2D"
+  },
+  {
+   "task": "光流",
+   "dataset": "Middlebury / Sintel / KITTI",
+   "tool": "OpenCV / PyTorch"
+  },
+  {
+   "task": "立体/深度",
+   "dataset": "Middlebury / KITTI / ETH3D",
+   "tool": "OpenCV / Open3D"
+  },
+  {
+   "task": "SfM/SLAM",
+   "dataset": "1DSfM / ETH3D",
+   "tool": "COLMAP / OpenSfM"
+  },
+  {
+   "task": "三维重建",
+   "dataset": "ScanNet / DiLiGenT",
+   "tool": "Open3D / PyTorch3D"
+  },
+  {
+   "task": "IBR/神经渲染",
+   "dataset": "Stanford LF / 4D LF",
+   "tool": "PyTorch3D / NeRF 实现"
+  }
+ ],
+ "versions": {
+  "opencv": "5.0.0",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1"
+ },
+ "protocol": {
+  "synthetic": true,
+  "single_operation": "9x9 gaussian blur",
+  "machine": "local",
+  "general_benchmark": false
+ }
+}

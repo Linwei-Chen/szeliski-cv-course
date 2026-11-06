@@ -1,0 +1,28 @@
+[lab] 开始 2026-11-02T05:44:35
+[lab] 源码 sha256=d39b17fa4bdee60198469594e6a7454ac732b2580592d9ada361731a378b9549
+[lab] cv2=4.13.0 numpy=2.3.5
+[lab] 图1 文本：第一步：两张图各自提取特征点 / SIFT 对照：原图 1000 个，变换图 1001 个；圆大小=尺度，半径方向=主方向 / 程序生成场景，未用原书原图/外部照片 · 对应原书 p.422–433 特征点与尺度空间，布局自绘
+[lab] 图2 文本：第二步：从候选到内点，匹配数一路做减法（程序生成场景）
+[lab] 图3 文本：第三步：单应矩阵到手，拼接只差融合 / 程序生成场景，未用原书原图/外部照片 · 对应原书 p.477–482 直线/单应与拼接前哨，布局自绘
+[lab] 图内字号 min=12.0 max=16.0
+[lab] leaked= []
+[PASS] 环境：cv2 4.x + SIFT/ORB 可用 + RNG 可设种子　| cv2=4, sift=1, orb=1
+[PASS] 两图程序生成且单应已知（960×640）　| size=960x640, H=3x3
+[PASS] ORB/SIFT 特征点数 > 500（每图）　| orb=1000/1000, sift=1000/1001
+[PASS] KNN 候选=描述子数（每查询一条）　| orb=1000/1000, sift=1000/1000
+[PASS] 比率测试保留 20%–80%　| orb=431, sift=452
+[PASS] 互检后不超过比率后、且 > 50　| orb=330, sift=407
+[PASS] RANSAC 内点 >= 100 且内点率 > 0.5　| orb=317(0.735), sift=390(0.863)
+[PASS] 单应重投影中位误差 < 3px（两法）　| orb=0.767, sift=0.281
+[PASS] ORB 描述子 32 字节/256 位、SIFT 128 维　| orb_bytes=32, sift_dim=128
+[PASS] 三图字号≥12pt、程序生成注记×3、内部记号零泄漏、PNG 落盘×3　| min_fs=12.0, notes=3, leaked=0, pngs=3
+[lab] readings → e072_opencv_readings.json
+[lab] readings sha256=58a5d9104ee12bf696046f803fc94104bef15cc4e787dcabc498abfa1a856f1b
+[lab] PNG sha256(e072_detect.png)=b29e2b8e051740e77006aa82873014a669dc8fed3e60f934a4b12046c5495c25
+[lab] PNG sha256(e072_match_funnel.png)=57ccd00efcfc878ba3c55c86c9f38aecdd065b95c350770abae096311a24d6bd
+[lab] PNG sha256(e072_stitch.png)=512c6169fe8e2bda13241cf7e242173de57cde3cd90128ea86c6609b6e031db2
+[lab] PNG sha256(e072_scene_a.png)=bc0001e8fb353cd8f53237fff6de72a600909418920d034623c42e92caa195a3
+[lab] PNG sha256(e072_scene_b.png)=20556bf073af9bb9b47cc1986f297c046a03e80ca10f5d9907c5efa20cd4fa56
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T05:44:36

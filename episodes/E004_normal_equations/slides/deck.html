@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E004 · 矩阵求导与最小二乘：一行抵万行</title>
+<link rel="stylesheet" href="../../../assets/shared/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<style>
+  /* E004 集内微调：公式卡保持全尺寸字号，压缩 KaTeX display 边距与卡片内边距（E003 formula-tight 方案） */
+  .formula-tight .katex-display { margin: .12em 0; }
+  .formula-tight { padding: 18px 44px; }
+</style>
+<script defer src="../../../assets/shared/vendor/katex/katex.min.js"></script>
+<script defer src="../../../assets/shared/vendor/katex/contrib/auto-render.min.js"></script>
+<script defer src="../../../assets/shared/deck.js"></script>
+<script>
+window.addEventListener("load", () => {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    });
+  }
+});
+</script>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 04</div>
+  <h1 class="step" data-step="1">矩阵求导与最小二乘：<br><span class="hl">一行抵万行</span></h1>
+  <p class="ep step" data-step="1">把上一集的两条偏导方程，升级成一条正规方程 —— 解法、陷阱与实验，附录 A.2 一次到位</p>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>01 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">开场 · PERVASIVE</div>
+    <h2>从两个参数，<span class="hl">到成千上万个</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:10px">原书附录 A.2 开篇第一句：<b>最小二乘拟合问题，在计算机视觉里无处不在</b>（第 927 页）。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:26px">上一集的直线拟合只有 2 个参数；真实问题动辄<b>上千个变量</b>一起估计——逐个写偏导不现实，必须矩阵化。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="最小二乘的四大应用">
+      <g font-family="PingFang SC, sans-serif">
+        <rect x="55" y="52" width="540" height="88" rx="14" fill="#ffffff" stroke="#d8cfc0" stroke-width="3"></rect>
+        <circle cx="100" cy="96" r="22" fill="#1e3a5f"></circle>
+        <text x="100" y="105" font-size="24" fill="#ffffff" text-anchor="middle">1</text>
+        <text x="140" y="88" font-size="26" fill="#2b2b33" font-weight="700">特征点对齐图像</text>
+        <text x="140" y="122" font-size="22" fill="#8a8378">平方距离目标（式 8.2）</text>
+        <rect x="55" y="158" width="540" height="88" rx="14" fill="#ffffff" stroke="#d8cfc0" stroke-width="3"></rect>
+        <circle cx="100" cy="202" r="22" fill="#1e3a5f"></circle>
+        <text x="100" y="211" font-size="24" fill="#ffffff" text-anchor="middle">2</text>
+        <text x="140" y="194" font-size="26" fill="#2b2b33" font-weight="700">大规模三维重建 SFM</text>
+        <text x="140" y="228" font-size="22" fill="#8a8378">上千个变量一起估（§11.4.2）</text>
+        <rect x="55" y="264" width="540" height="88" rx="14" fill="#ffffff" stroke="#d8cfc0" stroke-width="3"></rect>
+        <circle cx="100" cy="308" r="22" fill="#1e3a5f"></circle>
+        <text x="100" y="317" font-size="24" fill="#ffffff" text-anchor="middle">3</text>
+        <text x="140" y="300" font-size="26" fill="#2b2b33" font-weight="700">图像滤波</text>
+        <text x="140" y="334" font-size="22" fill="#8a8378">最小化平方误差和（§3.4.1）</text>
+        <rect x="55" y="370" width="540" height="88" rx="14" fill="#ffffff" stroke="#e8590c" stroke-width="3"></rect>
+        <circle cx="100" cy="414" r="22" fill="#e8590c"></circle>
+        <text x="100" y="423" font-size="24" fill="#ffffff" text-anchor="middle">4</text>
+        <text x="140" y="406" font-size="26" fill="#2b2b33" font-weight="700">正则化</text>
+        <text x="140" y="440" font-size="22" fill="#8a8378">同一副骨架（§4.2，本课程第 6 集）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>02 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">矩阵化 · DESIGN MATRIX</div>
+    <h2>四个点，<span class="hl">摞成一个矩阵</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:10px">每个数据点的 \(x_i\) 和 1 打包成<b>一行</b>；n 个点摞成设计矩阵 A。观测值立成一列 b，参数 \((m,b)\) 立成一列 x。</p>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:20px">
+      $$E = \sum_i |a_i x - b_i|^2 = \|Ax - b\|^2$$
+      <div class="note">原书式 A.28 ｜ 脚注 5：这里的 x 是参数向量，不是横坐标 x<br>撞名提醒：观测列 b ≠ 截距 b</div>
+    </div>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="设计矩阵乘参数向量减观测">
+      <g font-family="PingFang SC, sans-serif">
+        <text x="180" y="92" font-size="23" fill="#8a8378" text-anchor="middle">A：设计矩阵（4×2）</text>
+        <text x="365" y="92" font-size="23" fill="#8a8378" text-anchor="middle">x：参数</text>
+        <text x="520" y="92" font-size="23" fill="#8a8378" text-anchor="middle">b：观测</text>
+        <g fill="#ffffff" stroke="#1e3a5f" stroke-width="3">
+          <rect x="85" y="115" width="90" height="58"></rect><rect x="180" y="115" width="90" height="58"></rect>
+          <rect x="85" y="180" width="90" height="58"></rect><rect x="180" y="180" width="90" height="58"></rect>
+          <rect x="85" y="245" width="90" height="58"></rect><rect x="180" y="245" width="90" height="58"></rect>
+          <rect x="85" y="310" width="90" height="58"></rect><rect x="180" y="310" width="90" height="58"></rect>
+        </g>
+        <g font-size="27" fill="#1e3a5f" text-anchor="middle">
+          <text x="130" y="153">x₁</text><text x="225" y="153">1</text>
+          <text x="130" y="218">x₂</text><text x="225" y="218">1</text>
+          <text x="130" y="283">x₃</text><text x="225" y="283">1</text>
+          <text x="130" y="348">x₄</text><text x="225" y="348">1</text>
+        </g>
+        <text x="312" y="245" font-size="34" fill="#2b2b33">×</text>
+        <g fill="#ffffff" stroke="#e8590c" stroke-width="3">
+          <rect x="332" y="115" width="70" height="58"></rect>
+          <rect x="332" y="180" width="70" height="58"></rect>
+        </g>
+        <g font-size="27" fill="#e8590c" text-anchor="middle">
+          <text x="367" y="153">m</text><text x="367" y="218">b</text>
+        </g>
+        <text x="437" y="245" font-size="34" fill="#2b2b33">=</text>
+        <g fill="#ffffff" stroke="#d8a13c" stroke-width="3">
+          <rect x="480" y="115" width="80" height="58"></rect>
+          <rect x="480" y="180" width="80" height="58"></rect>
+          <rect x="480" y="245" width="80" height="58"></rect>
+          <rect x="480" y="310" width="80" height="58"></rect>
+        </g>
+        <g font-size="27" fill="#d8a13c" text-anchor="middle">
+          <text x="520" y="153">y₁</text><text x="520" y="218">y₂</text>
+          <text x="520" y="283">y₃</text><text x="520" y="348">y₄</text>
+        </g>
+        <text x="320" y="428" font-size="24" fill="#2b2b33" text-anchor="middle">每行：aᵢ·x − yᵢ = 竖直残差</text>
+        <text x="320" y="462" font-size="22" fill="#8a8378" text-anchor="middle">整体误差 = 残差的平方和 = ‖Ax − b‖²</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>03 / 14</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">边界 · LINEAR IN PARAMETERS</div>
+  <h2>线性的是<span class="hl">参数</span>，不是函数</h2>
+  <p class="lead step" data-step="1" style="margin-top:6px">原书第 927 页原话：函数本身<b>不必</b>是线性的，只要求它<b>对未知参数线性</b>（linear in the unknown parameters）。</p>
+  <div class="cards c2 step" data-step="1">
+    <div class="card">
+      <div class="big">多项式拟合 ✓</div>
+      <div class="cap">$$y = a_0 + a_1 x + a_2 x^2 + a_3 x^3$$
+        <small>各次幂是已知输入列，系数 \(a_j\) 线性——原书式 A.26</small></div>
+    </div>
+    <div class="card">
+      <div class="big">正弦拟合 ✓</div>
+      <div class="cap">$$A\sin(2\pi f x + \phi) = B\sin 2\pi f x + C\cos 2\pi f x$$
+        <small>频率 f 已知时，对 (B, C) 线性——原书式 A.27</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">讲者的判定口诀：模型是<b>已知积木的加权组合</b> → 归正规方程管；频率藏在参数里 → 等非线性方法。</p>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>04 / 14</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">灵魂时刻 ① · EXPAND</div>
+  <h2>平方展开，<span class="hl">碗就现形</span></h2>
+  <div class="formula formula-tight step" data-step="1">
+    $$E = x^T(A^TA)\,x \;-\; 2\,x^T(A^Tb) \;+\; \|b\|^2$$
+    <div class="note">原书式 A.29 ｜ 讲者推导：平方和 = 转置自乘，混合项配对合并（欢迎暂停验算）</div>
+  </div>
+  <p class="lead step" data-step="1">讲者的类比：标量的 \(x^2\)，进矩阵世界 = \(x^TCx\)。盯住两个新面孔：<b>AᵀA 是 2×2 对称方阵</b>，<b>Aᵀb 是向量</b>——旧问题被包成一个新碗。</p>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>05 / 14</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">灵魂时刻 ② · SET TO ZERO</div>
+  <h2>梯度为零，<span class="hl">一行定案</span></h2>
+  <div class="formula formula-tight step" data-step="1">
+    $$\nabla E = 2(A^TA)x - 2A^Tb = 0 \quad\Longrightarrow\quad (A^TA)\,x = A^Tb$$
+    <div class="note">正规方程（原书式 A.30）｜ C = AᵀA：海森矩阵（原书第 928 页）｜ 碗的曲率（讲者类比）｜ d = Aᵀb：数据揉成的目标（式 A.32）</div>
+  </div>
+  <p class="lead step" data-step="1">与上一集那两条手算偏导方程<b>完全等价</b>——矩阵记号把 m 方程和 b 方程压缩成了一行。</p>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>06 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">解法 ① · CHOLESKY</div>
+    <h2 style="margin-bottom:28px">对称正定，<span class="hl">开个平方根</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px;font-size:46px">
+      $$C = A^TA = R^TR$$
+      $$R^Tz = d, \qquad Rx = z$$
+      <div class="note" style="margin-top:10px">原书式 A.31–A.33 ｜ R 上三角：先前代、后回代 ｜ 讲者注：≥2 个不同 x ⇒ C 正定</div>
+    </div>
+    <p class="lead dim step" data-step="1" style="margin-top:8px">讲者纪律：<b>永远别求逆</b>；相对 LU 约快一倍——讲者补充。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="乔列斯基分解与两次三角回代">
+      <g font-family="PingFang SC, sans-serif">
+        <rect x="150" y="45" width="340" height="70" rx="14" fill="#ffffff" stroke="#1e3a5f" stroke-width="3"></rect>
+        <text x="320" y="90" font-size="30" fill="#1e3a5f" text-anchor="middle" font-weight="700">C = AᵀA（对称正定）</text>
+        <line x1="230" y1="118" x2="170" y2="170" stroke="#8a8378" stroke-width="4"></line>
+        <line x1="410" y1="118" x2="470" y2="170" stroke="#8a8378" stroke-width="4"></line>
+        <g stroke="#1e3a5f" stroke-width="3" fill="#ffffff">
+          <rect x="100" y="180" width="64" height="52"></rect><rect x="170" y="180" width="64" height="52"></rect><rect x="240" y="180" width="64" height="52"></rect>
+          <rect x="100" y="238" width="64" height="52"></rect><rect x="170" y="238" width="64" height="52"></rect>
+          <rect x="100" y="296" width="64" height="52"></rect>
+        </g>
+        <g fill="#d8cfc0" stroke="#1e3a5f" stroke-width="3">
+          <rect x="356" y="180" width="64" height="52"></rect><rect x="426" y="180" width="64" height="52"></rect><rect x="496" y="180" width="64" height="52"></rect>
+          <rect x="426" y="238" width="64" height="52"></rect><rect x="496" y="238" width="64" height="52"></rect>
+          <rect x="496" y="296" width="64" height="52"></rect>
+        </g>
+        <text x="202" y="390" font-size="25" fill="#1e3a5f" text-anchor="middle" font-weight="700">Rᵀ 下三角</text>
+        <text x="458" y="390" font-size="25" fill="#1e3a5f" text-anchor="middle" font-weight="700">R 上三角</text>
+        <text x="320" y="185" font-size="26" fill="#2b2b33" text-anchor="middle">=</text>
+        <text x="202" y="430" font-size="23" fill="#8a8378" text-anchor="middle">① 前代：Rᵀz = d</text>
+        <text x="458" y="430" font-size="23" fill="#8a8378" text-anchor="middle">② 回代：Rx = z</text>
+        <text x="320" y="466" font-size="23" fill="#e8590c" text-anchor="middle" font-weight="700">两次三角方程 → 解出 x（式 A.33）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>07 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">解法 ② · QR</div>
+    <h2 style="margin-bottom:28px">跳过 AᵀA，<span class="hl">直接分解 A</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px;font-size:46px">
+      $$Ax = QRx = b$$
+      $$\Longrightarrow\quad Rx = Q^Tb$$
+      <div class="note" style="margin-top:14px">原书式 A.34 ｜ <b>R 就是乔列斯基那个 R</b>（第 929 页）</div>
+    </div>
+    <p class="lead dim step" data-step="1" style="margin-top:10px">讲者推导：QᵀQ = I ⇒ AᵀA = RᵀR。</p>
+    <p class="lead step" data-step="1" style="margin-top:8px">原书第 929 页：更稳、慢一个常数因子。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="QR 分解流程">
+      <g font-family="PingFang SC, sans-serif">
+        <rect x="60" y="80" width="110" height="80" rx="14" fill="#ffffff" stroke="#1e3a5f" stroke-width="3"></rect>
+        <text x="115" y="130" font-size="34" fill="#1e3a5f" text-anchor="middle" font-weight="700">A</text>
+        <text x="200" y="130" font-size="32" fill="#2b2b33">=</text>
+        <rect x="240" y="80" width="130" height="80" rx="14" fill="#ffffff" stroke="#009E73" stroke-width="3"></rect>
+        <text x="305" y="115" font-size="34" fill="#009E73" text-anchor="middle" font-weight="700">Q</text>
+        <text x="305" y="148" font-size="20" fill="#8a8378" text-anchor="middle">正交矩阵</text>
+        <text x="400" y="130" font-size="32" fill="#2b2b33">×</text>
+        <g stroke="#d8a13c" stroke-width="3">
+          <rect x="440" y="80" width="60" height="20" fill="#d8a13c"></rect><rect x="506" y="80" width="60" height="20" fill="#d8a13c"></rect>
+          <rect x="506" y="110" width="60" height="20" fill="#d8a13c"></rect>
+          <rect x="440" y="140" width="126" height="20" fill="#ffffff"></rect>
+        </g>
+        <text x="503" y="190" font-size="22" fill="#8a8378" text-anchor="middle">R 上三角（同乔列斯基）</text>
+        <line x1="320" y1="205" x2="320" y2="275" stroke="#8a8378" stroke-width="4"></line>
+        <path d="M320,285 l-14,-22 M320,285 l14,-22" stroke="#8a8378" stroke-width="4" fill="none"></path>
+        <rect x="130" y="300" width="380" height="80" rx="14" fill="#ffffff" stroke="#e8590c" stroke-width="3"></rect>
+        <text x="320" y="352" font-size="34" fill="#e8590c" text-anchor="middle" font-weight="700">Rx = Qᵀb</text>
+        <text x="320" y="415" font-size="23" fill="#2b2b33" text-anchor="middle">一次回代，直接得到解——</text>
+        <text x="320" y="450" font-size="23" fill="#2b2b33" text-anchor="middle">数值上不形成 AᵀA：舍入误差少一处放大器</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>08 / 14</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">实验 · CODE</div>
+  <h2>四个方法，<span class="hl">一个答案</span></h2>
+  <p class="lead step" data-step="1">四个含噪数据点，真斜率 0.8、截距 1.5。同台：正规方程、乔列斯基、<span style="white-space:nowrap">lstsq（SVD）</span>、梯度下降。</p>
+  <p class="lead dim step" data-step="1" style="margin-top:12px">梯度下降：步长 = 0.85 × 2/λmax(AᵀA)——按 ½E 写误差时海森就是 AᵀA。</p>
+  <figure class="shot step" data-step="2">
+    <img src="figures/normal_equations_demo.png" alt="四种最小二乘解法对照实验图" style="max-height:300px">
+  </figure>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>09 / 14</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 病态</div>
+  <h2>数据平移十万：<span class="hl">灾难现场</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/condition_number_demo.png" alt="病态条件下四种解法的斜率偏差与飞线图" style="max-height:520px">
+  </figure>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>10 / 14</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">处方 · PP.928–929</div>
+    <h2>病态不是<span class="hl">绝症</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:10px">原书处方：病态<b>一般应当避免</b>——加足够的<b>正则化或参数先验</b>（附录 A.3）；或绕开 AᵀA，直接对 A 用 <b>QR / SVD</b>。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:22px">讲者再补一招：中心化（x 减均值）——cond 从 8×10¹⁹ 降到 <b>1.25</b>；挪回原点立刻回 14。病的是坐标系。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="病态的两味处方">
+      <g font-family="PingFang SC, sans-serif">
+        <rect x="50" y="45" width="540" height="150" rx="16" fill="#ffffff" stroke="#1e3a5f" stroke-width="3"></rect>
+        <text x="90" y="100" font-size="27" fill="#1e3a5f" font-weight="700">① 预防：别让问题病</text>
+        <text x="90" y="140" font-size="23" fill="#2b2b33">正则化 / 先验（附录 A.3）｜ 讲者补充：中心化</text>
+        <text x="90" y="176" font-size="23" fill="#009E73" font-weight="700">cond 8×10<tspan baseline-shift="super" font-size="17">19</tspan> → 1.25（减均值，实测）</text>
+        <rect x="50" y="225" width="540" height="130" rx="16" fill="#ffffff" stroke="#e8590c" stroke-width="3"></rect>
+        <text x="90" y="280" font-size="27" fill="#e8590c" font-weight="700">② 治疗：绕开 AᵀA</text>
+        <text x="90" y="320" font-size="23" fill="#2b2b33">直接对 A 用 QR / SVD——更稳，慢一个常数因子</text>
+        <text x="320" y="412" font-size="23" fill="#2b2b33" text-anchor="middle">平移十万后，截距本身已估不准：真值 1.5，参考解 −52</text>
+        <text x="320" y="448" font-size="23" fill="#2b2b33" text-anchor="middle">外推放大：斜率统计误差 × 十万 ≈ 几十（非舍入误差）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>11 / 14</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="qmark step" data-step="1">「</div>
+  <blockquote class="step" data-step="1">一行抵万行：AᵀA·x = Aᵀb。<br>碗的曲率，乘上参数，等于数据推来的力。</blockquote>
+  <div class="attrib step" data-step="1">—— 本集记忆锚 ｜ 讲者的两条纪律：解正规方程用分解、别求逆；矩阵病了，先中心化、再 QR</div>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>12 / 14</span></div>
+</section>
+
+<section class="slide endcard" data-steps="1">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>附录 A.2（主体第 927–929 页：式 A.23–A.34）→ 病态处方第 928–929 页 → 有余力看 A.2.1 全最小二乘（第 929 页起）</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>把 code/normal_equations_demo.py 的 X_CROWD_SHIFT 改成 1e6，重跑看条件数与斜率偏差怎么变——双精度还撑得住吗？</div>
+  <div class="row step" data-step="1"><span class="tag">下一集</span>E005 概率速通</div>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>13 / 14</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 04 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E004 · 数学工具箱</span><span>14 / 14</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

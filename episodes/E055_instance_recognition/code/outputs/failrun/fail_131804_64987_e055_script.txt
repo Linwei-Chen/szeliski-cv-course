@@ -1,0 +1,22 @@
+[mech] 开始 2026-11-01T13:18:04
+[mech] 输入 shots.json sha256=4704dff581a7767bd641848496ee458a3d0621360b8812b80cea271fbd3693fa
+[mech] 输入 deck.html sha256=0bc48646cb88c4e191c29999fe8bff2cda7f960cc8b6b9bdc0ffe075ee1fee23
+  [seq f001 p1/s1] 口播=['原书页'] deck=['原书页'] ok
+  [seq f002 p1/s2] 口播=['原书页'] deck=['原书页'] ok
+  [seq f003 p2/s1] 口播=['原书页'] deck=['原书页'] ok
+  [seq f004 p2/s2] 口播=[] deck=[] ok
+  [seq f005 p3/s1] 口播=['原书页'] deck=['原书页'] ok
+  [seq f006 p3/s2] 口播=['讲者白话', '原书页'] deck=['讲者白话', '原书页'] ok
+  [seq f007 p4/s1] 口播=['原书页'] deck=['原书页'] ok
+  [seq f008 p4/s2] 口播=['原书页'] deck=['原书页'] ok
+  [seq f009 p5/s1] 口播=['原书页'] deck=['原书页'] ok
+  [seq f010 p5/s2] 口播=['原书页'] deck=['原书页'] ok
+  [seq f011 p5/s3] 口播=['原书页'] deck=['原书页'] ok
+  [seq f012 p6/s1] 口播=['讲者归纳'] deck=['讲者归纳'] ok
+  [seq f013 p7/s1] 口播=['原书页'] deck=['原书页'] ok
+  [seq f014 p7/s2] 口播=['原书页'] deck=['原书页'] ok
+  [seq f015 p8/s1] 口播=[] deck=[] ok
+  [seq f016 p9/s1] 口播=[] deck=[] ok
+  [scope] 口播与 deck 同标签辖域锚集合一致（人名+年份，deck 超集检查）
+  [recite] 讲者复算辖域=纯计数（含分项数字），无原书内容；讲者辖域「书里」仅白名单短语（复述已锚内容）；引文引导词零命中
+  [refs] refs 引句逐字校验通过（口播子串+存档语料库双通道）

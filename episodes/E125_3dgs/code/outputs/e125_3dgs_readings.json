@@ -1,0 +1,25 @@
+{
+ "n_pass": 11,
+ "n_total": 11,
+ "N": 128,
+ "n_gaussians": 6,
+ "mse_aniso": 0.0,
+ "mse_iso": 0.005792582423655913,
+ "sorted_err": 0.0,
+ "reversed_err": 0.01490557886451655,
+ "mse_single": 0.0029779228142084876,
+ "mse_adapt": 0.0,
+ "adapt_gain": 2977922814.2084875,
+ "pairs": 140,
+ "pair_total": 384,
+ "pair_ratio": 0.3645833333333333,
+ "nonempty_tiles": 44,
+ "tiles": 8,
+ "proj_ratio": 11.111111111111109,
+ "proj_angle": 30.0,
+ "param_ratio": 0.003662109375,
+ "ev2": [
+  0.022500000000000006,
+  0.25
+ ]
+}

@@ -1,0 +1,240 @@
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+Font 'default' does not have a glyph for '\u2212' [U+2212], substituting with a dummy symbol.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.
+findfont: Font family 'PingFang SC' not found.

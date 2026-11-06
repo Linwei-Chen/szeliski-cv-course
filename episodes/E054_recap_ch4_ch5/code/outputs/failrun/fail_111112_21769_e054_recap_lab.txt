@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E054_recap_ch4_ch5/code/e054_recap_lab.py", line 51, in <module>
+    assert len(eps_order) == 18, f"台账集名提取异常：{len(eps_order)}"
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: 台账集名提取异常：13

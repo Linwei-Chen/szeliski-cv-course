@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E009 · 什么是计算机视觉？</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<script defer src="../../../assets/shared/deck.js"></script>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="2">
+  <div class="course step" data-step="1">正课 · 01 · 第 1 章 绪论</div>
+  <h1 class="step" data-step="1">什么是<span class="hl">计算机视觉</span>？</h1>
+  <p class="ep step" data-step="2">以及，它为什么这么难</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>01 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">开场之问 · ONE LOOK</div>
+  <h2>一张照片，<span class="hl">你一眼</span>就看懂了</h2>
+  <div class="formula step" data-step="1" style="border-left-color:var(--sand)">
+    <div style="font-family:var(--serif);font-weight:900;color:var(--ink-strong);font-size:56px">对你是「一眼」，对它是十亿次加减。</div>
+    <div class="note">这张图里没有人、没有花、没有桌子——只有一格格数字</div>
+  </div>
+  <p class="lead step" data-step="1">这一集回答两个问题：计算机视觉到底在干什么？它为什么比你想的难得多？</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>02 / 17</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="kicker">人类 · HUMANS</div>
+  <div class="qmark step" data-step="1">“</div>
+  <blockquote class="step" data-step="1">我们毫不费力地感知着身边世界的三维结构。</blockquote>
+  <p class="attrib step" data-step="1">花瓶里的花：花瓣的形状与半透明、光影的细微模式、与背景的分离 —— 原书 §1.1 开篇（第 3 页）</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>03 / 17</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">机器眼里 · PIXELS</div>
+    <h2>同一张照片，<br>机器只看到<span class="hl">数字</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:14px">没有「花」，没有「桌子」，只有 0 到 255 的亮度值。<b>「看懂」这件事，要从数字里凭空重建出来。</b></p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 620 440" aria-label="图像即数字矩阵">
+      <g font-size="26" fill="#1e3a5f" font-family="Menlo,monospace" text-anchor="middle">
+        <rect x="60" y="40" width="100" height="100" rx="8" fill="#1e3a5f" opacity="0.85"></rect><text x="110" y="100" fill="#ffffff">201</text>
+        <rect x="170" y="40" width="100" height="100" rx="8" fill="#1e3a5f" opacity="0.45"></rect><text x="220" y="100">098</text>
+        <rect x="280" y="40" width="100" height="100" rx="8" fill="#e8590c" opacity="0.85"></rect><text x="330" y="100" fill="#ffffff">187</text>
+        <rect x="60" y="150" width="100" height="100" rx="8" fill="#1e3a5f" opacity="0.30"></rect><text x="110" y="210">064</text>
+        <rect x="170" y="150" width="100" height="100" rx="8" fill="#e8590c" opacity="0.30"></rect><text x="220" y="210">112</text>
+        <rect x="280" y="150" width="100" height="100" rx="8" fill="#1e3a5f" opacity="0.70"></rect><text x="330" y="210" fill="#ffffff">173</text>
+        <rect x="60" y="260" width="100" height="100" rx="8" fill="#e8590c" opacity="0.55"></rect><text x="110" y="320" fill="#ffffff">142</text>
+        <rect x="170" y="260" width="100" height="100" rx="8" fill="#1e3a5f" opacity="0.85"></rect><text x="220" y="320" fill="#ffffff">206</text>
+        <rect x="280" y="260" width="100" height="100" rx="8" fill="#1e3a5f" opacity="0.25"></rect><text x="330" y="320">031</text>
+      </g>
+      <text x="60" y="410" font-size="28" fill="#8a8377">一张 3×3 的「图」——真实照片是几百万格</text>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>04 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">落差 · THE GAP</div>
+  <h2>一边毫不费力，一边<span class="hl">错误百出</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">人与动物</div>
+      <div class="cap">看懂世界，毫不费力<small>如此自然，以至我们意识不到这是个难题</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big warn">计算机</div>
+      <div class="cap">算法错误百出<small>「effortlessly」对照「error prone」——原书原话（第 5 页）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">原书提醒：没入过行的人，常常低估这个问题的难度。</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>05 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">定义 · INVERSE PROBLEM</div>
+  <h2>视觉是一场<span class="hl">逆问题</span></h2>
+  <p class="lead step" data-step="1">原书定义（第 5 页）：从一张或多张图像出发，<b>描述所见的世界，并重建它的性质</b>——形状、光照、颜色分布。</p>
+  <div class="step" data-step="2" style="margin-top:40px">
+    <svg class="diagram" viewBox="0 0 1500 300" aria-label="正问题与逆问题">
+      <defs>
+        <marker id="ar1" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#8a8377"></path></marker>
+        <marker id="ar2" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#e8590c"></path></marker>
+      </defs>
+      <rect x="40" y="100" width="300" height="110" rx="14" fill="#1e3a5f"></rect>
+      <text x="190" y="150" font-size="34" fill="#ffffff" text-anchor="middle" font-weight="700">三维世界</text>
+      <text x="190" y="190" font-size="25" fill="#f6c98a" text-anchor="middle">形状 · 光照 · 颜色</text>
+      <line x1="360" y1="155" x2="620" y2="155" stroke="#8a8377" stroke-width="6" marker-end="url(#ar1)"></line>
+      <text x="490" y="110" font-size="28" fill="#8a8377" text-anchor="middle">成像（正问题）</text>
+      <text x="490" y="200" font-size="24" fill="#8a8377" text-anchor="middle">物理定律，方向明确</text>
+      <rect x="640" y="100" width="300" height="110" rx="14" fill="#ffffff" stroke="#e8e0d2"></rect>
+      <text x="790" y="150" font-size="34" fill="#1e1e26" text-anchor="middle" font-weight="700">二维图像</text>
+      <text x="790" y="190" font-size="25" fill="#8a8377" text-anchor="middle">一格格亮度数字</text>
+      <path d="M640 240 C 520 320 480 320 360 240" fill="none" stroke="#e8590c" stroke-width="6" marker-end="url(#ar2)"></path>
+      <text x="500" y="300" font-size="28" fill="#e8590c" text-anchor="middle" font-weight="700">视觉（逆问题）：猜回去</text>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>06 / 17</span></div>
+</section>
+
+<section class="slide split" data-steps="2">
+  <div class="col-l">
+    <div class="kicker">为什么难 · ONE IMAGE, MANY WORLDS</div>
+    <h2>一张图，<span class="hl">多种</span>立体解读</h2>
+    <p class="lead step" data-step="1" style="margin-top:14px">这个线框立方体，是<b>左下的面</b>朝向你，还是<b>右上的面</b>朝向你？——两个答案都说得通。</p>
+    <p class="lead step" data-step="2" style="margin-top:26px">成像把三维压成二维，<b>单张图像不足以唯一确定三维世界</b>。逆问题之所以难，是因为它的解往往不止一个。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 620 560" aria-label="内克尔立方线框（12 条棱）">
+      <g stroke="#1e3a5f" stroke-width="7" fill="none" stroke-linecap="round">
+        <path d="M140 420 L390 420 L390 170 L140 170 Z"></path>
+        <path d="M280 280 L530 280 L530 30 L280 30 Z"></path>
+        <line x1="140" y1="420" x2="280" y2="280"></line>
+        <line x1="390" y1="420" x2="530" y2="280"></line>
+        <line x1="390" y1="170" x2="530" y2="30"></line>
+        <line x1="140" y1="170" x2="280" y2="30"></line>
+      </g>
+      <g fill="#e8590c" font-size="30" font-weight="700">
+        <text x="18" y="515">左下的面在前？</text>
+        <text x="415" y="80">右上的面在前？</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>07 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">出路 · PRIORS</div>
+  <h2>没有唯一解，就要<span class="hl">加约束</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big">先验</div><div class="cap">世界长什么样<small>表面通常连续、光照通常平滑</small></div></div>
+    <div class="card step" data-step="1"><div class="big">约束</div><div class="cap">问题自带的条件<small>多台相机、多帧画面、已知标定</small></div></div>
+    <div class="card step" data-step="1"><div class="big">统计</div><div class="cap">从数据里学<small>大量训练数据 → 概率模型（原书第 10 页）</small></div></div>
+  </div>
+  <p class="lead step" data-step="1">全书后面讲的所有技术，本质都是这三件事的不同组合。</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>08 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">证据 · ILLUSIONS</div>
+  <h2>错觉证明：视觉是<span class="hl">猜</span>出来的</h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big" style="font-size:52px">缪勒-莱尔</div><div class="cap">等长的线看起来不等长<small>大脑在自动套用透视规则</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:52px">棋盘阴影</div><div class="cap">暗块与亮块其实一样亮<small>视觉在自动「减去」光照</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:52px">赫尔曼网格</div><div class="cap">交叉点上幽灵般的灰点<small>视网膜与脑的并行通路在「作画」</small></div></div>
+  </div>
+  <p class="lead dim step" data-step="1">视知觉心理学家研究了几十年（原书 Figure 1.3 · 第 4 页）——连人眼的「算法」都还没被完全破解。</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>09 / 17</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="kicker">历史 · EARLY AI</div>
+  <div class="qmark step" data-step="1">“</div>
+  <blockquote class="step" data-step="1">让人引以为难的，是让计算机明白：「视觉」其实比下棋更难。</blockquote>
+  <p class="attrib step" data-step="1">早期 AI 曾相信：逻辑与规划才是智能的硬骨头，知觉是简单活儿 —— 事实正相反（原书第 5 页 · Boden 2006）</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>10 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">方法论 · HOW TO WIN</div>
+  <h2>难，但有<span class="hl">章法</span></h2>
+  <p class="lead step" data-step="1">原书立场（第 10 页）：视觉大量是逆问题与未知量估计，所以全书<b>重度强调算法</b>——对噪声与模型偏差足够鲁棒、运行起来足够高效。</p>
+  <p class="lead step" data-step="2">统计与贝叶斯方法负责「稳」：用概率表达多个可能答案，并<b>量化不确定性</b>。原书例子：机器人估距，宁可低估也别高估——撞上去的代价不对称。</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>11 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">下一集 · APPLICATIONS</div>
+  <h2>这些算法，<span class="hl">已经在</span>你身边</h2>
+  <div class="cards c4">
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">OCR</div><div class="cap">邮政手写识别 · 车牌<small>原书第 5 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">全景</div><div class="cap">照片无缝拼接<small>原书第 7 页 · §8.2</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">人脸</div><div class="cap">检测 · 解锁 · 认证<small>原书第 8 页 · §6.3.1</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="font-size:44px">医疗</div><div class="cap">医学影像重建<small>原书第 6 页</small></div></div>
+  </div>
+  <p class="lead step" data-step="1">下一集（E010）把工业到消费级的应用讲透——它们也是全书的组织线索。</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>12 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">动手 · CODE</div>
+  <h2>实验：亲手画<span class="hl">内克尔立方</span></h2>
+  <div class="cards c4">
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">①</div><div class="cap">定八个顶点<small>两个错位正方形</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">②</div><div class="cap">连十二条棱<small>两个正方形 + 四条连线</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">③</div><div class="cap">两种读法<small>给「最近角」的三个可见面上色</small></div></div>
+    <div class="card step" data-step="1"><div class="big" style="color:var(--orange)">④</div><div class="cap">三联图<small>歧义原图 + 读法A + 读法B</small></div></div>
+  </div>
+  <p class="lead step" data-step="1">全部用 Matplotlib 手绘，不查任何 3D 库——让你亲眼看见「歧义」本身。</p>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>13 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验结果 · OUTPUT</div>
+  <h2>同一组线条，<span class="hl">两个世界</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/necker_cube.png" alt="内克尔立方两种解读">
+    <figcaption>左：歧义线框 ｜ 中：读法 A（左下的面在前）｜ 右：读法 B（右上的面在前）—— 本集代码实跑输出</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>14 / 17</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">收个尾 · RECAP</div>
+  <h2>带走<span class="hl">三句话</span></h2>
+  <ul class="big step" data-step="1">
+    <li>计算机视觉 = 从图像<b>反推</b>世界：形状、光照、颜色分布（逆问题）</li>
+    <li>它难，是因为成像丢信息——<b>一张图对应多种世界</b></li>
+    <li>出路是<b>先验 + 约束 + 统计</b>，绝大多数技术都能从这三个角度理解</li>
+  </ul>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>15 / 17</span></div>
+</section>
+
+<section class="slide endcard" data-steps="2">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§1.1 开篇（原书第 3–5 页），留意「逆问题」那段原话</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>对着本集的立方体图盯三十秒，看「前后翻转」会不会自己发生</div>
+  <div class="row step" data-step="2"><span class="tag">下一集</span>E010 应用全景：从 OCR 到自动驾驶，视觉都在挣钱</div>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>16 / 17</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">正课 · 01 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E009 · 正课第一集</span><span>17 / 17</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E013 · 三维世界如何压进二维平面</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  figure.shot img { max-height: 500px; }
+</style>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="2">
+  <div class="course step" data-step="1">正课 · 05 · 第 2 章 图像形成</div>
+  <h1 class="step" data-step="1">三维世界如何<span class="hl">压进二维平面</span></h1>
+  <p class="ep step" data-step="1">点、线、面与投影 · §2.1 几何基元</p>
+  <p class="lead dim step" data-step="2">四段：① 词汇表为何打头 ② 2D：点 · 线 · 二次曲线 ③ 3D：点 · 面 · 线（含 Plücker） ④ 盘点与预告</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>01 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">导览 · GEOMETRIC PRIMITIVES</div>
+  <h2>先备词汇，<span class="hl">再谈投影</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">基本构件</div>
+      <div class="cap">几何基元是描述三维形状的基本构件：点、线、面<small>曲线、曲面、体积留给 §7.3 / §12.2 / §13.3 / §13.5（原书第 36 页）</small></div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big warn">作者提示</div>
+      <div class="cap">学过图形学可略读本节，但射影深度与物体中心投影可能是新的<small>原书第 35 页「A note to students」，两段在 §2.1.4 后半</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="1">讲者按：词汇表不是缩水的目录，是全书的通用货币（讲者归纳）</p>
+  <p class="lead dim step" data-step="2">讲者按：E002 的比喻版齐次坐标，这集起换成原书正式定义</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>02 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="3">
+  <div class="kicker">基元 · 2D POINTS</div>
+  <h2>2D 点：像素坐标与<span class="hl">添一格</span></h2>
+  <div class="formula step" data-step="1">x = (x, y) ∈ R²，或写成列向量 —— 式(2.1)，原书第 36 页</div>
+  <div class="formula step" data-step="2">x̃ = (x̃, ỹ, w̃) ∈ P²，只差倍数算同一点；x̃ = w̃·x̄（式 2.2）</div>
+  <p class="note step" data-step="3">理想点：w̃ = 0 的齐次点，没有普通坐标对应——原书定义（第 36 页）；铁轨/消失点例子为讲者补充：消失点是理想点的投影（E002）</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>03 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">基元 · 2D LINES</div>
+  <h2>2D 线：点与线，<span class="hl">同一种运算</span></h2>
+  <div class="formula step" data-step="1">l̃ = (a, b, c)：x̄·l̃ = ax + by + c = 0 —— 式(2.3)，第 36 页</div>
+  <p class="lead dim step" data-step="1">讲者按：点与线对等——「点在线上」就是内积为零（本节最重要的结构）</p>
+  <div class="formula step" data-step="2">归一化 l = (n̂, d)：n̂ 单位法向，d 到原点的距离（第 36–37 页）</div>
+  <p class="note step" data-step="2">唯一例外：无穷远线 l̃ = (0, 0, 1)，装着所有理想点，无法归一化（原书第 36 页）</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>04 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">重绘 · FIGURE 2.2(A)</div>
+  <h2>法向量 n̂、距离 d 与<span class="hl">夹角 θ</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/e013_fig2_2a.png" alt="重绘的 2D 直线方程示意图">
+    <figcaption>据原书 Figure 2.2(a)（第 37 页）重绘 · 原书图未使用 · 代码实跑输出</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>05 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">基元 · POLAR COORDINATES</div>
+  <h2>(θ, d)：Hough 变换的<span class="hl">伏笔</span></h2>
+  <div class="formula step" data-step="1">n̂ = (cos θ, sin θ)；(θ, d) 即极坐标 —— 原书第 37 页</div>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">第七章预支</div>
+      <div class="cap">Hough 变换找直线，用的正是这套表示（§7.4.2，原书第 37 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big warn">讲者按</div>
+      <div class="cap">词汇表不是孤立小节——第七章的伏笔，在这里埋下</div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>06 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">基元 · CROSS PRODUCT</div>
+  <h2>交点与连线，都是<span class="hl">叉积</span></h2>
+  <div class="formula step" data-step="1">x̃ = l̃<sub>1</sub> × l̃<sub>2</sub>（两线交点）· l̃ = x̃<sub>1</sub> × x̃<sub>2</sub>（两点连线）—— 式(2.4)(2.5)，原书第 37 页</div>
+  <p class="note step" data-step="1">E002 的两个彩蛋，在原书式(2.4)(2.5)里各就各位（讲者按）</p>
+  <p class="lead dim step" data-step="2">多线共点 / 多点共线：叉积不够，用最小二乘——§8.1.1 与附录 A.2，习题 2.1（原书第 37 页；噪声与练习场为讲者按）</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>07 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">基元 · 2D CONICS</div>
+  <h2>二次曲线：<span class="hl">认识一下</span></h2>
+  <div class="formula step" data-step="1">x̃<sup>T</sup> Q x̃ = 0 —— 式(2.6)，原书第 37 页</div>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">圆锥曲线</div>
+      <div class="cap">名字由来：平面截 3D 圆锥的截线（原书第 37 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">本书取舍</div>
+      <div class="cap">多视图几何与标定研究有用，但本书用得不多——不展开（原书第 37 页）</div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>08 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">实验 · NUMERICAL CHECK</div>
+  <h2>把词汇表<span class="hl">算一遍</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">19 项数值断言</div>
+      <div class="cap">齐次等价 · 增广往返 · 理想点 · 点在线上 · (n̂,d) 距离 · 叉积交点连线 · 平行线理想点 · 极/球坐标往返 · 3D 两点式与方向式 · Plücker 等价与约束</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">1 项同步检查</div>
+      <div class="cap">四张输出图与 slides/figures/ 逐字节比对<small>讲者设计实验（非原书内容）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="2">讲者按，最漂亮的一条：两条平行线做叉积，第三个分量恰好为零——交点是理想点，可计算的事实（式 2.4 + 理想点定义）</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>09 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验结果 · CROSS PRODUCT DEMO</div>
+  <h2>相交线得交点，<span class="hl">平行线得理想点</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/e013_cross_demo.png" alt="叉积求交点与平行线理想点的数值演示">
+    <figcaption>讲者设计实验 · 式(2.4)（原书第 37 页）数值验证 · 代码实跑输出 · 断言 20/20 全过</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>10 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">基元 · 3D POINTS &amp; PLANES</div>
+  <h2>3D 点与平面：<span class="hl">一个模子</span></h2>
+  <div class="formula step" data-step="1">3D 点 x=(x,y,z)；面 m̃=(a,b,c,d) —— 式(2.7)，第 37–38 页</div>
+  <div class="formula step" data-step="2">归一化 m = (n̂, d)；无穷远面无法归一化 —— 原书第 38 页</div>
+  <p class="note step" data-step="1">讲者按：词汇表的自相似——点在面上，还是内积为零（讲者归纳）</p>
+  <p class="lead dim step" data-step="2">法向量也能用两个角写（球坐标，式 2.8）——原书：采样不均匀，故少用（第 38 页）</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>11 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">重绘 · FIGURE 2.2(B)</div>
+  <h2>3D 平面：法向量与<span class="hl">距离</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/e013_fig2_2b.png" alt="重绘的 3D 平面方程示意图">
+    <figcaption>据原书 Figure 2.2(b)（第 37 页）重绘 · 原书图未使用 · 代码实跑输出 ·「只差一维」为讲者按</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>12 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">基元 · 3D LINES</div>
+  <h2>3D 直线：原书承认它<span class="hl">不够优雅</span></h2>
+  <div class="formula step" data-step="1">r = (1−λ)p + λq —— 两点式；0≤λ≤1 即线段（式 2.9，第 38 页）</div>
+  <div class="formula step" data-step="2">r̃ = μp̃ + λq̃；q̃ = (d̂,0) → r = p + λd̂（式 2.10–2.11）</div>
+  <p class="lead dim step" data-step="2">讲者按：一个起点加一个方向——最省事的写法；自由度账本见后两页</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>13 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">重绘 · FIGURE 2.3</div>
+  <h2>r 是 p 与 q 的<span class="hl">加权混合</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/e013_fig2_3.png" alt="重绘的 3D 直线方程示意图">
+    <figcaption>据原书 Figure 2.3（第 38 页）重绘 · 原书图未使用 · 代码实跑输出 ·「加不加限制」为讲者按</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>14 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">基元 · DEGREES OF FREEDOM</div>
+  <h2>端点表示：六个数，<span class="hl">管四件事</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">6 → 4</div>
+      <div class="cap">两个端点六个数，而 3D 直线真正的自由度是 4<small>原书第 39 页原话「too many degrees of freedom」</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">双平面参数化</div>
+      <div class="cap">把两点分别钉在 z = 0 与 z = 1 平面上，两个 (x, y) 恰好四个数<small>近竖直直线的表示（原书第 39 页）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="2">这套双平面参数化，第十四章光场与 Lumigraph（光图）在用——组织相机扫过物体时看到的光线（原书第 39 页；「钉住光线」为讲者按）</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>15 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">基元 · PLÜCKER COORDINATES</div>
+  <h2>Plücker 坐标与<span class="hl">作者的实用主义</span></h2>
+  <div class="formula step" data-step="1">L = p̃q̃<sup>T</sup> − q̃p̃<sup>T</sup>（4×4 斜对称矩阵）—— 式(2.12)，原书第 39 页</div>
+  <p class="lead dim step" data-step="1">六个独立非零分量，却只有四个自由度：齐次性 + |L| = 0 的二次约束（原书第 39 页）</p>
+  <div class="cards c2">
+    <div class="card step" data-step="2">
+      <div class="big">实用建议</div>
+      <div class="cap">方向 + 可见段内一点，或直接用端点<small>线段是常态（第 39 页，§11.4.8）；深究见 Förstner 2005</small></div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big warn">讲者按</div>
+      <div class="cap">极小表示是数学洁癖，工程上「够用」就行<small>讲者解读，非原书内容</small></div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>16 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">基元 · 3D QUADRICS</div>
+  <h2>3D 二次曲面：同一句<span class="hl">点到为止</span></h2>
+  <div class="formula step" data-step="1">x̄<sup>T</sup> Q x̄ = 0 —— 式(2.13)，原书第 39 页</div>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">建模基元</div>
+      <div class="cap">球、椭球、圆柱都是特例；多视图几何里有用（原书第 39 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">本书取舍</div>
+      <div class="cap">与二次曲线一样：不深究——词汇表点到为止（原书第 39 页）</div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>17 / 19</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">盘点 · VOCABULARY</div>
+  <h2>一页词汇表，<span class="hl">五个对象</span>（讲者归纳）</h2>
+  <div class="cards c4">
+    <div class="card step" data-step="1">
+      <div class="big">2D 点</div>
+      <div class="cap">(x, y) ~ x̃；w̃ = 0 理想点<small>式(2.1)(2.2)，第 36 页</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">2D 线</div>
+      <div class="cap">(a, b, c)；归一化 (n̂, d)<small>式(2.3)，第 36–37 页</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big" style="font-size:62px">3D 点·面</div>
+      <div class="cap">(x, y, z) ~ x̄；(a, b, c, d) ~ (n̂, d)<small>式(2.7)，第 37–38 页</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">3D 线</div>
+      <div class="cap">两点式 / 方向式 / Plücker<small>式(2.9)–(2.12)，第 38–39 页</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">讲者归纳：能归一化成「法向 + 距离」的，只有 2D 线与 3D 面；2D 里求交与连线一律叉积——下一集让它们动起来（§2.1.1，Figure 2.4，第 40 页）</p>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>18 / 19</span></div>
+</section>
+
+<section class="slide endcard" data-steps="2">
+  <div class="kicker">NEXT · 词汇表到手</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§2.1 开篇（原书第 36–39 页），对照 Figure 2.2（第 37 页）与 Figure 2.3（第 38 页）</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>挑两条平行线，用叉积算它们的交点：确认第三个分量是零，写下这三个数</div>
+  <div class="row step" data-step="2"><span class="tag">下一集</span>E014 二维变换族谱：平移、刚体、相似、仿射、射影（§2.1.1）</div>
+  <div class="pagefoot"><span>E013 · 正课第五集</span><span>19 / 19</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

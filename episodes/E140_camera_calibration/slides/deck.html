@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>相机内参标定：棋盘格、Zhang 与畸变</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 11 章 · 内参标定</div>
+  <h2>K 到底从哪里来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E016 讲直觉，E017 讲畸变。</li><li>E104 讲已知 K 的位姿。</li><li>这一集补 K 的估计。</li><li>只讲内参，位姿留给下一集。</li></ul>
+      <div class="src">依据：原书第 685 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三问</div><div class="kline">靶标怎么拍</div><div class="kline">单应怎么变成内参</div><div class="kline">畸变怎么一起估</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 685–686 页 · 标定图案</div>
+  <h2>立体靶与平面棋盘格</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>标定图案是可靠方式。</li><li>平面靶远离平面时位姿差。</li><li>要占满工作空间。</li><li>每张图算一个单应。</li></ul>
+      <div class="src">依据：原书第 685–686 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种靶标</div><div class="kline">三维：准，但笨重</div><div class="kline">平面：轻，但要多角度</div><div class="kline">EXIF 焦距只能粗估</div><div class="kline">自标定要大量图像</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 686 页 · DLT</div>
+  <h2>单应：平面到图像的 3×3 映射</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每张图算一个单应。</li><li>DLT：两组方程，SVD 求解。</li><li>先归一化，再反归一化。</li><li>单应 8 个自由度。</li></ul>
+      <div class="src">依据：原书第 686 页；DLT 为标准实现</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">x′ = H x</div><div class="mnote">H：3×3 单应；齐次坐标下整体尺度不影响投影</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 686–687 页 · Zhang</div>
+  <h2>从单应到 B，再到 K</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对 B 的九个元素构造线性约束。</li><li>B 是绝对二次曲线的像 IAC。</li><li>每张单应给两个约束。</li><li>B 有五个自由度，至少三个视角。</li></ul>
+      <div class="src">依据：原书第 686–687 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">B = K⁻ᵀ K⁻¹</div><div class="mnote">B：IAC；K：内参矩阵；线性解作初值，再做非线性精调</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图 1 · 合成标定</div>
+  <h2>六个视角，一套内参</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>7×6 平面靶标，6 个视角。</li><li>合成 640×480 图像。</li><li>DLT 重投影误差 0.0000 像素。</li><li>fx 800.00、fy 780.00，主点 320/240。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e140_views.png" style="max-height:470px" alt="标定视角：7×6 平面靶标与 6 个视角｜程序生成，未用教材或论文原图"><figcaption>标定视角：7×6 平面靶标与 6 个视角｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 687–688 页 · 消失点</div>
+  <h2>只求焦距的捷径</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>假设主点在中心、方形像素、无倾斜。</li><li>旋转矩阵列正交，得到焦距方程。</li><li>消失点越靠中心越准。</li><li>靶标绕 45 度轴倾斜。</li></ul>
+      <div class="src">依据：原书第 687–688 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">适用与边界</div><div class="kline">适合建筑、盒子等平行线场景</div><div class="kline">只用一张图，快</div><div class="kline">假设强，适合粗模</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图 2 · 噪声与稳定性</div>
+  <h2>噪声一大，内参就飘</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>0、0.5、1 像素三档噪声。</li><li>焦距误差 0.00% / 0.80% / 4.13%。</li><li>主点误差 0.00 / 0.85 / 4.07 像素。</li><li>1 像素噪声，RMS 1.329 像素。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e140_noise.png" style="max-height:500px" alt="噪声敏感性：焦距与主点误差｜程序生成，未用教材或论文原图"><figcaption>噪声敏感性：焦距与主点误差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 691–692 页 · 畸变</div>
+  <h2>直线拍成弧线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>广角镜头要建模径向畸变。</li><li>桶形向中心拉，枕形向外推。</li><li>铅垂线法：调到直线变直。</li><li>有靶标时，畸变并入内外参一起估。</li></ul>
+      <div class="src">依据：原书第 691–692 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">模型与做法</div><div class="kline">x(1 + k1 r² + k2 r⁴)</div><div class="kline">r：到畸变中心的半径</div><div class="kline">k1 的符号反映方向</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图 3 · 畸变校正</div>
+  <h2>弯 7 像素，去完回直线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>合成畸变 k1 = 0.30。</li><li>最大弯曲 7.15 像素。</li><li>估出 k1 = 0.3000，焦距误差 0.000000。</li><li>去畸变后弯曲 0.0176 像素。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e140_distortion.png" style="max-height:500px" alt="径向畸变：k1=0.30 的弯曲与去畸变｜程序生成，未用教材或论文原图"><figcaption>径向畸变：k1=0.30 的弯曲与去畸变｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 689–691 页 · 完整管线</div>
+  <h2>五步再加非线性精调</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>拍靶标、提角点、算单应。</li><li>线性估内参，非线性重投影精调。</li><li>有畸变就加进最后一步。</li><li>纯旋转拍全景也能估焦距。</li></ul>
+      <div class="src">依据：原书第 689–691 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">最高精度</div><div class="kline">内参、外参、畸变一起最小化</div><div class="kline">工业级还会做束调整</div><div class="kline">线性解只是初值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">标定边界 · 这一集不做什么</div>
+  <h2>别拿坏数据喂优化器</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>靶标只占一小块。</li><li>只拍正面，不倾斜。</li><li>角点噪声大。</li><li>把 EXIF 焦距当精确值。</li></ul>
+      <div class="src">依据：原书第 685 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">lab 边界</div><div class="kline">合成 7×6 靶标，6 个视角</div><div class="kline">自写 Zhang 线性解</div><div class="kline">畸变用 OpenCV 做参照</div><div class="kline">不拍真实相机，不做束调整</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 11 章 · 闭环</div>
+  <h2>从棋盘格到内参</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>靶标 → 单应 → B → K。</li><li>畸变并入重投影精调。</li><li>作业：拍 10–15 张不同角度。</li><li>下一集：已知 K 解位姿。</li></ul>
+      <div class="src">依据：原书第 685 页；第 11 章 §11.1</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一步</div><div class="kline">P3P / PnP 入场</div><div class="kline">先估焦距和主点，再加畸变</div><div class="kline">记录重投影误差与参数变化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百三十二集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

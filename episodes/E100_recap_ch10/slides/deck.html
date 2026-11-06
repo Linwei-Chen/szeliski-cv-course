@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>第 10 章复盘：计算摄影是把物理、算法与产品揉在一起的课</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 复盘</div>
+  <h2>这一章：物理、算法、产品</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>计算摄影用一张或多张照片，做出传统成像做不到的图像。</li><li>物理给约束，算法做取舍，产品定目标。</li><li>九集放回同一条链：光进来，信息补上，给谁看。</li></ul>
+      <div class="src">依据：原书第 609 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集路线</div><div class="kline">九集回看</div><div class="kline">三层结构</div><div class="kline">选型三问</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘地图 · 三层结构</div>
+  <h2>三层：物理、算法、产品</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>底层物理：相机响应、噪声、PSF 与采样。</li><li>中层算法：多帧对齐合并、先验、渲染。</li><li>顶层产品：手机夜景、评测、取证。</li><li>信息从下往上走，约束从上往下压。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e100_layers.png" style="max-height:500px" alt="三层结构：物理给约束，算法做取舍，产品定目标｜程序生成，未用教材或论文原图"><figcaption>三层结构：物理给约束，算法做取舍，产品定目标｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">物理层 · 先量边界</div>
+  <h2>物理层：先量清数据的边界</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三样东西影响光变数字：辐射响应、暗角、点扩散函数。</li><li>光度标定是后面很多算法的前提。</li><li>高光饱和救不回，暗部光子太少。</li><li>放大暗部，只会放大噪声。</li></ul>
+      <div class="src">依据：原书第 609–610 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">物理三件</div><div class="kline">辐射响应</div><div class="kline">暗角</div><div class="kline">点扩散函数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">算法层 · 多帧</div>
+  <h2>多帧：把信息补回来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>HDR 用多张曝光捕获完整亮度范围。</li><li>分辨率与画质，可靠合并多张照片提升。</li><li>动态范围 63.1 倍；四帧超分 20.8 升到 24.2 dB。</li><li>八帧去噪 29.4 dB，未对齐 20.6 dB。</li></ul>
+      <div class="src">依据：原书第 609 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">多帧的代价</div><div class="kline">对齐错出鬼影</div><div class="kline">运动物体要剔除</div><div class="kline">帧数有边际收益</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">算法层 · 先验</div>
+  <h2>先验：信息不够时怎么猜</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>也可以用复杂图像先验或深度网络提升画质。</li><li>超分和去噪、去模糊、去马赛克同源。</li><li>稀疏导数抑制振铃，BM3D 学噪声分布。</li><li>先验越强，越可能补错。</li></ul>
+      <div class="src">依据：原书第 609/673 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先验从哪来</div><div class="kline">物理模型：可解释</div><div class="kline">学习模型：靠数据</div><div class="kline">问一句：恢复还是编造</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">产品层 · 夜景</div>
+  <h2>产品层：夜景把一切串起来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>手机夜景：测光、连拍、对齐、RAW 合并。</li><li>接着去马赛克、超分、去噪、色调映射。</li><li>一共十八步，是本课整理的工程顺序。</li><li>难点是先做哪步、代价是什么。</li></ul>
+      <div class="src">依据：原书第 627/630/645/646 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">取舍</div><div class="kline">暗部干净，高光可能裁切</div><div class="kline">噪点没了，纹理可能变塑料</div><div class="kline">十八步不是厂商流程图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">选型 · 三问</div>
+  <h2>选型：先问三件事</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>信息从哪来：能多帧就多帧。</li><li>先验从哪来：有物理模型就用物理。</li><li>输出去哪：给人看要色调映射。</li><li>给测量要线性、辐射、保留 RAW。</li></ul>
+      <div class="src">依据：本集复盘</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三问</div><div class="kline">信息从哪来</div><div class="kline">先验从哪来</div><div class="kline">输出去哪</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘 · 九集台账</div>
+  <h2>九集台账：看数字的边界</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>标定误差 0.22%，朴素平均 18.8%。</li><li>动态范围 63.1 倍；晕轮 69.6% 降到 7.4%。</li><li>超分 20.8 升到 24.2 dB；八帧去噪 29.4 dB。</li><li>去雾 12.05 升到 20.21 dB；夜景 24.73 dB。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e100_ledger.png" style="max-height:500px" alt="九集台账：每集一个可核对结果｜程序生成，未用教材或论文原图"><figcaption>九集台账：每集一个可核对结果｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程复盘 · 失败边界</div>
+  <h2>失败边界：比算法名更值得记</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对齐错，亮边双层；运动不剔除，出鬼影。</li><li>长曝光高光裁切；去马赛克差出伪彩。</li><li>降噪过头变塑料；色调映射过头出光晕。</li><li>放大看高光、暗部、运动物体与细纹理。</li></ul>
+      <div class="src">依据：原书第 625/630/646 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">检查清单</div><div class="kline">高光边缘</div><div class="kline">暗部平场</div><div class="kline">运动物体</div><div class="kline">细纹理</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">选型 · 决策图</div>
+  <h2>三问画成一张图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>信息、先验、输出，各有两个方向。</li><li>先选方向，再选算法。</li><li>夜景第一问选多帧。</li><li>医学与取证保留 RAW 和线性。</li></ul>
+      <div class="src">依据：本集复盘</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e100_tree.png" style="max-height:500px" alt="三问：信息 / 先验 / 输出，先定方向再选算法｜程序生成，未用教材或论文原图"><figcaption>三问：信息 / 先验 / 输出，先定方向再选算法｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘 · 课程边界</div>
+  <h2>没讲什么，也要说清楚</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>闪光合成、抠图与合成、纹理合成前半段。</li><li>视频抠图只在导览和修补里带到。</li><li>本章重点在标定、HDR、色调、超分去噪、去雾、修补与夜景。</li><li>后续补专题，matting、alpha、trimap 优先。</li></ul>
+      <div class="src">依据：原书第 609 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">未单独展开</div><div class="kline">闪光合成</div><div class="kline">抠图与合成</div><div class="kline">纹理合成前半</div><div class="kline">视频抠图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>三层、三问、失败边界</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 10 章是三层结构，不是算法清单。</li><li>多帧补信息，先验补病态，渲染定输出。</li><li>每个算法都有失败边界，指标分开看。</li><li>下一集进第 11 章：从照片到三维。</li></ul>
+      <div class="src">依据：原书第 609 页；移交第 11 章</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">物理 / 算法 / 产品</div><div class="kline">多帧 / 先验 / 渲染</div><div class="kline">指标分开看</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十二集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

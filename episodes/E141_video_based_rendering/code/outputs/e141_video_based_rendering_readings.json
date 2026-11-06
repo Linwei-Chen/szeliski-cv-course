@@ -1,0 +1,57 @@
+{
+ "n_pass": 12,
+ "n_total": 12,
+ "video": {
+  "frames": 100,
+  "height": 120,
+  "width": 160,
+  "cut_frame": 99,
+  "appearance_neighbor": 21,
+  "appearance_mse": 0.0,
+  "appearance_direction_flip": true,
+  "motion_neighbor": 95,
+  "motion_direction_flip": false,
+  "motion_jump_mse": 0.0028838299304194443,
+  "median_positive_mse": 0.0036279192004584084,
+  "lambda_motion": 0.6,
+  "transition_row_sum_min": 0.9999999999999996,
+  "transition_row_sum_max": 1.0000000000000004,
+  "dissolve": [
+   {
+    "L": 0,
+    "max_step_mse": 0.0028838299304194443
+   },
+   {
+    "L": 2,
+    "max_step_mse": 0.0003204255478243828
+   },
+   {
+    "L": 4,
+    "max_step_mse": 0.00011535319721677787
+   },
+   {
+    "L": 8,
+    "max_step_mse": 3.560283864715367e-05
+   },
+   {
+    "L": 16,
+    "max_step_mse": 9.978650278267982e-06
+   }
+  ],
+  "dissolve_reduction": 0.9965397923875432
+ },
+ "animation": {
+  "frames": 24,
+  "layers": 4,
+  "edge_pixels": 1344,
+  "soft_mse": 0.0,
+  "hard_mse": 0.0014908118127878898,
+  "hard_psnr_db": 28.265771746730472,
+  "hole_pixels": 2383,
+  "exposed_pixels": 1619,
+  "black_hole_mse": 0.5406232636749961,
+  "inpaint_hole_mse": 0.03474520565661033,
+  "inpaint_reduction": 0.9357312050901717,
+  "composite_black_vs_fill_mse": 0.0315483553378677
+ }
+}

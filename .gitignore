@@ -1,0 +1,27 @@
+# 版权红线区：教材 PDF 永不入库
+books/
+
+# 大型媒体产物不入 git
+/releases-local/
+/outputs/
+
+# 生产中间物（公开树只保留 student_deck.json）
+episodes/*/production/audio/
+episodes/*/production/frames/
+episodes/*/production/evidence/
+episodes/*/production/subs/
+episodes/*/production/timeline.json
+episodes/*/production/shots.json
+episodes/*/production/build_*.py
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+
+# Node（幻灯片本地构建）
+node_modules/
+
+# 系统杂物
+.DS_Store

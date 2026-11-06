@@ -1,0 +1,19 @@
+[lab] 开始 2026-11-02T00:54:23
+[lab] 源码 sha256=33546246d04fa9e9fce4c6947fe87db7981c09fdd8eb2784e145e93271749c49
+[PASS] 图1 四类任务词在档　| 语义分割/实例分割/全景分割/密集姿态 全命中
+[PASS] 图1 任务对照句在档　| 逐像素分类/物体掩码/物体+背景/像素→表面 全命中
+[PASS] 图2 编解码词在档　| 下采样/瓶颈/上采样/跳连/逐像素输出 全命中
+[PASS] 图3 三头+两分支词在档　| 类别头/框精修头/掩码头/实例分支/语义分支 全命中
+[PASS] 主文本字号≥11.5pt+程序生成注记在档×3　| 图一 最小 11.5pt/图二 最小 11.5pt/图三 最小 11.5pt
+[PASS] 图内文字内部记号零泄漏（红线 5）　| 图内 Text 收割 36 条，命中 无
+[PASS] FG1 程序生成图落盘　| e062_segmentation_tasks.png
+[PASS] FG2 程序生成图落盘　| e062_fcn_unet.png
+[PASS] FG3 程序生成图落盘　| e062_mask_rcnn.png
+[lab] readings → e062_semantic_segmentation_readings.json
+[lab] readings sha256=49020933acb3d9d499f70e6f2fbe0847ee9c0836f26467a7c6ea5416c0dce35a
+[lab] PNG sha256(e062_fcn_unet.png)=1b4a961d5c3085ab26b2e83cb239b0a955ad2ba4145849672c3806851e0601df
+[lab] PNG sha256(e062_mask_rcnn.png)=2778838c305287f0f894be938e120a5b0e65449b38c7c84a7bb1b64b05898853
+[lab] PNG sha256(e062_segmentation_tasks.png)=bfd19c274eee57a0111d7b088d29a11acbe12c461e9ecd97031851a33f06627c
+[lab] LEDGER：断言 9 条，PASS 9
+[lab] 汇总 PASS 9 / FAIL 0 / 共 9
+[lab] 结束 2026-11-02T00:54:24

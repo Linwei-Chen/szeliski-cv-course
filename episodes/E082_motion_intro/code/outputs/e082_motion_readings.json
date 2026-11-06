@@ -1,0 +1,39 @@
+{
+ "R": 14,
+ "patch": 100,
+ "corner_best": [
+  7,
+  -5
+ ],
+ "corner_true": [
+  7,
+  -5
+ ],
+ "corner_err": 4.000614750871375e-06,
+ "corner_ratio": 791.4329093987698,
+ "edge_best": [
+  5,
+  -14
+ ],
+ "edge_err": 0.0,
+ "plateau": 29,
+ "flat_err": 0.0,
+ "flat_std": 0.0,
+ "glob_err": 0.006001582720360192,
+ "glob_shift": [
+  4,
+  0
+ ],
+ "fg_err": 0.0,
+ "fg_shift": [
+  -6,
+  3
+ ],
+ "bg_err": 0.0,
+ "bg_shift": [
+  4,
+  0
+ ],
+ "n_pass": 10,
+ "n_total": 10
+}

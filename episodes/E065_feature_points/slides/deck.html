@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>为什么需要“特征点”：跟踪、配准与检索的地基</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 7 章开篇 · 特征检测与匹配</div>
+  <h2>两张图里的同一个点，怎么找、怎么对</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>特征检测与匹配是很多应用的基础零件。</li><li>前一章讲识别，这一章换问题：找同一个点。</li><li>先看两对图，再决定找什么特征。</li><li>下一集从角点检测开始。</li></ul>
+      <div class="src">依据：原书第 419 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集范围</div><div class="kline">两对图：拼接与三维重建</div><div class="kline">特征家族：点、边缘、轮廓、直线、区域</div><div class="kline">两条路线与四个阶段</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 两对图</div>
+  <h2>两对图：拼接全景与建立三维对应</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第一对：对齐后无缝拼成全景。</li><li>第二对：建立稠密对应，重建三维模型。</li><li>稠密对应也能生成中间视角。</li><li>图 7.2 问：该用什么特征建立对应？</li></ul>
+      <div class="src">依据：原书第 419–420 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两对图的用途</div><div class="kline">全景拼接：重叠区域对齐</div><div class="kline">三维重建：稠密对应</div><div class="kline">中间视角：插出新画面</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 特征家族</div>
+  <h2>特征家族：五类线索各答一个问题</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>点：山峰、楼角、门洞、特别形状的雪块。</li><li>关键点、兴趣点、角点，用周围图块描述。</li><li>图 7.1 把点、边缘、直线、区域排在一起。</li><li>区域是分割出的像素块，用于匹配和识别。</li></ul>
+      <div class="src">依据：原书第 418–419 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e065_feature_family.png" style="max-height:500px" alt="特征家族五类：点/边缘/轮廓/直线/区域｜程序生成，未用教材或论文原图"><figcaption>特征家族五类：点/边缘/轮廓/直线/区域｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 边缘</div>
+  <h2>边缘：按方向和局部外观匹配</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>例子：山脊和天空的交界。</li><li>匹配看方向和局部外观。</li><li>边缘常是物体边界和遮挡的信号。</li><li>边缘连成曲线、轮廓，可以跟踪。</li></ul>
+      <div class="src">依据：原书第 419 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">边缘的信息</div><div class="kline">方向：变化朝哪边</div><div class="kline">外观：局部像什么样子</div><div class="kline">边界：物体与遮挡</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 轮廓与直线</div>
+  <h2>轮廓与直线：边界和空间方向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>轮廓是连起来的边缘，回答边界在哪。</li><li>直线段可以直接匹配。</li><li>直线也能求灭点，进而求相机内外参。</li><li>边缘、轮廓、直线和点都是本章主角。</li></ul>
+      <div class="src">依据：原书第 419 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">从边到直线</div><div class="kline">轮廓：边界在哪</div><div class="kline">直线：空间往哪退</div><div class="kline">灭点：内外参的来源</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 学习顺序</div>
+  <h2>学习顺序：点特征为主，边缘直线为辅</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>本章讲检测方法，也讲跨图建立对应。</li><li>点特征用途广，7.1 节的算法值得读。</li><li>更值得亲手实现一遍。</li><li>边缘和直线可跳过，适合短课。</li></ul>
+      <div class="src">依据：原书第 419 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">时间怎么分</div><div class="kline">点特征：主线，必读</div><div class="kline">边缘与直线：补充信息</div><div class="kline">分割：最后一部分</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 分割的位置</div>
+  <h2>分割：从主课退到辅助位置</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>本章最后讲自底向上的非语义分割。</li><li>这些方法多被 6.4 节语义分割取代。</li><li>偶尔用来分组像素，让匹配更快更稳。</li></ul>
+      <div class="src">依据：原书第 419 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">非语义分割</div><div class="kline">做法：不认物体，只分像素</div><div class="kline">现状：多由语义分割接手</div><div class="kline">用处：加速匹配</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 对应点的用途</div>
+  <h2>对应点能做什么：从稀疏到稠密</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>稀疏对应常常是求相机位姿的前一步。</li><li>有了位姿，才能用立体匹配算稠密对应。</li><li>还能拼全景、拼高动态范围、做视频稳像。</li><li>物体实例识别也大量使用对应点。</li></ul>
+      <div class="src">依据：原书第 419–420 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e065_match_use_cases.png" style="max-height:500px" alt="对应点用途：稀疏对应→相机位姿→稠密立体→三维重建｜程序生成，未用教材或论文原图"><figcaption>对应点用途：稀疏对应→相机位姿→稠密立体→三维重建｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 抗变化与简史</div>
+  <h2>为什么能跨图匹配：抗遮挡与变化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>有遮挡、尺度变化、旋转变化，也还能匹配。</li><li>从早期立体匹配就开始用：1974、1983、1988。</li><li>后来在图像拼接和全自动三维建模里流行。</li><li>论文线索从 1970 年代排到 2000 年代。</li></ul>
+      <div class="src">依据：原书第 420 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">历史线索</div><div class="kline">1974 Hannah：早期立体匹配</div><div class="kline">1997 Zoghlami：图像拼接</div><div class="kline">2006 Snavely：运动恢复结构</div><div class="kline">2007 Brown 与 Lowe：全景拼接</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 两条路线</div>
+  <h2>两条路线：局部跟踪与独立检测</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>路线一：一张图找特征，再用局部搜索跟踪。</li><li>相关或最小二乘都能做局部搜索。</li><li>路线二：每张图独立检测，再按外观匹配。</li><li>前者适合视频，后者适合大运动、宽基线。</li></ul>
+      <div class="src">依据：原书第 420–421 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么选</div><div class="kline">近视角、连拍、视频：跟踪</div><div class="kline">大运动、外观变化：匹配</div><div class="kline">全景、宽基线、识别：匹配</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 四个阶段</div>
+  <h2>四阶段：检测、描述、匹配、跟踪</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>检测：找在别的图里也容易匹配的位置。</li><li>描述：把邻域变成紧凑、稳定的描述子。</li><li>匹配：在别的图里搜索候选。</li><li>跟踪：只在特征附近的小邻域里搜。</li></ul>
+      <div class="src">依据：原书第 421 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四个动词</div><div class="kline">检测：在哪</div><div class="kline">描述：长什么样</div><div class="kline">匹配：跨图对上</div><div class="kline">跟踪：视频里跟住</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 检测阶段</div>
+  <h2>检测：找换一张图也找得回的点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>检测看的不是显眼，是换图还能找回。</li><li>每张图都搜大概率能匹配上的位置。</li><li>只在原图里显眼、换角度就消失的不算。</li></ul>
+      <div class="src">依据：原书第 421 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">可重复性</div><div class="kline">同一物体，换个视角</div><div class="kline">位置要能被再次检出</div><div class="kline">这是检测阶段的判据</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 描述阶段</div>
+  <h2>描述：把邻域变成可比较的向量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>关键点周围的区域转成描述子。</li><li>描述子要紧凑，还要稳定。</li><li>稳定指在变化下仍能相互比较。</li><li>位置加长相，才能跨图对上号。</li></ul>
+      <div class="src">依据：原书第 421 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个要求</div><div class="kline">紧凑：存得小、比得快</div><div class="kline">稳定：变化下还像</div><div class="kline">可比较：能算距离</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 匹配与跟踪</div>
+  <h2>匹配与跟踪：搜全图还是搜邻域</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>匹配：在别的图里高效搜索候选。</li><li>跟踪：只在已检测特征附近的小邻域搜。</li><li>视频里常用跟踪，跨视角常用匹配。</li></ul>
+      <div class="src">依据：原书第 421 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">搜索范围</div><div class="kline">全图匹配：不怕大跳</div><div class="kline">小邻域跟踪：擅长小步</div><div class="kline">视频优先跟踪</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 范例与综述</div>
+  <h2>范例：SIFT 把四个阶段串起来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Lowe 2004 的 SIFT 是四阶段的范例。</li><li>SIFT 是尺度不变特征变换。</li><li>想系统看替代方法，可以读系列综述。</li><li>Shi 与 Tomasi 1994、Triggs 2004 有经典回顾。</li></ul>
+      <div class="src">依据：原书第 421 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">往下怎么走</div><div class="kline">本集：为什么找特征点</div><div class="kline">下一集：角点怎么找</div><div class="kline">再往后：尺度与描述子</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">章开篇 · 图块可定位性</div>
+  <h2>可定位性：不是每块图块都一样好找</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图 7.3 比较了不同图块的定位精度。</li><li>平坦雪地放哪都像，位置定不住。</li><li>单向边缘沿线滑动也像。</li><li>拐角横竖都有变化，最容易钉住。</li></ul>
+      <div class="src">依据：原书第 421 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e065_patch_localizability.png" style="max-height:500px" alt="图块可定位性：平坦雪地/单向边缘/拐角｜程序生成，未用教材或论文原图"><figcaption>图块可定位性：平坦雪地/单向边缘/拐角｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十七集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

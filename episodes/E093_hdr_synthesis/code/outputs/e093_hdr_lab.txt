@@ -1,0 +1,20 @@
+[lab] E093 HDR 开始 2026-11-02T21:49:57
+[lab] 源码 sha256=4e28fa2b49ff9a9867ebbae85587551b36dd2ebe3251aae9bd3a0dc60f482437
+[PASS] 场景动态范围>50　| 63.1 倍
+[PASS] 最长曝光饱和>40%　| 50.0%
+[PASS] 五曝光覆盖全部像素　| 100.0%
+[PASS] 加权合并误差<1%　| 0.22%
+[PASS] 合并辐亮度相关>0.999　| r=0.99999
+[PASS] 合并保留动态范围>50　| 63.0 倍
+[PASS] 亮区加权误差<1%　| 0.20%
+[PASS] 亮区朴素平均>10%　| 18.8%
+[PASS] 帽子权重中间高　| 中心/边缘=13.0×
+[PASS] 合并饱和像素<1%　| 0.00%
+[lab] PNG sha256(e093_bracket.png)=f593179a1620328b736e1b4460d44293ab10415efa599a0221d46abea04cbf5d
+[lab] PNG sha256(e093_pipeline.png)=cedffd3c194656368a40bc83f223fa3a2cc5ea049ec8df44998b3355007f885f
+[lab] PNG sha256(e093_weights.png)=3ae92fe79ba6d35c73ce1a9951a479d4f67f30b639917b8a70ca74e662ba23b3
+[lab] readings → e093_hdr_readings.json
+[lab] readings sha256=3da5642762a6319fe3b97048a092d958cba77004f1f2307d0dadd2981286ed21
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T21:49:57

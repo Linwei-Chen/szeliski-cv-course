@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>SIFT Ⅰ：尺度空间与关键点的诞生</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 7 章 · 尺度空间</div>
+  <h2>物体忽大忽小，特征就丢了</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>细尺度的特征，换个大小时可能不存在。</li><li>办法：在多种尺度上各提一遍特征。</li><li>同一层之间互相匹配，图 7.10 是五层。</li><li>适合航拍、定焦全景这类场景。</li></ul>
+      <div class="src">依据：原书第 429 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">多尺度方案</div><div class="kline">多种尺度提取，同层匹配</div><div class="kline">图 7.10：五层多尺度图块</div><div class="kline">代价：计算量变大</div><div class="kline">换来尺度上的可比性</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">尺度未知</div>
+  <h2>让特征自带大小标签</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>多数识别任务里，物体尺度未知。</li><li>每层都试一遍，代价太高。</li><li>直接找位置、尺度都稳定的点。</li><li>匹配时只找两者都对得上的。</li></ul>
+      <div class="src">依据：原书第 429 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">更省的做法</div><div class="kline">位置稳定</div><div class="kline">尺度稳定</div><div class="kline">匹配只查同尺度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">尺度空间 · 程序生成图</div>
+  <h2>看图：模糊、相减、下采样</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Lindeberg：LoG 极值定位置。</li><li>Lowe：子八度 DoG 找三维极大。</li><li>二次拟合到亚像素、子层。</li><li>子八度三层，约四分之一八度。</li></ul>
+      <div class="src">依据：原书第 429–430 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e067_scale_space.png" style="max-height:500px" alt="尺度空间金字塔：两个八度、高斯模糊、相减得 DoG、隔行隔列下采样｜程序生成，未用教材或论文原图"><figcaption>尺度空间金字塔：两个八度、高斯模糊、相减得 DoG、隔行隔列下采样｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Hessian 剔除</div>
+  <h2>边缘上的点，要剔掉</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>曲率强烈不对称的点要剔除。</li><li>与 Harris 同理，指示函数用 DoG。</li><li>先算差分图的局部 Hessian。</li><li>迹平方比行列式过大就丢，阈值 10。</li></ul>
+      <div class="src">依据：原书第 429 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">Tr(H)² / Det(H) > 10</div><div class="mnote">H：差分图 D 的局部 Hessian；比值过大=边缘响应</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">与自相关的关系</div>
+  <h2>SIFT 与 Harris 是两条路</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SIFT 与自相关类检测子根基不同。</li><li>两者的检测位置常常互补。</li><li>实际系统里可以一起用。</li><li>Harris 加 LoG：只留 LoG 极值点。</li></ul>
+      <div class="src">依据：原书第 429 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">互补关系</div><div class="kline">SIFT：DoG 极值</div><div class="kline">Harris：自相关矩阵</div><div class="kline">位置互补，可并用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">DoG 与归一化</div>
+  <h2>DoG 近似尺度归一化 LoG</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>DoG 可以很好近似 σ²∇²G。</li><li>乘 σ² 归一化，才真正尺度不变。</li><li>σ²∇²G 的极值比梯度、Hessian 稳。</li><li>不同尺度上的响应可以公平比较。</li></ul>
+      <div class="src">依据：原书第 430 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">DoG ≈ σ² ∇²G</div><div class="mnote">Lindeberg：乘 σ² 才尺度不变；Mikolajczyk 实验：极值最稳</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">热扩散</div>
+  <h2>热扩散给出 DoG 的来历</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对 σ 求导，等于 σ 乘拉普拉斯。</li><li>相邻尺度 kσ 与 σ 的差分近似导数。</li><li>连续的是热扩散，离散的就是 DoG。</li></ul>
+      <div class="src">依据：原书第 430 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个视角</div><div class="kline">连续：热扩散方程</div><div class="kline">离散：相邻层相减</div><div class="kline">DoG 有微分方程依据</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">常数因子</div>
+  <h2>k−1 是常数，不妨碍找极值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>把上式整理，DoG 已含 σ² 归一化。</li><li>系数 k−1 在所有尺度上相同。</li><li>常数只改整体高低，不改极值位置。</li><li>k 越接近 1，近似误差越小。</li></ul>
+      <div class="src">依据：原书第 430 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实践结论</div><div class="kline">尺度差大，影响也小</div><div class="kline">极值检测与定位仍稳</div><div class="kline">DoG 因此好用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">高效构造</div>
+  <h2>模糊、相减、缩小、再来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每层用高斯逐步模糊，相邻相减。</li><li>每个八度生成 s+3 张模糊图。</li><li>σ 翻倍的那张隔行隔列下采样。</li><li>进入下一八度，重复同一套操作。</li></ul>
+      <div class="src">依据：原书第 430 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">构造顺序</div><div class="kline">模糊 → 相减 → 下采样</div><div class="kline">一个八度接一个八度</div><div class="kline">搭出完整尺度金字塔</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">DoG 三维极值</div>
+  <h2>26 个邻居，全大或全小才留</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>当前层 8 个邻居。</li><li>上下两层各 9 个，共 26 个。</li><li>比全部 26 个都大或都小才选。</li><li>这样在空间和尺度上都稳定。</li></ul>
+      <div class="src">依据：原书第 430–431 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e067_dog_extrema.png" style="max-height:500px" alt="DoG 三维极值：当前层 8 + 上下层各 9 = 26 邻域｜程序生成，未用教材或论文原图"><figcaption>DoG 三维极值：当前层 8 + 上下层各 9 = 26 邻域｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">旋转</div>
+  <h2>先给关键点定个正方向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>旋转不变描述子判别力差。</li><li>不同图块可能映射成同一描述。</li><li>更好：每个关键点估主方向。</li><li>按尺度、方向取 patch 再描述。</li></ul>
+      <div class="src">依据：原书第 431 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三步</div><div class="kline">先定尺度</div><div class="kline">再定方向</div><div class="kline">取缩放旋转后的图块</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">平均梯度</div>
+  <h2>平均梯度：简单，但窗口要大</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最简单的估计：区域平均梯度。</li><li>加高斯权重=一阶可转向滤波。</li><li>可用高斯水平、垂直导数来算。</li><li>聚合窗通常比检测窗更大。</li></ul>
+      <div class="src">依据：原书第 431 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么窗口要大</div><div class="kline">窗口小，方向被噪声带偏</div><div class="kline">窗口大，方向更稳</div><div class="kline">所以用独立聚合窗</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">主方向 · 程序生成图</div>
+  <h2>看图：36 桶定主方向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平均梯度太小，方向不可靠。</li><li>用 36 桶方向直方图统计。</li><li>权重：梯度幅值 + 高斯距离。</li><li>取 80% 峰值，三桶抛物线拟合。</li></ul>
+      <div class="src">依据：原书第 431–432 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e067_orientation_affine.png" style="max-height:500px" alt="主方向与 affine：36 桶直方图、80% 峰值、三桶拟合；仿射椭圆与 MSER｜程序生成，未用教材或论文原图"><figcaption>主方向与 affine：36 桶直方图、80% 峰值、三桶拟合；仿射椭圆与 MSER｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">affine 不变性</div>
+  <h2>斜着看：小图块近似仿射</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>宽基线、位置识别要完整 affine。</li><li>透视缩短也是仿射形变。</li><li>足够小的图块，连续形变≈affine。</li><li>椭圆主轴、轴比当仿射坐标架。</li></ul>
+      <div class="src">依据：原书第 431–432 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三道不变性</div><div class="kline">尺度：管大小</div><div class="kline">方向：管旋转</div><div class="kline">affine：管斜视角</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">MSER</div>
+  <h2>MSER：面积变得最稳的区域</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>在所有灰度阈值上做二值化。</li><li>跟踪每个连通区域的面积变化。</li><li>变化率最小=最大稳定区域。</li><li>对仿射几何、光度变换不敏感。</li></ul>
+      <div class="src">依据：原书第 432 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个要点</div><div class="kline">稳定，才值得拿来匹配</div><div class="kline">可用矩矩阵拟合坐标架</div><div class="kline">Matas、Chum 等提出</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">现代检测子 · 移交</div>
+  <h2>检测子还在变，框架没变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SURF 用积分图加速。</li><li>FAST 是早期学习型检测子。</li><li>BRISK 结合尺度空间 FAST 与二值描述。</li><li>ORB 加方向，KAZE 用非线性扩散。</li></ul>
+      <div class="src">依据：原书第 432–433 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">交接</div><div class="kline">综述比较经典仿射检测子</div><div class="kline">检测子的名单还在变长</div><div class="kline">下一集：128 维描述子与匹配</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十九集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

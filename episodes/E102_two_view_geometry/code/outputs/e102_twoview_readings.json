@@ -1,0 +1,25 @@
+{
+ "n_pass": 9,
+ "n_total": 9,
+ "n_points": 60,
+ "max_epi_res": 8.326672684688674e-17,
+ "max_epi_res_sci": "8.33e-17",
+ "det_E": 9.78370710392491e-19,
+ "max_line_dist": 1.0799547595532797e-16,
+ "R_err_deg": 1.7075472925031877e-06,
+ "R_err_deg_4": 0.0,
+ "cos_t": 1.0000000000000002,
+ "cos_t_6": 1.0,
+ "counts": [
+  0,
+  60,
+  0,
+  0
+ ],
+ "selected": 1,
+ "true_candidate": 0,
+ "max_pix_res": 1.6653345369377348e-16,
+ "noisy_ratio": 912527258.4290848,
+ "noisy_ratio_0": 912527258,
+ "true_front_count": 60
+}

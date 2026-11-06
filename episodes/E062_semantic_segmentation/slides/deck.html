@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>语义分割：FCN、U-Net 与分割任务全景</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 四类分割任务</div>
+  <h2>给每个像素贴类别</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>语义分割：逐像素分到类别。</li><li>实例分割：每个物体一张掩码。</li><li>全景分割：物体和背景一起标。</li><li>密集姿态：人体像素对应身体部位。</li></ul>
+      <div class="src">依据：原书第 387 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e062_segmentation_tasks.png" style="max-height:410px" alt="四类分割任务对照：语义分割、实例分割、全景分割、密集姿态｜程序生成，未用教材或论文原图"><figcaption>四类分割任务对照：语义分割、实例分割、全景分割、密集姿态｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">逐像素标注 · 四类任务对照</div>
+  <h2>每个像素先表态，邻居再商量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>基本做法：给每个像素标一个类别。</li><li>四类任务都建立在这层像素标注上。</li><li>老办法：能量最小化或贝叶斯推断，即 CRF。</li><li>TextonBoost：一元势打分，成对势看梯度。</li></ul>
+      <div class="src">依据：原书第 387 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么更难</div><div class="kline">识别和精确边界要同时做</div><div class="kline">通用识别里更有挑战的版本</div><div class="kline">分类问有什么，检测问在哪</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">经典路线 · 纹理布局与条件随机场</div>
+  <h2>十七个滤波器，三十类纹理基元</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>十七个方向滤波器组，聚成三十类 texton。</li><li>偏移矩形区域加联合提升，得到一元势。</li><li>LayoutCRF：多实例、处理遮挡。</li><li>Hoiem 等人再接进完整三维模型。</li></ul>
+      <div class="src">依据：原书第 387–388 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">从局部到整图</div><div class="kline">一元势：颜色、位置、纹理布局</div><div class="kline">成对势：相邻像素颜色梯度</div><div class="kline">LayoutCRF：多实例加遮挡</div><div class="kline">再往上接三维场景模型</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全卷积与 U-Net</div>
+  <h2>编码看全局，解码补细节</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>FCN：一个网络直接做逐像素标注。</li><li>早期分辨率差、边界松。</li><li>末端 CRF、反卷积上采样、U-Net 跳连。</li><li>跳连把没丢的浅层信息接回来。</li></ul>
+      <div class="src">依据：原书第 388 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e062_fcn_unet.png" style="max-height:410px" alt="FCN 与 U-Net 流水线：编码器、解码器、跳连、逐像素输出｜程序生成，未用教材或论文原图"><figcaption>FCN 与 U-Net 流水线：编码器、解码器、跳连、逐像素输出｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">现代架构 · 多尺度与多头</div>
+  <h2>多尺度聚特征，多头分工</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>现代分割常建在特征金字塔网络上。</li><li>自顶向下，把语义灌到高分辨率图。</li><li>PSPNet 用空间金字塔池化聚多尺度。</li><li>UPerNet 标类别、材质、部件和纹理。</li></ul>
+      <div class="src">依据：原书第 388–389 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">图 6.34 的四个头</div><div class="kline">场景头：做分类</div><div class="kline">物体与部件头：吃融合特征</div><div class="kline">材质头：看最细一层</div><div class="kline">纹理头：不参与微调</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">数据集 · 从几类到万物</div>
+  <h2>标签越细，模型懂得越多</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>起步：MSRC 和 PASCAL VOC。</li><li>Cityscapes 是城市街景。</li><li>ADE20K：一百五十种类别和部件标签。</li><li>Broden 联邦多数据集，扩到材质纹理。</li></ul>
+      <div class="src">依据：原书第 389–390 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">表 6.2 的数据集</div><div class="kline">MSRC / PASCAL VOC</div><div class="kline">Cityscapes：街景</div><div class="kline">ADE20K：150 类</div><div class="kline">Broden：物体加材质</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">医学分割 · 定量分析</div>
+  <h2>先把组织分出来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>医学分割把解剖组织分出来。</li><li>图 4.21：二值图割分出肝脏。</li><li>图 6.35：脑部扫描的肿瘤分割。</li><li>从手工描边，到 MRF、随机森林、深度学习。</li></ul>
+      <div class="src">依据：原书第 390–391 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一路怎么变</div><div class="kline">早期：一片片 X 光片手工描边</div><div class="kline">然后：马尔可夫随机场、随机森林</div><div class="kline">后来：转向深度学习</div><div class="kline">MICCAI 会议与医学图像期刊</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实例分割 · 旧路线</div>
+  <h2>先认出来，再把形状套回去</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>找出所有相关物体，给可见区域掩码。</li><li>已知刚体：三维模型反投影回场景。</li><li>这条路只对已知的三维模型管用。</li><li>人用柔性模型；可变类按特征投票。</li></ul>
+      <div class="src">依据：原书第 391 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条旧思路</div><div class="kline">刚体：模型反投影</div><div class="kline">人体：预分割再拼装</div><div class="kline">高度可变类：位置尺度投票</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实例分割 · 深度二阶段</div>
+  <h2>三个头，多一条画轮廓</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>区域提议接卷积第二阶段，出实例掩码。</li><li>突破出现在 Mask R-CNN。</li><li>沿用 Faster R-CNN 的区域提议网络。</li><li>框精修、分类之外，再加掩码分支。</li></ul>
+      <div class="src">依据：原书第 391–392 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个头分工</div><div class="kline">框：在哪</div><div class="kline">类别：是谁</div><div class="kline">掩码：精确到每个像素</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三头并行 · 全景双分支</div>
+  <h2>损失要平衡，分支还能加</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图 6.36a：三个分支分别出类别、框、掩码。</li><li>多分支多输出，每条损失权重仔细平衡。</li><li>还能加关键点掩码分支，做人体关键点。</li><li>更强骨干继续涨分；COCO+LVIS 看最新结果。</li></ul>
+      <div class="src">依据：原书第 392 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e062_mask_rcnn.png" style="max-height:410px" alt="Mask R-CNN 三头与全景双分支：类别、框、掩码、全景输出｜程序生成，未用教材或论文原图"><figcaption>Mask R-CNN 三头与全景双分支：类别、框、掩码、全景输出｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实例分割 · 边界指标</div>
+  <h2>面积对了，轮廓还要贴</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>掩码可换成随时间演化的闭合轮廓，snakes。</li><li>Peng 等人在 2020 年这么做过。</li><li>Boundary IoU 用边界交并比，替代 Mask IoU。</li><li>Cheng、Girshick 等人 2021 年提出。</li></ul>
+      <div class="src">依据：原书第 392 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种看法</div><div class="kline">Mask IoU：面积对不对</div><div class="kline">Boundary IoU：轮廓贴不贴</div><div class="kline">面积分对了，边还可能毛糙</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全景分割 · 物体与背景</div>
+  <h2>数清楚，还要铺满</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>语义回答每像素是什么，实例回答几个。</li><li>全景：物体正确分开，背景正确标类。</li><li>PQ 指标要同时平衡两边。</li><li>COCO 加了全景任务；Panoptic FPN 双分支。</li></ul>
+      <div class="src">依据：原书第 392–393 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">全景怎么算</div><div class="kline">所有物体正确分割</div><div class="kline">剩余背景正确标类</div><div class="kline">PQ 平衡语义与实例</div><div class="kline">FPN 上加实例、语义两分支</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">智能修图 · 场景补全</div>
+  <h2>找一张本来就长这样的图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Photo Clip Art 分割行人，贴进用户照片。</li><li>场景补全：擦掉一大块，再找像素来源。</li><li>Hays 和 Efros：先算 gist 找相近图。</li><li>图割最小化梯度差，Poisson 融合贴回。</li></ul>
+      <div class="src">依据：原书第 394 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">补图的四步</div><div class="kline">擦除：去掉一大块</div><div class="kline">找图：颜色构图相近</div><div class="kline">对齐：图割最小梯度差</div><div class="kline">融合：Poisson 贴回</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">单图三维 · 照片立起</div>
+  <h2>把照片折成能立起来的模型</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Criminisi 等人检测消失点，用户画墙。</li><li>Hoiem 等人：逐像素判地面、垂直面、天空。</li><li>超像素分组，沿边界折成平面，去掉天空。</li><li>Saxena 等人直接推每像素的深度和朝向。</li></ul>
+      <div class="src">依据：原书第 395 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种做法</div><div class="kline">消失点 + 用户画墙</div><div class="kline">自动照片立起：pop-up</div><div class="kline">直接回归深度与朝向</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">姿态估计 · 关键点与密集姿态</div>
+  <h2>从几个关节到整张皮</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>姿态是头、躯干、四肢的位置和朝向。</li><li>Felzenszwalb 和 Huttenlocher 2005 年开创。</li><li>深度网络找关键点；OpenPose 实时多人。</li><li>DensePose：每像素对应三维表面，五万人标注。</li></ul>
+      <div class="src">依据：原书第 395–396 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种粒度</div><div class="kline">关键点：只标几个关节</div><div class="kline">DensePose：整个人贴皮</div><div class="kline">每个像素知道贴在哪一块</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">小结 · 移交下一集</div>
+  <h2>从像素类别到三维表面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>四类任务：语义、实例、全景、密集姿态。</li><li>方法线：TextonBoost → FCN/U-Net。</li><li>再到 Mask R-CNN 三头、Panoptic FPN 双分支。</li><li>下一集：视频理解，读时间轴上的人和动作。</li></ul>
+      <div class="src">依据：原书第 396 页；本集综述</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一条主线</div><div class="kline">像素级分类</div><div class="kline">每个物体一个掩码</div><div class="kline">物体与背景一起标</div><div class="kline">人体像素映射到三维表面</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十四集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

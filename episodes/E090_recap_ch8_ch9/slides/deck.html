@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>一切皆对齐：运动估计串起的前后五章</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8–9 章复盘 · 开场</div>
+  <h2>十六集，同一件事</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 8 章对齐图像与特征。</li><li>第 9 章估计像素运动。</li><li>两章都在回答：谁和谁对上。</li><li>本集把两条线并成一张总表。</li></ul>
+      <div class="src">依据：本集复盘（E074–E089 回链）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条线</div><div class="kline">第 8 章：图对图、图对场景</div><div class="kline">第 9 章：像素对像素</div><div class="kline">共同问题：同名点怎么找</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 · 章头与导言</div>
+  <h2>图像对齐与拼接</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 8 章叫图像对齐与拼接。</li><li>先找特征，再做几何配准。</li><li>几何配准就是估计图像间变换。</li><li>变换估错，拼接和混合都救不回。</li></ul>
+      <div class="src">依据：原书第 501/503 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">书上两处</div><div class="kline">图像对齐与拼接</div><div class="kline">几何配准：估 2D/3D 变换</div><div class="kline">基于特征的对齐</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 · E074–E078</div>
+  <h2>变换模型从简到繁</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>变换阶梯：平移、相似、仿射、单应。</li><li>再往后是柱面与球面投影。</li><li>E074–E078 依次讲这五站。</li><li>模型越自由，越容易过拟合。</li></ul>
+      <div class="src">依据：第 8 章回链（E074–E078）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">按场景选模型</div><div class="kline">平面场景常用单应</div><div class="kline">相机转动用柱面</div><div class="kline">非平面多图用捆扎</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 · E079–E081</div>
+  <h2>全景：对齐加混合</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E079 讲曝光补偿与多频段混合。</li><li>E080 讲手机与 360 全景应用。</li><li>E081 上机走柱面、粗对齐、曝光、混合。</li><li>先补偿曝光再混合，接缝才不亮。</li></ul>
+      <div class="src">依据：第 8 章回链（E079–E081）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两步分工</div><div class="kline">对齐决定图摆在哪</div><div class="kline">混合决定接缝明不明显</div><div class="kline">曝光不一致先补偿</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">程序生成图 · 十六站</div>
+  <h2>十六站总表</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上排是第 8 章八站。</li><li>下排是第 9 章八站。</li><li>中间一行是全景流水线。</li><li>箭头只表示顺序，不代表唯一依赖。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e090_map.png" style="max-height:500px" alt="第 8–9 章十六站总表：上排图像对齐，下排运动估计｜程序生成，未用教材或论文原图"><figcaption>第 8–9 章十六站总表：上排图像对齐，下排运动估计｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 · 导言</div>
+  <h2>先定误差度量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 557 页说，对齐和运动估计最常用。</li><li>要估运动，先选误差度量。</li><li>误差度量决定外点长什么样。</li><li>也决定鲁棒损失怎么选。</li></ul>
+      <div class="src">依据：原书第 557 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先问三件事</div><div class="kline">怎么衡量两张图不像</div><div class="kline">怎么找得更快</div><div class="kline">怎么做得更细</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 · E083</div>
+  <h2>误差度量怎么选</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E083 讲平移对齐。</li><li>工具：SSD、SAD、NCC、鲁棒损失。</li><li>NCC 对亮度变化更稳。</li><li>SSD 更适合高斯噪声。</li></ul>
+      <div class="src">依据：原书第 558–562 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个细节</div><div class="kline">偏置与增益：处理亮度差</div><div class="kline">重叠归一化：避免假象</div><div class="kline">误差选错，搜索再快也没用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 · E084</div>
+  <h2>三条加速路线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E084 讲三条加速路线。</li><li>金字塔由粗到细，省搜索次数。</li><li>FFT 与相位相关省卷积。</li><li>泰勒展开做增量细化。</li></ul>
+      <div class="src">依据：原书第 562–570 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">各管一段</div><div class="kline">金字塔：先粗后细</div><div class="kline">FFT：频域找位移</div><div class="kline">增量法：补亚像素精度</div><div class="kline">层数按最大位移选</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 · E085</div>
+  <h2>参数模型与样条</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E085 把平移推广到参数模型。</li><li>模型：相似、仿射、单应。</li><li>还讲雅可比链、Hessian、分块近似。</li><li>样条控制网格用于非刚体。</li></ul>
+      <div class="src">依据：原书第 570–578 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">代价与边界</div><div class="kline">参数少，抗噪更稳</div><div class="kline">非刚体与多运动不够用</div><div class="kline">医学配准常用互信息</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 · E086</div>
+  <h2>KLT 只跟特征点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E086 讲 KLT 跟踪。</li><li>好特征、低 SSD、亮度补偿。</li><li>金字塔处理大位移。</li><li>固定模板与重采样两种做法。</li></ul>
+      <div class="src">依据：原书第 452–455 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">KLT 的边界</div><div class="kline">不估全图，只跟特征点</div><div class="kline">角点两个方向都有梯度</div><div class="kline">跟丢了要重新检测</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 · E087</div>
+  <h2>深度光流学匹配</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E087 讲深度学习光流。</li><li>谱系：DeepFlow、FlowNet、SPyNet。</li><li>之后有 PWC-Net、IRR、RAFT。</li><li>从手工代价体走到全相关体加迭代。</li></ul>
+      <div class="src">依据：原书第 584–586 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">网络学了什么</div><div class="kline">匹配、正则、细化</div><div class="kline">相关体记谁和谁像</div><div class="kline">迭代记上次错在哪</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 · E088</div>
+  <h2>防抖和插帧在改什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E088 把光流用到产品。</li><li>防抖分三阶段。</li><li>帧插值与慢动作。</li><li>边界裁剪、遮挡与可见性都要处理。</li></ul>
+      <div class="src">依据：原书第 573–575、593–594 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三件事</div><div class="kline">防抖：估计、平滑、补偿</div><div class="kline">插帧：运动、遮挡、混合</div><div class="kline">慢动作是时间上的插帧</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 9 章 · E089</div>
+  <h2>上机：把公式变成数字</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>E089 是上机课。</li><li>颜色轮、箭头图、误差图。</li><li>手写 2×2 的 LK。</li><li>孔径、平坦区、大位移用五层金字塔。</li></ul>
+      <div class="src">依据：第 9 章回链（E089）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">上机看什么</div><div class="kline">每个数字为什么是这样</div><div class="kline">矩阵条件数决定可信度</div><div class="kline">先看特征值再决定信不信</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">程序生成图 · 全景流水线</div>
+  <h2>全景流水线六步</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>全景要过六道工序。</li><li>特征、匹配、几何校验。</li><li>估变换、warp、混合。</li><li>每一步都有对应的集。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e090_pipeline.png" style="max-height:500px" alt="第 8 章全景六步：特征、匹配、几何校验、估变换、warp、混合｜程序生成，未用教材或论文原图"><figcaption>第 8 章全景六步：特征、匹配、几何校验、估变换、warp、混合｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">程序生成图 · 运动台阶</div>
+  <h2>运动估计六级台阶</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第一级是平移与 SSD。</li><li>第二级是金字塔、FFT、增量。</li><li>再往上是参数、KLT、深度光流。</li><li>最后是应用与上机。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e090_motion.png" style="max-height:500px" alt="第 9 章运动六级台阶：平移、金字塔、参数、KLT、深度光流、应用与上机｜程序生成，未用教材或论文原图"><figcaption>第 9 章运动六级台阶：平移、金字塔、参数、KLT、深度光流、应用与上机｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一章</div>
+  <h2>两条线合起来看</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 8 章把图摆到一起。</li><li>第 9 章把位移估到像素。</li><li>两条线共用特征、匹配、校验。</li><li>下一章计算摄影接上这些工具。</li></ul>
+      <div class="src">依据：第 8–9 章复盘</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一章</div><div class="kline">曝光、拼接、去噪、重对焦</div><div class="kline">还是同一套对齐与运动</div><div class="kline">下一集见</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十二集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

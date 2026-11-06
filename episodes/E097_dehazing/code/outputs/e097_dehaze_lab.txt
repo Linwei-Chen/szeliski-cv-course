@@ -1,0 +1,20 @@
+[lab] E097 dehaze 开始 2026-11-02T23:31:01
+[lab] 源码 sha256=6bef0b909638f8f00b7c198260d88b9926c5f92af881eb3ebcb75454acbc41a8
+[PASS] 非天空暗通道低值>60%　| 65.7%
+[PASS] 大气光误差<5%　| 1.15%
+[PASS] 透射率相关>0.85　| r=0.871
+[PASS] 恢复提升>5dB　| 20.21 vs 12.05 dB
+[PASS] 深度相关>0.75　| r=0.764
+[PASS] 细化优于原始透射率　| 20.21 vs 18.91 dB
+[PASS] patch 选择影响>1dB　| 1.81 dB
+[PASS] omega=1 过增强　| 19.90 vs 20.21 dB
+[PASS] t0 下限≥0.1　| min=0.10
+[PASS] 白屋顶透射率误差更大　| 0.162 vs 0.073
+[lab] PNG sha256(e097_dehaze.png)=06925a68df67dfd9dc47498933dcb02bb7376339e77479a929529840af8aecab
+[lab] PNG sha256(e097_params.png)=a13b75453b73d602401f5e92480c67e6614ef0aeb3801bcc3703e3c4733646ad
+[lab] PNG sha256(e097_prior.png)=9a7df68e5d208f02210f51c68dfecb1320684edebbe4d1083a6cbfa20bf8cc69
+[lab] readings → e097_dehaze_readings.json
+[lab] readings sha256=a0c222dd9eff9e3534eca0d5fa7aa0596bc276d00fe6e9cd9e8e254b74c9e055
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T23:31:01

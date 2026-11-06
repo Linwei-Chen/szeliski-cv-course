@@ -1,0 +1,32 @@
+{
+ "generated_at": "2026-11-05T21:46:45",
+ "n_pass": 9,
+ "n_total": 9,
+ "src_sha16": "38782150ad091d16",
+ "fig1": {
+  "nodes": 5,
+  "arrows": 4,
+  "gap": 0.145,
+  "tol": 0.012,
+  "min_fs": 10.0,
+  "max_fs": 11.5
+ },
+ "fig2": {
+  "steps": 4,
+  "match": 6,
+  "noise": 12,
+  "tol": 0.012,
+  "min_fs": 10.0,
+  "max_fs": 11.5,
+  "bounds": [
+   2.15,
+   4.6,
+   0.2,
+   3.5
+  ]
+ },
+ "texts": {
+  "collected": 139,
+  "leaked": 0
+ }
+}

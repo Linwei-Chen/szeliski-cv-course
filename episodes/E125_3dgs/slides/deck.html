@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>3D 高斯泼溅：把场景撒成高斯</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 教材与论文</div>
+  <h2>NeRF 之外，还有一条路</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>教材没有 3DGS 正文，只提供 splatting 背景。</li><li>3DGS 主体来自 Kerbl 2023 论文。</li><li>NeRF 每像素查网络，3DGS 直接投影高斯。</li><li>输出是一组可光栅化的高斯参数。</li></ul>
+      <div class="src">依据：原书第 170/829/908 页；论文第 1 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个来源</div><div class="kline">教材：splatting / surfels / 烘焙</div><div class="kline">论文：方法、实验与局限</div><div class="kline">页码分开说，不混用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">表示</div>
+  <h2>每个高斯四个参数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>位置、协方差、不透明度、球谐颜色。</li><li>协方差 3×3 对称，6 个自由参数。</li><li>存缩放向量和四元数，保证半正定。</li><li>各向异性椭球能贴住细长结构。</li></ul>
+      <div class="src">依据：论文第 4 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四个参数</div><div class="kline">位置：在哪</div><div class="kline">协方差：形状与方向</div><div class="kline">不透明度：挡多少光</div><div class="kline">球谐：随视角变色</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">投影</div>
+  <h2>三维椭球压成二维椭圆</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>投影公式：Σ′ = J W Σ Wᵀ Jᵀ。</li><li>J 是投影变换的雅可比。</li><li>实验：长轴 30°、比值 11.1 保持不变。</li><li>投影后只保留 2×2 协方差。</li></ul>
+      <div class="src">依据：论文第 4 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">Σ′ = J W Σ Wᵀ Jᵀ</div><div class="mnote">W：观察变换；J：投影雅可比；Σ：三维协方差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">光栅化</div>
+  <h2>16×16 tile，排序后混合</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>屏幕切成 16×16 的 tile。</li><li>99% 置信区间与视锥裁剪。</li><li>按深度和 tile 排序，前到后混合。</li><li>实验只处理 140/384 个配对，占 36.5%。</li></ul>
+      <div class="src">依据：论文第 6 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">光栅化三步</div><div class="kline">裁剪：只留相关高斯</div><div class="kline">排序：深度 + tile</div><div class="kline">混合：alpha 饱和就停</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 各向异性</div>
+  <h2>方向丢了，细条变圆斑</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>目标：两条各向异性细条。</li><li>换成圆斑后，方向信息丢失。</li><li>MSE：各向异性 0，各向同性 0.0058。</li><li>误差集中在细条边缘和尖端。</li></ul>
+      <div class="src">依据：本集实验（二维玩具）</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e125_anisotropy.png" style="max-height:500px" alt="各向异性 vs 各向同性：方向丢失的误差｜程序生成，未用教材或论文原图"><figcaption>各向异性 vs 各向同性：方向丢失的误差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">密度控制</div>
+  <h2>欠重建克隆，过重建分裂</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从 SfM 稀疏点开始，每 100 步调整。</li><li>欠重建：克隆小高斯。</li><li>过重建：分裂大高斯，尺度除以 1.6。</li><li>透明或过大的高斯裁掉。</li></ul>
+      <div class="src">依据：论文第 5 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">密度控制</div><div class="kline">判断：视空间位置梯度</div><div class="kline">阈值：0.0002</div><div class="kline">克隆增数量，分裂保体积</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 投影与排序</div>
+  <h2>顺序错了，颜色就换位</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>投影保持长轴 30°、比值 11.1。</li><li>正确排序：中心像素误差 0。</li><li>顺序颠倒：整图 MSE 0.0149。</li><li>排序键：深度 + tile 编号。</li></ul>
+      <div class="src">依据：论文第 6 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e125_projection.png" style="max-height:500px" alt="3D 投影与深度排序：椭圆和 alpha 误差｜程序生成，未用教材或论文原图"><figcaption>3D 投影与深度排序：椭圆和 alpha 误差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">优化</div>
+  <h2>渲染损失直接反传</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>损失：L1 + D-SSIM，λ = 0.2。</li><li>不透明度用 sigmoid，尺度用 exp。</li><li>位置、协方差、球谐、不透明度一起优化。</li><li>渲染损失直接反传到每个高斯。</li></ul>
+      <div class="src">依据：论文第 4/5 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">训练设置</div><div class="kline">优化器：SGD</div><div class="kline">实现：自定义 CUDA 核</div><div class="kline">训练完直接得到高斯集合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 密度控制</div>
+  <h2>一个大高斯盖不住两个目标</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一个大高斯盖两个目标，MSE 0.0030。</li><li>克隆成两个小高斯，MSE 0。</li><li>欠重建处增数量，过重建处分裂。</li><li>密度控制在训练中反复进行。</li></ul>
+      <div class="src">依据：本集实验；论文第 5 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e125_density.png" style="max-height:500px" alt="密度控制：一个大高斯 vs 两个克隆｜程序生成，未用教材或论文原图"><figcaption>密度控制：一个大高斯 vs 两个克隆｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">结果</div>
+  <h2>1080p 实时新视角合成</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>1080p 下达到 30 帧以上。</li><li>论文图 1：135 帧和 93 帧。</li><li>训练 6 分钟和 51 分钟。</li><li>质量对标 Mip-NeRF360。</li></ul>
+      <div class="src">依据：论文第 1 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">数字的边界</div><div class="kline">论文的 GPU 与数据集</div><div class="kline">不是本实验实测</div><div class="kline">帧率随场景变化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">局限</div>
+  <h2>快，但并非万能</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>未观测区域出现伪影。</li><li>高斯拉长成斑块，大高斯会 popping。</li><li>全局排序在切换时是近似的。</li><li>书上第 170 页：splatting 有混叠、裂缝、空洞。</li></ul>
+      <div class="src">依据：论文第 10 页；原书第 170 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">适合与不适合</div><div class="kline">适合：视角覆盖足够的静态场景</div><div class="kline">不擅长：无观测区域、复杂反射</div><div class="kline">不直接输出表面网格</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>表示、速度、细节</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>表示：场景长什么样。</li><li>投影与光栅化：怎么画得快。</li><li>密度控制：细节够不够。</li><li>下一集：评测与基准。</li></ul>
+      <div class="src">依据：论文第 1/4/5/6/10 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条线</div><div class="kline">NeRF：连续、紧凑</div><div class="kline">3DGS：显式、快、吃显存</div><div class="kline">评测：质量 + 帧率 + 显存</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十七集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

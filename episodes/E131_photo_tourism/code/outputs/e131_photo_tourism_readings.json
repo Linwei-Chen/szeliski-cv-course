@@ -1,0 +1,92 @@
+{
+ "n_pass": 11,
+ "n_total": 11,
+ "image": [
+  240,
+  180
+ ],
+ "n_views": 15,
+ "camera_x": [
+  -1.0,
+  -0.5,
+  0.0,
+  0.5,
+  1.0
+ ],
+ "camera_y": [
+  -0.5,
+  0.0,
+  0.5
+ ],
+ "dx_bg": -20.0,
+ "dx_fg": -60.0,
+ "ghost_shift_px": 40.0,
+ "psnr_planar": 17.05088245710981,
+ "psnr_bg_plane": 45.0,
+ "fg_mse_planar": 0.07331686904761904,
+ "ghost_pixels": 4480,
+ "path": [
+  [
+   0,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   2
+  ]
+ ],
+ "path_steps": 6,
+ "max_step": 0.5,
+ "dense_max": 0.34911823207199555,
+ "dense_mean": 0.1905853347211351,
+ "sparse_max": 1.0701285769311004,
+ "sparse_mean": 0.5920078171096496,
+ "coverage_gain": 3.0652325734464,
+ "protocol": {
+  "synthetic": true,
+  "sfm": false,
+  "images": [
+   240,
+   180
+  ],
+  "n_views": 15,
+  "scene": "fronto-parallel facade Z=6 + foreground post Z=2",
+  "proxy": "dominant background plane (translation-only homography)",
+  "graph": "4-neighbor 5×3 camera grid",
+  "full_photo_tourism": false
+ },
+ "fig_sizes": {
+  "graph": [
+   13.2,
+   5.4
+  ],
+  "proxy": [
+   13.0,
+   4.6
+  ],
+  "path": [
+   13.0,
+   4.8
+  ]
+ }
+}

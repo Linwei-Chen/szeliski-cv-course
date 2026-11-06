@@ -1,0 +1,84 @@
+{
+ "e0_he_init": {
+  "he_ratios": [
+   1.002698,
+   1.024837,
+   0.929154,
+   0.817223,
+   0.859884
+  ],
+  "glorot_ratios": [
+   0.501086,
+   0.239626,
+   0.126306,
+   0.060122,
+   0.029358
+  ],
+  "he_final": 0.859884,
+  "glorot_final": 0.029358,
+  "n_layer": 5,
+  "n_unit": 256,
+  "n_sample": 4000,
+  "seed": 2042
+ },
+ "e1_lr": {
+  "slow": {
+   "alpha": 0.1,
+   "err60": 0.005391031
+  },
+  "best": {
+   "alpha": 1.0,
+   "w1": 3.0,
+   "err1": 0.0
+  },
+  "div": {
+   "alpha": 2.2,
+   "err20": 115.0128
+  },
+  "n_steps": 60,
+  "w0": 0.0,
+  "w_star": 3.0
+ },
+ "e2_momentum": {
+  "w1_sgd_400": 15.008221,
+  "w1_mom_400": 0.006500677,
+  "w2_mom_residual": 9.2e-09,
+  "w2_envelope_theory": 0.948683,
+  "alpha": 0.05,
+  "rho": 0.9,
+  "steps": 400,
+  "w0": [
+   30.0,
+   1.0
+  ],
+  "terrain": "L=0.0173·w1²+1.0·w2²（程序生成教学地形，非原书）"
+ },
+ "e2b_iir": {
+  "steady_displacement": 1.5,
+  "steady_theory": 1.5,
+  "bare_displacement": 0.15,
+  "ratio": 10.0,
+  "theory_ratio": 10.0,
+  "g": -3.0,
+  "alpha": 0.05,
+  "rho": 0.9,
+  "steps": 400
+ },
+ "e10_homework": {
+  "hand_answer": 2.0,
+  "iir_measured": 2.0,
+  "params": {
+   "g": -2.0,
+   "alpha": 0.1,
+   "rho": 0.9
+  }
+ },
+ "fig1": {
+  "text_objects": 12,
+  "invisible_objects": 150,
+  "mark_hits": 0,
+  "png": "e045_fig1_optim_compare.png"
+ },
+ "n_pass": 12,
+ "n_total": 12
+}

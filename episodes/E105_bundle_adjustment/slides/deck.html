@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>束调整：把整张网一起拉直</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">联合优化</div>
+  <h2>束调整：一起优化所有相机和点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>重投影误差做鲁棒非线性最小化。</li><li>bundle 是射向三维点的一束光线。</li><li>所有观测的误差一起算。</li><li>输出所有相机和点的联合最优。</li></ul>
+      <div class="src">依据：原书第 717 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个词</div><div class="kline">bundle：光线束</div><div class="kline">adjustment：反复调整</div><div class="kline">来自摄影测量</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">一次迭代</div>
+  <h2>一次迭代分五步</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>用当前参数预测每个点的像素。</li><li>算残差，按协方差和鲁棒核加权。</li><li>对相机和点求雅可比，拼 H 和 b。</li><li>解线性系统，更新全部参数。</li></ul>
+      <div class="src">依据：原书第 718 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e105_pipeline.png" style="max-height:500px" alt="束调整五步：预测→残差→雅可比→Schur→更新｜程序生成，未用教材或论文原图"><figcaption>束调整五步：预测→残差→雅可比→Schur→更新｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">观测方程</div>
+  <h2>点和相机都在未知量里</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>xij 依赖点 i、相机 j 和内参。</li><li>残差是观测减预测。</li><li>Σij 的逆给残差加权。</li><li>鲁棒核在优化中持续降权。</li></ul>
+      <div class="src">依据：原书第 718 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">xij = f(pi, Rj, cj, Kj)</div><div class="mnote">pi 点；Rj 旋转；cj 相机中心；Kj 内参</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">多相机</div>
+  <h2>相机 rig：共享全局参数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>多个相机固定在同一个 rig 上。</li><li>rig 相对世界还有位姿。</li><li>轨迹、rig 标定和结构一起估。</li><li>内参、时间同步也能共享。</li></ul>
+      <div class="src">依据：原书第 719 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">可以放进优化的参数</div><div class="kline">内参 K</div><div class="kline">rig 外参</div><div class="kline">时间同步误差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">稀疏结构</div>
+  <h2>稀疏来自二部图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个特征只连一个点和一个相机。</li><li>点块是块对角，只和自己耦合。</li><li>Hessian 非零率只有 24.9%。</li><li>稀疏是问题本身的结构。</li></ul>
+      <div class="src">依据：原书第 720 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">排序可以换</div><div class="kline">相机少：点在前</div><div class="kline">点少帧多：相机在前</div><div class="kline">真实数据更稀疏</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">消元</div>
+  <h2>Schur 补：先解相机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Hpp 是点块，Hcc 是相机块。</li><li>消掉点，得到相机系统 S。</li><li>先解相机，再回代每个点。</li><li>实验里相机块 180 变 900 非零。</li></ul>
+      <div class="src">依据：原书第 721 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">S = Hcc − Hpcᵀ Hpp⁻¹ Hpc</div><div class="mnote">全局参数排最后，减少填充；点用齐次坐标</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 收敛</div>
+  <h2>干净数据：误差降到噪声地板</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>6 相机、40 点、167 个观测。</li><li>147 个未知量一起优化。</li><li>RMS 从 42.7 降到 1.02 像素。</li><li>代价 155766 降到 95，100 次迭代。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">规范自由度 7 维</div><div class="kline">平移 3 + 旋转 3 + 尺度 1</div><div class="kline">固定 1 相机 + 1 点</div><div class="kline">多出的 2 个约束不影响解</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 稀疏</div>
+  <h2>稀疏与 Schur 补的代价</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>H 是 147×147，非零率 24.9%。</li><li>相机块 180 个非零，补后 900 个。</li><li>稠密解和 Schur 解最大差 2.2e-14。</li><li>相机远少于点时，Schur 更省。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e105_sparsity.png" style="max-height:500px" alt="H 147×147 非零率 24.9%；相机块 180→900 非零｜程序生成，未用教材或论文原图"><figcaption>H 147×147 非零率 24.9%；相机块 180→900 非零｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 鲁棒</div>
+  <h2>25% 外点：鲁棒核压住影响</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>外点占 25%，偏移 80 像素。</li><li>普通 BA 内点 RMS 25.93 像素。</li><li>Huber 核降到 10.60 像素。</li><li>阈值 4 像素，噪声标准差 1 像素。</li></ul>
+      <div class="src">依据：原书第 718 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e105_cost.png" style="max-height:500px" alt="25% 外点：普通 BA 25.93 px，鲁棒核 10.60 px｜程序生成，未用教材或论文原图"><figcaption>25% 外点：普通 BA 25.93 px，鲁棒核 10.60 px｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失败边界</div>
+  <h2>初值、规范与规模</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>初值太远，会掉进局部极小。</li><li>规范没固定，H 会奇异。</li><li>外点不处理，结果被拉歪。</li><li>点太少或纯旋转，几何退化。</li></ul>
+      <div class="src">依据：原书第 721–722 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">大规模的做法</div><div class="kline">增量 / 固定窗口 / 关键帧</div><div class="kline">VSDF；L∞ + 二阶锥规划</div><div class="kline">Ceres、OpenSfM 等开源包</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程落地</div>
+  <h2>落地：五步检查</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>固定规范，至少锁一个相机。</li><li>点在前、相机在后，用 Schur 解。</li><li>协方差加鲁棒核，先 RANSAC 粗筛。</li><li>留验证集，看 RMS 和深度符号。</li></ul>
+      <div class="src">依据：原书第 722 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">初始化要保守</div><div class="kline">先小规模验证</div><div class="kline">再逐步加相机和点</div><div class="kline">监控代价是否单调下降</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>联合、稀疏、鲁棒</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>束调整联合最小化重投影误差。</li><li>二部图给出稀疏，Schur 拆出小系统。</li><li>鲁棒核和好初值决定能否收敛。</li><li>下一集：增量式 SFM。</li></ul>
+      <div class="src">依据：原书第 717–722 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">本集：所有相机和点一起优化</div><div class="kline">下一集：一台台加相机</div><div class="kline">每一步都要能回退</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十七集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

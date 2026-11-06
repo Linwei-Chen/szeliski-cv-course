@@ -1,0 +1,21 @@
+[lab] 开始 2026-11-01T22:45:43
+[lab] 源码 sha256=07ae23bc6de1a1a961583a9e3b443ccd7b9b4a02b8dc879dace26d5633bc8848
+[PASS] 图1 五数据集名与规模读数在档（锚 §8–§11/Table 6.1 直证）　| 5 个数据集名+5 条规模读数全命中，条形 5 条（对数刻度，最长 2.52 单位）
+[PASS] 图1 PIE 三因素词在档　| 姿态、光照、表情 三词全命中
+[PASS] 图2 四通道词在档（口播 f008 词面）　| 平均形状/形变×2/平均纹理/外观参数 全命中
+[PASS] 图3 五角度词在档（口播 f013 词面）　| 单位圆/角度距离/角度间隔/同一身份/不同身份 全命中
+[PASS] 图3 三条射线抵达单位圆（数据坐标自证）　| 实线 2 条+虚线 1 条，端点半径与 1.25 差 ≤0.012
+[PASS] 箭头/汇流几何自证　| 图2 形变与汇流箭头 4 条，端点贴框缘/图元（容差申报）
+[PASS] 主文本字号≥10pt+程序生成注记在档×3　| 图1 最小 12.0pt/图2 最小 12.0pt/图3 最小 12.0pt（最小 12.0pt 档）
+[PASS] 图内文字内部记号零泄漏（红线 5——E044–E058 同款收割断言）　| 图内 Text 收割 37 条，命中 无
+[PASS] FG1 程序生成图落盘　| e059_pie_datasets.png 已落盘（sha 自证见 [lab] PNG 行）
+[PASS] FG2 程序生成图落盘　| e059_aam_shape_texture.png 已落盘（sha 自证见 [lab] PNG 行）
+[PASS] FG3 程序生成图落盘　| e059_arcface_margin.png 已落盘（sha 自证见 [lab] PNG 行）
+[lab] readings → e059_face_recognition_readings.json
+[lab] readings sha256=09ef086c673e23e98d5000b02870431cd162151300f32a67464c586cbb16202b
+[lab] PNG sha256(e059_aam_shape_texture.png)=2827b6007179a70ea3ab5ce2f267eecbdafb714f501381eae8e3ee0c97d1702e
+[lab] PNG sha256(e059_arcface_margin.png)=a418848f9fd8cbc059f981d5f8830be9e7a439aa3fa7025dce5cdc0079cc30a6
+[lab] PNG sha256(e059_pie_datasets.png)=53d64f4eb34f3a9c24dd11006a89f58acf691b917abf527159a1e046331c9fdb
+[lab] LEDGER：断言 11 条，PASS 11
+[lab] 汇总 PASS 11 / FAIL 0 / 共 11
+[lab] 结束 2026-11-01T22:45:44

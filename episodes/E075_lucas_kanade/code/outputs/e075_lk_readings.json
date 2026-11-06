@@ -1,0 +1,26 @@
+{
+ "translation": [
+  0.41999999999999993,
+  -0.22999999999999998
+ ],
+ "delta": [
+  0.42,
+  -0.23
+ ],
+ "affine_error": 5.551115123125783e-16,
+ "weighted_error": 0.014174681807453047,
+ "unweighted_error": 0.650854139658888,
+ "rotation_deg": 20.0,
+ "rotation_error_deg": 0.0,
+ "rotation_iters": 4,
+ "lk_small": 0.15000000000000002,
+ "lk_large": -0.006448352942958734,
+ "lk_small_error": 2.7755575615628914e-17,
+ "lk_large_error": 0.8064483529429588,
+ "pyramid_large": 0.7999993500670578,
+ "pyramid_error": 6.499329422426925e-07,
+ "lm_step0": 0.41999999999999993,
+ "lm_step1": 0.20999999999999996,
+ "n_pass": 10,
+ "n_total": 10
+}

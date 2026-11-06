@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>生成模型的 IBR：可控新视角生成的当代狂想</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 神经渲染</div>
+  <h2>照片不够，能生成新视角吗</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>前面几集假设已有照片和几何。</li><li>这一集问：没拍到的视角能生成吗。</li><li>网络参与建模和观看，不只做后处理。</li><li>本集用合成场景演示，不训练大模型。</li></ul>
+      <div class="src">依据：原书第 899–905 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个条件</div><div class="kline">数据多</div><div class="kline">算力强</div><div class="kline">可微渲染把图形学和网络接上</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 建模与观看</div>
+  <h2>网络插在哪两步</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>建模：场景怎么存。</li><li>观看：新视角怎么画。</li><li>过去靠几何和图像处理。</li><li>现在两步都能让网络学。</li></ul>
+      <div class="src">依据：原书第 899 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一条管线</div><div class="kline">前端：图像变特征</div><div class="kline">中间：学混合权重</div><div class="kline">后端：补洞、去噪、提分辨率</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 任务版图</div>
+  <h2>六类任务，一张版图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>语义照片合成、新视角合成。</li><li>自由视点视频、重打光。</li><li>人脸重演、人体重演。</li><li>都在划分用户控制和网络生成。</li></ul>
+      <div class="src">依据：原书第 900 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三组</div><div class="kline">改内容：语义照片、重打光</div><div class="kline">改视角：新视角、自由视点</div><div class="kline">改人：人脸、人体</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 3D 表示</div>
+  <h2>四种表示，四个抽屉</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>纹理网格：三角面加纹理。</li><li>深度图与层：一层层前后关系。</li><li>体素网格：把空间切成小方块。</li><li>隐函数：用一个连续函数表示。</li></ul>
+      <div class="src">依据：原书第 900 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">渲染方式</div><div class="kline">网格：光栅化</div><div class="kline">深度层：warp 与合成</div><div class="kline">体素：ray marching</div><div class="kline">隐函数：逐点查询</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 四种表示</div>
+  <h2>看图：表示决定渲染</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>四条路线：网格、深度层、体素、隐式 MLP。</li><li>每条路线标了代表方法和渲染动作。</li><li>共同点：可存的表示、可微渲染、学习模块。</li><li>看到新系统先问：场景存在哪，图怎么画。</li></ul>
+      <div class="src">依据：原书第 900 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e132_taxonomy.png" style="max-height:500px" alt="四种 3D 表示与四条神经渲染路线｜程序生成，未用教材或论文原图"><figcaption>四种 3D 表示与四条神经渲染路线｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 混合与神经编码</div>
+  <h2>先 warp 图像，还是先 warp 特征</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>deep blending：学逐像素混合权重。</li><li>LookinGood：U-Net 给纹理网格渲染补洞。</li><li>Free View Synthesis：源图编码成 neural codes。</li><li>Deferred Neural Rendering：学 neural texture map。</li></ul>
+      <div class="src">依据：原书第 902 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两组做法</div><div class="kline">先 warp 彩色图，再让网络修</div><div class="kline">先把图变成特征，再 warp 特征</div><div class="kline">一个修结果，一个改中间表示</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 多视图混合</div>
+  <h2>看图：一张有洞，三张互补</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>单图 warp 留下 1,764 个洞。</li><li>三张源图等权平均把洞补到 0。</li><li>单图有效区 PSNR 30.29 分贝。</li><li>三视图 PSNR 33.39 分贝，高 7.70 分贝。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e132_blend.png" style="max-height:500px" alt="单图 warp / 三视图平均 / 目标，洞 1764px｜程序生成，未用教材或论文原图"><figcaption>单图 warp / 三视图平均 / 目标，洞 1764px｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 深度图与层</div>
+  <h2>层与 billboard：把深度做聪明</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Meshry：每幅图加深度图算外观向量。</li><li>Li 等：MPI 多层平面，AdaIN 调外观。</li><li>GeLaTO：少量定向 billboard 加神经纹理。</li><li>SynSin：单图生成特征 F 和深度 D。</li></ul>
+      <div class="src">依据：原书第 902–903 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">代价</div><div class="kline">保留图像式渲染的效率</div><div class="kline">层数、深度质量、透明边界都难</div><div class="kline">Semantic View Synthesis 从语义图建 MPI</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 传统补洞</div>
+  <h2>看图：补洞能填满，不等于还原</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最近邻填补 PSNR 25.69 分贝。</li><li>经典扩散填补 27.05 分贝，高 1.36 分贝。</li><li>两个方法都把 1,764 个洞填满。</li><li>条纹被拉成台阶或糊开，结构没回来。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e132_fill.png" style="max-height:500px" alt="最近邻 / 扩散填补，PSNR 25.69 vs 27.05｜程序生成，未用教材或论文原图"><figcaption>最近邻 / 扩散填补，PSNR 25.69 vs 27.05｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 体素与隐式</div>
+  <h2>体素、隐式、邻图查询</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>DeepVoxels：为物体学三维神经编码。</li><li>Neural Volumes：多视图变三维 RGBα 体积。</li><li>隐函数常用坐标 MLP 实现。</li><li>IBRNet：从邻近输入图采样神经特征。</li></ul>
+      <div class="src">依据：原书第 903–905 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三条路线</div><div class="kline">体素：把空间切成格子</div><div class="kline">隐式：把空间写成函数</div><div class="kline">IBRNet：把邻近照片当查询库</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 14 章 · 能力与边界</div>
+  <h2>可控，但不等于可靠</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视角、外观、表情、人体动作可控。</li><li>数据没覆盖的角度会编。</li><li>遮挡严重的区域会糊。</li><li>人脸和人体要防身份漂移。</li></ul>
+      <div class="src">依据：原书第 899–905 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">该问什么</div><div class="kline">输入几张图、要不要深度</div><div class="kline">能不能实时</div><div class="kline">换视角会不会闪、换外观会不会改身份</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>总结：四个抽屉，三类控制</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>神经渲染把网络放进建模和观看两端。</li><li>六类任务、四种表示。</li><li>方法在学混合、学补洞、学特征、学体积。</li><li>下一集：空间计算、VR 与 AI 视频。</li></ul>
+      <div class="src">依据：原书第 899–905 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个问题</div><div class="kline">场景存在哪</div><div class="kline">图怎么画</div><div class="kline">网络学什么</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十四集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

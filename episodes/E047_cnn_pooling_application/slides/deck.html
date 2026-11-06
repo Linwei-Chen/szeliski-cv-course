@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>打开 CNN 的脑壳：感受野、池化与特征图演化</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 5 章 · 池化与上池化</div>
+  <h2>卷积之后，特征图怎么变小</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>卷积负责提取特征。</li><li>池化把特征图变小，让网络看得更整。</li><li>门控卷积的遮罩由上一层自己学。</li><li>本集范围：池化、上池化、数字分类。</li></ul>
+      <div class="src">依据：原书第 295–299 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集路线</div><div class="kline">池化两件套</div><div class="kline">最大池化反传的开关</div><div class="kline">转置卷积与 U 形网络</div><div class="kline">LeNet-5 的银行应用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十九集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">平均与最大 · 原书第 295 页</div>
+  <h2>池化两件套：平均与最大</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平均池化：窗口权重相同、加起来等于一。</li><li>窗口跳两步，特征图边长缩一半。</li><li>最大池化：取方形窗口里的最大响应。</li><li>常见 stride 2、2×2 不重叠或 3×3 重叠。</li></ul>
+      <div class="src">依据：原书第 295 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e047_fig1_pooling_diagram.png" style="max-height:500px" alt="max pooling：4×4 输入、2×2 窗口、胜者位红框｜程序生成，未用教材或论文原图"><figcaption>max pooling：4×4 输入、2×2 窗口、胜者位红框｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十九集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">逻辑或 · 原书第 295 页</div>
+  <h2>最大池化的两张脸</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>池化区域里一个单元点亮，输出就点亮。</li><li>这被想成一种逻辑或。</li><li>也被认为带来一些平移不变性。</li><li>多数网络没那么不变，性能会受损。</li></ul>
+      <div class="src">依据：原书第 295 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">提醒</div><div class="kline">Zhang 2019 讨论了这个问题</div><div class="kline">还给出简单的缓解建议</div><div class="kline">位置信息本身可能也是特征</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十九集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">反传 switch · 原书第 295 页</div>
+  <h2>反传时那把开关</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最大池化把某个输入单元转接到输出。</li><li>反传只把误差和导数给响应最大的单元。</li><li>前提是记住了当时哪个单元最大。</li><li>所以要额外记一张胜者位置表。</li></ul>
+      <div class="src">依据：原书第 295 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">上池化</div><div class="kline">最大上池化可近似逆转最大池化</div><div class="kline">可搭反卷积网络找最强刺激</div><div class="kline">Zeiler 和 Fergus 2014 年的工作</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十九集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Lp 谱系 · 原书第 295 页</div>
+  <h2>从平均到最大：Lp 家族</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Lp 范数池化，p 推到无穷大就是取最大。</li><li>计算量更大，实践中用得不多。</li><li>偶尔用在最后一层：GeM 或 DAME。</li><li>步长卷积替代最大池化也有竞争力。</li></ul>
+      <div class="src">依据：原书第 295 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">趋势</div><div class="kline">新架构不再单设池化层</div><div class="kline">步长二卷积既降分辨率又学权重</div><div class="kline">最大池化仍是原生场景的默认值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十九集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">转置卷积 · U-Net · 原书第 296–298 页</div>
+  <h2>把图变大再组回去</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>转置卷积：先插全零行零列，再跑普通卷积。</li><li>步长在这里指定放大倍数。</li><li>降采样加升采样，能做多分辨率任务。</li><li>瓶颈之后，U-Net 用跳跃连接接回细节。</li></ul>
+      <div class="src">依据：原书第 296–298 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">多分辨率任务</div><div class="kline">像素级语义标注</div><div class="kline">图像去噪与超分辨率</div><div class="kline">单目深度推断、神经风格迁移</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十九集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">主干网络 · 原书第 298 页</div>
+  <h2>主干网络的更多用途</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>去噪超分、单目深度、风格迁移还会见到。</li><li>输入输出都是图的任务，几乎都靠它打底。</li><li>压下去提语义，放大来回细节。</li></ul>
+      <div class="src">依据：原书第 298 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">关键词</div><div class="kline">瓶颈：中间最细</div><div class="kline">跳跃连接：细节抄近路</div><div class="kline">U 形结构反复出现</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十九集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">LeNet-5 应用史 · 原书第 298–299 页</div>
+  <h2>第一代商业卷积网络</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>LeNet-5 是勒昆等人 1998 年的系统。</li><li>用 sigmoid、平均池化、高斯 RBF 输出。</li><li>1995 年前后由 AT&T 部署读支票。</li><li>一度处理全美 10% 到 20% 的支票。</li></ul>
+      <div class="src">依据：原书第 298–299 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三件事</div><div class="kline">比 AlexNet 早十七年</div><div class="kline">当年首选是平均池化</div><div class="kline">真在银行系统里跑生产</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十九集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">资源·作业·下一集 · 原书第 299 页</div>
+  <h2>资源、作业与下一站</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>LeNet-5 变体仍是教程里的第一个 CNN。</li><li>MNIST 之外，常用 CIFAR-10 或 Fashion MNIST。</li><li>卡帕西的浏览器演示可以在网页里跑。</li><li>作业：4×4 输入、2×2 窗口、步长 2，输出几乘几。</li></ul>
+      <div class="src">依据：原书第 299 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">AlexNet、VGG</div><div class="kline">GoogLeNet、ResNet</div><div class="kline">错误率从四分之一掉到百分之三点几</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十九集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

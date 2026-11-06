@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>Lucas-Kanade：用梯度猜位移，迭代逼近就够</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 · 两条求解路线</div>
+  <h2>从怎么动到怎么解</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集讲五种变换，只说允许怎么动。</li><li>这一集回答：参数怎么从数据里求。</li><li>一条路：先找匹配点，再做最小二乘。</li><li>另一条路：直接用像素梯度猜位移。</li></ul>
+      <div class="src">依据：本集课程编排；原书第 504–509 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">匹配点：最小二乘</div><div class="kline">像素梯度：Lucas-Kanade</div><div class="kline">同一个残差，两种算法</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">最小二乘 · 残差</div>
+  <h2>最小二乘：让残差平方和最小</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>有一组匹配点和一个参数化变换。</li><li>预测位置减实测位置，得到残差。</li><li>所有残差平方加起来，让总和最小。</li><li>平方让正负不抵消，大误差受重罚。</li></ul>
+      <div class="src">依据：原书第 504 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么平方</div><div class="kline">正负不抵消</div><div class="kline">大误差受重罚</div><div class="kline">目标函数可导</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">最小二乘 · 线性模型</div>
+  <h2>线性模型：一次矩阵求解</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平移、相似、仿射，运动量与参数线性相关。</li><li>位移写成雅可比矩阵乘参数。</li><li>最小二乘变成线性回归。</li><li>求导令其为零，得到正规方程。</li></ul>
+      <div class="src">依据：原书第 505 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">Δx = J p</div><div class="mnote">J 的每一列：这个参数动一点，像素往哪走</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">最小二乘 · 纯平移</div>
+  <h2>纯平移：答案就是平均位移</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>纯平移的解等于所有对应点位移的平均。</li><li>也等于两组点的质心之差。</li><li>平移对所有点一视同仁，只能取平均。</li><li>实验读数：横移 0.42，竖移 −0.23。</li></ul>
+      <div class="src">依据：原书第 505 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e075_translation_ls.png" style="max-height:500px" alt="纯平移最小二乘：平均位移 = 质心差｜程序生成，未用教材或论文原图"><figcaption>纯平移最小二乘：平均位移 = 质心差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">最小二乘 · 加权</div>
+  <h2>加权：谁可靠，谁多说话</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>不是所有匹配都一样可靠。</li><li>纹理丰富的点定位准，平坦区会飘。</li><li>每个点给方差估计，方差大权重小。</li><li>加权误差 0.0142，未加权 0.651。</li></ul>
+      <div class="src">依据：原书第 505 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">权重从哪来</div><div class="kline">匹配的不确定度</div><div class="kline">权重矩阵是对角阵</div><div class="kline">角点权重高，平坦区低</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">非线性 · 旋转</div>
+  <h2>一有旋转，方程就非线性</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>欧氏变换的雅可比含旋转角的正弦余弦。</li><li>它依赖当前参数值，方程不再线性。</li><li>判断办法：雅可比里有没有当前未知量。</li><li>有，就得迭代；每次都要重算雅可比。</li></ul>
+      <div class="src">依据：原书第 507 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">线性与非线性</div><div class="kline">线性：一次解完</div><div class="kline">非线性：一步步逼近</div><div class="kline">初值决定能不能收敛</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">迭代 · 高斯-牛顿</div>
+  <h2>迭代：在当前位置线性化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>在当前参数附近做一阶展开。</li><li>把非线性问题近似成关于增量的问题。</li><li>解出增量，更新参数，再展开一次。</li><li>这就是高斯-牛顿，也是 LK 的迭代框架。</li></ul>
+      <div class="src">依据：原书第 507 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">每一步</div><div class="kline">解一个线性方程</div><div class="kline">走一小步</div><div class="kline">残差不再下降就停</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">正规方程 · LM</div>
+  <h2>正规方程与阻尼</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>矩阵是雅可比的转置乘雅可比。</li><li>右端是雅可比乘残差。</li><li>对角线上加一点 λ，步子就会缩短。</li><li>λ 大稳但慢，λ 小快但可能冲过头。</li></ul>
+      <div class="src">依据：原书第 508 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">(JᵀJ + λI) Δp = Jᵀ r</div><div class="mnote">λ：阻尼项；实际实现常用自适应 λ</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三乘三 · 初值</div>
+  <h2>三乘三：平移加旋转</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>未知量是横移、竖移、转角三个增量。</li><li>每一步解一个三乘三的方程。</li><li>初值：先拟合四参数相似变换，再取角度。</li><li>或用质心估平移，用极坐标估旋转。</li></ul>
+      <div class="src">依据：原书第 508 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">代价在哪</div><div class="kline">三乘三很小</div><div class="kline">贵在每次迭代重采样图像</div><div class="kline">初值越近越稳</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">单应 · 八参数</div>
+  <h2>单应：八参数的雅可比</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>单应雅可比的每一行都带当前预测坐标。</li><li>分母 D 也随参数变。</li><li>八个未知量，尺度可以固定一个。</li><li>套路一样：线性化、解增量、更新。</li></ul>
+      <div class="src">依据：原书第 508–509 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">怎么参数化</div><div class="kline">自由度怎么数</div><div class="kline">初值怎么给</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Lucas-Kanade · 迭代管线</div>
+  <h2>Lucas-Kanade：让像素自己说话</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>拿一张模板和一张目标图。</li><li>在当前位移处搬模板，减出残差。</li><li>用模板梯度构造方程，解位移增量。</li><li>更新后再来一遍，直到收敛。</li></ul>
+      <div class="src">依据：原书第 507–508 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e075_lk_pipeline.png" style="max-height:500px" alt="Lucas-Kanade 迭代管线：模板、梯度、更新｜程序生成，未用教材或论文原图"><figcaption>Lucas-Kanade 迭代管线：模板、梯度、更新｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">大位移 · 多尺度</div>
+  <h2>大位移：先粗后细</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>位移小，几步就收敛。</li><li>位移大，一阶近似失效，直接 LK 卡住。</li><li>实验：0.8 的位移，直接 LK 误差 0.806。</li><li>多尺度之后，误差几乎为零。</li></ul>
+      <div class="src">依据：本集实验；原书第 507–508 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e075_lk_convergence.png" style="max-height:500px" alt="收敛与初值：小位移收敛 / 大位移卡住 / 多尺度救回｜程序生成，未用教材或论文原图"><figcaption>收敛与初值：小位移收敛 / 大位移卡住 / 多尺度救回｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">两个坑 · 孔径与纹理</div>
+  <h2>两个坑：孔径与纹理</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>窗口里只有一条边，梯度都朝一个方向。</li><li>沿边方向的位移说不清，方程病态。</li><li>平坦区域梯度接近零，矩阵几乎奇异。</li><li>条件数比残差更早报警。</li></ul>
+      <div class="src">依据：本集归纳；回链原书第 507–508 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么办</div><div class="kline">选有角点、有纹理的窗口</div><div class="kline">加正则、加阻尼</div><div class="kline">孔径问题是信息不足</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">外点 · 鲁棒</div>
+  <h2>外点：先保命，再求精</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平方会放大外点的误差。</li><li>一个外点就能带偏整组解。</li><li>鲁棒损失把大残差的权重降下来。</li><li>RANSAC：先随机采样找一致集，再最小二乘。</li></ul>
+      <div class="src">依据：原书 §8.1.4 过渡；本集归纳</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">顺序</div><div class="kline">先保命</div><div class="kline">再求精</div><div class="kline">外点太多先降采样或分割</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 十项读数</div>
+  <h2>实验：十项都对上了</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平移 0.42、−0.23；仿射误差 5.55e-16。</li><li>加权 0.0142，未加权 0.651。</li><li>旋转 20°，4 步收敛；小位移 LK 误差近零。</li><li>大位移误差 0.806，多尺度救回；LM 0.42→0.21。</li></ul>
+      <div class="src">依据：本集实验读数</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">数字都有存证</div><div class="kline">10 项断言全 PASS</div><div class="kline">换图换初值可重跑</div><div class="kline">对不上先查初值和权重</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>能线性的，一次解完</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>能线性的，一次最小二乘。</li><li>不能线性的，线性化后迭代。</li><li>外点用鲁棒或 RANSAC。</li><li>大位移用多尺度；下一集讲单应。</li></ul>
+      <div class="src">依据：本集总结；移交 E076</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一组工具</div><div class="kline">线性解 / 迭代 / 加权</div><div class="kline">多尺度 / 鲁棒</div><div class="kline">下一集：单应参数化</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十七集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>平移对齐与 SSD：一个小窗口里的大思想（含孔径问题）</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 从运动到对齐</div>
+  <h2>把运动变成一个函数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集说运动很难，这一集先算平移对齐。</li><li>只让模板在候选图里挪，找最像的位置。</li><li>主角是平方差之和（SSD）。</li><li>三个补丁：鲁棒损失、曝光建模、归一化。</li></ul>
+      <div class="src">依据：原书第 558–562 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先收窄</div><div class="kline">只允许平移</div><div class="kline">模板在候选图里挪</div><div class="kline">找误差最小的位置</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">定义 · 原书第 558 页</div>
+  <h2>SSD：逐像素平方求和</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平移是最简单的对齐方式。</li><li>最小二乘就是让 SSD 最小。</li><li>模板与候选窗口相减、平方、求和。</li><li>模板大小、搜索范围、插值先固定。</li></ul>
+      <div class="src">依据：原书第 558 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个要先定</div><div class="kline">模板开多大</div><div class="kline">搜索范围多远</div><div class="kline">用哪种插值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">假设 · 原书第 558 页</div>
+  <h2>亮度不变是工作假设</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对应像素值保持不变，叫亮度不变。</li><li>灯光、自动曝光、反光都会破坏它。</li><li>残差不为零，最小二乘会被带偏。</li><li>鲁棒损失和曝光建模都在补这个洞。</li></ul>
+      <div class="src">依据：原书第 558 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">什么时候会破</div><div class="kline">灯光变化</div><div class="kline">相机自动曝光</div><div class="kline">物体反光</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">插值 · 原书第 558 页</div>
+  <h2>位移可以是小数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>真实运动不落在整数像素上。</li><li>候选图要插值才能取小数位移。</li><li>双线性常用，双三次略好。</li><li>不插值只剩整像素答案，画面会抖。</li></ul>
+      <div class="src">依据：原书第 558 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集做法</div><div class="kline">先做整数搜索</div><div class="kline">亚像素留到下一集</div><div class="kline">插值本身也会糊一点</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">鲁棒损失 · 原书第 558 页</div>
+  <h2>别让外点说了算</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>平方损失把大残差放得很大。</li><li>一块高亮就能把对齐拉走。</li><li>鲁棒函数在残差大时增长变慢。</li><li>常用 Huber、Geman–McClure、截断二次。</li></ul>
+      <div class="src">依据：原书第 558 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">外点从哪来</div><div class="kline">高光</div><div class="kline">人影</div><div class="kline">遮挡</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">SAD · 原书第 559 页</div>
+  <h2>便宜，但原点不可导</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>绝对差之和就是 L1 范数。</li><li>视频编码常用它，因为快。</li><li>抗外点比平方损失好。</li><li>绝对值在原点不可导，梯度下降会抖。</li></ul>
+      <div class="src">依据：原书第 559 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么选</div><div class="kline">直接搜索</div><div class="kline">平滑近似</div><div class="kline">看求解器</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">阈值 · 原书第 559 页</div>
+  <h2>Geman–McClure 的阈值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>小残差接近平方，大残差饱和。</li><li>阈值 a 可以看成外点分界。</li><li>MAD 用中位数，少量外点改不动。</li><li>阈值取 MAD 乘 1.4。</li></ul>
+      <div class="src">依据：原书第 559 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">MAD 的好处</div><div class="kline">中位数稳</div><div class="kline">少量外点不怕</div><div class="kline">估内点噪声</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">归一化 · 原书第 559–560 页</div>
+  <h2>别靠少比几个像素取胜</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>可以给每个像素一个空间权重。</li><li>搜索范围大时，SSD 偏向重叠小的解。</li><li>除以重叠面积，或开方成 RMS。</li><li>归一化后才比较平均每像素误差。</li></ul>
+      <div class="src">依据：原书第 559–560 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个作用</div><div class="kline">权重可以当遮罩</div><div class="kline">归一化防作弊</div><div class="kline">RMS 便于横向比较</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">曝光 · 原书第 560 页</div>
+  <h2>先拟合曝光，再比残差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>模型：I1(x+u) ≈ (1+α) I0(x) + β。</li><li>α 是增益参数，(1+α) 是乘性系数。</li><li>对对应像素做线性回归，先估再比。</li><li>偏置和增益可以逐颜色通道估。</li></ul>
+      <div class="src">依据：原书第 560 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">I1(x+u) ≈ (1+α)·I0(x) + β</div><div class="mnote">α：增益；β：偏置；逐通道估更稳</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 三种损失</div>
+  <h2>远处才见分晓</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三条曲线：平方、绝对值、Geman–McClure。</li><li>残差很大时，平方损失最高。</li><li>绝对值居中，Geman–McClure 饱和。</li><li>纵轴是对数，差别在远处。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e083_losses.png" style="max-height:500px" alt="三种损失：平方、绝对值、Geman–McClure 在远处的增长不同｜程序生成，未用教材或论文原图"><figcaption>三种损失：平方、绝对值、Geman–McClure 在远处的增长不同｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 曝光建模</div>
+  <h2>回归后残差小三个量级</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左图散点几乎落在一条直线上。</li><li>拟合的乘性系数约 1.2。</li><li>它对应增益约两成。</li><li>原始 SSD 误差约是回归后的一千倍。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e083_biascorr.png" style="max-height:500px" alt="偏置/增益回归：曝光差先建模，残差能小三个数量级｜程序生成，未用教材或论文原图"><figcaption>偏置/增益回归：曝光差先建模，残差能小三个数量级｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">NCC · 原书第 561 页</div>
+  <h2>减均值、除标准差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>原始互相关会被亮块吸引。</li><li>NCC 减均值、除标准差，分数在 −1 到 1。</li><li>零方差图块无定义，低对比区退化。</li><li>本例峰值 0.999，落在真值位移上。</li></ul>
+      <div class="src">依据：原书第 561 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">什么时候失灵</div><div class="kline">无纹理区</div><div class="kline">非线性 gamma</div><div class="kline">局部高光</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 外点贡献</div>
+  <h2>外点只是被压低声音</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>合成残差里多数很小，少数拖得很远。</li><li>最差 5% 像素：平方损失贡献 0.89。</li><li>Geman–McClure 只贡献 0.13。</li><li>外点没消失，只是话语权变小。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e083_outlier.png" style="max-height:500px" alt="外点影响：平方损失贡献 0.89，Geman–McClure 只贡献 0.13｜程序生成，未用教材或论文原图"><figcaption>外点影响：平方损失贡献 0.89，Geman–McClure 只贡献 0.13｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">配方 · 四个补丁</div>
+  <h2>补丁怎么按顺序用</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>选损失：平方、SAD 或鲁棒函数。</li><li>处理曝光：偏置/增益或 NCC。</li><li>归一化重叠面积。</li><li>用残差、峰值、一致性验证。</li></ul>
+      <div class="src">依据：本集实验；原书第 559–561 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">顺序不固定</div><div class="kline">先做能解释残差的那步</div><div class="kline">再看还剩什么</div><div class="kline">只报一个最小值不够</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">局限 · 平移之外</div>
+  <h2>平移不是全部</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>只允许平移，默认整块一起动。</li><li>真实场景有旋转、缩放、多个运动。</li><li>SSD 怕局部极小和无纹理区。</li><li>光流约束方程留到第 9 章后面。</li></ul>
+      <div class="src">依据：原书第 562 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集解决</div><div class="kline">金字塔由粗到细</div><div class="kline">亚像素泰勒展开</div><div class="kline">应付局部极小</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>把 SSD 补完整</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SSD 假设亮度不变。</li><li>曝光差用回归或 NCC 补。</li><li>外点用鲁棒损失或权重压。</li><li>下一集：金字塔与亚像素细化。</li></ul>
+      <div class="src">依据：原书第 558–562 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">平移先写对</div><div class="kline">假设要看清</div><div class="kline">误差要验证</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第七十五集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

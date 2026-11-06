@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>从点云到表面：隐函数、泊松重建与 Marching Cubes</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">表面重建 · 开场</div>
+  <h2>三种存法：网格、点云、隐式场</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>显式网格存三角面，点云存采样点。</li><li>隐式场给每个位置一个内外值。</li><li>三种表示对应三种工程取舍。</li><li>终点是能渲染、能测量的表面。</li></ul>
+      <div class="src">依据：原书第 825–826 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种表示</div><div class="kline">显式网格：三角面</div><div class="kline">点云：采样点</div><div class="kline">隐式场：内外值</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三类表示 · 同一个球</div>
+  <h2>同一个球，三种数据</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左图三角网格，有顶点和连接关系。</li><li>中图只有采样点，没有面。</li><li>右图每个格点存一个数，红线是零。</li><li>书上第 825–826 页：显式、点、体表示。</li></ul>
+      <div class="src">依据：原书第 825–826 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e120_representations.png" style="max-height:440px" alt="三种表示：显式网格、点云、隐式场切片，同一球体｜程序生成，未用教材或论文原图"><figcaption>三种表示：显式网格、点云、隐式场切片，同一球体｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">显式网格 · 拓扑假设</div>
+  <h2>网格：拓扑一旦定死</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 827 页：参数化模型假设拓扑固定。</li><li>要长洞、合并、裂开，就得重新网格化。</li><li>隐式场的表面是零等值面，拓扑能变。</li><li>网格渲染成熟，但难处理大变形。</li></ul>
+      <div class="src">依据：原书第 827 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">拓扑</div><div class="kline">网格：拓扑固定</div><div class="kline">隐式场：零等值面</div><div class="kline">改拓扑要换表示</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">点云转隐式 · 法向</div>
+  <h2>点云转隐式：先估法向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 829 页：先转符号距离或内外函数。</li><li>法向把里面和外面分开。</li><li>只留正负号，就得到 0/1 占据函数。</li><li>法向不准，表面附近就会抖。</li></ul>
+      <div class="src">依据：原书第 829 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">符号距离</div><div class="kline">绝对值：到表面距离</div><div class="kline">符号：内负外正</div><div class="kline">只留符号：占据函数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">隐式面 · 内外函数</div>
+  <h2>隐式面：F 等于 0 的那层</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 831 页：F 小于 0 在里面。</li><li>F 大于 0 在外面，F 等于 0 是表面。</li><li>梯度指向外法向，单位化就是法向场。</li><li>场可存规则网格，也可存八叉树。</li></ul>
+      <div class="src">依据：原书第 831 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">F(x,y,z) = 0</div><div class="mnote">F<0 在内，F>0 在外；梯度指外法向</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">等值面提取 · 逐格查表</div>
+  <h2>Marching Cubes：逐格查表连面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个格子看八个角的正负。</li><li>256 种组合按对称性归并成 15 种。</li><li>二维切片看四个角，就是 marching squares。</li><li>输出三角面，但不去噪，噪声会变毛刺。</li></ul>
+      <div class="src">依据：原书第 831 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e120_mc.png" style="max-height:440px" alt="Marching Cubes 二维切片与三角面数–分辨率曲线｜程序生成，未用教材或论文原图"><figcaption>Marching Cubes 二维切片与三角面数–分辨率曲线｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三档分辨率 · 面数与误差</div>
+  <h2>分辨率：面数涨得比精度快</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>N=48：14492 面，误差 0.000107。</li><li>N=64：25964 面，误差 0.000060。</li><li>N=96：59036 面，误差 0.000027。</li><li>体积误差 −0.038%，等值面 +0.1 半径 1.1000。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三档取舍</div><div class="kline">误差减半：N 加倍</div><div class="kline">面数约翻四倍</div><div class="kline">可视化 48，量体积 96</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">泊松重建 · 法向积分</div>
+  <h2>Poisson：把法向当梯度积分</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 831 页：用平滑的 0/1 内外函数。</li><li>表面点附近，梯度沿有向法向。</li><li>解拉普拉斯等于法向散度，再提零等值面。</li><li>二维切片误差 0.000884，带噪 0.037731。</li></ul>
+      <div class="src">依据：原书第 831 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e120_poisson.png" style="max-height:440px" alt="Poisson 积分（2D 切片）：真值、带噪、恢复｜程序生成，未用教材或论文原图"><figcaption>Poisson 积分（2D 切片）：真值、带噪、恢复｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">失败对照 · 边界与法向</div>
+  <h2>失败对照：输入比求解器关键</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>边界全零，零等值线变成 0 条。</li><li>一半法向翻转，零等值线也变成 0 条。</li><li>法向要一致朝外，边界要给可信值。</li><li>先估法向、统一定向、补边界，再解方程。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">失败对照</div><div class="kline">边界全零：0 条</div><div class="kline">半翻法向：0 条</div><div class="kline">输入错，解方程只会抹匀</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">神经隐式 · 章节延伸</div>
+  <h2>神经隐式：把查表换成问网络</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>书上第 832 页：深度网络用于体表示建模。</li><li>书上第 833 页：NeRF 输出透明度和辐射值。</li><li>DeepSDF 学符号距离，Occupancy 学占据。</li><li>这是章节末尾的延伸，本集不跑网络。</li></ul>
+      <div class="src">依据：原书第 832–833 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种神经场</div><div class="kline">DeepSDF：符号距离</div><div class="kline">Occupancy：0/1 占据</div><div class="kline">NeRF：透明度与颜色</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">表示选型 · 按任务挑</div>
+  <h2>怎么选：按任务挑表示</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>渲染和碰撞检测，网格最直接。</li><li>采集和编辑，点云最灵活。</li><li>改拓扑、去噪、融合，隐式体表示更顺手。</li><li>常见流程：点云进、隐式中间、网格交付。</li></ul>
+      <div class="src">依据：原书第 825–831 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">按任务选</div><div class="kline">渲染/碰撞 → 网格</div><div class="kline">采集/编辑 → 点云</div><div class="kline">改拓扑/去噪 → 隐式</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 移交下一集</div>
+  <h2>总结：从点到面</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>点云先变隐式场，再由 Marching Cubes 提网格。</li><li>Poisson 走另一条：法向积分内外函数。</li><li>下一集：深度图融合与 TSDF。</li><li>再下一集：ICP 配准多视角点云。</li></ul>
+      <div class="src">依据：原书第 825–833 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本章主线</div><div class="kline">采集 → 配准</div><div class="kline">配准 → 融合</div><div class="kline">融合 → 表面</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十二集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

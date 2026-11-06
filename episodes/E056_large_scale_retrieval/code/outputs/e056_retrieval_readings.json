@@ -1,0 +1,23 @@
+{
+ "generated_at": "2026-11-05T22:41:32",
+ "n_pass": 8,
+ "n_total": 8,
+ "src_sha16": "91b0f82010b2bf57",
+ "fig1": {
+  "doc_cells": 4,
+  "vis_cells": 4,
+  "bridges": 3,
+  "min_fs": 10.5,
+  "max_fs": 11.5
+ },
+ "fig2": {
+  "stages": 5,
+  "main_fs_min": 10.5,
+  "max_fs": 11.5,
+  "tags": 2
+ },
+ "texts": {
+  "collected": 26,
+  "leaked": 0
+ }
+}

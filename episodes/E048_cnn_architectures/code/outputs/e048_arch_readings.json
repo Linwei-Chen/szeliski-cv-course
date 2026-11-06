@@ -1,0 +1,37 @@
+{
+ "C": 64,
+ "n_pass": 12,
+ "n_total": 12,
+ "cfg": {
+  "kh": 7,
+  "ch": 512,
+  "n_classes": 1000
+ },
+ "closed_terms": {
+  "two_3x3": 18,
+  "one_5x5": 25,
+  "direct": 9,
+  "bott_1x1": 2,
+  "bott_3x3": 9,
+  "bott_terms": 17,
+  "bott_den": 16,
+  "ratio_num": 144,
+  "channel_quarter": 4
+ },
+ "fg_leak_hits": 0,
+ "two_3x3": 73728,
+ "one_5x5": 102400,
+ "saving": 0.28,
+ "direct_3x3": 36864,
+ "bottleneck_r": 16,
+ "bottleneck": 4352,
+ "bottleneck_ratio": 8.470588235294118,
+ "fc_params": 25089000,
+ "gap_params": 513000,
+ "gap_ratio": 48.90643274853801,
+ "hw_saving": 0.28,
+ "fg1_text_harvest": 16,
+ "fg1_invisible_texts": 16,
+ "fg2_text_harvest": 18,
+ "fg2_invisible_texts": 13
+}

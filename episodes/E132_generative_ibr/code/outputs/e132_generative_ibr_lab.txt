@@ -1,0 +1,20 @@
+[lab] E132 生成模型 IBR 开始 2026-11-03T13:49:49
+[lab] 源码 sha256=0232ab2e16640e9b55a7d6f18ad431d1fe467ec73b657ae13ce13aa901f38701
+[lab] 边界：合成外墙+前景柱；单图/三图 warp；扩散填补是经典方法，不是神经网络生成
+[PASS] 合成图像尺寸与相机数　| 3/240×180
+[PASS] 单图 warp 有洞　| 1764
+[PASS] 单图有效区 PSNR≥25　| 30.29
+[PASS] 三视图混合补满洞　| 0
+[PASS] 三视图混合 PSNR≥30　| 33.39
+[PASS] 多视图比单图最近邻填补高≥3dB　| 7.70
+[PASS] 最近邻填补 PSNR≥24　| 25.69
+[PASS] 扩散填补 PSNR≥26　| 27.05
+[PASS] 扩散填补比最近邻高≥1dB　| 1.36
+[PASS] 填补后无洞　| 1764
+[PASS] lab 边界声明为非神经网络　| 经典扩散填补，不是生成网络
+[lab] LEDGER：断言 11 条，PASS 11
+[lab] readings sha256=dd1215dccdec313e3191df1f941eb4530dc1a2d0c0f822e32e170615425729b8
+[lab] PNG sha256(e132_taxonomy.png)=5a9664b317552d307a477efeec84bddcdf463889c24b33591508032b9fea4a30
+[lab] PNG sha256(e132_blend.png)=569132742e6d7885c99727988ff616c208211bcf0ec17b8a6d0f1285d5482005
+[lab] PNG sha256(e132_fill.png)=2a5d51a1943fde7b1d3830a14570adef4c7f4c916b5c1cd53647401263edbc88
+[lab] E132 生成模型 IBR 结束 2026-11-03T13:49:50

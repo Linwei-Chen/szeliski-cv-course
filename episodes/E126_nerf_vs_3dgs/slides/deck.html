@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>NeRF vs 3DGS：指标、成本与画质</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">评测 · 同一张表</div>
+  <h2>同一张表，谁赢了</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同一张基准表，三个指标给出两个赢家。</li><li>Mip-NeRF360 上 PSNR 27.69 对 27.21。</li><li>SSIM 0.815 对 0.792，LPIPS 0.214 对 0.237。</li><li>本集问：指标怎么算，表怎么读。</li></ul>
+      <div class="src">依据：论文第 8 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个指标</div><div class="kline">PSNR：逐像素误差</div><div class="kline">SSIM：局部结构</div><div class="kline">LPIPS：网络特征距离</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">指标 · PSNR</div>
+  <h2>PSNR：只看逐像素误差</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>PSNR 由平均均方误差导出。</li><li>公式：10 log10(Imax² / MSE)。</li><li>Imax 是最大信号范围，八位图取 255。</li><li>MSE 0.01、Imax 1 时，PSNR 正好 20 分贝。</li></ul>
+      <div class="src">依据：原书第 100–101 页；本集实验</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">PSNR = 10 log₁₀(Imax² / MSE)</div><div class="mnote">Imax：最大信号范围；MSE：平均均方误差；单位是分贝</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">指标 · SSIM / FLIP / LPIPS</div>
+  <h2>SSIM、FLIP、LPIPS：三把感知尺</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SSIM 看局部亮度、对比度和结构。</li><li>LPIPS 用网络特征距离，越低越好。</li><li>FLIP 模拟人眼对差异的可见度。</li><li>三把尺子都可能被不同失真骗。</li></ul>
+      <div class="src">依据：原书第 148–149 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三把尺子</div><div class="kline">PSNR：像素</div><div class="kline">SSIM：结构</div><div class="kline">LPIPS：感知</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">协议 · 基准表怎么读</div>
+  <h2>基准协议：数字放在同一张桌上</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>训练和测试按 Mip-NeRF360 的方法划分。</li><li>每 8 张照片取 1 张做测试。</li><li>所有结果在 A6000 GPU 上跑。</li><li>读表先问指标方向、测试集、分辨率、硬件。</li></ul>
+      <div class="src">依据：论文第 8 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">读表五问</div><div class="kline">指标方向</div><div class="kline">测试集划分</div><div class="kline">分辨率与硬件</div><div class="kline">训练时间与显存</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 同分不同质</div>
+  <h2>看图：同分不同质</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左边目标，中间模糊，右边噪声。</li><li>两张失真图 PSNR 都对齐到 32.29 分贝。</li><li>SSIM 是 0.974 对 0.965，模糊更高。</li><li>PSNR 打平，不代表看起来一样。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e126_metrics.png" style="max-height:500px" alt="目标 / 模糊 / 噪声：同 PSNR 不同结构｜程序生成，未用教材或论文原图"><figcaption>目标 / 模糊 / 噪声：同 PSNR 不同结构｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Table 1 · 排名翻转</div>
+  <h2>Table 1：同一张表，两个赢家</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Mip-NeRF360 上 PSNR 赢家是 M-NeRF360。</li><li>SSIM 和 LPIPS 的赢家是 3DGS。</li><li>PSNR 只差 0.48 分贝。</li><li>先说你最在乎哪种好。</li></ul>
+      <div class="src">依据：论文第 8 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">同一张表</div><div class="kline">PSNR 赢家：M-NeRF360</div><div class="kline">SSIM / LPIPS 赢家：3DGS</div><div class="kline">只差 0.48 分贝</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 等 PSNR</div>
+  <h2>看图：PSNR 打平，SSIM 不一定</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左图 PSNR，两根柱子几乎一样高。</li><li>右图 SSIM，0.974 对 0.965。</li><li>只看 PSNR 选模型，可能选到平的结果。</li><li>换一把尺子，排名可能就换。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e126_equal_psnr.png" style="max-height:500px" alt="PSNR / SSIM：等 PSNR 的两种失真｜程序生成，未用教材或论文原图"><figcaption>PSNR / SSIM：等 PSNR 的两种失真｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 速度与显存</div>
+  <h2>看图：没有单一赢家</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>3DGS：134 帧、734MB、训练 41 分 33 秒。</li><li>M-NeRF360：0.06 帧、8.6MB、训练 48 小时。</li><li>显存差八十多倍，速度差上千倍。</li><li>没有单一赢家，只有愿意付哪笔账。</li></ul>
+      <div class="src">依据：论文第 8 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e126_tradeoff.png" style="max-height:500px" alt="PSNR / FPS / 显存：三种取舍｜程序生成，未用教材或论文原图"><figcaption>PSNR / FPS / 显存：三种取舍｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">数据集 · 排名依赖</div>
+  <h2>换数据集，赢家可能换</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Tanks&Temples 上 3DGS PSNR 23.14。</li><li>M-NeRF360 是 22.22，赢家换了。</li><li>排名依赖场景、拍摄、划分和预算。</li><li>一个数据集的第一名不能直接推广。</li></ul>
+      <div class="src">依据：论文第 8 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">排名会变</div><div class="kline">Mip：PSNR 赢家 M-NeRF360</div><div class="kline">Tanks：PSNR 赢家 3DGS</div><div class="kline">场景与协议决定排名</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">读表 · 五个问题</div>
+  <h2>读表五问：先问协议，再看排名</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>指标箭头朝哪：PSNR/SSIM 越高越好。</li><li>LPIPS 越低越好。</li><li>测试集是留出视角还是训练视角。</li><li>分辨率、硬件、训练时间、显存、最差场景。</li></ul>
+      <div class="src">依据：论文第 8 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五个问题</div><div class="kline">箭头朝哪</div><div class="kline">测试集怎么分</div><div class="kline">分辨率与硬件</div><div class="kline">显存与最差场景</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">陷阱 · 指标不是裁判</div>
+  <h2>五个坑：指标不是裁判</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>PSNR 奖励平滑，模糊图可能分数高。</li><li>LPIPS 也可能被像训练集的纹理骗。</li><li>不同分辨率、测试集的数字不能直接比。</li><li>per-scene 平均会掩盖最差场景。</li></ul>
+      <div class="src">依据：原书第 149 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五个坑</div><div class="kline">PSNR 奖励平滑</div><div class="kline">LPIPS 怕训练集纹理</div><div class="kline">平均掩盖最差场景</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>总结：尺子不是裁判</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>PSNR 量像素，SSIM 量结构，LPIPS 量感知。</li><li>同一张表可能有两个赢家。</li><li>读表先看协议，再看排名。</li><li>下一集：数据集、基准与统计口径。</li></ul>
+      <div class="src">依据：原书第 100–101/148–149 页；论文第 8 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三句话</div><div class="kline">PSNR 量像素</div><div class="kline">SSIM 量结构</div><div class="kline">LPIPS 量感知</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十八集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

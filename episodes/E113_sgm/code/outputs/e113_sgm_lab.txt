@@ -1,0 +1,22 @@
+[lab] E113 SGM 开始 2026-11-03T05:00:50
+[lab] 源码 sha256=65e6dc195b89d47acce05e7fa5f601099a67766cd1b235b429299ca26d07bff0
+[lab] 320x240｜DMAX 86｜P1 0.02｜P2 0.12｜弱纹理 2444 像素
+[PASS] SGM 总误差更小　| 0.44 vs 0.98
+[PASS] SGM 弱纹理更好　| 3.33 vs 10.31
+[PASS] SGM 边界更好　| 1.41 vs 4.59
+[PASS] SGM 更平滑　| 0.278 vs 0.319
+[PASS] SGM 误差小于 2px　| 0.44
+[PASS] 四路径在盘　| 四条路径
+[PASS] 三图在盘　| paths/penalty/compare
+[PASS] 弱纹理块存在　| 2444 像素
+[PASS] 视差层覆盖　| 四层
+[PASS] P2 大于 P1　| 0.12>0.02
+[lab] 块匹配 0.98｜SGM 0.44｜弱纹理 10.31→3.33｜边界 4.59→1.41
+[lab] PNG sha256(e113_compare.png)=9c3dcda35a480f51c2da31d6c8207521fac25168a64871cd1fbe388f74279af7
+[lab] PNG sha256(e113_paths.png)=eff66d959247dded8f5f0cd9168a1de3cf534cb4ba359f707f4dd8a5f9acebd0
+[lab] PNG sha256(e113_penalty.png)=e0f6209479d6f1c6ceee64a98ff1283efb9296f30544daf81cb8548197268384
+[lab] readings → e113_sgm_readings.json
+[lab] readings sha256=dbc319310230053aab88e33c71e62ceea69937f12ccdd240cacdc7df1d99411f
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T05:00:50

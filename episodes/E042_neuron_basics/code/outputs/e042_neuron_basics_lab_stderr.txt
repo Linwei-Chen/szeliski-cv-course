@@ -1,0 +1,6 @@
+findfont: Failed to find font weight normal for STSong, now using 300.
+findfont: Failed to find font weight normal for STSong, now using 300.
+findfont: Failed to find font weight normal for STSong, now using 300.
+findfont: Failed to find font weight normal for STSong, now using 300.
+findfont: Failed to find font weight normal for STSong, now using 300.
+findfont: Failed to find font weight normal for STSong, now using 300.

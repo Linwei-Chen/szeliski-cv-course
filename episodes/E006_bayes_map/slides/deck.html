@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E006 · 贝叶斯思维：先验、似然、后验与 MAP</title>
+<link rel="stylesheet" href="../../../assets/shared/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<style>
+  /* E006 集内微调：公式卡压缩 KaTeX display 边距与卡片内边距（E003–E005 formula-tight 方案） */
+  .formula-tight .katex-display { margin: .12em 0; }
+  .formula-tight { padding: 18px 44px; }
+</style>
+<script defer src="../../../assets/shared/vendor/katex/katex.min.js"></script>
+<script defer src="../../../assets/shared/vendor/katex/contrib/auto-render.min.js"></script>
+<script defer src="../../../assets/shared/deck.js"></script>
+<script>
+window.addEventListener("load", () => {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    });
+  }
+});
+</script>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 06</div>
+  <h1 class="step" data-step="1">贝叶斯思维：<br><span class="hl">先验、似然、后验与 MAP</span></h1>
+  <p class="ep step" data-step="1">数据投似然票，先验投常识票 —— 附录 B 后半，给估计装上常识</p>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>01 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">接棒 · MAXIMUM LIKELIHOOD</div>
+    <h2>MLE：<span class="hl">没有先验时</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$L = p(y\,|\,x) = p(y, x) = p(x\,|\,y)$$
+      <div class="note">式 B.14（第 944 页）｜讲者注：三者只差常数因子（p(x)=const 与 p(y)），argmax 不变；一般情形 MLE 未必无偏</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:12px">选似然最大的 x ＝ 选概率密度最高的 x。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">原书第 944 页：候选值<b>紧紧聚在一个值周围</b>（如 p(x|y) 单峰高斯）时，MLE 最优——<b>无偏、方差最小</b>。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="单峰高斯后验下的 MLE 最优性">
+      <g font-family="PingFang SC, sans-serif">
+        <path d="M60,390 C180,390 230,110 320,110 C410,110 460,390 580,390" fill="none" stroke="#2b2b33" stroke-width="5"></path>
+        <line x1="40" y1="390" x2="600" y2="390" stroke="#8a8378" stroke-width="3"></line>
+        <line x1="320" y1="110" x2="320" y2="390" stroke="#e8590c" stroke-width="3" stroke-dasharray="8 6"></line>
+        <text x="320" y="72" font-size="24" fill="#2b2b33" text-anchor="middle">p(x|y)：单峰高斯（原书条件）</text>
+        <text x="320" y="150" font-size="23" fill="#e8590c" text-anchor="middle" font-weight="700">MLE：无偏 + 方差最小</text>
+        <text x="320" y="440" font-size="21" fill="#1e3a5f" text-anchor="middle">脚注 3 · Gauss–Markov：线性模型 + 零均值不相关噪声</text>
+        <text x="320" y="468" font-size="21" fill="#1e3a5f" text-anchor="middle">→ 最小二乘 = BLUE（不要求噪声是高斯）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>02 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">两种陷阱 · DECISION THEORY</div>
+  <h2>多峰与损失：<span class="hl">别急着选峰</span></h2>
+  <div class="cards c2 step" data-step="1" style="margin-top:30px">
+    <div class="card">
+      <div class="big">多峰后验</div>
+      <div class="cap">对数似然有几个局部极小 → <b>推迟决策</b>，等更多测量
+        <small>CONDENSATION（§7.3.1）＝粒子滤波与 MCMC 技术的一员（第 944 页）</small></div>
+    </div>
+    <div class="card">
+      <div class="big">期望损失 B.15</div>
+      <div class="cap">\(E_{\text{loss}} = \int l(x-z)\,p(z\,|\,y)\,dz\)
+        <small>\(l=\delta\) → 峰（无先验 = MLE）；\(l=\|x-z\|^2\) → MSE（后验均值）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1" style="margin-top:20px">原书例：机器人避墙——损失<b>两侧不必对称</b>（第 944 页；原书措辞 underestimates，按语义疑为笔误——讲者注）。显式建模损失 ＝ 统计决策理论（第 941 页）。</p>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>03 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">线性情形 · LEAST SQUARES</div>
+  <h2>线性测量：<span class="hl">解与不确定性一起拿到</span></h2>
+  <div class="formula formula-tight step" data-step="1" style="margin-top:12px">
+    $$f_i(x) = H_i x, \qquad E = \sum_i \big(\tilde y_i - H_i x\big)^{\!T} C_i \big(\tilde y_i - H_i x\big)$$
+    $$x = \Big(\textstyle\sum_i H_i^T C_i H_i\Big)^{\!-1} \sum_i H_i^T C_i\, \tilde y_i$$
+    <div class="note">式 B.16 测量矩阵 / B.17 二次型能量 → 式 B.18 闭式解｜式 B.19 后验协方差 Σ = C⁻¹——不确定性也白送（第 945 页）</div>
+  </div>
+  <p class="lead dim step" data-step="1" style="margin-top:14px">Hᵢ = I → 上一集的信息加权平均（B.20）；非线性：迭代解（A.3），CRLB 用雅可比替 H。</p>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>04 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">动机 · WHY PRIOR</div>
+    <h2>只有似然：<span class="hl">寸步难行</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:8px">原书第 948 页（B.4 开篇）：有时<b>与测量一致的可能解范围太大</b>，大到没有用处。</p>
+    <p class="lead step" data-step="1" style="margin-top:14px">图像去噪（§3.4.2）：只用带噪版本<b>逐像素</b>估计，根本无法前进。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:14px">脚注 4 直译：事实上，<span class="hl">最大似然估计就是噪声图像本身</span>。</p>
+    <p class="lead step" data-step="1" style="margin-top:14px">出路：靠图像的典型性质——<b>分段平滑</b>（§4.2.1）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="逐像素 MLE 去噪等于原样返回">
+      <g font-family="PingFang SC, sans-serif">
+        <text x="105" y="55" font-size="23" fill="#2b2b33" text-anchor="middle" font-weight="700">带噪观测 y</text>
+        <g stroke="#2b2b33" stroke-width="2.5">
+          <rect x="45" y="75" width="28" height="28" fill="#dfe6ee"></rect>
+          <rect x="75" y="75" width="28" height="28" fill="#f4ede0"></rect>
+          <rect x="105" y="75" width="28" height="28" fill="#c8d4e2"></rect>
+          <rect x="135" y="75" width="28" height="28" fill="#efe2cf"></rect>
+          <rect x="45" y="105" width="28" height="28" fill="#e8dfd2"></rect>
+          <rect x="75" y="105" width="28" height="28" fill="#d3dce8"></rect>
+          <rect x="105" y="105" width="28" height="28" fill="#f2e8d8"></rect>
+          <rect x="135" y="105" width="28" height="28" fill="#ccd8e4"></rect>
+          <rect x="45" y="135" width="28" height="28" fill="#f0e6d6"></rect>
+          <rect x="75" y="135" width="28" height="28" fill="#c9d5e3"></rect>
+          <rect x="105" y="135" width="28" height="28" fill="#e4dccf"></rect>
+          <rect x="135" y="135" width="28" height="28" fill="#f5eee2"></rect>
+        </g>
+        <line x1="185" y1="119" x2="228" y2="119" stroke="#2b2b33" stroke-width="5"></line>
+        <path d="M240,119 l-24,-13 M240,119 l24,13" stroke="#2b2b33" stroke-width="5" fill="none"></path>
+        <rect x="252" y="80" width="100" height="78" rx="12" fill="#ffffff" stroke="#e8590c" stroke-width="3"></rect>
+        <text x="302" y="112" font-size="22" fill="#e8590c" text-anchor="middle" font-weight="700">逐像素</text>
+        <text x="302" y="140" font-size="22" fill="#e8590c" text-anchor="middle" font-weight="700">MLE</text>
+        <text x="384" y="130" font-size="34" fill="#2b2b33" text-anchor="middle" font-weight="700">＝</text>
+        <g stroke="#2b2b33" stroke-width="2.5">
+          <rect x="425" y="75" width="28" height="28" fill="#dfe6ee"></rect>
+          <rect x="455" y="75" width="28" height="28" fill="#f4ede0"></rect>
+          <rect x="485" y="75" width="28" height="28" fill="#c8d4e2"></rect>
+          <rect x="515" y="75" width="28" height="28" fill="#efe2cf"></rect>
+          <rect x="425" y="105" width="28" height="28" fill="#e8dfd2"></rect>
+          <rect x="455" y="105" width="28" height="28" fill="#d3dce8"></rect>
+          <rect x="485" y="105" width="28" height="28" fill="#f2e8d8"></rect>
+          <rect x="515" y="105" width="28" height="28" fill="#ccd8e4"></rect>
+          <rect x="425" y="135" width="28" height="28" fill="#f0e6d6"></rect>
+          <rect x="455" y="135" width="28" height="28" fill="#c9d5e3"></rect>
+          <rect x="485" y="135" width="28" height="28" fill="#e4dccf"></rect>
+          <rect x="515" y="135" width="28" height="28" fill="#f5eee2"></rect>
+        </g>
+        <text x="484" y="200" font-size="21" fill="#8a8378" text-anchor="middle">原样返回（脚注 4）</text>
+        <rect x="70" y="290" width="500" height="120" rx="16" fill="#ffffff" stroke="#1e3a5f" stroke-width="3"></rect>
+        <text x="320" y="336" font-size="24" fill="#1e3a5f" text-anchor="middle" font-weight="700">每个像素只有一个观测</text>
+        <text x="320" y="376" font-size="22" fill="#8a8378" text-anchor="middle">能产生它的取值太多 → 信息不够，无解可进</text>
+        <text x="320" y="452" font-size="23" fill="#e8590c" text-anchor="middle" font-weight="700">出路：注入图像先验——分段平滑</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>05 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">主角 · PRIOR p(x)</div>
+  <h2>先验：<span class="hl">好答案长什么样</span></h2>
+  <div class="cards c3 step" data-step="1" style="margin-top:32px">
+    <div class="card">
+      <div class="big">先验分布</div>
+      <div class="cap">p(x)：衡量一张图是<b>自然图像</b>的可能性
+        <small>典型性质如分段平滑（第 948 页原话 e.g.）</small></div>
+    </div>
+    <div class="card">
+      <div class="big">生成模型</div>
+      <div class="cap">构建/估计 p(x) 的统计模型
+        <small>从 p(x) 采样，看像不像自然图像</small></div>
+    </div>
+    <div class="card">
+      <div class="big">不止图像</div>
+      <div class="cap">物体大致尺寸｜镜头焦距｜物体出现的概率
+        <small>全是先验，都让估计更可靠（第 948 页）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1" style="margin-top:24px">分段平滑性常用<b>马尔可夫随机场</b>编码（式 B.29）——留到 §4.3 细讲。</p>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>06 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">钥匙 · BAYES' RULE</div>
+  <h2>贝叶斯法则：<span class="hl">后验 ∝ 似然 × 先验</span></h2>
+  <div class="formula formula-tight step" data-step="1" style="margin-top:12px">
+    $$p(x\,|\,y) = \frac{p(y\,|\,x)\,p(x)}{p(y)}, \qquad p(y) = \int p(y\,|\,x)\,p(x)\,dx$$
+    $$-\log p(x\,|\,y) = -\log p(y\,|\,x) - \log p(x) + \log p(y)$$
+    <div class="note">式 B.26（第 948 页）：p(y) 归一化常数，让后验积分为 1｜式 B.27 负后验对数似然：log p(y) 是常数，通常丢掉</div>
+  </div>
+  <p class="lead dim step" data-step="1" style="margin-top:14px">例外：先验自带未知参数时可保留 log p(y)——奥卡姆剃刀 / 模型选择（第 948–949 页）。</p>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>07 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">MAP · ENERGY FORM</div>
+    <h2>MAP：<span class="hl">数据能量 + 先验能量</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$E(x, y) = E_d(x, y) + E_p(x)$$
+      <div class="note">式 B.28（第 949 页）｜Ed：数据能量（负对数似然）｜Ep：先验能量——角色对应<b>正则化的平滑能量</b></div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:12px">讲者解读：可以把<b>正则项</b>看成一个先验。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">原书警告：MAP 选的是后验的<b>「峰」</b>，而非 MSE 这类<b>更稳定的统计量</b>。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="偏斜后验中 MAP 选峰而 MSE 取均值">
+      <g font-family="PingFang SC, sans-serif">
+        <path d="M50,400 C110,398 150,150 205,132 C230,124 245,160 275,230 C305,295 350,345 420,368 C480,386 550,393 600,396" fill="none" stroke="#2b2b33" stroke-width="5"></path>
+        <line x1="40" y1="400" x2="610" y2="400" stroke="#8a8378" stroke-width="3"></line>
+        <line x1="205" y1="132" x2="205" y2="400" stroke="#e8590c" stroke-width="3.5" stroke-dasharray="9 6"></line>
+        <line x1="318" y1="272" x2="318" y2="400" stroke="#1e3a5f" stroke-width="3.5" stroke-dasharray="9 6"></line>
+        <text x="205" y="98" font-size="23" fill="#e8590c" text-anchor="middle" font-weight="700">MAP：峰（随形状晃动）</text>
+        <text x="330" y="240" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">MSE：均值（更稳定）</text>
+        <text x="320" y="448" font-size="21" fill="#8a8378" text-anchor="middle">讲者示意：偏斜后验——峰不稳定，均值更稳</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>08 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">实验数学 · GAUSSIAN × GAUSSIAN</div>
+    <h2>高斯 × 高斯：<span class="hl">还是高斯</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px;font-size:38px">
+      $$\hat x_{\text{MAP}} = \Big(\textstyle\sum_i C_i + C_0\Big)^{\!-1}\Big(\textstyle\sum_i C_i\, \tilde y_i + C_0\, x_0\Big)$$
+      <div class="note">标量、Hᵢ=I 情形（讲者推导，原书只给框架）｜一般式：(ΣHᵀCH+C₀)⁻¹(ΣHᵀCỹ+C₀x₀)｜先验＝虚拟传感器 C₀=1/σ₀²</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:12px">后验精度 ＝ 各测量精度之和 ＋ C₀——式 B.19 的<b>信息账本</b>再记一笔。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">σ₀ 越小 → C₀ 越大 → 先验这票越重。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="先验作为虚拟传感器参与加权平均">
+      <g font-family="PingFang SC, sans-serif">
+        <rect x="40" y="52" width="240" height="88" rx="14" fill="#ffffff" stroke="#1e3a5f" stroke-width="3"></rect>
+        <text x="160" y="88" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">传感器 A</text>
+        <text x="160" y="120" font-size="18" fill="#8a8378" text-anchor="middle">精度 C₁ = 1</text>
+        <rect x="40" y="182" width="240" height="88" rx="14" fill="#ffffff" stroke="#1e3a5f" stroke-width="3"></rect>
+        <text x="160" y="218" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">传感器 B</text>
+        <text x="160" y="250" font-size="18" fill="#8a8378" text-anchor="middle">精度 C₂ = 1/16</text>
+        <rect x="40" y="312" width="240" height="88" rx="14" fill="#fdf3e7" stroke="#e8590c" stroke-width="3.5"></rect>
+        <text x="160" y="348" font-size="20" fill="#e8590c" text-anchor="middle" font-weight="700">先验 · 虚拟传感器</text>
+        <text x="160" y="380" font-size="17" fill="#e8590c" text-anchor="middle">中心 3.5 · 精度 C₀</text>
+        <line x1="284" y1="96" x2="338" y2="222" stroke="#1e3a5f" stroke-width="4"></line>
+        <line x1="284" y1="226" x2="338" y2="234" stroke="#1e3a5f" stroke-width="4"></line>
+        <line x1="284" y1="356" x2="338" y2="252" stroke="#e8590c" stroke-width="4"></line>
+        <rect x="348" y="185" width="180" height="110" rx="16" fill="#ffffff" stroke="#2b2b33" stroke-width="3"></rect>
+        <text x="438" y="228" font-size="20" fill="#2b2b33" text-anchor="middle" font-weight="700">信息加权平均</text>
+        <text x="438" y="262" font-size="15" fill="#8a8378" text-anchor="middle">三票相加（B.20 推广）</text>
+        <line x1="532" y1="240" x2="556" y2="240" stroke="#2b2b33" stroke-width="5"></line>
+        <path d="M572,240 l-16,-9 M572,240 l-16,9" stroke="#2b2b33" stroke-width="5" fill="none"></path>
+        <text x="606" y="248" font-size="22" fill="#2fe0a8" text-anchor="middle" font-weight="700">MAP</text>
+        <text x="320" y="452" font-size="19" fill="#8a8378" text-anchor="middle">后验精度 = C₁ + C₂ + C₀（比 MLE 多记一笔）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>09 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 能量分解</div>
+  <h2>MLE 1.93 → MAP 2.23：<span class="hl">先验推了一把</span></h2>
+  <p class="lead step" data-step="1" style="margin-top:6px">读数同上一集（A=2.20 σ=1，B=−2.30 σ=4），加先验 N(3.5, σ₀=2)：总能量 = 数据碗 + 先验浅碗，谷底朝 3.5 挪了 <b>0.30</b>（式 B.28）。</p>
+  <figure class="shot step" data-step="1">
+    <img src="figures/bayes_map_energy.png" alt="数据能量、先验能量与总能量的谷底分解" style="max-height:420px">
+  </figure>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>10 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 先验强度扫描</div>
+  <h2>σ₀ 越小，<span class="hl">谷底越靠先验</span></h2>
+  <p class="lead step" data-step="1" style="margin-top:6px">σ₀：∞→1.93（=MLE）、4.0→2.02、2.0→2.23、1.0→2.69、0.5→3.17——<b>已越过真值 3.0</b>；std 0.97→0.44，<b>更自信 ≠ 更准确</b>；网格积分验证与解析一致。</p>
+  <figure class="shot step" data-step="1">
+    <img src="figures/bayes_map_sweep.png" alt="先验强度扫描：MAP 与后验标准差随 σ0 变化" style="max-height:350px">
+  </figure>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>11 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">伏笔回收 · ROBUST STATISTICS</div>
+  <h2>离群值：<span class="hl">B.3 稳健统计指路</span></h2>
+  <div class="cards c3 step" data-step="1" style="margin-top:30px">
+    <div class="card">
+      <div class="big">M-估计量</div>
+      <div class="cap">长尾噪声（如 Laplacian）：惩罚随残差<b>增长变慢</b>
+        <small>式 B.21 稳健惩罚 ρ 代平方；Barron 族（B.22）运行时自动调参（本课后面 §4.1.3 细讲）</small></div>
+    </div>
+    <div class="card">
+      <div class="big">IRLS</div>
+      <div class="cap">影响函数 ψ = ρ′（B.23）→ 权重 w = ψ/r（原书写作 Ψ）
+        <small>式 B.24 迭代重加权最小平方——大残差被降权</small></div>
+    </div>
+    <div class="card">
+      <div class="big">尺度 + 开局</div>
+      <div class="cap">MAD × 1.4 ≈ 内点噪声 std（B.25）
+        <small>RANSAC（Fischler–Bolles 1981）：随机小子集先找内点</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1" style="margin-top:22px">原书第 945–947 页｜这些工具在 §8.1.4 与后续应用集里反复出现。</p>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>12 / 15</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="qmark step" data-step="1">「</div>
+  <blockquote class="step" data-step="1">数据投似然票，先验投常识票；<br>MAP，是两叠票相加后最高的那座峰。</blockquote>
+  <div class="attrib step" data-step="1">—— 本集记忆锚 ｜ 一条暗线：−log 似然是能量，先验也是能量——相加即正则化（式 B.28）</div>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>13 / 15</span></div>
+</section>
+
+<section class="slide endcard" data-steps="1">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>附录 B 后半第 943–949 页：式 B.14–B.19 MLE 与线性最小二乘 → B.3 稳健统计第 945–947 页（B.21–B.25 + RANSAC）→ B.4 先验与贝叶斯第 948–949 页（式 B.26–B.28）；B.5 随机场 / B.6 不确定性 → §4.3 与应用集回收</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>把 code/bayes_map_demo.py 里先验中心 X0 从 3.5 改成 0（错误的先验），σ0 从 4.0 调到 0.5——看 MAP 被越拉越偏：强先验能救你，也能坑你（参考：σ0=4/2/1/0.5 → MAP≈1.83/1.57/1.00/0.41，越强越偏向 0；ML 基线 1.93）</div>
+  <div class="row step" data-step="1"><span class="tag">下一集</span>E007 卷积——上一集两枚骰子点数之和的伏笔，马上兑现</div>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>14 / 15</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 06 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E006 · 数学工具箱</span><span>15 / 15</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

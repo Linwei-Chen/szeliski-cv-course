@@ -1,0 +1,26 @@
+[lab] E141 视频渲染实验开始 2026-11-03T22:27:00
+[lab] 源码 sha256=bac2303f6662853b2635d14a9f81d5f4e8fcc4dfba48ebb5939ef2a3c6e484d9
+[lab] OpenCV 5.0.0 / NumPy 2.5.4
+[lab] 边界：合成 100 帧往返小球 + 合成 240×160 四层静态图；光流 Farnebäck、补洞 Telea；不是真实视频/完整 video texture 系统
+[PASS] 帧形状 100×120×160×3：(100, 120, 160, 3)
+[PASS] 帧全部有限：finite
+[PASS] 外观最近邻=同位置反例：j=21，MSE=0.0000
+[PASS] 外观匹配方向翻转：-1→+1
+[PASS] 运动感知匹配保方向：j=95，-1→-1
+[PASS] 运动感知跳变非零（需混合）：MSE=0.002884
+[PASS] 转移矩阵行和=1：min=1.000000
+[PASS] cross-dissolve 单步单调下降：L=0:2.88e-03；L=2:3.20e-04；L=4:1.15e-04；L=8:3.56e-05；L=16:9.98e-06
+[PASS] L=16 降幅>20×：9.98e-06
+[PASS] 软 alpha 精确/硬边有误差：soft=0.000000，hard=0.001491
+[PASS] 修补优于黑洞：0.540623→0.034745
+[PASS] 24 帧动画有限：(24, 160, 240, 3)
+[lab] LEDGER：断言 12 条，PASS 12
+[lab] PNG sha256(e141_similarity.png)=7862cf3a181593bab55d80575f08061a28ad863103c5b2ad1446ca3352f7fc67
+[lab] PNG sha256(e141_loop.png)=5585e51b5caf44d6e2bda6ea48eed696016c4f838c74574c7f6d3b63cf32bc75
+[lab] PNG sha256(e141_animation.png)=f430b689c2a05c9bd8e1efe7a39791d1ee80bf13c0bce066d2f2e22bc522d9d4
+[lab] 汇总：12/12 断言通过
+[lab] 视频：cut=99 外观 j=21（MSE=0.0000，翻转=True）；运动 j=95（翻转=False，MSE=0.002884）
+[lab] 溶解：L=0 2.88e-03；L=2 3.20e-04；L=4 1.15e-04；L=8 3.56e-05；L=16 9.98e-06
+[lab] 动画：软边 1344 像素；软 MSE=0.000000/硬 MSE=0.001491；洞 2383/露出 1619；修补 0.540623→0.034745
+[lab] readings sha256=e771a4e32bd224dc76562c57f08b9cb611d8e34da4c200180afbb6063df066c6
+[ok] E141 lab：视频纹理 + 静态图分层动画

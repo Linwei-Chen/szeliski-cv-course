@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>从猜到证明：最小二乘的直观与正规方程推导</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 4 章 · 开章</div>
+  <h2>从猜到证明：最小二乘</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 4 章处理数据不全的问题。</li><li>从最简单的模型开始：猜一条线。</li><li>写下误差，求导令零，推出答案。</li><li>这一集走完从猜到证明。</li></ul>
+      <div class="src">依据：原书第 193 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集路线</div><div class="kline">残差平方和</div><div class="kline">正规方程</div><div class="kline">全最小二乘</div><div class="kline">两道作业</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十八集</span><span>01 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">附录 A · 最小二乘</div>
+  <h2>残差与直线拟合</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最小二乘在视觉里无处不在。</li><li>残差 = 测量位置 − 预测位置。</li><li>直线拟合：y = mx + b。</li><li>让竖直残差平方和最小。</li></ul>
+      <div class="src">依据：原书第 927 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">min Σ |y<sub>i</sub> − (m x<sub>i</sub> + b)|²</div><div class="mnote">式 A.25；残差定义见式 A.23–A.24</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十八集</span><span>02 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">附录 A · 正规方程</div>
+  <h2>三步推出正规方程</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对参数线性；A 叫设计矩阵，一行一个点。</li><li>一般形式：‖A x − b‖²。</li><li>展开后求梯度，令其为零。</li><li>得到 (AᵀA)x = Aᵀb。</li></ul>
+      <div class="src">依据：原书第 927–928 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e036_energy_contour.png" style="max-height:500px" alt="能量面 E(m,b) 的等高线碗｜程序生成，未用教材或论文原图"><figcaption>能量面 E(m,b) 的等高线碗｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十八集</span><span>03 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">附录 A · 解法与新尺子</div>
+  <h2>同一个模子，换一把尺子</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>实验三路同解：斜率 1.2560、截距 0.7606。</li><li>正弦拟合恢复振幅 2.5131，真值 2.5。</li><li>首选乔列斯基；QR 与病态见工具箱。</li><li>误差四面八方：解是最小特征向量。</li></ul>
+      <div class="src">依据：原书第 927–929 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个新对象</div><div class="kline">变量含误差模型</div><div class="kline">齐次平方误差</div><div class="kline">特征向量解</div><div class="kline">最后右奇异向量</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十八集</span><span>04 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">附录 A · 全最小二乘实验</div>
+  <h2>两种量距，两条线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>竖直量距斜率 1.2560。</li><li>垂直量距中心化斜率 1.2678。</li><li>差 0.0118，放大看能分开。</li><li>统计最优要求噪声一样大；先减均值。</li></ul>
+      <div class="src">依据：原书第 929–930 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e036_tls_vs_vls.png" style="max-height:500px" alt="竖直残差（橙）与垂直残差（浅蓝）｜程序生成，未用教材或论文原图"><figcaption>竖直残差（橙）与垂直残差（浅蓝）｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十八集</span><span>05 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 作业与下一集</div>
+  <h2>闭环了，下一集见</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>作业一：手推两点直线拟合。</li><li>作业二：换二次多项式重跑。</li><li>这一集：残差→正规方程→三路验证。</li><li>下一集：鲁棒损失与迭代重加权。</li></ul>
+      <div class="src">依据：原书第 927–930、945 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两句话</div><div class="kline">残差平方和是最小二乘的核心</div><div class="kline">量距方向决定最优的线</div><div class="kline">外点会拉坏平方损失</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十八集</span><span>06 / 6</span></div>
+</section>
+<div id="subbar"></div></body></html>

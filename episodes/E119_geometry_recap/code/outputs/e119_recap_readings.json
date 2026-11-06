@@ -1,0 +1,20 @@
+{
+ "n_stations": 18,
+ "n_ch11": 11,
+ "n_ch12": 6,
+ "n_ch13_bridge": 1,
+ "ch11_pages": 68,
+ "ch12_pages": 57,
+ "ch13_bridge_pages": 5,
+ "n_sparse": 5,
+ "n_dense": 6,
+ "n_trajectory": 2,
+ "n_learning": 2,
+ "n_lab": 1,
+ "n_eval": 1,
+ "n_bridges": 3,
+ "n_neural_fields": 0,
+ "n_ops": 3,
+ "n_pass": 10,
+ "n_total": 10
+}

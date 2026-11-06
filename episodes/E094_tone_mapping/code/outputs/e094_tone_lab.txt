@@ -1,0 +1,20 @@
+[lab] E094 tone mapping 开始 2026-11-02T22:12:56
+[lab] 源码 sha256=aeac26afa821e7f68338ed126162782c721dea85659fd7fa7f2d2afde81a876b
+[PASS] HDR 动态范围>100　| 15608 倍
+[PASS] 线性裁切丢失>20%像素　| 66.3%
+[PASS] 逐通道 gamma 更灰　| 0.15 vs 0.28
+[PASS] 逐通道色度误差更大　| 0.0241 vs 0.0094
+[PASS] 全局映射压进显示域　| [0.19,1.00]
+[PASS] 高斯 base 有晕轮　| 69.6%
+[PASS] 双边晕轮减半　| 7.4% vs 69.6%
+[PASS] 双边保住阶跃>80%　| 100.0%
+[PASS] 梯度域能量降>50%　| 99.6%
+[PASS] 泊松重建误差<1%　| 0.00%
+[lab] PNG sha256(e094_global.png)=8077c121e4768f7558e793d36b025f1fb17bea96a951f28d4f49573f09e89b69
+[lab] PNG sha256(e094_local.png)=716abe3d389bc79574ae6d33afb6ddbe2efc9bb2b91e4a30a7e4d01d4f582704
+[lab] PNG sha256(e094_operators.png)=1528ef38444d06d0067c451cb4014cb38bdd218146f4e9ab6e643fbd7b36a827
+[lab] readings → e094_tone_readings.json
+[lab] readings sha256=ed0cd46f7efd58eed67a101904780bdd9e41fc62bb1b936460b60bf5840a92bd
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-02T22:12:57

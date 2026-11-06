@@ -1,0 +1,20 @@
+[lab] E077 全景姿态图 开始 2026-11-05T00:31:36
+[lab] 源码 sha256=404e549007b73f6dcd0bd222f0a8acd05a884f4dc19315e9a2969a3e0a7b1008
+[PASS] 逐对串联明显漂移　| RMSE=2.55°
+[PASS] 全局解误差不到串联一半　| 串联=2.55° 全局=1.04°
+[PASS] 闭合边把缺口压小　| 串联=8.30° 全局=2.40°
+[PASS] 图连通　| 19 条边 / 8 台相机
+[PASS] 跳边提升精度　| 链边=2.55° 全边=1.04°
+[PASS] 外点破坏全局解　| 无外点=1.04° 含外点=2.17°
+[PASS] 鲁棒剔除恢复　| 含外点=2.17° 鲁棒=1.56°
+[PASS] 规范固定　| 首台相机角度固定
+[PASS] 未知量 N−1　| 每台相机一个角度未知量
+[PASS] 三图在盘　| 三张全在
+[lab] PNG sha256(e077_error.png)=917c40aeb2a5aed942750946ac75ba2e1a8c7ba2075341735a3944af3e6c48ec
+[lab] PNG sha256(e077_graph.png)=bb2e5921870fb8678dc149bc2603eb4f6cc6ecfe1a463e6d7c439c596c66f4b4
+[lab] PNG sha256(e077_pipeline.png)=9e7d3dd6078a6df486207e8075b0955d8c0c345c1a6487f4d6148514fa6034db
+[lab] readings → e077_bundle_readings.json
+[lab] readings sha256=3b2db615c000d8ef916b66cb4a7b75bf7861aa112d4e7a01ca0e5d8878bd7667
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-05T00:31:36

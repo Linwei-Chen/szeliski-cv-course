@@ -1,0 +1,23 @@
+[lab] E117 感知栈开始 2026-11-05T21:38:51
+[lab] 源码 sha256=6a3ba39d9670cae6de906301fe7618e60fd545f1f7c267a36f0c29a442c1784c
+[PASS] 深度被三个下游模块共享　| 检测/自由空间/定位
+[PASS] 双目 20 米误差小于 0.25 米　| 0.20 米
+[PASS] 双目 50 米误差大于 1 米　| 1.25 米
+[PASS] LiDAR 50 米误差小于 0.1 米　| 0.05 米
+[PASS] 融合 50 米误差小于 LiDAR　| 0.045 vs 0.05 米
+[PASS] 双目自由空间误检高于 LiDAR　| 21.2% vs 0.0%
+[PASS] 融合链路 120ms 预算内　| 100 毫秒
+[PASS] 相机失效仍有 LiDAR+雷达　| 0.045 米
+[PASS] LiDAR 失效仍有相机+雷达　| 0.100 米
+[PASS] 100ms 行进 1.5 米　| 1.5 米
+[lab] 双目 20m 0.20m｜50m 1.25m｜LiDAR 0.05m｜雷达 0.10m｜融合50m 0.045m
+[lab] 自由空间误检：双目 21.2%｜LiDAR 0.0%｜延迟 100ms｜100ms 行进 1.5m
+[lab] 失效：相机掉线 0.045m｜LiDAR 掉线 0.100m｜两者都掉 0.10m
+[lab] PNG sha256(e117_error.png)=bfe07f5b494ef4225a5441082d2e288b38097c4dae9695347c49084656a71746
+[lab] PNG sha256(e117_latency.png)=4f6b796f51527cebf60c3fcac5b6b21103c74fead01800a0759eeab434c125c5
+[lab] PNG sha256(e117_stack.png)=151856af642238a1aa92a58d2660c72190599ff16165602df488323c1d52ef62
+[lab] readings → e117_stack_readings.json
+[lab] readings sha256=7eee8463f1b5fc98794e6a2f530eeff5dc6001ff813157d09a418bb21afe7fda
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-05T21:38:51

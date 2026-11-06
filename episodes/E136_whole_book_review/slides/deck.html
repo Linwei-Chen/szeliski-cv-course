@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>全书总复盘：十五章归成六层</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">全书总复盘 · 为什么先看结构</div>
+  <h2>十五章，先归成六层</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>这一集不学新算法，只把全书结构理一遍。</li><li>全书主题很广，但广不等于散；作者在 1.3 节给过导览图。</li><li>这一集只带三样：一根横轴、一根纵轴、一张六层图。</li><li>先有结构，再谈细节。</li></ul>
+      <div class="src">依据：原书第 22、915 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">今天的三样</div><div class="kline">横轴：语义 ↔ 三维</div><div class="kline">纵轴：依赖顺序</div><div class="kline">六层图：课程自己的结构</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">两根坐标</div>
+  <h2>横看是什么，竖看先学什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>横轴：从语义理解到三维结构。</li><li>纵轴：从可以独立看，到必须依赖前面的章。</li><li>越往右越几何，越往下依赖越多。</li><li>Figure 1.12 是粗略布局，不是严格课程表。</li></ul>
+      <div class="src">依据：原书第 22 页 Figure 1.12</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么读系统图</div><div class="kline">先看横轴：这是什么</div><div class="kline">再看纵轴：先学什么</div><div class="kline">最后看箭头：谁依赖谁</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">基础 · 第 1–3 章</div>
+  <h2>问题、成像、图像处理</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 1 章：问题有多难。</li><li>第 2 章：图像怎么来的——投影、光照、镜头、采样。</li><li>第 3 章：拿到图先怎么处理——滤波、傅里叶、金字塔、几何变换。</li><li>第 1 章的逆问题、第 2 章的针孔、第 3 章的卷积，是后面的共同语言。</li></ul>
+      <div class="src">依据：原书第 24 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三章一句话</div><div class="kline">1 章：逆问题</div><div class="kline">2 章：成像模型</div><div class="kline">3 章：图像处理</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">建模 · 第 4–5 章</div>
+  <h2>一层靠模型，一层靠数据</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 4 章：能量函数、优化、先验、鲁棒拟合、MRF。</li><li>第 5 章：机器学习、深度学习、CNN、Transformer、生成模型。</li><li>现代视觉系统常常两层一起用。</li><li>一个管怎么解，一个管怎么学。</li></ul>
+      <div class="src">依据：原书第 26 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">分工</div><div class="kline">4 章：定结构</div><div class="kline">5 章：补细节</div><div class="kline">最小二乘 / 反向传播</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三个任务 · 同一套最小二乘</div>
+  <h2>换个设计矩阵，还是同一个求解器</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>直线拟合：2 个参数。</li><li>仿射对齐：6 个参数。</li><li>光度立体：每个像素 3 个未知数。</li><li>三者都最小化预测减观测的平方和；条件数差，噪声放大。</li></ul>
+      <div class="src">依据：本集实验（合成玩具，不冒充真实系统）</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e136_three_tasks.png" style="max-height:500px" alt="同一套最小二乘解三个任务：几何、运动、三维形状｜程序生成，未用教材原图"><figcaption>同一套最小二乘解三个任务：几何、运动、三维形状｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">理解与几何 · 第 6–7 章</div>
+  <h2>识别问是什么，特征问哪里是同一点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 6 章：实例识别、分类、检测、分割、视频理解、视觉语言。</li><li>第 7 章：Harris、SIFT、边缘、轮廓、Hough、分割。</li><li>第 6、7 章是一个分界：往左是理解，往右是重建。</li><li>特征匹配做不好，后面的 SfM、拼接、识别都会连锁失败。</li></ul>
+      <div class="src">依据：原书第 26–27 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">识别：这是什么</div><div class="kline">特征：哪里是同一个点</div><div class="kline">两条路都要表示和匹配</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">噪声怎么传下去</div>
+  <h2>噪声翻倍，误差大致也翻倍</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三条线：直线、仿射、光度立体的误差随噪声增长。</li><li>斜率 0.95、0.93、0.99，都接近 1。</li><li>最小二乘不压噪声，它把噪声原样传下去。</li><li>先估噪声、再看误差；模型再漂亮，也挡不住坏数据。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e136_noise.png" style="max-height:500px" alt="三种任务的误差随噪声增长：斜率都接近 1｜程序生成，未用教材原图"><figcaption>三种任务的误差随噪声增长：斜率都接近 1｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">运动与应用 · 第 8–10 章</div>
+  <h2>把基础变成产品</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 8 章：对齐、拼接、RANSAC、捆绑调整、全景。</li><li>第 9 章：稠密光流、参数运动、分层运动、视频稳像。</li><li>第 10 章：HDR、去噪、去模糊、超分、抠图、纹理合成。</li><li>手机里的全景、夜景、防抖、人像模式都在这。</li></ul>
+      <div class="src">依据：原书第 27–28 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一层三章</div><div class="kline">8 章：把图对齐</div><div class="kline">9 章：让像素有运动</div><div class="kline">10 章：做成新图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全书结构</div>
+  <h2>六层正文，加三本附录</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>六层：基础、建模、识别、运动、三维、渲染。</li><li>左边偏 2D 和语义，右边偏 3D 和几何。</li><li>附录 A、B 给数学和推断，附录 C 给数据和软件。</li><li>第 4 章给所有层提供优化，第 5 章给所有层提供学习。</li></ul>
+      <div class="src">依据：原书第 22–29 页 + 本集 lab</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e136_map.png" style="max-height:500px" alt="全书结构：六层正文 + 三本附录｜程序生成，未用教材原图"><figcaption>全书结构：六层正文 + 三本附录｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三维 · 第 11–13 章</div>
+  <h2>相机在哪、像素多远、表面什么材质</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 11 章：SfM、SLAM，恢复相机运动和三维结构。</li><li>第 12 章：局部、全局、多视图立体、单目深度。</li><li>第 13 章：形状 from X、扫描、表面表示、人体/人脸建模。</li><li>相机矩阵、对极几何、三角化、BA、MVS、泊松、隐式表面都在这一层。</li></ul>
+      <div class="src">依据：原书第 28–29 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三章三问</div><div class="kline">11 章：相机在哪</div><div class="kline">12 章：像素多远</div><div class="kline">13 章：表面什么材质</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">渲染与收束 · 第 14–15 章</div>
+  <h2>新视角，和作者的四条方法论</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 14 章：视图插值、LDI、sprite、光场、环境遮罩、视频渲染、神经渲染。</li><li>第 15 章：工程、科学、统计、学习，四条方法论收束。</li><li>渲染层决定用户最后看到什么。</li><li>表示从纹理网格一路排到纯采样光场。</li></ul>
+      <div class="src">依据：原书第 29、918 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">第 14 章路线</div><div class="kline">视图插值 → 光场</div><div class="kline">视频 → 自由视点</div><div class="kline">神经渲染</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">附录与下一步</div>
+  <h2>三本工具书，一张复习清单</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>附录 A：线性代数与数值技术。</li><li>附录 B：贝叶斯估计与鲁棒统计。</li><li>附录 C：数据集、软件、课程幻灯片。</li><li>视觉是在不确定性下，把像素变成可用的三维或语义描述。</li></ul>
+      <div class="src">依据：原书第 29 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">离开课程后常查</div><div class="kline">A：最小二乘 / 矩阵分解</div><div class="kline">B：贝叶斯 / 鲁棒统计</div><div class="kline">C：数据集 / 软件</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十八集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

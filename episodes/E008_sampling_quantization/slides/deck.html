@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E008 · 图像即函数：采样、量化与混叠</title>
+<link rel="stylesheet" href="../../../assets/shared/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<style>
+  /* E008 集内微调：公式卡压缩 KaTeX display 边距与卡片内边距（E003–E007 formula-tight 方案） */
+  .formula-tight .katex-display { margin: .12em 0; }
+  .formula-tight { padding: 18px 44px; }
+  /* E008 endcard 微调：行距/字号压缩，确保"下一集"行不被 5 行字幕栏遮盖 */
+  .endcard .row { font-size: 40px; margin: 16px 0; }
+</style>
+<script defer src="../../../assets/shared/vendor/katex/katex.min.js"></script>
+<script defer src="../../../assets/shared/vendor/katex/contrib/auto-render.min.js"></script>
+<script defer src="../../../assets/shared/deck.js"></script>
+<script>
+window.addEventListener("load", () => {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    });
+  }
+});
+</script>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 08</div>
+  <h1 class="step" data-step="1">图像即函数：<br><span class="hl">采样、量化与混叠</span></h1>
+  <p class="ep step" data-step="1">连续的光，怎么变成一格一格的像素 · §2.3 数码相机 × §3.4 傅里叶变换</p>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>01 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">全景 · IMAGE SENSING PIPELINE</div>
+  <h2>从光子到 JPEG：<span class="hl">一条流水线</span></h2>
+  <div class="step" data-step="1" style="margin-top:8px">
+    <svg class="diagram" viewBox="0 0 1180 320" aria-label="Figure 2.23 重绘：数码相机成像流水线">
+      <g font-family="PingFang SC, sans-serif">
+        <rect x="20" y="150" width="120" height="80" rx="10" fill="#e7efd9" stroke="#7aa843" stroke-width="2"></rect>
+        <text x="80" y="197" font-size="19" fill="#3f5a1e" text-anchor="middle" font-weight="700">场景辐射</text>
+        <path d="M140,190 L162,190" stroke="#8a8378" stroke-width="2.5"></path><path d="M156,184 L166,190 L156,196" fill="none" stroke="#8a8378" stroke-width="2.5"></path>
+        <rect x="165" y="150" width="120" height="80" rx="10" fill="#dbe7f0" stroke="#4a7ba6" stroke-width="2"></rect>
+        <text x="225" y="190" font-size="18" fill="#1e3a5f" text-anchor="middle" font-weight="700">光学</text>
+        <text x="225" y="214" font-size="14" fill="#4a7ba6" text-anchor="middle">含光圈</text>
+        <path d="M285,190 L307,190" stroke="#8a8378" stroke-width="2.5"></path><path d="M301,184 L311,190 L301,196" fill="none" stroke="#8a8378" stroke-width="2.5"></path>
+        <rect x="310" y="70" width="740" height="192" rx="14" fill="none" stroke="#b8ae9c" stroke-width="2" stroke-dasharray="8 6"></rect>
+        <text x="332" y="100" font-size="15" fill="#8a8378">机身 Camera Body</text>
+        <rect x="340" y="150" width="190" height="80" rx="10" fill="#fdeede" stroke="#e8590c" stroke-width="2"></rect>
+        <text x="435" y="186" font-size="19" fill="#b04a0a" text-anchor="middle" font-weight="700">传感器 CCD/CMOS</text>
+        <text x="435" y="212" font-size="14" fill="#c97a3d" text-anchor="middle">快门 · 增益（ISO）</text>
+        <path d="M530,190 L552,190" stroke="#8a8378" stroke-width="2.5"></path><path d="M546,184 L556,190 L546,196" fill="none" stroke="#8a8378" stroke-width="2.5"></path>
+        <rect x="556" y="150" width="84" height="80" rx="10" fill="#dbe7f0" stroke="#4a7ba6" stroke-width="2"></rect>
+        <text x="598" y="197" font-size="20" fill="#1e3a5f" text-anchor="middle" font-weight="700">ADC</text>
+        <path d="M640,190 L662,190" stroke="#8a8378" stroke-width="2.5"></path><path d="M656,184 L666,190 L656,196" fill="none" stroke="#8a8378" stroke-width="2.5"></path>
+        <rect x="666" y="163" width="74" height="54" rx="12" fill="#ffffff" stroke="#8a8378" stroke-width="2"></rect>
+        <text x="703" y="197" font-size="17" fill="#5a5245" text-anchor="middle" font-weight="700">RAW</text>
+        <path d="M740,190 L762,190" stroke="#8a8378" stroke-width="2.5"></path><path d="M756,184 L766,190 L756,196" fill="none" stroke="#8a8378" stroke-width="2.5"></path>
+        <rect x="766" y="128" width="274" height="124" rx="12" fill="#f6f1e6" stroke="#b8ae9c" stroke-width="2" stroke-dasharray="6 5"></rect>
+        <text x="903" y="154" font-size="15" fill="#5a5245" text-anchor="middle" font-weight="700">ISP 图像信号处理器</text>
+        <g stroke="#b8ae9c" stroke-width="1.6" fill="#ffffff">
+          <rect x="774" y="172" width="48" height="64" rx="6"></rect><rect x="827" y="172" width="48" height="64" rx="6"></rect><rect x="880" y="172" width="48" height="64" rx="6"></rect><rect x="933" y="172" width="48" height="64" rx="6"></rect><rect x="986" y="172" width="48" height="64" rx="6"></rect>
+        </g>
+        <g font-size="11" fill="#5a5245" text-anchor="middle">
+          <text x="798" y="208">去马赛克</text>
+          <text x="851" y="208">降噪锐化</text>
+          <text x="904" y="208">白平衡</text>
+          <text x="957" y="208">伽马曲线</text>
+          <text x="1010" y="208">压缩</text>
+        </g>
+        <path d="M1040,190 L1068,190" stroke="#8a8378" stroke-width="2.5"></path><path d="M1062,184 L1072,190 L1062,196" fill="none" stroke="#8a8378" stroke-width="2.5"></path>
+        <rect x="1076" y="163" width="82" height="54" rx="12" fill="#e7efd9" stroke="#7aa843" stroke-width="2"></rect>
+        <text x="1117" y="197" font-size="17" fill="#3f5a1e" text-anchor="middle" font-weight="700">JPEG</text>
+        <text x="590" y="288" font-size="19" fill="#1e3a5f" text-anchor="middle" font-weight="700">Figure 2.23（第 80 页）示意重绘：噪声会在多处混入</text>
+        <text x="590" y="310" font-size="17" fill="#8a8378" text-anchor="middle">讲者解读：采样是混叠的主现场；重采样（放大/缩小）也会引入混叠（第 87 页）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>02 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">传感器 · SENSOR GEOMETRY</div>
+    <h2>几何三参数：<span class="hl">间距与占空比</span></h2>
+    <div class="cards c2 step" data-step="1" style="margin-top:16px">
+      <div class="card">
+        <div class="big" style="font-size:52px">采样间距</div>
+        <div class="cap">相邻感光单元的物理间距<br><small>越小越密；单元越小→更噪（第 82 页）</small></div>
+      </div>
+      <div class="card">
+        <div class="big warn" style="font-size:52px">占空比</div>
+        <div class="cap">有效感光面积 ÷ 可用面积<br><small>越高越好：多进光、<b>少混叠</b>（第 82 页）</small></div>
+      </div>
+    </div>
+    <p class="lead dim step" data-step="1" style="margin-top:10px">芯片尺寸：大芯片单像素更集光（第 82 页）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 416" aria-label="采样间距与占空比示意">
+      <g font-family="PingFang SC, sans-serif">
+        <text x="329" y="44" font-size="17" fill="#1e3a5f" text-anchor="middle" font-weight="700">采样间距 pitch</text>
+        <path d="M278,66 L380,66" stroke="#1e3a5f" stroke-width="2"></path>
+        <path d="M286,60 L276,66 L286,72" fill="none" stroke="#1e3a5f" stroke-width="2"></path>
+        <path d="M372,60 L382,66 L372,72" fill="none" stroke="#1e3a5f" stroke-width="2"></path>
+        <g stroke="#d8d1c2" stroke-width="1.5" fill="#f6f1e6">
+          <rect x="74" y="80" width="84" height="84"></rect><rect x="176" y="80" width="84" height="84"></rect><rect x="278" y="80" width="84" height="84"></rect><rect x="380" y="80" width="84" height="84"></rect><rect x="482" y="80" width="84" height="84"></rect>
+          <rect x="74" y="182" width="84" height="84"></rect><rect x="176" y="182" width="84" height="84"></rect><rect x="380" y="182" width="84" height="84"></rect><rect x="482" y="182" width="84" height="84"></rect>
+          <rect x="74" y="284" width="84" height="84"></rect><rect x="176" y="284" width="84" height="84"></rect><rect x="278" y="284" width="84" height="84"></rect><rect x="380" y="284" width="84" height="84"></rect><rect x="482" y="284" width="84" height="84"></rect>
+        </g>
+        <rect x="278" y="182" width="84" height="84" fill="#f2e8dc" stroke="#d8d1c2" stroke-width="1.5"></rect>
+        <rect x="286.5" y="190.5" width="67" height="67" fill="#c89060" stroke="#8a5a2e" stroke-width="2"></rect>
+        <path d="M354,225 L470,225" stroke="#8a5a2e" stroke-width="1.5" stroke-dasharray="4 4"></path>
+        <text x="478" y="230" font-size="16" fill="#8a5a2e" font-weight="700">有效感光面积</text>
+        <text x="320" y="384" font-size="18" fill="#1e3a5f" text-anchor="middle" font-weight="700">占空比 ＝ 有效面积 ÷（横间距×纵间距）</text>
+        <text x="320" y="406" font-size="16" fill="#8a8378" text-anchor="middle">间距小→密而噪；占空比大→多光、少混叠（第 82 页）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>03 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">增益 · 噪声 · 量化 · GAIN &amp; ADC</div>
+    <h2>光变电<span class="hl">之后</span></h2>
+    <div class="cards c2 step" data-step="1" style="margin-top:16px">
+      <div class="card">
+        <div class="big" style="font-size:52px">增益＝ISO</div>
+        <div class="cap">暗光利器，代价是<br><small>往往连噪声一起放大（第 82–83 页）</small></div>
+      </div>
+      <div class="card">
+        <div class="big warn" style="font-size:52px">噪声五源</div>
+        <div class="cap">原书列举五类：固定图案 · 暗电流<br>散粒 · 放大器 · <b>量化</b>（第 83 页）</div>
+      </div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:10px"><b>标称位数 ≠ 实际可用位数</b>（第 83–84 页）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <img src="figures/quantize_banding.png" alt="渐变图量化到 2/4/8/16 级出现条带" style="width:100%;max-height:360px;object-fit:contain">
+  </div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>04 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">混叠 · ALIASING</div>
+  <h2>两根不同的波，<span class="hl">同一组采样</span></h2>
+  <p class="lead step" data-step="1" style="margin-top:14px">f=3/4 与 f=5/4 按 fs=2 采样——黑点严丝合缝重合：同一组采样，对应两个名字（alias 本义「别名」，脚注 18）。糟在无法重构：不知道原来是谁（第 84–85 页）。</p>
+  <div class="step" data-step="1" style="text-align:center; margin-top:8px">
+    <img src="figures/sampling_alias.png" alt="双正弦在 fs=2 下采样重合；100% 方盒后幅值 30% 与 -18%" style="max-height:300px">
+  </div>
+  <p class="lead dim step" data-step="1" style="margin-top:6px">代码验证：两组采样逐点一致（偏差 10⁻¹⁵ 量级，演示一）。</p>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>05 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">采样定理 · SHANNON</div>
+    <h2>下限：<span class="hl">两倍最高频</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$f_s \;\geq\; 2\,f_{\max}$$
+      <div class="note">式 2.103（第 85 页）｜香农采样定理｜Nyquist 频率＝信号最高频率（原话；多数教材指 fs/2——讲者注）</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:8px">脚注补严谨：定理精确版按「带宽」陈述；拍照没有调制信号，用最高频率足矣（脚注 19）。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:6px">讲者口语：fs/2 常叫奈奎斯特极限（第 85 页）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="超过奈奎斯特极限的频率折返混叠">
+      <g font-family="PingFang SC, sans-serif">
+        <path d="M70,250 L590,250" stroke="#8a8378" stroke-width="2"></path>
+        <path d="M582,244 L592,250 L582,256" fill="none" stroke="#8a8378" stroke-width="2"></path>
+        <text x="90" y="276" font-size="16" fill="#5a5245" text-anchor="middle">0</text>
+        <text x="570" y="276" font-size="16" fill="#5a5245" text-anchor="middle">fs</text>
+        <path d="M330,120 L330,250" stroke="#c9401f" stroke-width="2" stroke-dasharray="7 5"></path>
+        <text x="330" y="300" font-size="16" fill="#c9401f" text-anchor="middle" font-weight="700">fs/2 奈奎斯特极限</text>
+        <ellipse cx="200" cy="218" rx="85" ry="27" fill="#dbe7f0" stroke="#4a7ba6" stroke-width="2"></ellipse>
+        <text x="200" y="168" font-size="17" fill="#1e3a5f" text-anchor="middle" font-weight="700">带限信号（安全）</text>
+        <ellipse cx="460" cy="218" rx="80" ry="27" fill="#f9dcc3" stroke="#c9401f" stroke-width="2"></ellipse>
+        <text x="460" y="168" font-size="17" fill="#c9401f" text-anchor="middle" font-weight="700">超过 fs/2 的成分</text>
+        <path d="M460,245 C420,320 320,340 250,345" fill="none" stroke="#c9401f" stroke-width="2" stroke-dasharray="6 4"></path>
+        <path d="M262,337 L248,346 L264,352" fill="none" stroke="#c9401f" stroke-width="2"></path>
+        <ellipse cx="200" cy="352" rx="85" ry="20" fill="none" stroke="#c9401f" stroke-width="1.6" stroke-dasharray="5 4"></ellipse>
+        <text x="355" y="392" font-size="18" fill="#c9401f" text-anchor="middle" font-weight="700">折返假扮低频（混叠）</text>
+        <text x="320" y="428" font-size="15" fill="#8a8378" text-anchor="middle">防御思路：先让所有频率站到虚线左边（后面几页给出处方）</text>
+        <text x="612" y="470" font-size="12" fill="#8a8378" text-anchor="end">讲者示意（非原书）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>06 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">铺满也不保险 · 100% FILL</div>
+    <h2>混叠只是<span class="hl">化了装</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$H_{\text{box}}(f) = \frac{\sin \pi f}{\pi f}$$
+      <div class="note">方盒频响（讲者核算，宽=1＝两个采样间距）｜H(0.75)=+30.0%｜H(1.25)=−18.0%，与图注一致</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:14px">图注原话：蓝剩 30%、红剩 −18%——红的采样成了蓝波的<b>缩小反转版</b>（第 85 页）。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">代码验证：sinc 两值、采样比例 −0.600 全中（演示一）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="方盒滤波后两波幅值 30% 与 -18%">
+      <g font-family="PingFang SC, sans-serif">
+        <path d="M90,240 L570,240" stroke="#b8ae9c" stroke-width="2"></path>
+        <text x="72" y="246" font-size="15" fill="#8a8378">0</text>
+        <rect x="170" y="126" width="120" height="114" fill="#4a7ba6" opacity="0.85"></rect>
+        <text x="230" y="105" font-size="18" fill="#1e3a5f" text-anchor="middle" font-weight="700">+30%（f=0.75）</text>
+        <rect x="350" y="240" width="120" height="68" fill="#c9401f" opacity="0.85"></rect>
+        <text x="410" y="342" font-size="18" fill="#c9401f" text-anchor="middle" font-weight="700">−18%（f=1.25）</text>
+        <text x="320" y="400" font-size="17" fill="#5a5245" text-anchor="middle" font-weight="700">负号＝倒相：红的采样＝蓝的采样 ×（−0.6）</text>
+        <text x="320" y="436" font-size="15" fill="#8a8378" text-anchor="middle">铺满感光面只把混叠变小，没把它变没（第 85 页）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>07 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · CHIRP DOWNSAMPLING</div>
+  <h2>三种滤镜，<span class="hl">四种命运</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:14px">啁啾图频率左疏右密，4× 降采样：25% 方盒假纹最重（本集度量），9-tap 彻底清除（图注原话）。具体系数原书未给——截断 sinc 代演（讲者选择）。</p>
+  <div class="step" data-step="1" style="text-align:center; margin-top:8px">
+    <img src="figures/chirp_downsample.png" alt="啁啾图 4 倍降采样：25% 方盒、100% 方盒、9-tap 对比" style="max-height:280px">
+  </div>
+  <p class="lead dim step" data-step="1" style="margin-top:6px">代码验证：假纹振荡幅度 0.354 / 0.068 / 0.010（演示二）。</p>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>08 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">系统视角 · PSF &amp; MTF</div>
+    <h2>给相机<span class="hl">做体检</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:18px">PSF＝理想点光源的响应＝镜头模糊 ⊛ 感光面积（第 86 页）。</p>
+    <p class="lead step" data-step="1" style="margin-top:12px">MTF＝PSF 的傅里叶变换幅值（脚注 21）；混叠量 ≈ MTF 越过奈奎斯特线的面积（第 86 页）。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">散焦越重：混叠显著降，细节也陪葬。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 430" aria-label="PSF 与 MTF 示意">
+      <g font-family="PingFang SC, sans-serif">
+        <circle cx="110" cy="130" r="34" fill="none" stroke="#4a7ba6" stroke-width="3"></circle>
+        <text x="110" y="200" font-size="15" fill="#1e3a5f" text-anchor="middle">模糊盘（镜头）</text>
+        <text x="185" y="140" font-size="22" fill="#2b2b33" text-anchor="middle" font-weight="700">⊛</text>
+        <rect x="215" y="96" width="68" height="68" fill="#c89060" stroke="#8a5a2e" stroke-width="2"></rect>
+        <text x="249" y="200" font-size="15" fill="#8a5a2e" text-anchor="middle">感光面积</text>
+        <text x="320" y="140" font-size="22" fill="#2b2b33" text-anchor="middle" font-weight="700">＝</text>
+        <path d="M350,158 Q455,42 560,158" fill="none" stroke="#4a8a2e" stroke-width="3"></path>
+        <text x="455" y="72" font-size="17" fill="#4a8a2e" text-anchor="middle" font-weight="700">PSF（两者卷积）</text>
+        <path d="M80,400 L580,400" stroke="#8a8378" stroke-width="1.6"></path>
+        <path d="M80,400 L80,275" stroke="#8a8378" stroke-width="1.6"></path>
+        <rect x="440" y="275" width="140" height="125" fill="#c9401f" opacity="0.12"></rect>
+        <path d="M80,290 C220,302 330,342 470,382 L580,393" fill="none" stroke="#4a8a2e" stroke-width="3"></path>
+        <path d="M440,275 L440,400" stroke="#c9401f" stroke-width="2" stroke-dasharray="7 5"></path>
+        <text x="440" y="262" font-size="14" fill="#c9401f" text-anchor="middle" font-weight="700">奈奎斯特</text>
+        <text x="512" y="308" font-size="14" fill="#c9401f" text-anchor="middle">混叠量≈红区</text>
+        <text x="330" y="416" font-size="16" fill="#1e3a5f" text-anchor="middle" font-weight="700">MTF＝PSF 的傅里叶变换幅值（Figure 2.27 重绘，第 87 页）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>09 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">频域钥匙 · FOURIER TRANSFORM</div>
+    <h2>兑现<span class="hl">上集伏笔</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:4px;padding-top:8px;padding-bottom:8px">
+      $$s(x) = e^{\mathrm{j}\omega x}$$
+      $$o(x) = h(x) * s(x) = A\,e^{\mathrm{j}(\omega x + \phi)}$$
+      $$H(\omega) = \mathcal{F}\{h(x)\} = A\,e^{\mathrm{j}\phi}$$
+      <div class="note">式 3.52–3.54（第 143 页）</div>
+    </div>
+    <p class="lead dim step" data-step="1" style="margin-top:2px">DFT：k 超 ±N/2 即混叠；FFT O(N log N)。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="Figure 3.24 重绘：滤波器对正弦的响应">
+      <g font-family="PingFang SC, sans-serif">
+        <path d="M50,140 Q72,102 95,140 T140,140 T185,140" fill="none" stroke="#4a7ba6" stroke-width="2.5"></path>
+        <text x="118" y="182" font-size="16" fill="#1e3a5f" text-anchor="middle" font-weight="700">输入 s(x)</text>
+        <path d="M195,140 L243,140" stroke="#8a8378" stroke-width="2.5"></path><path d="M237,134 L247,140 L237,146" fill="none" stroke="#8a8378" stroke-width="2.5"></path>
+        <rect x="250" y="105" width="90" height="70" rx="10" fill="#fdf3e7" stroke="#e8590c" stroke-width="2.5"></rect>
+        <text x="295" y="147" font-size="19" fill="#b04a0a" text-anchor="middle" font-weight="700">h(x)</text>
+        <path d="M340,140 L388,140" stroke="#8a8378" stroke-width="2.5"></path><path d="M382,134 L392,140 L382,146" fill="none" stroke="#8a8378" stroke-width="2.5"></path>
+        <path d="M395,140 Q418,82 440,140 T490,140 T540,140" fill="none" stroke="#4a8a2e" stroke-width="2.5"></path>
+        <text x="468" y="182" font-size="16" fill="#4a8a2e" text-anchor="middle" font-weight="700">输出 o(x)</text>
+        <text x="468" y="222" font-size="14" fill="#5a5245" text-anchor="middle">同频正弦：幅值 A · 相移 φ</text>
+        <text x="320" y="300" font-size="18" fill="#1e3a5f" text-anchor="middle" font-weight="700">同频进、同频出，只改 A 与 φ</text>
+        <text x="320" y="336" font-size="16" fill="#5a5245" text-anchor="middle">逐频记录 (A, φ)，就是滤波器的「频率指纹」H(ω)</text>
+        <text x="320" y="392" font-size="16" fill="#1e3a5f" text-anchor="middle" font-weight="700">空域卷积 ＝ 频域相乘（卷积定理，第 122 页）</text>
+        <text x="320" y="430" font-size="14" fill="#8a8378" text-anchor="middle">Figure 3.24（第 143 页）示意重绘</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>10 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">核的体检 · TABLE 3.1</div>
+  <h2>常用核的<span class="hl">频率指纹</span></h2>
+  <p class="lead step" data-step="1" style="margin-top:14px">原书读表三句话：滑动平均不均匀压高频→振铃；二项式仍漏高频→降采样混叠；Sobel 先放大后衰减→细边缘吃亏（第 144–146 页）。</p>
+  <div class="step" data-step="1" style="text-align:center; margin-top:8px">
+    <img src="figures/kernel_freqresp.png" alt="Table 3.1 六个核的频响曲线" style="max-height:290px">
+  </div>
+  <p class="lead dim step" data-step="1" style="margin-top:6px">代码验证：闭式 vs np.fft 幅值谱逐点一致（最大偏差 6.7×10⁻¹⁶）。</p>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>11 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">压缩 · DISCRETE COSINE TRANSFORM</div>
+    <h2>八乘八的<span class="hl">频率积木</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px;padding-top:6px;padding-bottom:6px">
+      $$F(k)=\textstyle\sum_i \cos\big(\tfrac{\pi}{N}(i{+}\tfrac{1}{2})k\big)\,f(i)$$
+      <div class="note">式 3.62–3.63（第 147–148 页）｜实验用正交归一版（讲者注）</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:8px">JPEG 把图切成 <b>8×8 块</b>独立变换、量化（JPEG/MPEG 均用 8×8，第 98 页；基函数见 Figure 3.25）。</p>
+    <p class="lead step" data-step="1" style="margin-top:6px">第一个基＝DC 块平均；第二个＝微弯斜坡。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:6px">独立分块的代价：块效应（第 148 页）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <img src="figures/dct_compress.png" alt="8×8 分块 DCT 保留 16/6/3 系数的重构对比" style="max-height:440px">
+  </div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>12 / 15</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="qmark step" data-step="1">「</div>
+  <blockquote class="step" data-step="1">采样，是把连续世界切成格子；<br>混叠，是格子太粗时，高频假扮低频来骗你。<br>防御只有一招：先低通，再采样。</blockquote>
+  <div class="attrib step" data-step="1">—— 讲者总结 · 本集记忆锚 ｜ 暗线：上集卷积定理（空域卷积＝频域相乘）在此从性质变成处方</div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>13 / 15</span></div>
+</section>
+
+<section class="slide endcard" data-steps="1">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§2.3 第 79–100 页：传感器七参数第 81–84 页；重点 §2.3.1 采样与混叠第 84–87 页（Figure 2.25–2.27、式 2.103）；§3.4 第 143–148 页：式 3.52–3.57、Table 3.1（第 145 页）、DCT 式 3.62–3.63；傅里叶性质详见（Szeliski 2010, Tables 3.1–3.3）</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>code/sampling_demo.py 三问：①换频率与相位——何时重合、何时倒相？②方盒宽取 1，换帐篷核，重算 30% 与 −18% ③自设计 9-tap，对比假纹</div>
+  <div class="row step" data-step="1"><span class="tag">下一集</span>E009 什么是计算机视觉？为什么它这么难</div>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>14 / 15</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 08 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E008 · 数学工具箱</span><span>15 / 15</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

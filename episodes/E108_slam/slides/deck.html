@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>SLAM：机器人一边走一边画地图</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 734 页 · 什么是 SLAM</div>
+  <h2>SLAM：边走，边定位，边建图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>机器人一边走，一边要知道自己在哪里。</li><li>还要把周围的地标画进地图。</li><li>定位和建图互相依赖：先有地图才能定位，先定位才能建图。</li><li>地图可以是稀疏点、稠密深度，也可以带语义。</li></ul>
+      <div class="src">依据：原书 p.734</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个问题一起解</div><div class="kline">我在哪？</div><div class="kline">周围是什么样？</div><div class="kline">答案互相依赖</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 734 页 · 里程计 vs SLAM</div>
+  <h2>里程计只回答“相对上一帧走了多少”</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视觉里程计：短距离运动估计，不建全局地图。</li><li>误差一帧帧累积，走一圈可能偏几十厘米。</li><li>SLAM 多两件事：维护全局地图，认出回到老地方。</li><li>回环把累积漂移拉回去。</li></ul>
+      <div class="src">依据：原书 p.734</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">里程计 → SLAM</div><div class="kline">里程计：相邻帧运动</div><div class="kline">+ 全局地图</div><div class="kline">+ 回环检测</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 735 页 · 前端与后端</div>
+  <h2>SLAM 通常拆成前端和后端</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>前端：高频跟踪当前帧、做数据关联、维护局部地图。</li><li>后端：低频优化关键帧和全局地图。</li><li>PTAM 把跟踪和建图拆到两个线程，用不同频率跑。</li><li>前端要快要稳，后端要准。</li></ul>
+      <div class="src">依据：原书 p.735</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e108_pipeline.png" style="max-height:520px" alt="SLAM 五步：跟踪→局部地图→回环检测→位姿图优化→全局地图｜程序生成，未用原书原图"><figcaption>SLAM 五步：跟踪→局部地图→回环检测→位姿图优化→全局地图｜程序生成，未用原书原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 734–735 页 · 回环</div>
+  <h2>回环：认出“我又回到这里”</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>当前画面和很久以前某一帧很像，先做地点识别。</li><li>确认是同一地方后，在轨迹上加一条回环边。</li><li>后端把里程计边、回环边、地标观测一起优化。</li><li>认对了拉回漂移；认错了，整张地图会被假边拧歪。</li></ul>
+      <div class="src">依据：原书 pp.734–735</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">回环两步</div><div class="kline">地点识别：外观检索</div><div class="kline">几何验证：确认同一地点</div><div class="kline">加边：让整条轨迹分担误差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 736 页 · 路线分歧</div>
+  <h2>稀疏还是稠密？特征还是直接？</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>稀疏特征快、稳，适合定位。</li><li>稠密地图好看，适合避障和 AR 遮挡，但算力大。</li><li>直接法用像素灰度，弱纹理也能用，但对光照敏感。</li><li>后端可以用滤波、因子图或位姿图。</li></ul>
+      <div class="src">依据：原书 p.736</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个选择</div><div class="kline">稀疏特征 / 稠密像素</div><div class="kline">特征匹配 / 直接法</div><div class="kline">滤波 / 因子图 / 位姿图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 736–737 页 · VIO</div>
+  <h2>视觉 + IMU：一个管快，一个管慢</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相机帧率低，快速运动容易糊。</li><li>IMU 频率高、短期准，但长期漂。</li><li>视觉惯性里程计把两者结合，用 IMU 去低频漂移。</li><li>VIO 还要做时间同步、外参标定和 IMU 偏置估计。</li></ul>
+      <div class="src">依据：原书 pp.736–737</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么互补</div><div class="kline">相机：低频、长期稳</div><div class="kline">IMU：高频、短期准</div><div class="kline">合起来：尺度可观、漂移更小</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · 纯里程计</div>
+  <h2>40 个位姿走一圈，终点偏 0.395 米</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>机器人沿 10×8 矩形走一圈。</li><li>40 个位姿、12 个地标、120 条观测。</li><li>里程计噪声：0.02 米、0.008 弧度。</li><li>不做回环，位姿图只能拟合里程计，终点拉不回起点。</li></ul>
+      <div class="src">依据：程序生成 2D 实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">漂移怎么来的</div><div class="kline">每一步误差不大</div><div class="kline">39 步连起来</div><div class="kline">终点就偏了</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图 · 回环前后轨迹</div>
+  <h2>加回环：终点误差降到 0.0223 米</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>加起点和终点的回环约束。</li><li>终点误差 0.395 → 0.0223 米，约 17.7 倍。</li><li>ATE 0.330 → 0.195。</li><li>地标地图 RMS 0.259 → 0.188。</li></ul>
+      <div class="src">依据：程序生成 2D 实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e108_traj.png" style="max-height:520px" alt="2D 轨迹：真值/纯里程计/回环优化，40 位姿 12 地标｜程序生成，未用原书原图"><figcaption>2D 轨迹：真值/纯里程计/回环优化，40 位姿 12 地标｜程序生成，未用原书原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图 · 误差与失败边界</div>
+  <h2>回环认对是收益，认错是灾难</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>回环残差 RMS 只有 0.00096。</li><li>回环不是把终点硬拽过去，而是加一条观测边。</li><li>假回环会把整张地图带歪。</li><li>动态物体、纯旋转、弱纹理、快速运动都会让前端失败。</li></ul>
+      <div class="src">依据：程序生成实验；原书 pp.734–737</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e108_error.png" style="max-height:520px" alt="回环前后：终点 0.395→0.022，ATE 0.330→0.195｜程序生成，未用原书原图"><figcaption>回环前后：终点 0.395→0.022，ATE 0.330→0.195｜程序生成，未用原书原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程 · 架构四问</div>
+  <h2>落地 SLAM，先回答四个问题</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>前端多快，后端多慢？</li><li>关键帧怎么选？太多算不动，太少约束不够。</li><li>回环怎么验证？单靠外观不够。</li><li>地图怎么存？稀疏点、稠密深度还是语义层？</li></ul>
+      <div class="src">依据：原书 pp.735–736；本集总结</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">四个设计点</div><div class="kline">频率分工</div><div class="kline">关键帧策略</div><div class="kline">回环验证</div><div class="kline">地图表示</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">概念比较 · SLAM / SFM / BA</div>
+  <h2>不是三种算法，是三种用法</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SFM：离线、全局一致、可以慢慢优化。</li><li>BA：它们共用的后端。</li><li>SLAM：在线、有延迟约束、要处理回环和传感器。</li><li>选型先问：要实时吗？要闭环吗？地图要多密？</li></ul>
+      <div class="src">依据：原书 pp.734–737；本集总结</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一张表</div><div class="kline">SFM：离线 + 全局</div><div class="kline">SLAM：在线 + 回环</div><div class="kline">BA：共用后端</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 下一集</div>
+  <h2>SLAM 的三句话</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>在线同时定位和建图：前端高频，后端低频。</li><li>回环拉回漂移，假回环会毁图。</li><li>稀疏/稠密、特征/直接、滤波/图优化，都是取舍。</li><li>下一集：解剖 ORB-SLAM 的三条线程。</li></ul>
+      <div class="src">依据：本集回顾</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">带走三句话</div><div class="kline">前端跟踪，后端优化</div><div class="kline">回环是双刃剑</div><div class="kline">选型看场景和算力</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>从 2D 到 3D：视频卷积与循环网络</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 5 章 · 更复杂的模型</div>
+  <h2>从二维走到三维</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第一步，把卷积从二维平面搬到三维时空。</li><li>第二步，让网络沿着时间传信息。</li><li>三维数据：视频、占用地图、医学影像。</li><li>本集讲三维卷积与循环网络两小节。</li></ul>
+      <div class="src">依据：原书第 317 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两步</div><div class="kline">到三维去</div><div class="kline">沿时间传</div><div class="kline">从平面到时空</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十二集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三维卷积 · 辨析与四种融合</div>
+  <h2>通道不是时间，三维卷积另开一维</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>老网络的感受野，是长宽加通道的盒子。</li><li>通道是并列特征，不是空间。</li><li>三维卷积沿时间再开一维，同组核共享权重。</li><li>四种融合：单帧、晚融合、早融合、三维卷积。</li></ul>
+      <div class="src">依据：原书第 317–318 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e050_fig1_fusion.png" style="max-height:500px" alt="四种时序融合：单帧 / 晚融合 / 早融合 / 三维卷积｜程序生成，未用教材或论文原图"><figcaption>四种时序融合：单帧 / 晚融合 / 早融合 / 三维卷积｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十二集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三维卷积 · C3D 与时空核</div>
+  <h2>三乘三乘三的时空核</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>C3D 用三乘三乘三的核加深网络。</li><li>效果更好，被称作三维卷积世界的 VGG。</li><li>二维换三维，参数只乘时间格数。</li><li>每帧独立配核，参数才乘帧数。</li></ul>
+      <div class="src">依据：原书第 318 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e050_fig2_kernel.png" style="max-height:500px" alt="感受野盒子与时空窗：长宽加通道，对照长宽加时间｜程序生成，未用教材或论文原图"><figcaption>感受野盒子与时空窗：长宽加通道，对照长宽加时间｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十二集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">体积数据 · 提速</div>
+  <h2>体素、医学影像与工程提速</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>3D ShapeNets 与 VoxNet 把物体切成体素。</li><li>医学影像用三维卷积分割病灶。</li><li>代价是计算和内存都很重。</li><li>慢快双流：慢路低帧率，快路高帧率。</li></ul>
+      <div class="src">依据：原书第 318–319 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">提速招法</div><div class="kline">慢快双流</div><div class="kline">通道分离卷积</div><div class="kline">架构搜索</div><div class="kline">多网格训练</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十二集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">点云与网格 · 单图推三维</div>
+  <h2>单图推三维：点云与网格</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三条路：逐像素深度、体积密度、点云网格。</li><li>新近实验怀疑：可能只是认出类别。</li><li>点云研究很多，综述回顾两百多篇。</li><li>Mesh R-CNN：检测骨干加两条三维支路。</li></ul>
+      <div class="src">依据：原书第 320 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">关键词</div><div class="kline">逐像素深度</div><div class="kline">体积密度重建</div><div class="kline">三角网格</div><div class="kline">PyTorch3D</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十二集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">循环网络 · 序列与展开</div>
+  <h2>RNN：把上一刻喂给下一刻</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>序列数据：视频帧、音频、文本。</li><li>上一时刻的特征，喂给下一时刻。</li><li>展开图：同一层摊开成时间上的一串。</li><li>卷起来看和摊开看，是同一个网络。</li></ul>
+      <div class="src">依据：原书第 321 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e050_fig3_unroll.png" style="max-height:500px" alt="循环层展开：同组权重走时间串｜程序生成，未用教材或论文原图"><figcaption>循环层展开：同组权重走时间串｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十二集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">梯度与门控</div>
+  <h2>梯度会消失，也会爆炸</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>梯度沿时间回传，可能消失或爆炸。</li><li>权重缩半，十二步缩水四千多倍。</li><li>权重放大一点八倍，十二步放大一千多倍。</li><li>门控单元 GRU 与 LSTM 调节信息流。</li></ul>
+      <div class="src">依据：原书第 321–322 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e050_fig4_gradient.png" style="max-height:500px" alt="梯度随回传步数衰减或爆炸（实验档实算，log 纵轴，线性化教学设定）｜程序生成，未用教材或论文原图"><figcaption>梯度随回传步数衰减或爆炸（实验档实算，log 纵轴，线性化教学设定）｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十二集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">应用与 attention</div>
+  <h2>用在哪儿：从视频到注意力</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视频理解、语言建模、看图说话、视觉问答。</li><li>也能缝多视角，或做可训练的光流。</li><li>RNN 的历史信息都挤在隐藏状态里。</li><li>注意力：查询对键，加权取值。</li></ul>
+      <div class="src">依据：原书第 322 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">attention</div><div class="kline">键与值：存一串</div><div class="kline">查询：按相似度对</div><div class="kline">自注意力：看历史</div><div class="kline">视觉注意力：看图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十二集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">盘点 · 移交</div>
+  <h2>两步走完：3D 卷积与 RNN</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三维卷积：时空核、体素、点云、网格。</li><li>循环网络：共享权重、梯度问题、门控。</li><li>深学去看教科书第八到第十章。</li><li>下一集：Transformer 与视觉 Transformer。</li></ul>
+      <div class="src">依据：原书第 322 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集回顾</div><div class="kline">到三维去</div><div class="kline">沿时间传</div><div class="kline">下一集：注意力</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十二集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

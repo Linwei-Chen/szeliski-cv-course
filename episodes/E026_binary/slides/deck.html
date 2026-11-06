@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>二值图像处理：形态学、距离变换与连通域</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 二值图像处理</div>
+  <h2>二值图：阈值、形态学、距离、连通域</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>二值图来自一次阈值：f 不小于 t 记 1。</li><li>形态学五个操作：膨胀、腐蚀、多数票、开、闭。</li><li>距离变换两趟光栅，量到零像素的距离。</li><li>连通域连片，报面积、周长、质心、二阶矩。</li></ul>
+      <div class="src">依据：原书第 138–142 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三站</div><div class="kline">阈值化：f≥t 记 1</div><div class="kline">形态学：五个操作</div><div class="kline">距离变换：两趟光栅</div><div class="kline">连通域：N4/N8 与统计</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>01 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 138 页 · 阈值与形态学</div>
+  <h2>一道阈值，五种修法</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>阈值：灰度不小于 t 记 1，否则记 0。</li><li>用途：扫描文档转黑白，再做 OCR。</li><li>形态学改变二值物体的形状。</li><li>图 3.22 六格，结构元素 5×5 方形。</li></ul>
+      <div class="src">依据：原书第 138 页</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e026_morph_ops.png" style="max-height:520px" alt="五操作六格：原图、膨胀、腐蚀、多数票、开、闭，结构元素 5×5 方形｜程序生成，未用教材或论文原图"><figcaption>五操作六格：原图、膨胀、腐蚀、多数票、开、闭，结构元素 5×5 方形｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>02 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 138–139 页 · 统一框架</div>
+  <h2>一个框架管五个：卷积计数再卡阈值</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>结构元素扫过图像，数窗口里的 1，得 c。</li><li>再对 c 卡阈值，就得到各种操作。</li><li>膨胀 θ(c,1)，腐蚀 θ(c,S)，多数票 θ(c,S/2)。</li><li>开=先腐蚀再膨胀，闭=先膨胀再腐蚀。</li></ul>
+      <div class="src">依据：原书第 138–139 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">c = f ⊗ s</div><div class="mnote">S=结构元素像素数；dilate=θ(c,1)，erode=θ(c,S)，majority=θ(c,S/2)；open=dilate(erode)，close=erode(dilate)</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>03 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 138–139 页 · 效果与图注</div>
+  <h2>长粗、缩细、去小、填孔</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>膨胀让 1 的物体长粗，腐蚀让它缩细。</li><li>开、闭保住大区域和光滑边界。</li><li>多数票把尖锐的角轻微磨圆。</li><li>开运算去不掉不够宽的点。</li></ul>
+      <div class="src">依据：原书第 138–139 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e026_morph_ops.png" style="max-height:520px" alt="同一组六格：多数票磨圆尖角，开运算去小亮点，闭运算填暗孔，5×5 大亮块保留｜程序生成，未用教材或论文原图"><figcaption>同一组六格：多数票磨圆尖角，开运算去小亮点，闭运算填暗孔，5×5 大亮块保留｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>04 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 139–140 页 · 距离变换</div>
+  <h2>到最近的零像素有多远</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两趟光栅预计算到曲线或点集的距离。</li><li>用途：水平集、倒角匹配、羽化、最近点对齐。</li><li>d1 街区 |k|+|l|，d2 欧氏 √(k²+l²)。</li><li>D 取到最近零像素的距离。</li></ul>
+      <div class="src">依据：原书第 139–140 页</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e026_dt_iso.png" style="max-height:520px" alt="两种度量的等值线：街区距离是菱形，欧氏距离是圆｜程序生成，未用教材或论文原图"><figcaption>两种度量的等值线：街区距离是菱形，欧氏距离是圆｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>05 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 140 页 · 两趟光栅</div>
+  <h2>先传北西，再传南东</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第一趟自顶向下：取 1+北邻或西邻的最小值。</li><li>第二趟自底向上：再并入 1+南邻或东邻。</li><li>两趟结果与逐点定义一致。</li><li>方向要与邻居配套，配错就出错。</li></ul>
+      <div class="src">依据：原书第 140 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e026_dt_raster.png" style="max-height:520px" alt="两趟光栅：中央 7×7 方块的距离由边界向内 1、2、3、4｜程序生成，未用教材或论文原图"><figcaption>两趟光栅：中央 7×7 方块的距离由边界向内 1、2、3、4｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>06 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 140 页 · 欧氏距离</div>
+  <h2>标量不够，要存向量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>只存最小标量距离，两趟不够。</li><li>每个像素存到边界的 Δx、Δy。</li><li>比较用平方距离，搜索区域要更大。</li><li>实验：标量 5.83，真值约 5.39。</li></ul>
+      <div class="src">依据：原书第 140 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e026_dt_iso.png" style="max-height:520px" alt="同一张等值线图：菱形与圆对照，用来看欧氏距离的差别｜程序生成，未用教材或论文原图"><figcaption>同一张等值线图：菱形与圆对照，用来看欧氏距离的差别｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>07 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 140–141 页 · 别名与推广</div>
+  <h2>草火、倒角、骨架、带符号</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>草火变换：像素值是火烧到的时刻。</li><li>倒角：像木工和工业设计里的倒角。</li><li>距离场的脊线是骨架，也叫中轴变换。</li><li>带符号距离：前景正、背景负，边界 ±1。</li></ul>
+      <div class="src">依据：原书第 140–141 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e026_signed_profile.png" style="max-height:520px" alt="带符号距离的行剖面：前景为正，背景为负，边界两侧是 +1 和 −1｜程序生成，未用教材或论文原图"><figcaption>带符号距离的行剖面：前景为正，背景为负，边界两侧是 +1 和 −1｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>08 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">书上第 141–142 页 · 连通域</div>
+  <h2>连成片，再报统计量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>同值相邻的像素连成一个连通域。</li><li>N4 看上下左右，N8 再加斜对角。</li><li>用途：找字母、找细胞、算面积。</li><li>统计：面积、周长、质心、二阶矩。</li></ul>
+      <div class="src">依据：原书第 141–142 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e026_cc_stats.png" style="max-height:520px" alt="斜对角接触的两块：N4 分成两个域，N8 连成一个域，星号为质心｜程序生成，未用教材或论文原图"><figcaption>斜对角接触的两块：N4 分成两个域，N8 连成一个域，星号为质心｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>09 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>三件事：修形、量距、连片</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>形态学：卷积计数再卡阈值，开去亮点、闭填暗孔。</li><li>距离变换：到零像素的距离，欧氏要存向量。</li><li>连通域：N4 严、N8 宽，二阶矩给长短轴。</li><li>下一集：书上第 142 页起，傅里叶变换。</li></ul>
+      <div class="src">依据：原书第 138–142 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三站</div><div class="kline">形态学：五个操作</div><div class="kline">距离变换：两趟+向量</div><div class="kline">连通域：N4/N8+四统计</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第十八集</span><span>10 / 10</span></div>
+</section>
+<div id="subbar"></div></body></html>

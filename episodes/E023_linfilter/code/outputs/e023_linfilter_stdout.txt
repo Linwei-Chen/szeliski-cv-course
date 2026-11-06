@@ -1,0 +1,64 @@
+== E023 数值实验（§3.2 前半） ==
+== #1 卷积与相关之辨（式 3.14/3.15，p.120） ==
+  [PASS] #1 δ 卷积 h 复现 h 本尊（h∗δ=h）
+  [PASS] #1 δ 相关 h 得反射（correlation produces the reflected signal）
+  [PASS] #1 非对称核下卷积≠相关（输出差>0）
+    数值: 非对称核 δ 响应 卷积 vs 相关 最大差 0.1200（=|h−flip(h)| 最大差 0.1200）
+== #2 LSI 两原理（式 3.16/3.17，p.122） ==
+  [PASS] #2 叠加原理（式 3.16）：h∘(fA+fB)=h∘fA+h∘fB
+  [PASS] #2 平移不变（式 3.17）：输入平移 (2,2)，输出同样平移
+    数值: 叠加最大差 2.22e-16；平移最大差 0.00e+00（behaves the same everywhere）
+  [PASS] #2 线性滤波=小邻域固定加权组合（显式双循环=相关实现）
+== #3 矩阵视角（式 3.19 g=Hf，Figure 3.12，p.122） ==
+  [PASS] #3 一维滤波 g=Hf 与直接卷积逐点一致（Figure 3.12 同型）
+  [PASS] #3 H 每行非零元个数=核宽 K（Figure 3.12 的稀疏带状结构）
+    数值: 8×10 稀疏 H 每行非零元 3 个（=核宽 K），Hf 与卷积最大差 0.00e+00
+== #4 边界 padding（p.123–124 列表 + Figure 3.13 断言） ==
+  [PASS] #4 zero padding 把边缘拉暗（darkens the edges）
+  [PASS] #4 constant C=60 渗入比 zero 温和（边缘环更接近内部）
+  [PASS] #4 均匀图上 clamp/wrap/mirror/extend 边缘环无偏（=100 精确）
+  [PASS] #4 亮框图排序：zero 拉暗 < mirror 保色 < clamp 边界值向内传播
+    数值: 均匀图边缘环 zero 61.11、constant60 84.44；亮框图边缘环 zero 90.0、constant 113.3、clamp 160.0、wrap 160.0、mirror 135.6、extend 180.0
+  [PASS] #4 normalized zero（除以软 alpha）边缘环=只对图内窗口取均值（角点 160/边中 140）
+    数值: normalized zero 均匀图边缘环 100.0；亮框图角点 160.0、边中 140.0
+  [PASS] #4 extend 边缘环=行内一维平滑（无外部污染）、角点精确保持原值（keeps the border pixels fixed）
+    数值: extend 边缘环 vs 行内平滑最大差 1.11e-16；角点 (0,0) 保持差 5.55e-17
+== #5 box 滤波与滑动窗口（p.125–126） ==
+  [PASS] #5 全 1 核卷积再缩放=均值核（kernel of all ones and then scaling）
+  [PASS] #5 滑窗 running sum 与直接卷积逐点一致（1D，K=15）
+  [PASS] #5 二维两趟滑窗（横扫+纵扫）与直接二维卷积逐点一致
+    数值: 1D running sum 最大差 1.11e-16；2D 两趟最大差 2.78e-16；K=15 时每像素 直接 K²=225 次乘加 → 每趟滑窗 2 次加减（与 K 无关）
+== #6 tent 自卷积='Gaussian' 核（p.126） ==
+  [PASS] #6 tent⋆tent=[1,4,6,4,1]/16（Figure 3.14c 系数）
+    数值: [1,2,1]/4⋆[1,2,1]/4 与 [1,4,6,4,1]/16 最大差 0.00e+00
+  [PASS] #6 bilinear 3×3 核=两个线性 tent 的外积（p.126 bilinear）
+== #7 锐化式 3.22（p.126） ==
+  [PASS] #7 γ=0 → 恒等
+  [PASS] #7 式 3.22 对 f 线性（叠加成立）
+  [PASS] #7 锐化增强边缘（γ=1.0 梯度能量>原图）
+  [PASS] #7 γ=0/0.5/1.0 梯度能量单调增
+    数值: 梯度能量 γ=0 1.1360 → 0.5 1.5525 → 1.0 1.9768（提升 1.74×）；线性叠加最大差 4.44e-16
+== #8 暗房式 3.23 非线性（p.126） ==
+  [PASS] #8 同 γ 同图 3.23 与 3.22 输出不同（最大差>0）
+  [PASS] #8 式 3.23 违反叠加（no longer a linear filter）
+  [PASS] #8 乘性 3.23 无负值振铃（输出≥0），线性 3.22 有负值振铃（透射率非负：暗房比喻自洽）
+    数值: 3.23 vs 3.22 最大差 0.9992；叠加违反量 0.7569；输出最小值 3.22 -0.6012 < 0 ≤ 3.23 0.0001（γ=1）
+== #9 Sobel 与 corner 初瞥（Figure 3.14d–e，p.126–127） ==
+  [PASS] #9 Sobel 强调竖直边缘（竖边响应>横边响应）
+  [PASS] #9 Sobel=竖直 tent(1,2,1) 与水平中心差分(−1,0,1) 的外积（p.126–127）
+  [PASS] #9 corner 核对角点有响应、对轴对齐直边响应为 0（外积可分性）
+  [PASS] #9 corner 核沿对角边也有响应（responds not only to the corners … but also along diagonal edges）
+    数值: Sobel 竖边 4.00 / 横边 0.00；corner 核 角点 1.00、直边 0.00、对角边 3.00（p.127）
+== #C 常数核对 ==
+  [PASS] C1 Sobel 核每行和=0（差分核）
+  [PASS] C2 corner 核总和=0
+  [PASS] C3 式 3.22 γ=0 化简为恒等（g=f）
+  [PASS] C4 非对称核 flip(h)≠h（卷积=翻转后的相关）
+== #D 区分力注入自检 ==
+  [PASS] D1 相关冒充卷积 → #1 断言拦截 ✓
+  [PASS] D2 clamp 冒充 mirror → #4 断言拦截 ✓
+    数值: 八宫格演示图（程序生成）连通域数 2（主+次方块）
+== #S 同步检查 ==
+  [PASS] #S figures 同步 7 张（先比对后覆盖）
+
+34 条断言 PASS（30 数据+4 常数）＋同步 1 项＋区分力自检 2/2 拦截

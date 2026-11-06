@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>人脸识别：机器最拿手的识别任务</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 人脸识别</div>
+  <h2>机器最拿手的人脸识别</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>计算机的各种识别任务里，人脸识别最成功。</li><li>人认不熟的脸会吃力，机器在小圈子很稳。</li><li>从小圈子认人，已经走进消费级相册。</li><li>用途很多，也有被滥用的可能。</li></ul>
+      <div class="src">依据：原书第 363 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集路线</div><div class="kline">应用与滥用</div><div class="kline">PIE 与数据集</div><div class="kline">从特征点到 ArcFace</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">应用 · 边界</div>
+  <h2>用途很广，边界要清楚</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>人机交互、身份核验、桌面登录。</li><li>家长控制、病人监护也在用。</li><li>书上同一页提醒：可能被滥用。</li><li>用途越广，越要先问谁来管。</li></ul>
+      <div class="src">依据：原书第 363 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五类用途</div><div class="kline">人机交互</div><div class="kline">身份核验、桌面登录</div><div class="kline">家长控制、病人监护</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">难点 · 数据集</div>
+  <h2>姿态、光照、表情，合称 PIE</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>难点是姿态、光照、表情。</li><li>识别器要在宽范围的 PIE 下训练。</li><li>数据集从 LFW 一路涨到 WIDER FACE。</li><li>图里是五套数据集的规模阶梯。</li></ul>
+      <div class="src">依据：原书第 363–364 页；Table 6.1</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e059_pie_datasets.png" style="max-height:500px" alt="PIE 三因素与五套数据集规模｜程序生成，未用教材或论文原图"><figcaption>PIE 三因素与五套数据集规模｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">早期路线</div>
+  <h2>最早：量五官，学整体</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最早找眼睛、鼻子、嘴巴的位置。</li><li>再量这些特征点之间的距离。</li><li>另一支把灰度图投到低维子空间。</li><li>这就是特征脸，也有人用 AAM。</li></ul>
+      <div class="src">依据：原书第 364 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条早期路线</div><div class="kline">特征点：量距离</div><div class="kline">特征脸：低维子空间</div><div class="kline">AAM：形状与外观一起建模</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">形状与纹理</div>
+  <h2>只记脸色不够，形状也要算</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>长相和可辨识度，既靠形状也靠纹理。</li><li>特征脸抓住的主要是颜色和纹理。</li><li>头一转，姿态会干扰识别。</li><li>识别前要先把姿态影响扣掉。</li></ul>
+      <div class="src">依据：原书第 365 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两半</div><div class="kline">形状：脸型与轮廓</div><div class="kline">纹理：颜色与明暗</div><div class="kline">侧脸时形状这一半更要紧</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Rowland 实验</div>
+  <h2>形状和颜色，两本账一起算</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Rowland 和 Perrett 先手描五官轮廓。</li><li>用轮廓把每张脸校正到标准形状。</li><li>再分别看形状和颜色偏离平均脸多少。</li><li>两种变形都能对上年龄、性别。</li></ul>
+      <div class="src">依据：原书第 366 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实验结论</div><div class="kline">形状和颜色都重要</div><div class="kline">只看颜色会丢信息</div><div class="kline">校正到标准形状再比较</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">建模工具</div>
+  <h2>三件建模工具</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>主动形状模型：管形状怎么变。</li><li>三维形变模型：建整张脸的三维结构。</li><li>弹性束图匹配：局部响应绑形状模型。</li><li>三件工具后来都很常用。</li></ul>
+      <div class="src">依据：原书第 366 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">各管什么</div><div class="kline">ASM：轮廓点怎么摆</div><div class="kline">3DMM：给脸加深度</div><div class="kline">EBGM：关键点周围的小网</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">AAM · 双通道</div>
+  <h2>AAM：形状和纹理一起动</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>AAM 同时建模形状和纹理的变化。</li><li>纹理先归一化到标准形状再分析。</li><li>形状等于平均形状加形变。</li><li>纹理等于平均纹理加形变，共用参数。</li></ul>
+      <div class="src">依据：原书第 366 页（式 6.2–6.3 的白话）</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e059_aam_shape_texture.png" style="max-height:500px" alt="AAM 双通道：平均形状与平均纹理汇入同一组外观参数｜程序生成，未用教材或论文原图"><figcaption>AAM 双通道：平均形状与平均纹理汇入同一组外观参数｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">身份子空间</div>
+  <h2>先把脸摆正，再谈认人</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>身份子空间把身份和干扰分开。</li><li>干扰包括光照、姿态、表情。</li><li>AAM 在识别里主要用来对齐。</li><li>三维形状模型对大幅转头更稳。</li></ul>
+      <div class="src">依据：原书第 366–367 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么用</div><div class="kline">身份子空间：分开变化</div><div class="kline">对齐：摆到标准姿态</div><div class="kline">三维模型：单目或多视角视频</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">跟踪 · 前端化</div>
+  <h2>前端化：先把侧脸掰正</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三维 AAM 能估偏航、俯仰、翻滚。</li><li>估计结果套上可变形网格做跟踪。</li><li>DeepFace 用 6 个、后来 67 个基准点。</li><li>把侧脸掰正，裁成一张正脸。</li></ul>
+      <div class="src">依据：原书第 368 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两步</div><div class="kline">跟踪：估三个角度</div><div class="kline">前端化：先去掉姿态</div><div class="kline">后面的比对才有意义</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">DeepFace</div>
+  <h2>DeepFace：前端化加局部连接</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>架构从一张摆正的正脸开始。</li><li>若干局部连接层，卷积核可随位置变。</li><li>最后两层全连接，做 K 类 softmax。</li><li>深度网络从这里开始大规模奏效。</li></ul>
+      <div class="src">依据：原书第 368–369 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">流水线</div><div class="kline">前端化</div><div class="kline">局部连接层（非卷积）</div><div class="kline">两层全连接 + K 类 softmax</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">做减法</div>
+  <h2>省掉前端化，改用数据增强</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>后来的系统干脆省掉前端化。</li><li>改用数据增强，合成更多姿态。</li><li>Masi 等人的教程梳理了全流程。</li><li>数据集、前端化、增强、损失都讲到。</li></ul>
+      <div class="src">依据：原书第 369 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">综述覆盖</div><div class="kline">训练集与测试集</div><div class="kline">前端化与数据增强</div><div class="kline">训练损失单列一节</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">损失 · 角度间隔</div>
+  <h2>损失函数：把同一张脸挤紧</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>三元组损失学低维嵌入空间。</li><li>嵌入维度不随人数膨胀。</li><li>ArcFace 在单位超球面上量角度。</li><li>再加角度间隔，让同身份更紧。</li></ul>
+      <div class="src">依据：原书第 369–370 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e059_arcface_margin.png" style="max-height:500px" alt="ArcFace 角度间隔：单位圆上两簇身份被挤紧、推开｜程序生成，未用教材或论文原图"><figcaption>ArcFace 角度间隔：单位圆上两簇身份被挤紧、推开｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">个人相册</div>
+  <h2>最先日用化的是相册</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>数码相机自动找脸，帮助对焦。</li><li>视频会议找脸，把镜头对准发言人。</li><li>相册和分享网站几乎都带人脸整理。</li><li>打标签方便日后找照片、自动分享。</li></ul>
+      <div class="src">依据：原书第 369 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">日常场景</div><div class="kline">相机：对焦</div><div class="kline">会议：居中</div><div class="kline">相册：打标签</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">难找的脸 · 上下文</div>
+  <h2>脸难找时，就看人和场景</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>脸太小、转开、被挡住，都不好认。</li><li>人脸识别可以加上行人检测。</li><li>再加衣着识别，三样一起看。</li><li>位置、活动、事件等上下文也能帮忙。</li></ul>
+      <div class="src">依据：原书第 369–370 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">组合线索</div><div class="kline">脸 + 行人 + 衣着</div><div class="kline">位置 + 活动 + 事件</div><div class="kline">线索越多，身份越清楚</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>先量点，再学形状，最后学嵌入</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从量五官距离，到特征脸。</li><li>从 AAM 的形状纹理，到三维前端化。</li><li>DeepFace 与 ArcFace 用损失函数收口。</li><li>下一集：对象检测与人脸检测。</li></ul>
+      <div class="src">依据：原书第 370 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一条主线</div><div class="kline">量点：特征点距离</div><div class="kline">学形状：AAM</div><div class="kline">学嵌入：DeepFace / ArcFace</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第五十一集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

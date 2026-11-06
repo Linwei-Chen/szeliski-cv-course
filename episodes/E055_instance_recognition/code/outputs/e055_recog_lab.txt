@@ -1,0 +1,18 @@
+[lab] E055 实验课数值演示档 开始 2026-11-05T21:46:45
+[lab] 源码 sha256=38782150ad091d16aae8f3c48d49a7471d13da111262e3711ee52395fba613b5（哨兵版本绑定数据源——E043 r5 P2-5 口径）
+[PASS] 图1 节点序==原书 p.345 点名序（锚 §28→§9→§10→§11：Xerox 10→Caltech-101→PASCAL VOC→ImageNet→COCO）　| 节点 5 个（数据元组列表双比对——锚序即点名序逐位一致）
+[PASS] 图1 箭头端点贴节点缘+间距达标（数据坐标容差）　| 箭头 4 支，最小间距 0.145，容差 0.012
+[PASS] 图1 字号≥10pt+程序生成注记在档　| 字号 10.0–11.5pt（图内最小 10.0pt）
+[PASS] 图2 流程四步文本==口播 f012（逐框比对）　| 步数 4，字号最小 10.0pt
+[PASS] 图2 匹配线/干扰特征/仿射框常数自证　| 匹配线 6，干扰特征 12，仿射框四角界内（场景 x∈[2.15,4.6]、y∈[0.2,3.50]）
+[PASS] 图2 匹配线端点重合特征块中心（数据坐标容差）　| 6 条线起点全重合（容差 0.012）
+[PASS] 图内文字内部记号零泄漏（红线 5——E044–E054 同款收割断言）　| 图内 Text 收割 139 条，命中 无
+[PASS] FG1 程序生成图落盘　| e055_dataset_race.png 已落盘（sha 自证见 [lab] PNG 行）
+[PASS] FG2 程序生成图落盘　| e055_match_demo.png 已落盘（sha 自证见 [lab] PNG 行）
+[lab] readings → e055_recog_readings.json
+[lab] readings sha256=4ab980f98e6ce759ab7333e2cf988fe61dc0a650f52b4a886352b49ef0d784d7
+[lab] PNG sha256(e055_dataset_race.png)=bba9e1c851e4a52496daa3e49a437c30c5f3cf062a9f4801545ac91c8538f8bd
+[lab] PNG sha256(e055_match_demo.png)=647382519add7077d9e69843b2c3ea2bdcd76c52f8b71a994fa51fc99b3135a1
+[lab] LEDGER：断言 9 条，PASS 9
+[lab] 汇总 PASS 9 / FAIL 0 / 共 9
+[lab] 结束 2026-11-05T21:46:46

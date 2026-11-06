@@ -1,0 +1,25 @@
+[lab] E139 第4章补遗实验开始 2026-11-03T20:48:48
+[lab] 源码 sha256=f44cae5ddcf44b2ce846b38def82edbb5dfb6c43b55def9e0195ee5a84621262
+[lab] NumPy 2.5.4
+[lab] 边界：合成数据、RBF/Tikhonov/TV/ICM 四基线；不实现图割/BP/dense CRF；不是通用 benchmark
+[PASS] 干净 RBF 的 RMSE <0.05：0.0347
+[PASS] RBF 比最近邻更准：0.0347 < 0.2215
+[PASS] 含噪精确插值明显变差：0.9591 > 0.0347
+[PASS] 正则化降低含噪验证误差：0.1420 < 0.9591
+[PASS] Tikhonov MSE 低于含噪信号：0.0058 < 0.0149
+[PASS] TV MSE 低于含噪信号：0.0017 < 0.0149
+[PASS] TV 边缘误差低于 Tikhonov：0.1926 < 0.5764
+[PASS] TV 的总变差低于含噪信号：2.62 < 37.84
+[PASS] MRF 准确率高于逐点阈值：0.9832 > 0.8174
+[PASS] MRF 能量低于逐点阈值：913.0 < 2511.0
+[PASS] MRF 孤立像素少于逐点阈值：0 < 326
+[PASS] ICM 能量单调不升：7 次迭代
+[lab] LEDGER：断言 12 条，PASS 12
+[lab] PNG sha256(e139_rbf.png)=bffb1fe6405f95d0467a5129a492bbc7b0d5b8f6557bd7a62f40e761ea2e1091
+[lab] PNG sha256(e139_tv.png)=ffe7be72f848c1291c4169203107e259eec3cf43d607ceec3ab4009020557398
+[lab] PNG sha256(e139_mrf.png)=c17bc161aa5457f7d11991b969e8ff5a477e4830d4ad560136005d5fa774bfa2
+[lab] 汇总：12/12 断言通过
+[lab] RBF：干净 0.0347；最近邻 0.2215；含噪未正则 0.9591；含噪正则 0.1420
+[lab] 正则：MSE 含噪 0.0149/Tik 0.0058/TV 0.0017；边缘误差 Tik 0.5764/TV 0.1926；TV 总量 37.84/5.04/2.62
+[lab] MRF：准确率 0.8174→0.9832；能量 2511.0→913.0；孤立 326→0；迭代 6 次
+[lab] readings sha256=8c0f822886428b7ce0cd9349e0e6d56ef028ea68c19050d3d0ae8cc6fa588591

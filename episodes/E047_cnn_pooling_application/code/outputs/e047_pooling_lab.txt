@@ -1,0 +1,19 @@
+[lab] 开始 2026-11-05T14:33:07
+[lab] 输入 锚证据 sha256=0c8e4ef1a52bf356b3fa8ea17b3eecebdcec7c9933ac9b257bc3d99963a8ad12…
+[lab] seed=2047 输入 4×4 固定矩阵（readings 逐元素存档）
+[PASS] E1 max pooling 手算=readings　| max_out=[6.0, 8.0, 9.0, 6.0] expect=[6,8,9,6]
+[PASS] E1 average pooling 手算=readings　| avg_out=[3.75, 5.25, 4.5, 3.0] expect=[3.75,5.25,4.5,3.0]（偏置无——池化无参数申报）
+[PASS] E1 max 双线 scipy 对照 allclose　| scipy maximum_filter 一致（atol=1e-09——池化实验系真算子）
+[PASS] E1 avg 双线 scipy 对照 allclose　| scipy uniform_filter 一致（atol=1e-09）
+[PASS] E0 胜者位梯度==1（4 位）　| winners=4 位置=[[1, 1], [1, 3], [3, 1], [3, 3]]（mask 记忆=「记住哪个单元最大」）
+[PASS] E0 非胜者位梯度==0（12 位）　| zeros=12（「其他位置一分钱都拿不到」——f006 白话的数字版）
+[PASS] E0 梯度总流量==4（=窗口数）　| flow=4（每窗口只领走一份——switch 转接口径）
+[PASS] E0 对照：平均池化梯度每窗 4 位各 0.25　| avg 梯度 16 位各 0.25 汇总 4（「梯度平均分」对照——E044 口径呼应）
+[PASS] E10 作业档输出尺寸=(4−2)/2+1=2　| out_size=2（口播不出答案——答案只在此档；E1 实算形状 (2, 2) 互证）
+[PASS] FG 图内文字收割+内部记号零命中　| 收割 26 条 Text 对象、内部记号命中 0（不可见对象 18 条实测计数）
+[lab] 源码 sha256=5a30699cca6fe0ec9f384dd7f5e1648871c654455ee4137f51a2bd87aef2aee9（哨兵版本绑定数据源——E043 r5 P2-5 口径）
+[lab] readings sha256=9f38c178d8ad4705aad9ff8e27a34740d7ed3fbbb0d97eebe8d1fb7ede75d1d0
+[lab] PNG sha256(e047_fig1_pooling_diagram.png)=87ca3346f451fa7ce4e60fd4e15b7066ebdadc4c78aa5ef9cdb5c5a8680723cf
+[lab] scipy=yes
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 结束 2026-11-05T14:33:08

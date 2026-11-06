@@ -1,0 +1,24 @@
+[ok] p1/s2 col sh=398 ch=398
+last-bottom=602 visible=subbar-top=742
+steps=4
+[ok] p2/s2 col sh=327 ch=327
+last-bottom=751 visible=subbar-top=789
+steps=4
+[ok] p3/s2 col sh=302 ch=302
+last-bottom=599 visible=subbar-top=789
+steps=4
+[ok] p4/s2 col sh=327 ch=327
+last-bottom=719 visible=subbar-top=742
+steps=4
+[ok] p5/s2 col sh=352 ch=352
+last-bottom=785 visible=subbar-top=789
+steps=4
+[ok] p6/s1 col sh=128 ch=128
+last-bottom=442 visible=subbar-top=789
+steps=2
+[ok] p7/s1 col sh=141 ch=141
+last-bottom=458 visible=subbar-top=789
+steps=2
+[ok] p8/s1 col sh=150 ch=150
+last-bottom=434 visible=subbar-top=835
+steps=2

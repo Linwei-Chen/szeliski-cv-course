@@ -1,0 +1,20 @@
+[lab] E106 incremental SFM 开始 2026-11-03T03:12:09
+[lab] 源码 sha256=5f3a11a4b3f6f99e2daff130e238b9715b1b87385d95dab6eba7f278e4a8dc9e
+[PASS] 高视差种子更准　| 0.0011 vs 0.0290
+[PASS] 顺序生长全注册　| 10/10
+[PASS] 顺序相机误差小　| 中位 0.0024
+[PASS] 顺序最大误差小　| 最大 0.0053
+[PASS] 点误差小　| 中位 0.0036
+[PASS] 重投影小　| 1.09 px
+[PASS] 骨骼集全注册　| 10/10
+[PASS] 骨骼集误差接近　| 0.0027 vs 0.0024
+[PASS] 骨骼集最大误差小　| 最大 0.0070
+[PASS] 三图在盘　| pipeline/seed/growth
+[lab] PNG sha256(e106_growth.png)=654fa3bfeac7281180d5f380eba5478e309fb74975328c00effb4e083f65cfb0
+[lab] PNG sha256(e106_pipeline.png)=d3f65e988fb94f0b7d0736679ed5491921c9f4c2117e3b0e3769d1864c7328d6
+[lab] PNG sha256(e106_seed.png)=ff1d3ba5c263253c4bf20ae2d11dca62e74bca0dfd17f2719da8d5ddf72f512d
+[lab] readings → e106_incremental_sfm_readings.json
+[lab] readings sha256=1c5d528f399d7500ff460c3023a9a3a3b3e07ed4c50b478e9e26866b6db7bb80
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T03:12:09

@@ -1,0 +1,2 @@
+/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E083_translational_ssd/code/e083_ssd_lab.py:114: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout(rect=[0, 0.10, 1, 0.90])

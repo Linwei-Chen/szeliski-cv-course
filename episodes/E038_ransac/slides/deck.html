@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>RANSAC：用投票找出可靠直线</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 8 章 · 鲁棒拟合 · 起点问题</div>
+  <h2>先找对起点，再谈拟合</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>上一集 IRLS：换罚函数、按影响函数加权，一轮轮迭代。</li><li>外点太多时，从错误起点迭代，可能回不到全局最优。</li><li>RANSAC 不猜谁干净，让所有点投票。</li><li>这一集：为什么需要它 → 三步流程 → 实验与作业。</li></ul>
+      <div class="src">依据：原书第 510–511 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路</div><div class="kline">IRLS：怎么算</div><div class="kline">RANSAC：从哪儿起步</div><div class="kline">起点对了，上一集的工具才有用</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>01 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">RANSAC 主流程</div>
+  <h2>抽签、计票、留最多</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>随机抽 k 个点，先算一个初始模型。</li><li>拿全部点验：残差在门槛内算内点。</li><li>重复 S 轮，每轮数内点，留内点最多的模型。</li><li>p 是一个点有效的概率；k 个全中概率 p^k。</li></ul>
+      <div class="src">依据：原书第 511–512 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">p<sup>k</sup></div><div class="mnote">k 越大，全中越难；要的轮数涨得快</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>02 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">加速变体</div>
+  <h2>先粗筛，或按把握抽</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Preemptive RANSAC：先少量打分，挑出最像样的候选再细评。</li><li>PROSAC：按匹配把握从高到低渐进抽样。</li><li>两个都是提速；正赛仍是抽签、计票、留最多。</li><li>变体细节不展开，知道适用场景即可。</li></ul>
+      <div class="src">依据：原书第 511 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">什么时候用</div><div class="kline">点特别多：Preemptive</div><div class="kline">匹配有把握排序：PROSAC</div><div class="kline">规则不变：还是投票</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>03 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">本集实验 · 17 个点</div>
+  <h2>第一轮抽签，拿到 14 票</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>16 个内点 + 1 个外点，抽签池 17 个点。</li><li>门槛 0.3，约两倍噪声。</li><li>首轮抽到两个内点，线立住，14 个内点认它。</li><li>外点也在池子里，摸到它，线就可能偏。</li></ul>
+      <div class="src">依据：本集实验（seed 2038）</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实验设定</div><div class="kline">17 点 = 16 内点 + 1 外点</div><div class="kline">门槛 0.3 ≈ 2σ</div><div class="kline">每签 2 点，抽 200 轮</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>04 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">200 轮投票</div>
+  <h2>票数把好线挑出来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>最高 15 票，最低 2 票，中位 13 票。</li><li>180 轮抽到干净签；没有一轮拿到 17 票。</li><li>20 轮摸到外点，票数全被压到 5 票以下。</li><li>外点不用被赶出去，票数自然上不去。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e038_ransac_hist.png" style="max-height:500px" alt="200 轮票数分布：含外点签被压到低票区｜程序生成，未用教材原图"><figcaption>200 轮票数分布：含外点签被压到低票区｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>05 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">胜出线与内点名单</div>
+  <h2>15 票的线，15 人的名单</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>胜出线斜率 0.5295，真线 0.5。</li><li>外点到胜出线残差 1.7729，远在门槛外。</li><li>15 票的签有 57 张并列，取抽到的第一张。</li><li>名单重解最小二乘：斜率 0.5384，用上 15 个点。</li></ul>
+      <div class="src">依据：原书第 511 页 + 本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e038_ransac_vote.png" style="max-height:500px" alt="抽签线、胜出线与真线：15 票的模型最贴内点｜程序生成，未用教材原图"><figcaption>抽签线、胜出线与真线：15 票的模型最贴内点｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>06 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">外点加压 · 20 个点</div>
+  <h2>外点加到 4 个，投票仍认自己人</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>外点从 1 个加到 4 个，抽签池 20 个点。</li><li>普通最小二乘斜率被拉到 0.6496。</li><li>83/200 轮摸到外点；RANSAC 胜出 16 票，4 个外点 0 票。</li><li>名单重解 0.5307，与剔除外点后的 OLS 一致。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e038_ransac_hard.png" style="max-height:500px" alt="外点加压：OLS 被拉偏，RANSAC 仍找回内点｜程序生成，未用教材原图"><figcaption>外点加压：OLS 被拉偏，RANSAC 仍找回内点｜程序生成，未用教材原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>07 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">另一种判据 · 可复现</div>
+  <h2>RANSAC 数票，LMS 比中位</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>LMS 不看票数，看残差平方的中位数，谁小留谁。</li><li>本集 LMS 斜率 0.5476，RANSAC 0.5295，判据不同。</li><li>固定种子 2038：数据、抽签、票数、重解逐位一致。</li><li>换种子就换签，读数只认这一份。</li></ul>
+      <div class="src">依据：原书第 511 页 + 本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条读数</div><div class="kline">RANSAC：15 票，m=0.5295</div><div class="kline">LMS：m=0.5476</div><div class="kline">重放：seed 2038 逐位一致</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>08 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">作业</div>
+  <h2>两道作业，各动一个量</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一：门槛 0.3 换 0.15 和 0.6，重跑投票，看胜出线与票数。</li><li>二：每签从 2 点改成 3 点，抽 200 轮，数干净签轮数。</li><li>想想：门槛太窄、太宽，各会出什么问题。</li><li>书上第 512 页说：样本点越多，要的轮数涨得越快。</li></ul>
+      <div class="src">依据：原书第 512 页 + 讲者布置</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">提示</div><div class="kline">第一道：动门槛</div><div class="kline">第二道：动签大小</div><div class="kline">下一集：把这两笔账算清</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>09 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>起点找对了，下一集算门槛和轮数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>RANSAC 负责挑人，最小二乘负责算终点。</li><li>门槛 0.3 和 200 轮都是本集实验约定，不是原书规定。</li><li>原书说门槛依应用而定，图像里常见 1–3 像素。</li><li>下一集：阈值怎么定、轮数怎么算，还有变体族与 MAD。</li></ul>
+      <div class="src">依据：原书第 511–512 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">阈值：1–3 像素怎么用</div><div class="kline">轮数：8.29/8.30 与 Table 8.2</div><div class="kline">MAD：中位数定尺度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十集</span><span>10 / 10</span></div>
+</section>
+<div id="subbar"></div></body></html>

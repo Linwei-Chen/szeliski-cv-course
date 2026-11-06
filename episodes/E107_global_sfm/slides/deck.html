@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>全局 SFM：先对齐旋转，再一次性解相机</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">全局 SFM · 一次性解</div>
+  <h2>全局 SFM：一次解所有相机</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>增量式逐台加相机，越到后面越慢。</li><li>全局式先算全特征对应，再一次求解。</li><li>适合上万张、顺序打乱的照片集。</li><li>代价是前期匹配和相对旋转要算全。</li></ul>
+      <div class="src">依据：原书第 728 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条路线</div><div class="kline">增量式：逐台加，局部稳</div><div class="kline">全局式：先对齐，再一次解</div><div class="kline">全局式依赖匹配质量与内存</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>01 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 729 页 · 四步管线</div>
+  <h2>四步：两两重建到全局 BA</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两两重建，得到相对旋转和平移方向。</li><li>旋转平均，得到每台相机的全局朝向。</li><li>线性求解相机中心与每条边的尺度。</li><li>最后可选全局 BA 精化。</li></ul>
+      <div class="src">依据：原书第 729 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e107_pipeline.png" style="max-height:460px" alt="四步管线：两两重建、旋转平均、中心求解、全局 BA｜程序生成，未用教材或论文原图"><figcaption>四步管线：两两重建、旋转平均、中心求解、全局 BA｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>02 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 729 页 · 旋转平均</div>
+  <h2>旋转平均：加权、投影、降权</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>邻居候选加权求和，SVD 投影回旋转。</li><li>旋转矩阵不是向量，不能算术平均。</li><li>外点会把平均拉偏，按残差降权。</li><li>灭点、重力或 IMU 可消旋转漂移。</li></ul>
+      <div class="src">依据：原书第 729 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">鲁棒平均</div><div class="kline">候选：邻边的相对旋转</div><div class="kline">内层：加权求和 + SVD 投影</div><div class="kline">外层：残差大就降权</div><div class="kline">辅助：灭点 / 重力 / IMU</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>03 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 730 页 · 中心与尺度</div>
+  <h2>中心方程：方向、尺度、规范</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>中心关系：c_j 减 c_i 等于 s_ij 乘 t_ij。</li><li>叉乘形式只解相机位置。</li><li>固定一台相机，消掉平移规范。</li><li>固定一条边的尺度，消掉尺度规范。</li></ul>
+      <div class="src">依据：原书第 730 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">c_j − c_i = s_ij · t_ij</div><div class="mnote">t_ij：全局旋转后的单位平移方向；s_ij：边尺度。真实系统只能定到相似变换</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>04 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">原书第 730 页 · 共线退化</div>
+  <h2>共线相机：位置能沿线滑动</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每条边只约束方向，不约束距离。</li><li>共线时方向几乎一样，尺度可自由调。</li><li>近似共线也会让条件数变坏。</li><li>秩亏表示沿线的绝对位置不可观测。</li></ul>
+      <div class="src">依据：原书第 730 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">诊断与破局</div><div class="kline">看线性系统的条件数</div><div class="kline">看中心是否近似一条线</div><div class="kline">看边尺度是否互相矛盾</div><div class="kline">共享尺度、广角、多方向基线</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>05 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程扩展 · 分块与并行</div>
+  <h2>分布式：分块算，再对齐</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>匹配按图分块，旋转和中心分区解。</li><li>大规模任务拆到多台机器。</li><li>边界不一致，合并后再全局对齐。</li><li>边太多，通信和存储会成瓶颈。</li></ul>
+      <div class="src">依据：原书第 730 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">开源管线</div><div class="kline">Theia</div><div class="kline">OpenMVG</div><div class="kline">两者都包含全局技术</div><div class="kline">原书第 730 页</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>06 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合成实验 · 12 相机 30 边</div>
+  <h2>看图：两条错边拉偏全局朝向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>12 台相机、30 条边，其中 2 条外点。</li><li>相对旋转噪声 0.5 度。</li><li>普通平均：中位 13.93，最大 24.46。</li><li>鲁棒平均：中位 0.84，最大 1.39。</li></ul>
+      <div class="src">依据：本集实验；原书第 729 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e107_rotation.png" style="max-height:460px" alt="旋转平均误差：普通中位 13.93°，鲁棒中位 0.84°｜程序生成，未用教材或论文原图"><figcaption>旋转平均误差：普通中位 13.93°，鲁棒中位 0.84°｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>07 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合成实验 · 圆环与共线</div>
+  <h2>看图：共线时误差放大</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>圆环：中位 0.162，最大 0.238。</li><li>共线：中位 2.61，最大 5.61。</li><li>条件数从 114 涨到 615。</li><li>两组用同一张边图、0.5 度方向噪声。</li></ul>
+      <div class="src">依据：本集实验；原书第 730 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e107_centers.png" style="max-height:460px" alt="中心误差：圆环中位 0.162，共线中位 2.61；条件数 114→615｜程序生成，未用教材或论文原图"><figcaption>中心误差：圆环中位 0.162，共线中位 2.61；条件数 114→615｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>08 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程诊断 · 失败边界</div>
+  <h2>失败边界：先查边图与几何</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>外点多、边图孤岛、共线、纯旋转。</li><li>基线差异大，代数解没有加权。</li><li>尺度约束不足，整体缩放会飘。</li><li>查连通、残差、条件数，和 GPS 对照。</li></ul>
+      <div class="src">依据：原书第 730 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">取舍</div><div class="kline">全局式：快，误差不按顺序累积</div><div class="kline">全局式：对相对旋转敏感</div><div class="kline">增量式：慢，会漂，局部更稳</div><div class="kline">选型看数据规模与几何质量</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>09 / 10</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>总结：先转，再解，最后精化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两两重建加旋转平均，定全局朝向。</li><li>中心与尺度用线性系统求解。</li><li>鲁棒、连通、防共线。</li><li>下一集：SLAM 的在线与回环。</li></ul>
+      <div class="src">依据：原书第 728–730 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三件事</div><div class="kline">先对齐旋转</div><div class="kline">再解中心与尺度</div><div class="kline">最后全局 BA</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十九集</span><span>10 / 10</span></div>
+</section>
+<div id="subbar"></div></body></html>

@@ -1,0 +1,24 @@
+[lab] E112 立体匹配流水线开始 2026-11-03T04:45:30
+[lab] 源码 sha256=46d37ff20dc53ee2723725d5b5d07362f59560d99198713ef5de7bf3acc38f61
+[lab] 图像 640x480｜深度 [1.0, 2.0, 4.0, 8.0]｜视差 [160.0, 80.0, 40.0, 20.0]｜窗口 [3, 5, 9, 15, 21]
+[PASS] SAD 不差于 SSD　| 0.182 vs 0.299
+[PASS] 小窗口内部误差小　| 0.099
+[PASS] 大窗口边界更差　| 11.426 vs 5.772
+[PASS] 整数真值下亚像素不劣化　| 0.202 vs 0.182
+[PASS] 交叉检查抓遮挡　| 94.3% vs 0.2%
+[PASS] 补洞覆盖无效像素　| 97.3%
+[PASS] WTA 1px 内准确率高　| 99.8%
+[PASS] 采样点 DSI 最小正确　| 四点全对
+[PASS] 四层全覆盖　| 四层
+[PASS] 三图在盘　| pipeline/window/refine
+[lab] SAD9 0.182 px｜SSD9 0.299 px｜亚像素 0.2020 px｜1px 内 99.8%
+[lab] 交叉检查遮挡 94.3% vs 非遮挡 0.2%｜补洞覆盖 97.3%（原无效 22.5%）
+[lab] 窗口：3/9/21 内部 0.099/0.182/0.111；9/21 边界 11.426/8.412
+[lab] PNG sha256(e112_pipeline.png)=3484761894c653cb7cd56201c19b17b904c30a734ca9172a8c8bec1f7c029014
+[lab] PNG sha256(e112_refine.png)=eaed359eef7ef3176c877c34b313e7ac32e474a2e3046cf37c38646ab660246c
+[lab] PNG sha256(e112_window.png)=1e2f3866be9f399fa29ff6ce61f172bbcfa5c15561f3a346038cedcf4857e502
+[lab] readings → e112_pipeline_readings.json
+[lab] readings sha256=4680d6489ebfa561f0b4c458bdf031c5c01e6d2473df53a96e3ef7808a91c4ea
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T04:45:30

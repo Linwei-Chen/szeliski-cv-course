@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>包围曝光合成 HDR：从鬼影到 ghost-free</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · HDR 合成</div>
+  <h2>一张照片装不下整个场景</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>室内看窗外：窗外过曝，室内太暗。</li><li>8 位照片装不下场景的亮度范围。</li><li>多拍几张，各取看得清的部分。</li><li>合成辐亮度图，再决定怎么显示。</li></ul>
+      <div class="src">依据：原书第 620 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">问题与解法</div><div class="kline">单张：顾此失彼</div><div class="kline">包围曝光：多拍几张</div><div class="kline">合并：按可信度取像素</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 自动包围曝光</div>
+  <h2>AEB：故意欠曝和过曝</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>自动包围曝光拍一组不同曝光。</li><li>通常改快门，不改光圈。</li><li>改光圈会连带改暗角和景深。</li><li>±2 EV 是常见的折中。</li></ul>
+      <div class="src">依据：原书第 620–621 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">拍摄要点</div><div class="kline">固定构图和白平衡</div><div class="kline">曝光时间按 1/2 的幂走</div><div class="kline">张数越多，对齐越麻烦</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验图 · 三阶段</div>
+  <h2>三阶段：标定、合并、映射</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先从对齐图像估辐射响应曲线。</li><li>再选或混合像素，得到辐亮度图。</li><li>最后色调映射回可显示范围。</li><li>运动分支：对齐、去鬼影、选帧。</li></ul>
+      <div class="src">依据：原书第 621 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e093_pipeline.png" style="max-height:500px" alt="HDR 三阶段：标定响应曲线、合并辐亮度、色调映射｜程序生成，未用教材或论文原图"><figcaption>HDR 三阶段：标定响应曲线、合并辐亮度、色调映射｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 响应方程</div>
+  <h2>方程：把乘法变成加法</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>像素值 z 是响应函数 f 作用于 E·t。</li><li>取反函数再取对数，得到 g(z)。</li><li>未知数是每个像素的 logE 和 g。</li><li>多张曝光给足方程，一起解。</li></ul>
+      <div class="src">依据：原书第 622 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">g(z) = logE + logt</div><div class="mnote">z：像素值；E：辐亮度；t：曝光时间；g：响应曲线</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 帽子权重</div>
+  <h2>中间像素更可靠</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>像素值在中间段更可靠。</li><li>接近饱和时响应函数会奇异。</li><li>帽子权重两端降到零。</li><li>加权最小二乘，再加平滑正则。</li></ul>
+      <div class="src">依据：原书第 623 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个参数</div><div class="kline">权重：谁更可信</div><div class="kline">正则：曲线多平滑</div><div class="kline">λ 太大太直，太小会抖</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 合并辐亮度</div>
+  <h2>合并：按可信度投票</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>响应曲线估好后，把曝光图合并。</li><li>每张曝光翻译成辐亮度。</li><li>再按帽子权重做加权平均。</li><li>饱和或全黑像素权重为零。</li></ul>
+      <div class="src">依据：原书第 624 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">合并式子</div><div class="kline">分子：w 乘 (g(z) − log t)</div><div class="kline">分母：权重之和</div><div class="kline">只有一张可信时，退化成选帧</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验图 · 包围曝光</div>
+  <h2>每张曝光只信一段</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>短曝光保住高光。</li><li>长曝光保住暗部。</li><li>中曝光两头都兼顾。</li><li>合并图取各自可信的部分。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e093_bracket.png" style="max-height:500px" alt="短、中、长曝光与合并辐亮度：饱和从 0 升到 50%｜程序生成，未用教材或论文原图"><figcaption>短、中、长曝光与合并辐亮度：饱和从 0 升到 50%｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 鬼影</div>
+  <h2>鬼影：同一像素不是同一物</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>手持或运动物体会让画面对不齐。</li><li>直接平均会出半透明鬼影。</li><li>先做全局配准，再做局部光流。</li><li>还要检查运动一致性。</li></ul>
+      <div class="src">依据：原书第 625 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种处理</div><div class="kline">对齐：配准加光流</div><div class="kline">选帧：只信一张</div><div class="kline">工程上常用中位数投票</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 大运动</div>
+  <h2>大运动：先选帧，再补缺</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>相机大幅平移时，光流也可能不够。</li><li>先找共识拼图，选一张参考帧。</li><li>只在欠曝或过曝区域补算辐亮度。</li><li>运动太大时，只能做选帧 HDR。</li></ul>
+      <div class="src">依据：原书第 626 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">参考帧怎么选</div><div class="kline">通常选中间曝光</div><div class="kline">兼顾高光和暗部</div><div class="kline">参考帧也过曝就换一张</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">本集实验 · 五张曝光</div>
+  <h2>加权合并与朴素平均</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>五张模拟曝光，EV 从负七到负三。</li><li>gamma 2.2，无噪声，无对齐误差。</li><li>动态范围约 63 倍，最长曝光饱和 50%。</li><li>加权误差 0.22%，亮区朴素平均 18.8%。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实验读数</div><div class="kline">覆盖率 100%</div><div class="kline">相关接近 1</div><div class="kline">帽子中心/边缘 13.0×</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验图 · 帽子权重</div>
+  <h2>权重决定谁有资格投票</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>中间像素权重大。</li><li>两端像素权重为零。</li><li>饱和像素不参与合并。</li><li>亮区误差 0.22% 对 18.8%。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e093_weights.png" style="max-height:520px" alt="帽子权重曲线；亮区误差 0.22% 对 18.8%｜程序生成，未用教材或论文原图"><figcaption>帽子权重曲线；亮区误差 0.22% 对 18.8%｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章 · 收束</div>
+  <h2>HDR 合成：三阶段与两条提醒</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>标定曲线、合并辐亮度、色调映射。</li><li>合并按可信度加权。</li><li>有运动先对齐，或者选帧。</li><li>下一集：色调映射怎么塞回屏幕。</li></ul>
+      <div class="src">依据：原书第 620–626 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">全局与局部色调映射</div><div class="kline">HDR 不等于更亮</div><div class="kline">先把信息拿全，再谈观感</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第八十五集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

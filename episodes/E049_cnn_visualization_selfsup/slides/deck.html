@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>看懂网络在想什么：可视化、对抗样本与自监督</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 5 章 · 5.4.5–5.4.7</div>
+  <h2>看懂网络在想什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>可视化、对抗样本、自监督，三块内容。</li><li>先看网络在看什么，再看怎么骗它。</li><li>最后看它怎么不靠标签自学。</li><li>三节按 5.4.5、5.4.6、5.4.7 展开。</li></ul>
+      <div class="src">依据：原书第 307 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集路线</div><div class="kline">可视化：探针一族</div><div class="kline">对抗样本：改图不改网络</div><div class="kline">自监督：数据自己出题</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十一集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">可视化 · 辛顿图与第一层</div>
+  <h2>先画方块，再看第一层</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>辛顿图：方块大小表示权重，黑白表示正负。</li><li>第一层响应可直接从输入权重读出。</li><li>验证集里可找响应最大的图像块。</li><li>高维激活可用 t-SNE 压成二维看聚类。</li></ul>
+      <div class="src">依据：原书第 308 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e049_fig1_hinton.png" style="max-height:500px" alt="辛顿图：左为权重数值，右为方块大小与正负｜程序生成，未用教材或论文原图"><figcaption>辛顿图：左为权重数值，右为方块大小与正负｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十一集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">可视化 · 反卷积与遮盖</div>
+  <h2>把网络倒着跑</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>反卷积把深层激活一路回传到图像块。</li><li>图 5.47 第二到第五层就是这样来的。</li><li>引导反传只放正信号，对比度更高。</li><li>灰方块遮区域，看哪里一遮就错。</li></ul>
+      <div class="src">依据：原书第 308 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条探针</div><div class="kline">反卷积：从激活回到像素</div><div class="kline">引导反传：只走正梯度</div><div class="kline">遮盖：灰块扫过整张图</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十一集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">可视化 · 同族方法与分层</div>
+  <h2>同一族方法，各有各的名字</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>显著性图、激活最大化、Grad-CAM。</li><li>Grad-CAM 是梯度加权类激活映射。</li><li>GoogLeNet 浅层认边缘，深层认物体。</li><li>Microscope 能逐个神经元翻看。</li></ul>
+      <div class="src">依据：原书第 308–311 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个名字</div><div class="kline">Simonyan 2013：显著性图</div><div class="kline">Nguyen 2016：激活最大化</div><div class="kline">Selvaraju 2017：Grad-CAM</div><div class="kline">Olah 2017：GoogLeNet 分层</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十一集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">对抗样本 · 原理</div>
+  <h2>不改网络，只改图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>朝假类回传梯度，反复修改输入图。</li><li>假类成为主导激活，就得到对抗样本。</li><li>熊猫加看不见的扰动，被认成鸵鸟。</li><li>扰动放大十倍才看得见。</li></ul>
+      <div class="src">依据：原书第 311–312 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e049_fig3_adversarial.png" style="max-height:500px" alt="对抗方向：沿假类梯度一步修改输入，预测翻转（线性模型教学演示）｜程序生成，未用教材或论文原图"><figcaption>对抗方向：沿假类梯度一步修改输入，预测翻转（线性模型教学演示）｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十一集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">对抗样本 · 现实与防御</div>
+  <h2>现实攻击、根源与防御</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>停车标志贴贴纸，网络就认错。</li><li>自然图像库能让 ImageNet 集体翻车。</li><li>对抗样本掺进训练，识别反而更好。</li><li>根源是捷径学习：用了非鲁棒特征。</li></ul>
+      <div class="src">依据：原书第 311–312 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">攻与防</div><div class="kline">白盒：拿到网络和权重</div><div class="kline">黑盒：对网络一无所知</div><div class="kline">对抗训练：扛住有界扰动</div><div class="kline">防御仍是进行中的问题</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十一集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">自监督 · 迁移与代理任务</div>
+  <h2>自学：先造一个代理任务</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>一个任务上训练、用到另一个任务，叫迁移学习。</li><li>把网络改到目标应用，叫域适应。</li><li>代理任务的标签从无标注图像自动派生。</li><li>五道题：邻接、补全、拼图、上色、旋转。</li></ul>
+      <div class="src">依据：原书第 313–314 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">五道题</div><div class="kline">猜邻接块相对位置</div><div class="kline">补全缺失区域</div><div class="kline">九宫格拼图</div><div class="kline">黑白上色 / 判旋转</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十一集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">自监督 · 大数据与对比学习</div>
+  <h2>两条赛道：大数据与对比学习</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>弱标注数据从三亿到三十五亿。</li><li>记忆库→MoCo→PIRL→SimCLR→MoCo v2。</li><li>SimCLR 用批内两两对比，损失近式 5.58。</li><li>CLIP 用四亿个文图配对做监督。</li></ul>
+      <div class="src">依据：原书第 315–316 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e049_fig2_lineage.png" style="max-height:500px" alt="对比学习谱系：memory bank→MoCo→PIRL→SimCLR→MoCo v2→BYOL→SimSiam｜程序生成，未用教材或论文原图"><figcaption>对比学习谱系：memory bank→MoCo→PIRL→SimCLR→MoCo v2→BYOL→SimSiam｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十一集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">自监督 · 免负样本与收束</div>
+  <h2>连负样本都不要，也能学</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>BYOL：动量编码器、预测器、停梯度。</li><li>SimSiam 连动量编码器也不要。</li><li>全输出同一个数会崩塌，相似度恒为一。</li><li>生成式与蒸馏是两条支线。</li></ul>
+      <div class="src">依据：原书第 316–317 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">收束</div><div class="kline">自监督：数据自己出题</div><div class="kline">生成式：自回归 / 去噪</div><div class="kline">师徒：伪标签循环</div><div class="kline">下一集：5.5 更复杂的模型</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第四十一集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

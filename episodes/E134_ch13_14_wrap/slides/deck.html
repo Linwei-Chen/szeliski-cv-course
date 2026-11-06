@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>从像素到场：三维重建与新视角的全景收官</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 13–14 章 · 收官</div>
+  <h2>第 13 章建场，第 14 章看场</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 13 章：立体、SfM、稠密深度到网格。</li><li>第 14 章：视图插值、光场到神经渲染。</li><li>两章连成一条线：像素→场→新视角。</li><li>本集用合成小实验走一遍流程。</li></ul>
+      <div class="src">依据：原书第 854–886 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条线</div><div class="kline">第 13 章：怎么建</div><div class="kline">第 14 章：怎么画</div><div class="kline">实验只做合成球和平面</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">3D 摄影 · 原书第 854 页</div>
+  <h2>从多张照片到带色模型</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>从多图建完整模型，再恢复表面外观。</li><li>五步：匹配、SfM、稠密深度、建模、纹理。</li><li>特征匹配找同名点，SfM 求相机位姿。</li><li>稠密深度补像素，建模连面，纹理贴色。</li></ul>
+      <div class="src">依据：原书第 854 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">每一步都可能出错</div><div class="kline">真实系统要人工检查</div><div class="kline">出错要能回退</div><div class="kline">本集给定位姿和深度</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">三条路线 · 原书第 854–855 页</div>
+  <h2>自动、商业、交互三种做法</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>ARC3D：网页端自动 3D 建模。</li><li>Pix4D：商业摄影测量，物体场景都能拍。</li><li>VideoTrace：自动跟踪，在点云上画三角面。</li><li>三条路各有取舍，看场景选。</li></ul>
+      <div class="src">依据：原书第 854–855 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三种定位</div><div class="kline">ARC3D 求省事</div><div class="kline">Pix4D 求产品化</div><div class="kline">VideoTrace 求可控</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">图像渲染 · 原书第 863 页</div>
+  <h2>重建加渲染，做出可交互体验</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图像渲染把三维重建和多视图渲染结合。</li><li>Google Maps 街景、Photosynth 是商业形态。</li><li>第 13 章提供场，第 14 章提供相机。</li><li>核心是重建与渲染之间的接口。</li></ul>
+      <div class="src">依据：原书第 863 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">接口</div><div class="kline">接口好：图像和几何互相补</div><div class="kline">接口差：只能切换原图</div><div class="kline">本集只做合成新视角</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 端到端管线</div>
+  <h2>四步：图像、深度、点云、新视角</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>多视角图像先转成深度图。</li><li>深度图把每个像素变成三维点。</li><li>点云在目标视角重新投影。</li><li>z-buffer 决定前后，视角越多洞越少。</li></ul>
+      <div class="src">依据：本集实验；原书第 854 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e134_pipeline.png" style="max-height:520px" alt="图像→深度→3D 点云→新视角四步管线｜程序生成，未用教材或论文原图"><figcaption>图像→深度→3D 点云→新视角四步管线｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视图插值 · 原书第 863 页</div>
+  <h2>先补两幅参考图之间的视角</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视图插值用预计算深度图做无缝过渡。</li><li>视图相关纹理在模型表面混合多张纹理。</li><li>LDI 和带深度 sprite 是常见变体。</li><li>这一路都假设有几何、有参考图。</li></ul>
+      <div class="src">依据：原书第 863 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">共同点</div><div class="kline">有几何</div><div class="kline">有参考图</div><div class="kline">任务是补中间视角</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 视角数量</div>
+  <h2>少视角有洞，多视角补满</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>1 个视角：覆盖率 78.7%，PSNR 14.02 分贝。</li><li>8 个视角：覆盖率 100%，PSNR 34.42 分贝。</li><li>4 个视角 35.23 分贝，之后趋稳。</li><li>8 个视角略低，是泼溅噪声。</li></ul>
+      <div class="src">依据：本集实验（readings.coverage/psnr_cloud）</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e134_cloud.png" style="max-height:520px" alt="1 视角点云 / 8 视角点云 / 目标，覆盖 78.7%→100%｜程序生成，未用教材或论文原图"><figcaption>1 视角点云 / 8 视角点云 / 目标，覆盖 78.7%→100%｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">光场 · 原书第 863 页</div>
+  <h2>用更多采样换自由视点</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>光场和 Lumigraph 用四维表示。</li><li>可以从任意视点渲染。</li><li>变体：非结构 Lumigraph、表面光场、同心拼图、环境遮罩。</li><li>环境遮罩专处理玻璃、水杯的折射。</li></ul>
+      <div class="src">依据：原书第 863 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">代价与收益</div><div class="kline">采样多，数据量大</div><div class="kline">渲染可以很快</div><div class="kline">表面光场贴到物体表面</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 几何与图像的权衡</div>
+  <h2>几何–图像连续谱</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>覆盖率随视角数：2 个视角就补满。</li><li>PSNR：1 个 14.02，2 个 35.21，4 个 35.23。</li><li>8 个视角 34.42，略低于 4 个。</li><li>平面代理没有洞，但 PSNR 只有 14.16。</li></ul>
+      <div class="src">依据：本集实验（readings.psnr_cloud/psnr_proxy）</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e134_tradeoff.png" style="max-height:520px" alt="覆盖率/PSNR vs 视角数；平面代理 14.16dB｜程序生成，未用教材或论文原图"><figcaption>覆盖率/PSNR vs 视角数；平面代理 14.16dB｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">视频与神经渲染 · 原书第 863 页</div>
+  <h2>从图像到视频，再到可交互空间</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>视频渲染生成新的视频体验。</li><li>包括人脸动画、视频纹理、3D 视频和漫游。</li><li>视频纹理让短视频无缝循环。</li><li>神经渲染用生成网络重建场景、物体和人。</li></ul>
+      <div class="src">依据：原书第 863 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">自由度更高</div><div class="kline">3D 视频在相机之间插</div><div class="kline">漫游沿路径走</div><div class="kline">数据和算力要求也更高</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">几何–图像连续谱 · 原书第 886 页</div>
+  <h2>没有唯一最优，只有匹配场景</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>表示从经典纹理网格排到纯采样光场。</li><li>视图相关几何、多深度图绕开一致 3D 几何。</li><li>深度 sprite 和 LDI 用颜色加几何 warp。</li><li>选择取决于图像数量、质量和应用。</li></ul>
+      <div class="src">依据：原书第 886 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种偏向</div><div class="kline">几何多：省图，容易近似</div><div class="kline">图像多：保真，数据重</div><div class="kline">近邻视角用图像式更保真</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">总结 · 移交 E135</div>
+  <h2>重建管有什么，渲染管怎么看</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>第 13 章：像素变成场。</li><li>第 14 章：场变成新视角。</li><li>几何和图像互相补，按场景选表示。</li><li>下一集：第 15 章结论。</li></ul>
+      <div class="src">依据：原书第 854–886 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个词</div><div class="kline">重建：场景有什么</div><div class="kline">渲染：从哪个位置看</div><div class="kline">连续谱连接两者</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百二十六集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

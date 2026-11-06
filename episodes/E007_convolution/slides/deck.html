@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E007 · 卷积到底是什么：加权平均的数学化</title>
+<link rel="stylesheet" href="../../../assets/shared/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<style>
+  /* E007 集内微调：公式卡压缩 KaTeX display 边距与卡片内边距（E003–E006 formula-tight 方案） */
+  .formula-tight .katex-display { margin: .12em 0; }
+  .formula-tight { padding: 18px 44px; }
+</style>
+<script defer src="../../../assets/shared/vendor/katex/katex.min.js"></script>
+<script defer src="../../../assets/shared/vendor/katex/contrib/auto-render.min.js"></script>
+<script defer src="../../../assets/shared/deck.js"></script>
+<script>
+window.addEventListener("load", () => {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    });
+  }
+});
+</script>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 07</div>
+  <h1 class="step" data-step="1">卷积到底是什么：<br><span class="hl">加权平均的数学化</span></h1>
+  <p class="ep step" data-step="1">模糊、锐化、找边缘、去噪 —— 同一个公式 · §3.2 线性滤波</p>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>01 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">从点到邻域 · NEIGHBORHOOD</div>
+    <h2>让像素<span class="hl">看邻居</span></h2>
+    <div class="cards c2 step" data-step="1" style="margin-top:34px">
+      <div class="card">
+        <div class="big" style="font-size:56px">点算子</div>
+        <div class="cap">调对比度、全局直方图均衡<br><small>输出只由<b>同一位置</b>的输入决定（§3.1）</small></div>
+      </div>
+      <div class="card">
+        <div class="big warn" style="font-size:56px">邻域算子</div>
+        <div class="cap">输出由附近<b>一组像素</b>共同决定<br><small>也叫局部算子（第 119 页）</small></div>
+      </div>
+    </div>
+    <p class="lead dim step" data-step="1" style="margin-top:20px">原书用途：柔化、锐化、强化边缘、去噪。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="邻域算子：中心像素由邻居共同决定">
+      <g font-family="PingFang SC, sans-serif">
+        <rect x="40" y="40" width="560" height="400" rx="18" fill="#ffffff" stroke="#e3dccd" stroke-width="2"></rect>
+        <g stroke="#d8d1c2" stroke-width="1.5" fill="#f6f1e6">
+          <rect x="130" y="110" width="80" height="80"></rect><rect x="210" y="110" width="80" height="80"></rect><rect x="290" y="110" width="80" height="80"></rect>
+          <rect x="370" y="110" width="80" height="80"></rect><rect x="450" y="110" width="80" height="80"></rect>
+          <rect x="130" y="190" width="80" height="80"></rect><rect x="210" y="190" width="80" height="80"></rect><rect x="370" y="190" width="80" height="80"></rect><rect x="450" y="190" width="80" height="80"></rect>
+          <rect x="130" y="270" width="80" height="80"></rect><rect x="210" y="270" width="80" height="80"></rect><rect x="290" y="270" width="80" height="80"></rect>
+          <rect x="370" y="270" width="80" height="80"></rect><rect x="450" y="270" width="80" height="80"></rect>
+        </g>
+        <g stroke="#e8590c" stroke-width="3" fill="#fbe9dd">
+          <rect x="290" y="190" width="80" height="80"></rect>
+        </g>
+        <text x="330" y="242" font-size="24" fill="#e8590c" text-anchor="middle" font-weight="700">?</text>
+        <g stroke="#8a8378" stroke-width="2.5" fill="none">
+          <path d="M170,150 L305,196"></path><path d="M250,150 L315,192"></path><path d="M330,150 L330,186"></path><path d="M410,150 L345,192"></path><path d="M490,150 L355,196"></path>
+          <path d="M170,230 L286,230"></path><path d="M490,230 L374,230"></path>
+          <path d="M170,310 L305,264"></path><path d="M250,310 L315,268"></path><path d="M330,310 L330,274"></path><path d="M410,310 L345,268"></path><path d="M490,310 L355,264"></path>
+        </g>
+        <text x="330" y="88" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">输出像素由邻域共同决定</text>
+        <text x="330" y="418" font-size="20" fill="#8a8378" text-anchor="middle">讲者示意：橘框 = 输出位置，灰箭头 = 邻居投票</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>02 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">线性滤波 · WEIGHTED SUM</div>
+    <h2>一个公式：<span class="hl">加权和</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$g(i, j) = \sum_{k,\,l} f(i{+}k,\; j{+}l)\; h(k, l)$$
+      <div class="note">式 3.12（第 120 页）｜h：核（kernel）/ 掩模（mask），系数 = 滤波系数｜记号 g = f ⊗ h（式 3.13）</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:16px">核在整幅图上滑动，每停一处，称一次重。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">讲者比方：核就是一把<b>小秤</b>——输出就是称出来的读数。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="Figure 3.10 重绘：图像卷核得输出">
+      <g font-family="PingFang SC, sans-serif">
+        <text x="105" y="50" font-size="20" fill="#1e3a5f" text-anchor="middle" font-weight="700">输入 f</text>
+        <g stroke="#d8d1c2" stroke-width="1.4" fill="#f6f1e6">
+          <rect x="35" y="66" width="34" height="34"></rect><rect x="69" y="66" width="34" height="34"></rect><rect x="103" y="66" width="34" height="34"></rect><rect x="137" y="66" width="34" height="34"></rect>
+          <rect x="35" y="100" width="34" height="34"></rect><rect x="69" y="100" width="34" height="34"></rect><rect x="103" y="100" width="34" height="34"></rect><rect x="137" y="100" width="34" height="34"></rect>
+          <rect x="35" y="134" width="34" height="34"></rect><rect x="69" y="134" width="34" height="34"></rect><rect x="103" y="134" width="34" height="34"></rect><rect x="137" y="134" width="34" height="34"></rect>
+          <rect x="35" y="168" width="34" height="34"></rect><rect x="69" y="168" width="34" height="34"></rect><rect x="103" y="168" width="34" height="34"></rect><rect x="137" y="168" width="34" height="34"></rect>
+        </g>
+        <g stroke="#4a7ba6" stroke-width="3" fill="#d9e7f2">
+          <rect x="35" y="66" width="34" height="34"></rect><rect x="69" y="66" width="34" height="34"></rect><rect x="103" y="66" width="34" height="34"></rect>
+          <rect x="35" y="100" width="34" height="34"></rect><rect x="69" y="100" width="34" height="34"></rect><rect x="103" y="100" width="34" height="34"></rect>
+          <rect x="35" y="134" width="34" height="34"></rect><rect x="69" y="134" width="34" height="34"></rect><rect x="103" y="134" width="34" height="34"></rect>
+        </g>
+        <text x="240" y="150" font-size="26" fill="#2b2b33" text-anchor="middle" font-weight="700">⊗</text>
+        <text x="330" y="50" font-size="20" fill="#e8590c" text-anchor="middle" font-weight="700">核 h</text>
+        <g stroke="#e8590c" stroke-width="2" fill="#fdf3e7">
+          <rect x="288" y="72" width="42" height="42"></rect><rect x="330" y="72" width="42" height="42"></rect><rect x="372" y="72" width="42" height="42"></rect>
+          <rect x="288" y="114" width="42" height="42"></rect><rect x="330" y="114" width="42" height="42"></rect><rect x="372" y="114" width="42" height="42"></rect>
+          <rect x="288" y="156" width="42" height="42"></rect><rect x="330" y="156" width="42" height="42"></rect><rect x="372" y="156" width="42" height="42"></rect>
+        </g>
+        <g font-size="16" fill="#e8590c" text-anchor="middle">
+          <text x="309" y="99">0.1</text><text x="351" y="99">0.1</text><text x="393" y="99">0.1</text>
+          <text x="309" y="141">0.1</text><text x="351" y="141" font-weight="700">0.2</text><text x="393" y="141">0.1</text>
+          <text x="309" y="183">0.1</text><text x="351" y="183">0.1</text><text x="393" y="183">0.1</text>
+        </g>
+        <text x="465" y="150" font-size="26" fill="#2b2b33" text-anchor="middle" font-weight="700">＝</text>
+        <text x="540" y="50" font-size="20" fill="#1e3a5f" text-anchor="middle" font-weight="700">输出 g</text>
+        <g stroke="#d8d1c2" stroke-width="1.4" fill="#f6f1e6">
+          <rect x="492" y="86" width="34" height="34"></rect><rect x="526" y="86" width="34" height="34"></rect>
+          <rect x="492" y="120" width="34" height="34"></rect><rect x="526" y="120" width="34" height="34"></rect>
+        </g>
+        <rect x="526" y="120" width="34" height="34" fill="#e7efd9" stroke="#7aa843" stroke-width="3"></rect>
+        <text x="543" y="144" font-size="16" fill="#5a7a2e" text-anchor="middle" font-weight="700">✓</text>
+        <text x="320" y="292" font-size="19" fill="#8a8378" text-anchor="middle">Figure 3.10（第 120 页）示意重绘</text>
+        <text x="320" y="330" font-size="20" fill="#1e3a5f" text-anchor="middle" font-weight="700">浅蓝 3×3 源邻域 × 核 → 浅绿输出像素</text>
+        <text x="320" y="366" font-size="18" fill="#8a8378" text-anchor="middle">讲者注：核权重和为 1，平均不改变整体亮度</text>
+        <text x="320" y="402" font-size="18" fill="#8a8378" text-anchor="middle">核滑遍全图，每个输出位置都称一次</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>03 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">关键区分 · CORRELATION VS CONVOLUTION</div>
+    <h2>差一次<span class="hl">翻转</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$g(i,j) = \textstyle\sum_{k,l} f(i{-}k,\,j{-}l)\,h(k,l)$$
+      $$\hphantom{g(i,j)} = \textstyle\sum_{k,l} f(k,l)\,h(i{-}k,\,j{-}l)$$
+      <div class="note">式 3.14–3.15（第 120 页）｜g = f∗h；h∗δ = h（冲激响应）</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:14px">冲激一试：卷积放回核<b>本身</b>；相关放回<b>镜像</b>。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">连续版：把求和换成积分（脚注 5）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <img src="figures/convolution_impulse.png" alt="冲激响应实验：卷积放回 h 本形，相关放回镜像" style="max-height:430px">
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>04 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">两大性质 · LSI</div>
+    <h2>线性 ＋ <span class="hl">平移不变</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$h\circ(f_0 + f_1) = h\circ f_0 + h\circ f_1$$
+      $$g(i,j) = f(i{+}k,\,j{+}l)$$
+      $$\Longleftrightarrow\;(h\circ g)(i,j)$$
+      $$\;=\;(h\circ f)(i{+}k,\,j{+}l)$$
+      <div class="note">式 3.16 叠加｜式 3.17 平移不变｜卷积定理见第 122 页</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:10px">卷积定理：空域卷积 = 频域相乘——<b>下集钥匙</b>。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="平移不变：同一个核处处行为一致">
+      <g font-family="PingFang SC, sans-serif">
+        <rect x="40" y="60" width="560" height="330" rx="18" fill="#ffffff" stroke="#e3dccd" stroke-width="2"></rect>
+        <g stroke="#d8d1c2" stroke-width="1.4" fill="#f6f1e6">
+          <rect x="80" y="100" width="70" height="70"></rect><rect x="150" y="100" width="70" height="70"></rect><rect x="220" y="100" width="70" height="70"></rect><rect x="290" y="100" width="70" height="70"></rect><rect x="360" y="100" width="70" height="70"></rect><rect x="430" y="100" width="70" height="70"></rect>
+          <rect x="80" y="170" width="70" height="70"></rect><rect x="150" y="170" width="70" height="70"></rect><rect x="220" y="170" width="70" height="70"></rect><rect x="290" y="170" width="70" height="70"></rect><rect x="360" y="170" width="70" height="70"></rect><rect x="430" y="170" width="70" height="70"></rect>
+          <rect x="80" y="240" width="70" height="70"></rect><rect x="150" y="240" width="70" height="70"></rect><rect x="220" y="240" width="70" height="70"></rect><rect x="290" y="240" width="70" height="70"></rect><rect x="360" y="240" width="70" height="70"></rect><rect x="430" y="240" width="70" height="70"></rect>
+        </g>
+        <rect x="150" y="170" width="70" height="70" fill="#fbe9dd" stroke="#e8590c" stroke-width="3"></rect>
+        <rect x="360" y="240" width="70" height="70" fill="#fbe9dd" stroke="#e8590c" stroke-width="3"></rect>
+        <text x="185" y="212" font-size="22" fill="#e8590c" text-anchor="middle" font-weight="700">h</text>
+        <text x="395" y="282" font-size="22" fill="#e8590c" text-anchor="middle" font-weight="700">h</text>
+        <text x="320" y="440" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">同一把秤，处处同样的称法</text>
+        <text x="320" y="472" font-size="18" fill="#8a8378" text-anchor="middle">讲者示意：平移不变 = 核不随位置变（移变核 式 3.18 除外）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>05 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">矩阵视角 · SPARSE SYSTEM</div>
+    <h2>卷积也是<span class="hl">矩阵乘向量</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$g = H f$$
+      <div class="note">式 3.19（第 122 页）｜图像拉直成向量后，卷积 = 稀疏矩阵乘向量（Figure 3.12）</div>
+    </div>
+    <p class="lead dim step" data-step="1" style="margin-top:18px">第四集「一行抵万行」在此接头；<b>CNN 之名源于此</b>（讲者补充，§5 细讲）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="Figure 3.12 重绘：一维卷积为稀疏矩阵乘向量">
+      <g font-family="PingFang SC, sans-serif">
+        <text x="208" y="52" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">稀疏矩阵 H（6×6）</text>
+        <g stroke="#d8d1c2" stroke-width="1.4" fill="#ffffff">
+          <rect x="70" y="75" width="46" height="46"></rect><rect x="116" y="75" width="46" height="46"></rect><rect x="162" y="75" width="46" height="46"></rect><rect x="208" y="75" width="46" height="46"></rect><rect x="254" y="75" width="46" height="46"></rect><rect x="300" y="75" width="46" height="46"></rect>
+          <rect x="70" y="121" width="46" height="46"></rect><rect x="116" y="121" width="46" height="46"></rect><rect x="162" y="121" width="46" height="46"></rect><rect x="208" y="121" width="46" height="46"></rect><rect x="254" y="121" width="46" height="46"></rect><rect x="300" y="121" width="46" height="46"></rect>
+          <rect x="70" y="167" width="46" height="46"></rect><rect x="116" y="167" width="46" height="46"></rect><rect x="162" y="167" width="46" height="46"></rect><rect x="208" y="167" width="46" height="46"></rect><rect x="254" y="167" width="46" height="46"></rect><rect x="300" y="167" width="46" height="46"></rect>
+          <rect x="70" y="213" width="46" height="46"></rect><rect x="116" y="213" width="46" height="46"></rect><rect x="162" y="213" width="46" height="46"></rect><rect x="208" y="213" width="46" height="46"></rect><rect x="254" y="213" width="46" height="46"></rect><rect x="300" y="213" width="46" height="46"></rect>
+          <rect x="70" y="259" width="46" height="46"></rect><rect x="116" y="259" width="46" height="46"></rect><rect x="162" y="259" width="46" height="46"></rect><rect x="208" y="259" width="46" height="46"></rect><rect x="254" y="259" width="46" height="46"></rect><rect x="300" y="259" width="46" height="46"></rect>
+          <rect x="70" y="305" width="46" height="46"></rect><rect x="116" y="305" width="46" height="46"></rect><rect x="162" y="305" width="46" height="46"></rect><rect x="208" y="305" width="46" height="46"></rect><rect x="254" y="305" width="46" height="46"></rect><rect x="300" y="305" width="46" height="46"></rect>
+        </g>
+        <g fill="#fbe9dd" stroke="#e8590c" stroke-width="2.5">
+          <rect x="70" y="75" width="46" height="46"></rect><rect x="116" y="75" width="46" height="46"></rect>
+          <rect x="70" y="121" width="46" height="46"></rect><rect x="116" y="121" width="46" height="46"></rect><rect x="162" y="121" width="46" height="46"></rect>
+          <rect x="116" y="167" width="46" height="46"></rect><rect x="162" y="167" width="46" height="46"></rect><rect x="208" y="167" width="46" height="46"></rect>
+          <rect x="162" y="213" width="46" height="46"></rect><rect x="208" y="213" width="46" height="46"></rect><rect x="254" y="213" width="46" height="46"></rect>
+          <rect x="208" y="259" width="46" height="46"></rect><rect x="254" y="259" width="46" height="46"></rect><rect x="300" y="259" width="46" height="46"></rect>
+          <rect x="254" y="305" width="46" height="46"></rect><rect x="300" y="305" width="46" height="46"></rect>
+        </g>
+        <text x="405" y="180" font-size="30" fill="#2b2b33" text-anchor="middle" font-weight="700">×</text>
+        <text x="490" y="52" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">f</text>
+        <g stroke="#d8d1c2" stroke-width="1.4" fill="#f6f1e6">
+          <rect x="465" y="75" width="50" height="46"></rect><rect x="465" y="121" width="50" height="46"></rect><rect x="465" y="167" width="50" height="46"></rect>
+          <rect x="465" y="213" width="50" height="46"></rect><rect x="465" y="259" width="50" height="46"></rect><rect x="465" y="305" width="50" height="46"></rect>
+        </g>
+        <text x="560" y="180" font-size="30" fill="#2b2b33" text-anchor="middle" font-weight="700">＝</text>
+        <text x="600" y="52" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">g</text>
+        <g stroke="#d8d1c2" stroke-width="1.4" fill="#e7efd9">
+          <rect x="575" y="75" width="46" height="46"></rect><rect x="575" y="121" width="46" height="46"></rect><rect x="575" y="167" width="46" height="46"></rect>
+          <rect x="575" y="213" width="46" height="46"></rect><rect x="575" y="259" width="46" height="46"></rect><rect x="575" y="305" width="46" height="46"></rect>
+        </g>
+        <text x="330" y="392" font-size="20" fill="#1e3a5f" text-anchor="middle" font-weight="700">每行 = 翻转后核平移一格的副本（Figure 3.12 重绘）</text>
+        <text x="330" y="428" font-size="18" fill="#8a8378" text-anchor="middle">H 极稀疏：非零元只在对角带内；首末行被图缘截断</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>06 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">边界处理 · PADDING</div>
+  <h2>核伸出图外，<span class="hl">图外补什么？</span></h2>
+  <div class="step" data-step="1" style="margin-top:26px">
+    <svg class="diagram" viewBox="0 0 1180 330" aria-label="六种边界补全（讲者示意；Figure 3.13 原图含其中四种）">
+      <g font-family="PingFang SC, sans-serif">
+        <g>
+          <text x="105" y="36" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">zero 补零</text>
+          <g stroke="#d8d1c2" stroke-width="1.3">
+            <rect x="45" y="60" width="40" height="40" fill="#2b2b33"></rect><rect x="85" y="60" width="40" height="40" fill="#2b2b33"></rect><rect x="125" y="60" width="40" height="40" fill="#f6f1e6"></rect><rect x="165" y="60" width="40" height="40" fill="#2b2b33"></rect>
+            <rect x="45" y="100" width="40" height="40" fill="#2b2b33"></rect><rect x="85" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="125" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="165" y="100" width="40" height="40" fill="#f6f1e6"></rect>
+            <rect x="45" y="140" width="40" height="40" fill="#2b2b33"></rect><rect x="85" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="125" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="165" y="140" width="40" height="40" fill="#f6f1e6"></rect>
+          </g>
+          <text x="105" y="215" font-size="17" fill="#8a8378" text-anchor="middle">图外=0</text>
+        </g>
+        <g>
+          <text x="290" y="36" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">constant 常数</text>
+          <g stroke="#d8d1c2" stroke-width="1.3">
+            <rect x="230" y="60" width="40" height="40" fill="#f2d3b8"></rect><rect x="270" y="60" width="40" height="40" fill="#f2d3b8"></rect><rect x="310" y="60" width="40" height="40" fill="#f6f1e6"></rect><rect x="350" y="60" width="40" height="40" fill="#f2d3b8"></rect>
+            <rect x="230" y="100" width="40" height="40" fill="#f2d3b8"></rect><rect x="270" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="310" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="350" y="100" width="40" height="40" fill="#f6f1e6"></rect>
+            <rect x="230" y="140" width="40" height="40" fill="#f2d3b8"></rect><rect x="270" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="310" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="350" y="140" width="40" height="40" fill="#f6f1e6"></rect>
+          </g>
+          <text x="290" y="215" font-size="17" fill="#8a8378" text-anchor="middle">补指定色</text>
+        </g>
+        <g>
+          <text x="475" y="36" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">clamp 复制</text>
+          <g stroke="#d8d1c2" stroke-width="1.3">
+            <rect x="415" y="60" width="40" height="40" fill="#cfe0ee"></rect><rect x="455" y="60" width="40" height="40" fill="#cfe0ee"></rect><rect x="495" y="60" width="40" height="40" fill="#f6f1e6"></rect><rect x="535" y="60" width="40" height="40" fill="#e8dfd2"></rect>
+            <rect x="415" y="100" width="40" height="40" fill="#cfe0ee"></rect><rect x="455" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="495" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="535" y="100" width="40" height="40" fill="#f6f1e6"></rect>
+            <rect x="415" y="140" width="40" height="40" fill="#cfe0ee"></rect><rect x="455" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="495" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="535" y="140" width="40" height="40" fill="#f6f1e6"></rect>
+          </g>
+          <text x="475" y="215" font-size="17" fill="#8a8378" text-anchor="middle">重复边缘</text>
+        </g>
+        <g>
+          <text x="660" y="36" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">wrap 绕回</text>
+          <g stroke="#d8d1c2" stroke-width="1.3">
+            <rect x="600" y="60" width="40" height="40" fill="#e8dfd2"></rect><rect x="640" y="60" width="40" height="40" fill="#cfe0ee"></rect><rect x="680" y="60" width="40" height="40" fill="#f6f1e6"></rect><rect x="720" y="60" width="40" height="40" fill="#e8dfd2"></rect>
+            <rect x="600" y="100" width="40" height="40" fill="#e8dfd2"></rect><rect x="640" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="680" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="720" y="100" width="40" height="40" fill="#cfe0ee"></rect>
+            <rect x="600" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="640" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="680" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="720" y="140" width="40" height="40" fill="#f6f1e6"></rect>
+          </g>
+          <text x="660" y="215" font-size="17" fill="#8a8378" text-anchor="middle">环形拼贴</text>
+        </g>
+        <g>
+          <text x="845" y="36" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">mirror 镜像</text>
+          <g stroke="#d8d1c2" stroke-width="1.3">
+            <rect x="785" y="60" width="40" height="40" fill="#cfe0ee"></rect><rect x="825" y="60" width="40" height="40" fill="#cfe0ee"></rect><rect x="865" y="60" width="40" height="40" fill="#f6f1e6"></rect><rect x="905" y="60" width="40" height="40" fill="#cfe0ee"></rect>
+            <rect x="785" y="100" width="40" height="40" fill="#cfe0ee"></rect><rect x="825" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="865" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="905" y="100" width="40" height="40" fill="#f6f1e6"></rect>
+            <rect x="785" y="140" width="40" height="40" fill="#cfe0ee"></rect><rect x="825" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="865" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="905" y="140" width="40" height="40" fill="#f6f1e6"></rect>
+          </g>
+          <text x="845" y="215" font-size="17" fill="#8a8378" text-anchor="middle">沿边反射</text>
+        </g>
+        <g>
+          <text x="1055" y="36" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">extend 延伸</text>
+          <g stroke="#d8d1c2" stroke-width="1.3">
+            <rect x="1010" y="60" width="40" height="40" fill="#b9cfe4"></rect><rect x="1050" y="60" width="40" height="40" fill="#cfe0ee"></rect><rect x="1090" y="60" width="40" height="40" fill="#f6f1e6"></rect><rect x="1130" y="60" width="40" height="40" fill="#efe9dd"></rect>
+            <rect x="1010" y="100" width="40" height="40" fill="#cfe0ee"></rect><rect x="1050" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="1090" y="100" width="40" height="40" fill="#f6f1e6"></rect><rect x="1130" y="100" width="40" height="40" fill="#f6f1e6"></rect>
+            <rect x="1010" y="140" width="40" height="40" fill="#cfe0ee"></rect><rect x="1050" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="1090" y="140" width="40" height="40" fill="#f6f1e6"></rect><rect x="1130" y="140" width="40" height="40" fill="#f6f1e6"></rect>
+          </g>
+          <text x="1055" y="215" font-size="17" fill="#8a8378" text-anchor="middle">反向外插</text>
+        </g>
+        <text x="590" y="272" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">补零 → 边缘变暗｜复制 → 边值向内传播｜镜像 → 保住边缘附近颜色（第 124 页）</text>
+        <text x="590" y="308" font-size="18" fill="#8a8378" text-anchor="middle">六种模式见第 123–124 页正文；Figure 3.13 原图只画其中四种（constant/extend 为讲者示意补画）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>07 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">工程性质 · SEPARABLE</div>
+    <h2>可分离：<span class="hl">K² 变 2K</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:8px">
+      $$K = v\,h^{\!\top} \qquad K^2 \;\rightarrow\; 2K$$
+      <div class="note">式 3.20（第 124 页）：2D 核 = 竖条 v × 横条 h 的外积｜先横后竖两趟一维卷积</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:14px">怎么判断能拆？SVD 只剩一个非零奇异值（式 3.21，Perona 1995）。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">不可分核可用前几项之和近似（第 125 页）。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="外积构造 2D 核与操作数账本">
+      <g font-family="PingFang SC, sans-serif">
+        <text x="185" y="46" font-size="20" fill="#1e3a5f" text-anchor="middle" font-weight="700">竖条 v</text>
+        <g fill="#fbe9dd" stroke="#e8590c" stroke-width="2">
+          <rect x="150" y="66" width="70" height="34"></rect><rect x="150" y="100" width="70" height="34"></rect><rect x="150" y="134" width="70" height="34"></rect><rect x="150" y="168" width="70" height="34"></rect><rect x="150" y="202" width="70" height="34"></rect>
+        </g>
+        <text x="185" y="93" font-size="16" fill="#e8590c" text-anchor="middle">1</text><text x="185" y="127" font-size="16" fill="#e8590c" text-anchor="middle">4</text><text x="185" y="161" font-size="16" fill="#e8590c" text-anchor="middle">6</text><text x="185" y="195" font-size="16" fill="#e8590c" text-anchor="middle">4</text><text x="185" y="229" font-size="16" fill="#e8590c" text-anchor="middle">1</text>
+        <text x="272" y="150" font-size="26" fill="#2b2b33" text-anchor="middle" font-weight="700">×</text>
+        <text x="345" y="46" font-size="20" fill="#1e3a5f" text-anchor="middle" font-weight="700">横条 hᵀ</text>
+        <g fill="#e7efd9" stroke="#7aa843" stroke-width="2">
+          <rect x="310" y="66" width="34" height="34"></rect><rect x="344" y="66" width="34" height="34"></rect><rect x="378" y="66" width="34" height="34"></rect><rect x="412" y="66" width="34" height="34"></rect><rect x="446" y="66" width="34" height="34"></rect>
+        </g>
+        <text x="327" y="93" font-size="16" fill="#5a7a2e" text-anchor="middle">1</text><text x="361" y="93" font-size="16" fill="#5a7a2e" text-anchor="middle">4</text><text x="395" y="93" font-size="16" fill="#5a7a2e" text-anchor="middle">6</text><text x="429" y="93" font-size="16" fill="#5a7a2e" text-anchor="middle">4</text><text x="463" y="93" font-size="16" fill="#5a7a2e" text-anchor="middle">1</text>
+        <text x="404" y="150" font-size="26" fill="#2b2b33" text-anchor="middle" font-weight="700">＝</text>
+        <g stroke="#d8d1c2" stroke-width="1.2">
+          <rect x="310" y="168" width="34" height="30" fill="#f9ead8"></rect><rect x="344" y="168" width="34" height="30" fill="#f3ddb8"></rect><rect x="378" y="168" width="34" height="30" fill="#eccfa0"></rect><rect x="412" y="168" width="34" height="30" fill="#f3ddb8"></rect><rect x="446" y="168" width="34" height="30" fill="#f9ead8"></rect>
+          <rect x="310" y="198" width="34" height="30" fill="#f0d6ab"></rect><rect x="344" y="198" width="34" height="30" fill="#e2bf88"></rect><rect x="378" y="198" width="34" height="30" fill="#d4a86a"></rect><rect x="412" y="198" width="34" height="30" fill="#e2bf88"></rect><rect x="446" y="198" width="34" height="30" fill="#f0d6ab"></rect>
+          <rect x="310" y="228" width="34" height="30" fill="#e8c793"></rect><rect x="344" y="228" width="34" height="30" fill="#d4a86a"></rect><rect x="378" y="228" width="34" height="30" fill="#c08e4e"></rect><rect x="412" y="228" width="34" height="30" fill="#d4a86a"></rect><rect x="446" y="228" width="34" height="30" fill="#e8c793"></rect>
+          <rect x="310" y="258" width="34" height="30" fill="#f0d6ab"></rect><rect x="344" y="258" width="34" height="30" fill="#e2bf88"></rect><rect x="378" y="258" width="34" height="30" fill="#d4a86a"></rect><rect x="412" y="258" width="34" height="30" fill="#e2bf88"></rect><rect x="446" y="258" width="34" height="30" fill="#f0d6ab"></rect>
+          <rect x="310" y="288" width="34" height="30" fill="#f9ead8"></rect><rect x="344" y="288" width="34" height="30" fill="#f3ddb8"></rect><rect x="378" y="288" width="34" height="30" fill="#eccfa0"></rect><rect x="412" y="288" width="34" height="30" fill="#f3ddb8"></rect><rect x="446" y="288" width="34" height="30" fill="#f9ead8"></rect>
+        </g>
+        <text x="404" y="352" font-size="18" fill="#8a8378" text-anchor="middle">深浅 = v·h 的乘积（5×5 近高斯核）</text>
+        <text x="320" y="410" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">账本：K=5 → 25 变 10｜K=21 → 441 变 42（省 90%）</text>
+        <text x="320" y="444" font-size="17" fill="#8a8378" text-anchor="middle">本集实验逐像素验证：两趟一维 ≡ 直接 2D（差 2e-16）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>08 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">常用核图鉴 · FIGURE 3.14</div>
+  <h2>五个核，<span class="hl">一件事：加权</span></h2>
+  <div class="step" data-step="1" style="margin-top:8px">
+    <svg class="diagram" viewBox="0 0 1180 400" aria-label="Figure 3.14 重绘：box / bilinear / Gaussian / Sobel / corner">
+      <g font-family="PingFang SC, sans-serif">
+        <g>
+          <text x="120" y="42" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">box 方块</text>
+          <text x="120" y="76" font-size="17" fill="#8a8378" text-anchor="middle">滑动平均 K=5</text>
+          <g stroke="#d8d1c2" stroke-width="1.3" fill="#f6f1e6">
+            <rect x="50" y="100" width="28" height="28"></rect><rect x="78" y="100" width="28" height="28"></rect><rect x="106" y="100" width="28" height="28"></rect><rect x="134" y="100" width="28" height="28"></rect><rect x="162" y="100" width="28" height="28"></rect>
+            <rect x="50" y="128" width="28" height="28"></rect><rect x="78" y="128" width="28" height="28"></rect><rect x="106" y="128" width="28" height="28"></rect><rect x="134" y="128" width="28" height="28"></rect><rect x="162" y="128" width="28" height="28"></rect>
+            <rect x="50" y="156" width="28" height="28"></rect><rect x="78" y="156" width="28" height="28"></rect><rect x="106" y="156" width="28" height="28"></rect><rect x="134" y="156" width="28" height="28"></rect><rect x="162" y="156" width="28" height="28"></rect>
+            <rect x="50" y="184" width="28" height="28"></rect><rect x="78" y="184" width="28" height="28"></rect><rect x="106" y="184" width="28" height="28"></rect><rect x="134" y="184" width="28" height="28"></rect><rect x="162" y="184" width="28" height="28"></rect>
+            <rect x="50" y="212" width="28" height="28"></rect><rect x="78" y="212" width="28" height="28"></rect><rect x="106" y="212" width="28" height="28"></rect><rect x="134" y="212" width="28" height="28"></rect><rect x="162" y="212" width="28" height="28"></rect>
+          </g>
+          <text x="120" y="290" font-size="18" fill="#1e3a5f" text-anchor="middle" font-weight="700">×1/25</text>
+          <text x="120" y="330" font-size="17" fill="#8a8378" text-anchor="middle">最朴素的平均</text>
+        </g>
+        <g>
+          <text x="330" y="42" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">bilinear 帐篷</text>
+          <text x="330" y="76" font-size="17" fill="#8a8378" text-anchor="middle">两根线性样条外积</text>
+          <g stroke="#d8d1c2" stroke-width="1.3">
+            <rect x="278" y="114" width="34" height="34" fill="#f9ead8"></rect><rect x="312" y="114" width="34" height="34" fill="#f0d6ab"></rect><rect x="346" y="114" width="34" height="34" fill="#f9ead8"></rect>
+            <rect x="278" y="148" width="34" height="34" fill="#f0d6ab"></rect><rect x="312" y="148" width="34" height="34" fill="#e2bf88"></rect><rect x="346" y="148" width="34" height="34" fill="#f0d6ab"></rect>
+            <rect x="278" y="182" width="34" height="34" fill="#f9ead8"></rect><rect x="312" y="182" width="34" height="34" fill="#f0d6ab"></rect><rect x="346" y="182" width="34" height="34" fill="#f9ead8"></rect>
+          </g>
+          <text x="295" y="138" font-size="15" fill="#7a5c2e" text-anchor="middle">1</text><text x="329" y="138" font-size="15" fill="#7a5c2e" text-anchor="middle">2</text><text x="363" y="138" font-size="15" fill="#7a5c2e" text-anchor="middle">1</text>
+          <text x="295" y="172" font-size="15" fill="#7a5c2e" text-anchor="middle">2</text><text x="329" y="172" font-size="15" fill="#7a5c2e" text-anchor="middle">4</text><text x="363" y="172" font-size="15" fill="#7a5c2e" text-anchor="middle">2</text>
+          <text x="295" y="206" font-size="15" fill="#7a5c2e" text-anchor="middle">1</text><text x="329" y="206" font-size="15" fill="#7a5c2e" text-anchor="middle">2</text><text x="363" y="206" font-size="15" fill="#7a5c2e" text-anchor="middle">1</text>
+          <text x="330" y="290" font-size="18" fill="#1e3a5f" text-anchor="middle" font-weight="700">×1/16</text>
+          <text x="330" y="330" font-size="17" fill="#8a8378" text-anchor="middle">比方块平滑</text>
+        </g>
+        <g>
+          <text x="560" y="42" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">"Gaussian" 近高斯</text>
+          <text x="560" y="76" font-size="17" fill="#8a8378" text-anchor="middle">帐篷卷帐篷（Burt-Adelson）</text>
+          <g stroke="#d8d1c2" stroke-width="1.2">
+            <rect x="480" y="100" width="32" height="28" fill="#f9ead8"></rect><rect x="512" y="100" width="32" height="28" fill="#efcf9f"></rect><rect x="544" y="100" width="32" height="28" fill="#e6bd7f"></rect><rect x="576" y="100" width="32" height="28" fill="#efcf9f"></rect><rect x="608" y="100" width="32" height="28" fill="#f9ead8"></rect>
+            <rect x="480" y="128" width="32" height="28" fill="#efcf9f"></rect><rect x="512" y="128" width="32" height="28" fill="#ddb072"></rect><rect x="544" y="128" width="32" height="28" fill="#cc9750"></rect><rect x="576" y="128" width="32" height="28" fill="#ddb072"></rect><rect x="608" y="128" width="32" height="28" fill="#efcf9f"></rect>
+            <rect x="480" y="156" width="32" height="28" fill="#e6bd7f"></rect><rect x="512" y="156" width="32" height="28" fill="#cc9750"></rect><rect x="544" y="156" width="32" height="28" fill="#b87c33"></rect><rect x="576" y="156" width="32" height="28" fill="#cc9750"></rect><rect x="608" y="156" width="32" height="28" fill="#e6bd7f"></rect>
+            <rect x="480" y="184" width="32" height="28" fill="#efcf9f"></rect><rect x="512" y="184" width="32" height="28" fill="#ddb072"></rect><rect x="544" y="184" width="32" height="28" fill="#cc9750"></rect><rect x="576" y="184" width="32" height="28" fill="#ddb072"></rect><rect x="608" y="184" width="32" height="28" fill="#efcf9f"></rect>
+            <rect x="480" y="212" width="32" height="28" fill="#f9ead8"></rect><rect x="512" y="212" width="32" height="28" fill="#efcf9f"></rect><rect x="544" y="212" width="32" height="28" fill="#e6bd7f"></rect><rect x="576" y="212" width="32" height="28" fill="#efcf9f"></rect><rect x="608" y="212" width="32" height="28" fill="#f9ead8"></rect>
+          </g>
+          <text x="560" y="290" font-size="18" fill="#1e3a5f" text-anchor="middle" font-weight="700">×1/256</text>
+          <text x="560" y="330" font-size="17" fill="#8a8378" text-anchor="middle">拉普拉斯金字塔用它</text>
+        </g>
+        <g>
+          <text x="790" y="42" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">Sobel 索贝尔</text>
+          <text x="790" y="76" font-size="17" fill="#8a8378" text-anchor="middle">差分 × 平滑</text>
+          <g stroke="#d8d1c2" stroke-width="1.3">
+            <rect x="738" y="114" width="34" height="34" fill="#dbe7f0"></rect><rect x="772" y="114" width="34" height="34" fill="#ffffff"></rect><rect x="806" y="114" width="34" height="34" fill="#f9d9c4"></rect>
+            <rect x="738" y="148" width="34" height="34" fill="#b9d2e6"></rect><rect x="772" y="148" width="34" height="34" fill="#ffffff"></rect><rect x="806" y="148" width="34" height="34" fill="#f4bd97"></rect>
+            <rect x="738" y="182" width="34" height="34" fill="#dbe7f0"></rect><rect x="772" y="182" width="34" height="34" fill="#ffffff"></rect><rect x="806" y="182" width="34" height="34" fill="#f9d9c4"></rect>
+          </g>
+          <text x="755" y="138" font-size="15" fill="#1e3a5f" text-anchor="middle">−1</text><text x="789" y="138" font-size="15" fill="#8a8378" text-anchor="middle">0</text><text x="823" y="138" font-size="15" fill="#b04a0a" text-anchor="middle">1</text>
+          <text x="755" y="172" font-size="15" fill="#1e3a5f" text-anchor="middle">−2</text><text x="789" y="172" font-size="15" fill="#8a8378" text-anchor="middle">0</text><text x="823" y="172" font-size="15" fill="#b04a0a" text-anchor="middle">2</text>
+          <text x="755" y="206" font-size="15" fill="#1e3a5f" text-anchor="middle">−1</text><text x="789" y="206" font-size="15" fill="#8a8378" text-anchor="middle">0</text><text x="823" y="206" font-size="15" fill="#b04a0a" text-anchor="middle">1</text>
+          <text x="790" y="290" font-size="18" fill="#1e3a5f" text-anchor="middle" font-weight="700">×1/8</text>
+          <text x="790" y="330" font-size="17" fill="#8a8378" text-anchor="middle">强调竖直边缘</text>
+        </g>
+        <g>
+          <text x="1020" y="42" font-size="22" fill="#1e3a5f" text-anchor="middle" font-weight="700">corner 角点</text>
+          <text x="1020" y="76" font-size="17" fill="#8a8378" text-anchor="middle">横竖二阶差分</text>
+          <g stroke="#d8d1c2" stroke-width="1.3">
+            <rect x="968" y="114" width="34" height="34" fill="#f9d9c4"></rect><rect x="1002" y="114" width="34" height="34" fill="#dbe7f0"></rect><rect x="1036" y="114" width="34" height="34" fill="#f9d9c4"></rect>
+            <rect x="968" y="148" width="34" height="34" fill="#dbe7f0"></rect><rect x="1002" y="148" width="34" height="34" fill="#f4bd97"></rect><rect x="1036" y="148" width="34" height="34" fill="#dbe7f0"></rect>
+            <rect x="968" y="182" width="34" height="34" fill="#f9d9c4"></rect><rect x="1002" y="182" width="34" height="34" fill="#dbe7f0"></rect><rect x="1036" y="182" width="34" height="34" fill="#f9d9c4"></rect>
+          </g>
+          <text x="985" y="138" font-size="15" fill="#b04a0a" text-anchor="middle">1</text><text x="1019" y="138" font-size="15" fill="#1e3a5f" text-anchor="middle">−2</text><text x="1053" y="138" font-size="15" fill="#b04a0a" text-anchor="middle">1</text>
+          <text x="985" y="172" font-size="15" fill="#1e3a5f" text-anchor="middle">−2</text><text x="1019" y="172" font-size="15" fill="#b04a0a" text-anchor="middle">4</text><text x="1053" y="172" font-size="15" fill="#1e3a5f" text-anchor="middle">−2</text>
+          <text x="985" y="206" font-size="15" fill="#b04a0a" text-anchor="middle">1</text><text x="1019" y="206" font-size="15" fill="#1e3a5f" text-anchor="middle">−2</text><text x="1053" y="206" font-size="15" fill="#b04a0a" text-anchor="middle">1</text>
+          <text x="1020" y="290" font-size="18" fill="#1e3a5f" text-anchor="middle" font-weight="700">×1/4</text>
+          <text x="1020" y="330" font-size="17" fill="#8a8378" text-anchor="middle">对角边也响应（局限）</text>
+        </g>
+        <text x="590" y="364" font-size="19" fill="#1e3a5f" text-anchor="middle" font-weight="700">原书图题即「可分离线性滤波器」（第 125 页）｜核设计常受可分离性影响（第 124 页）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>09 / 15</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · DICE & SMOOTHING</div>
+  <h2>骰子伏笔兑现 ＋ <span class="hl">一维三兄弟</span></h2>
+  <p class="lead step" data-step="1" style="margin-top:18px">两枚<b>独立</b>骰子之和 = 两个分布的卷积（讲者补充，回收 E005 伏笔）；带噪阶跃过 box-5 / tent-3 / gauss-5：噪声 std 0.48 → 0.16 / 0.28 / 0.22，理想台阶高差 2.0 → box-5 后单步 0.56。</p>
+  <div class="step" data-step="1" style="text-align:center; margin-top:8px">
+    <img src="figures/convolution_demo1.png" alt="骰子和的分布 = 卷积；一维信号三核平滑" style="max-height:310px">
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>10 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">反向操作 · UNSHARP MASKING</div>
+    <h2>用模糊核<span class="hl">做锐化</span></h2>
+    <div class="formula formula-tight step" data-step="1" style="margin-top:2px;padding-top:12px;padding-bottom:12px">
+      $$g_{\text{sharp}} = f + \gamma\,(f - h_{\text{blur}} * f)$$
+      <div class="note">式 3.22（第 126 页）：仍是线性滤波｜式 3.23（暗房叠印）g = f·(1−γh∗f)——原话：不再是线性滤波</div>
+    </div>
+    <p class="lead step" data-step="1" style="margin-top:8px">暗房时代的标准操作：失焦翻印模糊正片，<b>两片叠印</b>。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:6px">实验：边缘跳变 0.450 → 0.106 → 0.695。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <img src="figures/convolution_unsharp.png" alt="unsharp masking：原图、模糊、锐化三联" style="max-height:420px">
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>11 / 15</span></div>
+</section>
+
+<section class="slide split" data-steps="1">
+  <div class="col-l">
+    <div class="kicker">找边缘 · SOBEL & CORNER</div>
+    <h2>差分 × 平滑 = <span class="hl">边缘检测</span></h2>
+    <p class="lead step" data-step="1" style="margin-top:16px">Sobel 是<b>可分离组合</b>（第 126 页）：竖条平滑帐篷 × 横条<b>中心差分</b>——平滑与差分合在一个核里。</p>
+    <p class="lead step" data-step="1" style="margin-top:12px">角点核：找横竖二阶差分<b>同现</b>的位置。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">讲者注：差分核权重可正可负——是加权和，不是平均。</p>
+    <p class="lead dim step" data-step="1" style="margin-top:12px">原书自认局限：对角线上的边也会响应（第 127 页）；更强的检测器 §7.1 / §7.2 见。</p>
+  </div>
+  <div class="col-r step" data-step="1">
+    <svg class="diagram" viewBox="0 0 640 480" aria-label="Sobel 的可分离分解">
+      <g font-family="PingFang SC, sans-serif">
+        <text x="155" y="60" font-size="20" fill="#1e3a5f" text-anchor="middle" font-weight="700">中心差分（横条）</text>
+        <g stroke="#1e3a5f" stroke-width="2">
+          <rect x="80" y="100" width="50" height="44" fill="#dbe7f0"></rect><rect x="130" y="100" width="50" height="44" fill="#ffffff"></rect><rect x="180" y="100" width="50" height="44" fill="#f9d9c4"></rect>
+        </g>
+        <text x="105" y="130" font-size="19" fill="#1e3a5f" text-anchor="middle">−1</text><text x="155" y="130" font-size="19" fill="#8a8378" text-anchor="middle">0</text><text x="205" y="130" font-size="19" fill="#b04a0a" text-anchor="middle">+1</text>
+        <text x="265" y="130" font-size="26" fill="#2b2b33" text-anchor="middle" font-weight="700">×</text>
+        <text x="345" y="60" font-size="20" fill="#1e3a5f" text-anchor="middle" font-weight="700">帐篷（竖条）</text>
+        <g stroke="#1e3a5f" stroke-width="2">
+          <rect x="320" y="80" width="50" height="44" fill="#e7efd9"></rect><rect x="320" y="124" width="50" height="44" fill="#c8e0b8"></rect><rect x="320" y="168" width="50" height="44" fill="#e7efd9"></rect>
+        </g>
+        <text x="345" y="108" font-size="19" fill="#5a7a2e" text-anchor="middle">1</text><text x="345" y="152" font-size="19" fill="#5a7a2e" text-anchor="middle">2</text><text x="345" y="196" font-size="19" fill="#5a7a2e" text-anchor="middle">1</text>
+        <text x="415" y="152" font-size="26" fill="#2b2b33" text-anchor="middle" font-weight="700">＝</text>
+        <g stroke="#e8590c" stroke-width="2.5">
+          <rect x="445" y="80" width="46" height="44" fill="#fdeede"></rect><rect x="495" y="80" width="46" height="44" fill="#ffffff"></rect><rect x="545" y="80" width="46" height="44" fill="#fdeede"></rect>
+          <rect x="445" y="124" width="46" height="44" fill="#f9dcc3"></rect><rect x="495" y="124" width="46" height="44" fill="#ffffff"></rect><rect x="545" y="124" width="46" height="44" fill="#f9dcc3"></rect>
+          <rect x="445" y="168" width="46" height="44" fill="#fdeede"></rect><rect x="495" y="168" width="46" height="44" fill="#ffffff"></rect><rect x="545" y="168" width="46" height="44" fill="#fdeede"></rect>
+        </g>
+        <text x="468" y="108" font-size="17" fill="#b04a0a" text-anchor="middle">−1</text><text x="518" y="108" font-size="17" fill="#8a8378" text-anchor="middle">0</text><text x="568" y="108" font-size="17" fill="#b04a0a" text-anchor="middle">1</text>
+        <text x="468" y="152" font-size="17" fill="#b04a0a" text-anchor="middle">−2</text><text x="518" y="152" font-size="17" fill="#8a8378" text-anchor="middle">0</text><text x="568" y="152" font-size="17" fill="#b04a0a" text-anchor="middle">2</text>
+        <text x="468" y="196" font-size="17" fill="#b04a0a" text-anchor="middle">−1</text><text x="518" y="196" font-size="17" fill="#8a8378" text-anchor="middle">0</text><text x="568" y="196" font-size="17" fill="#b04a0a" text-anchor="middle">1</text>
+        <text x="320" y="290" font-size="21" fill="#1e3a5f" text-anchor="middle" font-weight="700">平滑 × 差分合为一个核（×1/8）</text>
+        <text x="320" y="330" font-size="19" fill="#8a8378" text-anchor="middle">横条差分找竖边；转置即找横边</text>
+        <text x="320" y="404" font-size="19" fill="#1e3a5f" text-anchor="middle" font-weight="700">corner 核 = [1 −2 1]ᵀ·[1 −2 1]/4（原书：可分离，第 125 页）</text>
+      </g>
+    </svg>
+  </div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>12 / 15</span></div>
+</section>
+
+<section class="slide quote" data-steps="1">
+  <div class="qmark step" data-step="1">「</div>
+  <blockquote class="step" data-step="1">卷积，是核先翻转、再当秤滑过每一片邻域；<br>不翻转的那一次，叫相关。</blockquote>
+  <div class="attrib step" data-step="1">—— 讲者总结 · 本集记忆锚 ｜ 暗线：前两集的信息加权、这一集的空间加权——同属加权和这一形式</div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>13 / 15</span></div>
+</section>
+
+<section class="slide endcard" data-steps="1">
+  <div class="kicker">NEXT · 回书指路</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§3.2 第 119–127 页：式 3.12–3.23（相关与卷积、LSI、padding、可分离、常用核、unsharp）；§3.2.3 带通/转向滤波第 127–129 页 → §7 回收；求和面积表（积分图）第 129–130 页；递归滤波 IIR/FIR 第 130 页</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>code/convolution_demo.py 三问：①阶跃换斜坡，三个核响应差在哪 ②用 h=[0.5,0.3,0.2] 验证卷积原样放回、相关放回镜像 ③die∗die 再卷一次 die——三枚骰子之和的众数搬到几（参考：10 与 11 并列，各 27/216）</div>
+  <div class="row step" data-step="1"><span class="tag">下一集</span>E008 图像即函数：采样、量化与混叠——数学工具箱最后一站，卷积定理回收</div>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>14 / 15</span></div>
+</section>
+
+<section class="slide title-slide" data-steps="1">
+  <div class="course step" data-step="1">数学工具箱 · 07 完</div>
+  <h1 class="step" data-step="1">下集<span class="hl">见</span>。</h1>
+  <div class="pagefoot"><span>E007 · 数学工具箱</span><span>15 / 15</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

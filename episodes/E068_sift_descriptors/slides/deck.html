@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>SIFT Ⅱ：128 维描述子的构造、归一化与匹配</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 描述子的任务</div>
+  <h2>检测完，还得说清长相</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>检测找点，描述子说它长什么样。</li><li>平移为主时，可直接比较小块像素。</li><li>平方差之和或归一化互相关都可以。</li><li>说不清长相，匹配只能靠猜。</li></ul>
+      <div class="src">依据：原书第 434 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种做法</div><div class="kline">平移：直接比像素</div><div class="kline">有变形：先重采样再比</div><div class="kline">描述子决定跨视角能不能对上</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>01 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">外观变化</div>
+  <h2>先摆正，再描述</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>外观随方向、尺度改变，甚至仿射形变。</li><li>先估计局部尺度、方向或仿射坐标架。</li><li>用这个坐标架重采样图块，再形成描述子。</li><li>图块摆正、缩放好，距离比较才有意义。</li></ul>
+      <div class="src">依据：原书第 434 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">重采样的顺序</div><div class="kline">估计尺度与方向</div><div class="kline">重采样图块</div><div class="kline">再算描述子</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>02 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">权衡</div>
+  <h2>太不变认不出，太敏感对不上</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>补偿之后，图块外观仍会逐图变化。</li><li>目标：对变化更不变，又保留可区分性。</li><li>太不变，不同图块都长得一样。</li><li>Mikolajczyk 与 Schmid 综述并做了比较。</li></ul>
+      <div class="src">依据：原书第 434 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个要求</div><div class="kline">不变：同一个点对得上</div><div class="kline">可区分：不同的点分得开</div><div class="kline">两头都要照顾</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>03 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">多尺度定向图块</div>
+  <h2>八乘八采样，间距五个像素</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先定局部尺度和方向，再采样。</li><li>八乘八网格，采 64 个强度值。</li><li>采偏置和增益归一化后的强度。</li><li>间距五个像素，低频采样更抗定位误差。</li></ul>
+      <div class="src">依据：原书第 435 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">MOPS 的做法</div><div class="kline">8×8 采样</div><div class="kline">间距 5 像素</div><div class="kline">偏置和增益先归一</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>04 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">偏置与增益</div>
+  <h2>均值归零，方差归一</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>简单归一化图块适合透视缩短不严重的任务。</li><li>五个像素间距，取更粗金字塔层防混叠。</li><li>线性曝光变化：减偏置、除增益。</li><li>重缩放后，均值零、方差一。</li></ul>
+      <div class="src">依据：原书第 435 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">只处理线性变化</div><div class="kline">偏置：整体变亮变暗</div><div class="kline">增益：对比度变大变小</div><div class="kline">复杂光度变化后面再管</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>05 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">SIFT 起点</div>
+  <h2>从十六乘十六的梯度开始</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Lowe 在关键点周围取 16×16 窗口。</li><li>窗口里逐像素算梯度方向和幅值。</li><li>用关键点被检测到的那层高斯金字塔。</li><li>高斯衰减压低外围梯度，抗配准误差。</li></ul>
+      <div class="src">依据：原书第 435 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三个选择</div><div class="kline">窗口：16×16</div><div class="kline">层级：关键点所在层</div><div class="kline">权重：中心高、外围低</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>06 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">四乘四乘八</div>
+  <h2>四乘四格，每格八个方向</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个 4×4 象限做一个方向直方图。</li><li>每格八个方向桶，按高斯权重投票。</li><li>256 个幅值软分配到 2×2×2 个桶。</li><li>分配用三线性插值，错位不跳变。</li></ul>
+      <div class="src">依据：原书第 435 到 436 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e068_sift_pipeline.png" style="max-height:500px" alt="SIFT 的 128 维流水线：16×16 梯度、4×4×8 直方图、单位化、0.2 截断、再归一化｜程序生成，未用教材或论文原图"><figcaption>SIFT 的 128 维流水线：16×16 梯度、4×4×8 直方图、单位化、0.2 截断、再归一化｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>07 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">示意图与实现</div>
+  <h2>示意图画小，实际实现更密</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图 7.16 左图：梯度方向、幅值、高斯加权。</li><li>右图：每个子区域统计加权方向直方图。</li><li>示意图用 8×8 图块、2×2 描述子阵列。</li><li>Lowe 实现用 16×16 图块、4×4 组八桶。</li></ul>
+      <div class="src">依据：原书第 436 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实现参数</div><div class="kline">图块 16×16</div><div class="kline">4×4 组直方图</div><div class="kline">每组 8 个方向桶</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>08 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">归一化三步</div>
+  <h2>单位化、截断、再归一化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>4×4×8 直方图给出 128 个非负值。</li><li>先归一化到单位长度，压对比度和增益。</li><li>截断到 0.2，再归一化到单位长度。</li><li>三步合起来，防少数大梯度独霸。</li></ul>
+      <div class="src">依据：原书第 436 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e068_normalization.png" style="max-height:500px" alt="归一化三步：原始 128 维、单位长度、截断 0.2、再归一化｜程序生成，未用教材或论文原图"><figcaption>归一化三步：原始 128 维、单位长度、截断 0.2、再归一化｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>09 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">主成分版</div>
+  <h2>三千零四十二降到三十六</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Ke 与 Sukthankar 提出主成分版 SIFT。</li><li>39×39 图块算梯度导数，得 3042 维。</li><li>主成分分析降到 36 维。</li><li>存储更小、匹配更快，但会丢细节。</li></ul>
+      <div class="src">依据：原书第 436 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">PCA-SIFT</div><div class="kline">输入：39×39 梯度导数</div><div class="kline">原始：3042 维</div><div class="kline">输出：36 维</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>10 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">两个变体</div>
+  <h2>SURF 提速，RootSIFT 改归一化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>SURF 用盒式滤波近似导数和积分。</li><li>RootSIFT 先按 L1 范数归一化。</li><li>再对每个分量开平方。</li><li>可区分性显著提升。</li></ul>
+      <div class="src">依据：原书第 436 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">改哪里</div><div class="kline">SURF：换算子</div><div class="kline">RootSIFT：换归一化</div><div class="kline">结构基本不动</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>11 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">GLOH</div>
+  <h2>换成同心圆加扇区</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对数极坐标分箱，替代四个象限。</li><li>半径 0 到 6、6 到 11、11 到 15，共 17 个空间箱。</li><li>每箱 16 个方向，SIFT 只用 8 个。</li><li>272 维直方图经主成分投影到 128 维。</li></ul>
+      <div class="src">依据：原书第 437 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">分箱结构</div><div class="kline">半径分三段</div><div class="kline">中心外加八个角向箱</div><div class="kline">近处细、远处粗</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>12 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">评测</div>
+  <h2>GLOH 略胜 SIFT</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>图 7.17 每箱用十六个梯度方向。</li><li>图上只画八个，避免拥挤。</li><li>评测里 GLOH 总体最好，比 SIFT 略胜。</li><li>换个数据集，排名可能变。</li></ul>
+      <div class="src">依据：原书第 437 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">怎么读排名</div><div class="kline">更强但更复杂</div><div class="kline">SIFT 紧随其后</div><div class="kline">工程常选 SIFT</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>13 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">可操控滤波器</div>
+  <h2>先算基，再按方向调配</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>高斯导数滤波器可以组合。</li><li>任意方向的奇、偶边缘和角点都能快速算。</li><li>高斯较宽，对定位和方向误差不敏感。</li><li>和第 3 章的可操控滤波是同一套思想。</li></ul>
+      <div class="src">依据：原书第 437 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">为什么快</div><div class="kline">先算几个基</div><div class="kline">按方向线性组合</div><div class="kline">不用每方向重算</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>14 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">性能对比</div>
+  <h2>没有全能冠军</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>GLOH 最好，SIFT 紧随其后。</li><li>书里没展开的描述子也有结果。</li><li>维数、归一化、不变性、速度要取舍。</li><li>先问任务最怕什么，再选指标。</li></ul>
+      <div class="src">依据：原书第 435 到 437 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e068_descriptor_zoo.png" style="max-height:500px" alt="经典描述子对照：MOPS、SIFT、PCA-SIFT、SURF、RootSIFT、GLOH 的维数、改动与归一化｜程序生成，未用教材或论文原图"><figcaption>经典描述子对照：MOPS、SIFT、PCA-SIFT、SURF、RootSIFT、GLOH 的维数、改动与归一化｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>15 / 16</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">小结与移交</div>
+  <h2>描述子有了，接下来匹配</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>本节从原始图块讲到多种描述子。</li><li>SIFT 核心：16×16、4×4×8、128 维。</li><li>再加单位化、0.2 截断、再归一化。</li><li>下一集：阈值、比率测试、互检、几何校验。</li></ul>
+      <div class="src">依据：原书第 434 到 437 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集</div><div class="kline">先讲阈值匹配</div><div class="kline">再讲比率测试</div><div class="kline">最后做几何校验</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第六十集</span><span>16 / 16</span></div>
+</section>
+<div id="subbar"></div></body></html>

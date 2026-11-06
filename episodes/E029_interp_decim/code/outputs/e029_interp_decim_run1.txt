@@ -1,0 +1,80 @@
+== E029_interp_decim 数值实验 run1 ==
+口径注记（windowed sinc 窗与截断，与 f011 refs 逐字同步）：
+原书已写明 raised-cosine（升余弦）窗（图 3.28 图注；
+Table 3.2 条目作 cosine-windowed）；原书给出的截断——图 3.27d 为 nine taps，
+Table 3.2 windowed sinc 为 |n|≤4，即 9 抽头（含两端零值），
+原文未说明两者是否同一窗口；原书未给连续窗的窗宽参数——连续曲线重绘取讲者口径 
+h(x)=sinc₂(x)·cos²(πx/5)（|x|≤2.5），r=2 下 11 抽头（含两端零值），
+与原书 9 抽头不同。本实验 Table 3.2 断言用表值口径（9 抽头），
+2D 放大示例用讲者口径窗。
+讲者口径系数（½ 采样归一）与 Table 3.2 表值（0.4939/0.2684/0/−0.0153/0）
+方向一致但不逐一相等——Table 3.2 数值断言一律以表值忠实录入为准；QMF-9/
+JPEG 2000 系数照表录入（文献值，原书未给解析式）。混叠功率
+E_alias=∫_{π/2}^{π}|H(ω)|²dω/π 为讲者口径（原书未给该积分式）。
+B-spline 称呼交叉（讲者复算）：tent⋆tent（分段三次，峰 2/3）½ 采样归一
+=[0.333,0.240,0.083,0.010]≠binomial；与 binomial=[1,4,6,4,1]/16 精确对应的
+是 tent⋆box（分段二次，峰 0.75）½ 采样——按字面采样复算对不上、对得上的
+是二次样条，deck/口播按原书表述转述并以讲者按申报。脚注 11「scale up by
+r」按幅度×r 复算（门A r1 P0-1 裁定）：单位面积平滑核×r 即得插值核——
+[1,2,1]/4×2=[0.5,1,0.5] 代式 3.64 恰为线性插值（#1-6 与 tent(x/r) 全等）；
+「拉伸」与「×r」两视角同一件事（×r 只对单位面积平滑核成立）。
+[存档] 本 stdout 保存为 code/outputs/e029_interp_decim_run1.txt（文件名 N 与此标头一致）。
+
+== #1 式 3.64 插值与两模型（Figure 3.26：加权和 vs 多相） ==
+  [PASS] #1-1 式 3.64（线性插值核 tent(x/r)）对线性斜坡逐点精确（piecewise linear）  max err 0.00e+00
+  [PASS] #1-2 多相形式（偶相+奇相子核）与式 3.64 直接式逐点一致（two forms are equivalent）  max err 0.00e+00
+  [PASS] #1-3 偶相在原样本处精确还原 f（h(2n) 采样 [0,1,0]）、奇相为邻均值 [0.5,0.5]  even err 0.0e+00
+  [PASS] #1-4 cubic B-spline=tent⋆tent（数值卷积 vs 解析式 2/3−x²+|x|³/2 一致；derive by convolving the tent with itself）  max err 1.33e-06（网格步长 0.0020 限制），峰 0.6667
+  [PASS] #1-5 tent⋆box（quadratic B-spline，峰 0.75）½ 像素采样归一=[1,4,6,4,1]/16 精确=binomial（binomial 对应关系见口径注记）且峰 0.75≠1（approximating kernel 不过样本点）  ½ 采样 [0.0625 0.25   0.375  0.25   0.0625] vs binomial [0.0625 0.25   0.375  0.25   0.0625]
+  [PASS] #1-6 脚注 11 幅度×r 实测：[1,2,1]/4×2=[0.5,1,0.5] 代式 3.64 偶相原样还原、奇相邻均值，与 tent(x/r) 连续核口径（#1-1）逐点全等（unit area → scale up by r；「拉伸」与「×r」两视角同一件事）  max|Δ(scale−tent(x/r))| 0.00e+00
+== #2 式 3.65 三次插值核（a=−1 与 a=−0.5） ==
+  [PASS] #2-1 式 3.65 基本性质：h(0)=1、h(±1)=h(±2)=0、|x|≥2=0  h(0)=1.0
+  [PASS] #2-2 x=1 处左右导数=a（a specifies the derivative at x=1；a=−1 档）  左 -1.000001 / 右 -0.999998 vs a=−1
+  [PASS] #2-3 a=−0.5 精确再现线性与二次（interpolates linear and quadratic exactly）  max err 0.00e+00
+  [PASS] #2-4 a=−1 不线性再现直线（过冲/欠冲双向≥0.05——visible ringing 的样条读法）  过冲 +0.0938 / 欠冲 -0.0938
+  [PASS] #2-5 a=−1 频响最贴 sinc（½ 像素采样核带内 [0,0.45π] 最大偏差 a=−1 < a=−0.5 < tent/linear；best matches the frequency characteristics of a sinc）  偏差 0.3455 / 0.3836 / 0.4218
+  [PASS] #2-6 a=−1 负瓣幅度大于 a=−0.5（|h(±1.5)| 0.125 vs 0.0625——sharpening 与过冲振铃的时域成因）  |h(1.5)| a=−1: 0.1250 vs a=−0.5: 0.0625
+== #3 Table 3.2 六种 r=2 抽稀滤波器（odd length, symmetric, unit DC gain） ==
+  [PASS] #3-1 七滤波器系数和=1（unit DC gain；windowed sinc/QMF-9/JPEG 2000 表值 4 位舍入，容差 5e-4）  {'linear': 1.0, 'binomial': 1.0, 'cubic a=-1': 1.0, 'cubic a=-0.5': 1.0, 'windowed sinc': 1.0001, 'QMF-9': 0.9998, 'JPEG 2000': 0.9999}
+  [PASS] #3-2 逐条对称（c_n=c_{−n}）
+  [PASS] #3-3 windowed sinc/QMF-9/JPEG 2000 系数与留档 L365–381 逐值一致（防转录错）  {'windowed sinc': [0.4939, 0.2684, 0.0, -0.0153, 0.0], 'QMF-9': [0.5638, 0.2932, -0.0519, -0.0431, 0.0198], 'JPEG 2000': [0.6029, 0.2669, -0.0782, -0.0169, 0.0267]}
+  [PASS] #3-4 binomial=[1,4,6,4,1]/16（与 E024/E027 口径同源）  [0.375, 0.25, 0.0625]
+  [PASS] #3-5 linear=[1,2,1]/4（tent 平滑核）  [0.5, 0.25]
+  [PASS] #3-6 linear/binomial/cubic×2 四列=插值核 ½ 像素采样归一（stretched and re-scaled 的数值兑现）  {'linear': '[np.float64(0.5), np.float64(0.25)] vs 表 [0.5, 0.25]', 'binomial': '[np.float64(0.375), np.float64(0.25), np.float64(0.0625)] vs 表 [0.375, 0.25, 0.0625]', 'cubic a=-1': '[np.float64(0.5), np.float64(0.3125), np.float64(-0.0), np.float64(-0.0625)] vs 表 [0.5, 0.3125, 0.0, -0.0625]', 'cubic a=-0.5': '[np.float64(0.5), np.float64(0.28125), np.float64(-0.0), np.float64(-0.03125)] vs 表 [0.5, 0.28125, 0.0, -0.03125]'}
+== #4 七滤波器频响（Figure 3.30 语义复算） ==
+  [PASS] #4-1 七滤波器 H(0)=1 精确（DC 增益；表值 4 位舍入容差 5e-4）  {'linear': 1.0, 'binomial': 1.0, 'cubic a=-1': 1.0, 'cubic a=-0.5': 1.0, 'windowed sinc': 1.0001, 'QMF-9': 0.9998, 'JPEG 2000': 0.9999}
+  [读数] H(π)（Nyquist 响应）：linear=+0.0000, binomial=+0.0000, cubic a=-1=+0.0000, cubic a=-0.5=+0.0000, windowed sinc=-0.0123, QMF-9=-0.0006, JPEG 2000=-0.0001
+  [PASS] #4-2 cubic a=−1 通带保持高于 a=−0.5（|H(0.45π)|——两者半增益点同为 0.5π，a=−1 从更高处降下=sharper fall-off 的数值兑现）  a=−1: 0.6545 vs a=−0.5: 0.6164
+  [PASS] #4-3 binomial |H(0.45π)| 为七者最小（cuts off a lot of frequencies——原文 L303–304）  最小 binomial=0.3343；windowed sinc=0.5918；binomial=0.334, linear=0.578, windowed sinc=0.592, cubic a=-0.5=0.616, cubic a=-1=0.655, QMF-9=0.825, JPEG 2000=0.894
+  [PASS] #4-4 混叠功率（E_alias 讲者口径）：binomial 七者最小、QMF-9 与 JPEG 2000 均高于 linear 基线（QMF-9 aliases a fair amount；JPEG 2000 七者最高=通带最宽的代价；完整排序与数值作读数）  排序 binomial < cubic a=-1 < cubic a=-0.5 < windowed sinc < linear < QMF-9 < JPEG 2000；binomial=0.008, cubic a=-1=0.029, cubic a=-0.5=0.039, windowed sinc=0.045, linear=0.057, QMF-9=0.081, JPEG 2000=0.137
+  [PASS] #4-5 QMF-9 与自逆条件一致（功率互补 |H(ω)|²+|H(ω+π)|²=2 的点检验（H(π/2)）+全频带均值检验（2Σc²）——H(π/2)·√2≈1 且 2Σc²≈1；单点检验不足以证明自逆，措辞为「与自逆条件一致」）  H(π/2)=0.7072，×√2=1.0001；2Σc²=0.9994
+  [PASS] #4-6 binomial 半带以上 [0.5π,0.7π] 的 |H| 均值明显大于零（相对理想半带低通的残留——still leaves a fair amount of high-frequency detail 的频域语义：E_alias 七者最小≠无残留）  binomial 均值 0.1286（理想半带低通=0）；JPEG 2000=0.548, QMF-9=0.414, linear=0.348, windowed sinc=0.310, cubic a=-0.5=0.286, cubic a=-1=0.223, binomial=0.129
+== #5 式 3.66/3.67 与混叠实测 ==
+  [PASS] #5-1 式 3.66（h_dec=[0.25,0.5,0.25]+隔 2 取样）与式 3.67（h=tent 连续核，(1/r) 缩放）逐点一致  max err 0.00e+00
+  [PASS] #5-2 七滤波器抽稀→插值回 PSNR 全部高于无预滤波口径  无预滤波 16.92 dB vs 最差滤波 17.92 dB
+  [PASS] #5-3 无预滤波直接隔点取样混叠最重（PSNR 最低）  无预滤波 16.92 dB
+  [PASS] #5-4 JPEG 2000 9/7 实测 PSNR 榜首与 linear 差 0.05 dB≤0.1 dB（记录区分不足——单一信号不足以检验「more careful filter design is required」）  JPEG 2000 18.21 dB；与 linear 差 0.05 dB
+  [PASS] #5-5 binomial 为七滤波器中 PSNR 最低，但与最优差距<2.5 dB（差距主要源于通带衰减更多、非混叠——[读数] |H(0.18π)| binomial 为七滤波器最低即其通带衰减最重的直接证据；E_alias 反而七者最小；decent job 与数据不矛盾——「aliasing is of little concern」属应用场景判断，PSNR 不承载）  binomial 17.92（七滤波器最低）vs 最优 JPEG 2000 18.21 dB
+  [读数] 抽稀→插值回 PSNR（dB）：无预滤波=16.92, linear=18.16, binomial=17.92, cubic a=-1=17.99, cubic a=-0.5=18.11, windowed sinc=18.13, QMF-9=18.15, JPEG 2000=18.21
+  [读数] |H(0.18π)|（测试信号中频分量处，通带衰减直接压低该分量）：binomial=0.850, linear=0.922, windowed sinc=0.951, JPEG 2000=0.957, cubic a=-0.5=0.983, QMF-9=1.000, cubic a=-1=1.043
+  [读数] |H(0.703π)|（高频条纹 180/512 处）：cubic a=-1=0.010, binomial=0.041, cubic a=-0.5=0.106, QMF-9=0.131, windowed sinc=0.145, linear=0.202, JPEG 2000=0.254
+  [PASS] #5-6 QMF-9 频域混叠功率>binomial（频域口径；原文 aliases a fair amount）  QMF-9 0.08097 vs binomial 0.00818
+== C1–C3 常数核对 ==
+  [PASS] C1 式 3.65 手算 h_{a=−1}(0.5)=1−(a+3)(0.25)+(a+2)(0.125)=0.625  0.625000
+  [PASS] C2 binomial H(π/2)=(6+8cos(π/2)+2cos(π))/16=0.25 手算对照  0.250000
+  [PASS] C3 式 3.67（h=tent 连续核）与式 3.66（h_dec=[0.25,0.5,0.25]）逐点等价（keep the same kernel 语义）  max err 0.00e+00
+== #S 程序生成图（5 张，写入 figures/ 与 slides/figures/） ==
+  [PASS] #S e029_interp_kernels.png 写入两处且 md5 一致  md5 9387e280
+  [PASS] #S e029_interp_2d.png 写入两处且 md5 一致  md5 9c3c1e3c
+  [PASS] #S e029_decim_freq.png 写入两处且 md5 一致  md5 ec208c43
+  [PASS] #S e029_aliasing.png 写入两处且 md5 一致  md5 ef23e3ab
+  [PASS] #S e029_polyphase.png 写入两处且 md5 一致  md5 de814a7d
+  共 5 张：['e029_interp_kernels.png', 'e029_interp_2d.png', 'e029_decim_freq.png', 'e029_aliasing.png', 'e029_polyphase.png']
+== #D 区分力注入（判据应拦截） ==
+  [PASS] D-1 式 3.65 第二段漏 (|x|−1) 因子 → h(1)≠0 被拦截
+  [PASS] D-2 Table 3.2 系数转录错位 → 和=1.1250≠1 被拦截
+  [PASS] D-3 抽稀忘预滤波 → 实测 16.92<18.13 dB 被拦截
+  [PASS] D-4 a=−1 冒充二次再现核 → 二次误差 0.2500 被拦截
+
+汇总：38 条 PASS / 0 FAIL＋区分力 4/4（注入自检，不计数）
+DONE

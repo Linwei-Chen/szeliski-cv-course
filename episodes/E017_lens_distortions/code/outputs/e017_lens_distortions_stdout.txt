@@ -1,0 +1,32 @@
+[demo] 前三张重绘图已存 outputs/
+[verify] 式(2.77) R=I,t=0 → (px/pz, py/pz)  首点 (0.2500, 0.1500)  [PASS]
+[verify] 式(2.77) 逐元（R,t 非平凡）    [PASS]
+[verify] (xc,yc) 已含外参（平移进入归一化坐标）  xc=(px+tx)/(pz+tz) 逐元成立；Δx 最大 0.1333  [PASS]
+[verify] κ₁=−0.2 → 观测半径 0.8<1（拉向中心=桶形）  |x̂|=0.800  [PASS]
+[verify] κ₁=+0.2 → 观测半径 1.2>1（推离中心=枕形）  |x̂|=1.200  [PASS]
+[verify] 方向单调性：桶形全程 r̂<r、枕形全程 r̂>r    [PASS]
+[verify] 网格范围 0<r≤√2 内括号恒 <1（桶形前提）  g(0)=1（中心无畸变）；0<r≤√2 g∈[0.800, 1)——上确界 1 于 r→0 不可达  [PASS]
+[verify] 归一化设定 κ₁=κ₂ 时 κ₂/κ₁ 贡献比 = r² @ r=0.500  0.25  [PASS]
+[verify] 归一化设定 κ₁=κ₂ 时 κ₂/κ₁ 贡献比 = r² @ r=1.000  1.00  [PASS]
+[verify] 归一化设定 κ₁=κ₂ 时 κ₂/κ₁ 贡献比 = r² @ r=1.414  2.00  [PASS]
+[verify] 本集镜头 (κ₂r⁴)/(κ₁r²) = (κ₂/κ₁)·r² = −0.25r²  r=0.5/1.0/√2 → -0.0625/-0.2500/-0.5000（|比|≤0.5<1：网格内 κ₁ 项始终主导，κ₂ 仅边缘加权）  [PASS]
+[verify] 式(2.79) = 畸变因子 × 式(2.59) K 投影  max|Δ|=0.00e+00  [PASS]
+[verify] 反例：同 κ 代脚注 7 反向式，弯度上升（两套约定不能混用）  弯度 3.58e-02 → 5.45e-02  [PASS]
+[verify] 不动点迭代：理想坐标恢复 <1e-10  max|Δ|=8.88e-16；迭代 23 次（终止阈值 1e-14，上限 60）  [PASS]
+[verify] 不动点迭代：弯度 <1e-9（机器精度内站直）  5.71e-16  [PASS]
+[verify] 往返自洽 distort(undistort(x̂))=x̂    [PASS]
+[verify] 反向约定的 κ₁′ 与 κ₁ 异号（一阶近似 κ₁′≈−κ₁）  κ₁=-0.2 → κ₁′≈+0.279（拟合范围 r∈[0,√2] 全网格 49 点、同时拟合 κ₂′=-0.056；κ₁′ 偏离一阶值（+0.2）约 +0.08，且级数反演理论值 κ₂′=3κ₁²−κ₂=+0.07 而大范围拟合得 -0.056——大半径处高阶效应显著）  [PASS]
+[verify] 式(2.80) r=fθ 线性（θ=90° 精确）  r(90°)=1.5708  [PASS]
+[verify] 径向多项式拟合 [0°,60°] 区间内尚可（<3%）  κ₁=-0.250 κ₂=0.041 max=2.97%  [PASS]
+[verify] 外推 θ=85° 相对误差发散（两位数百分比以上）  err=517803%  [PASS]
+[verify] 无畸变：K[R|t] ≡ (KR₁)[R₁ᵀR|R₁ᵀt]（p.56–57 复现）  max|Δ|=2.27e-13  [PASS]
+[verify] 带畸变：同一重参数化图像不同（K 吸收失效）  max 位移 20.3px  [PASS]
+[verify] 去畸变后 ≡ 纯线性投影（<1e-9）  max|Δ|=5.55e-16  [PASS]
+[verify] 网格方向向量与线性投影一致（cos≈1）  min cos=1.000000000000  [PASS]
+[demo] 去畸变实验图已存 outputs/（共 4 张）
+[verify] 同步检查（比对在写入前完成，漂移判 FAIL）  共 4 张、漂移 0 张  [PASS]
+[demo] 已同步 /Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E017_lens_distortions/slides/figures/e017_fig2_13.png
+[demo] 已同步 /Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E017_lens_distortions/slides/figures/e017_grid_undistort.png
+[demo] 已同步 /Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E017_lens_distortions/slides/figures/e017_pipeline.png
+[demo] 已同步 /Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E017_lens_distortions/slides/figures/e017_r_curve.png
+汇总：24/24 数据断言 PASS · 同步检查 PASS —— 全部通过

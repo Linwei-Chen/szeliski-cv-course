@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>图像金字塔：望远镜与显微镜的自由切换</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 3 章 · 多分辨率</div>
+  <h2>金字塔用来做什么</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>由粗到细搜索，在不同尺度找目标或图案。</li><li>做多分辨率的图像融合。</li><li>图形软硬件用 MIP-map 做分数级缩小。</li><li>最出名的是 Burt 与 Adelson 1983 年的拉普拉斯金字塔。</li></ul>
+      <div class="src">依据：原书第 154–155 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三类用途</div><div class="kline">由粗到细搜索</div><div class="kline">多尺度找目标</div><div class="kline">多分辨率融合</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十二集</span><span>01 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">搭塔</div>
+  <h2>先模糊，再隔二取样</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先低通模糊，再隔二取样，存进上一层。</li><li>相邻层采样率差一倍，叫倍频程金字塔。</li><li>每层宽高减半，像素数只剩四分之一。</li><li>五抽头核取 a=3/8，得 [1,4,6,4,1]/16；五层 256→16。</li></ul>
+      <div class="src">依据：原书第 155–156 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e030_gauss_pyramid.png" style="max-height:500px" alt="五层高斯金字塔，逐层模糊＋隔二取样，像素逐层四分之一｜程序生成，未用教材或论文原图"><figcaption>五层高斯金字塔，逐层模糊＋隔二取样，像素逐层四分之一｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十二集</span><span>02 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">拆塔与重构</div>
+  <h2>插值回来，本层减掉</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>拉普拉斯图 = 本层 − 上采样后的低层。</li><li>剩下的是带通图，只保留中等粗细的细节。</li><li>全部带通图加顶层低通图，能完全重构原图。</li><li>重构系数是分析系数的两倍：误差 1.11e−16，不乘二 0.793，变体 0.353。</li></ul>
+      <div class="src">依据：原书第 156–158 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e030_laplacian_pyramid.png" style="max-height:500px" alt="五层带通图、重构、误差与不乘二对照｜程序生成，未用教材或论文原图"><figcaption>五层带通图、重构、误差与不乘二对照｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十二集</span><span>03 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">名不副实</div>
+  <h2>两低通之差，就是带通</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>塔里的“拉普拉斯”其实是近似高斯之差。</li><li>式 3.70：Gσ1∗I − Gσ2∗I = (Gσ1−Gσ2)∗I。</li><li>真 LoG 是二阶导：∇²(Gσ∗I) = (∇²Gσ)∗I。</li><li>直流处归零；剖面 |cc|=0.9184，反相是符号约定。</li></ul>
+      <div class="src">依据：原书第 158 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e030_dog_log.png" style="max-height:500px" alt="DoG 空域与频域剖面：两低通之差成带通｜程序生成，未用教材或论文原图"><figcaption>DoG 空域与频域剖面：两低通之差成带通｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十二集</span><span>04 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">更细的尺度阶梯</div>
+  <h2>半倍频程与像素账</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>半倍频程又叫低通之差变换（DOLP），常配梅花采样。</li><li>覆盖 64 倍尺度：整倍频程 6 级，半倍频程 12 级。</li><li>小波金字塔每层存 3/4 像素，总数与原图相同。</li><li>整倍频程塔的账是 4/3，比原图多三分之一。</li></ul>
+      <div class="src">依据：原书第 159 页；本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../slides/figures/e030_halfoctave.png" style="max-height:500px" alt="整倍频程 6 级与半倍频程 12 级的层数示意；原书未给梅花采样滤波器组系数｜程序生成，未用教材或论文原图"><figcaption>整倍频程 6 级与半倍频程 12 级的层数示意；原书未给梅花采样滤波器组系数｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十二集</span><span>05 / 6</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">小结 · 下一集</div>
+  <h2>塔已搭好，下一站小波</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>搭塔：先模糊、再隔二取样，像素逐层四分之一。</li><li>拆塔：插值回来再减，重构端系数乘二。</li><li>认清：塔里的拉普拉斯是高斯之差；变体不自逆。</li><li>下一集：小波与图像融合。</li></ul>
+      <div class="src">依据：原书第 155–159 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">三步</div><div class="kline">搭塔：模糊 + 隔二</div><div class="kline">拆塔：插值 + 相减</div><div class="kline">认清：DoG 与 LoG 同族</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第二十二集</span><span>06 / 6</span></div>
+</section>
+<div id="subbar"></div></body></html>

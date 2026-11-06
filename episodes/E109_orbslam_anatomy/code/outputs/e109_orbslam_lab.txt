@@ -1,0 +1,20 @@
+[lab] E109 ORB-SLAM 开始 2026-11-03T03:58:28
+[lab] 源码 sha256=e3d8d444d8a93760efddb90e4b909945e4b0391c5ed280d1570fc3a77d41628a
+[PASS] 关键帧都有观测　| min 49
+[PASS] 共视图连通　| 79 边
+[PASS] 生成树覆盖全图　| 19 边/20 节点
+[PASS] Essential 更稀疏　| 22 < 79
+[PASS] Essential 含回环边　| 0–19
+[PASS] 回环相似度更高　| 0.711 vs 0.000
+[PASS] 回环降终点　| 0.227→0.0108
+[PASS] 回环降 ATE　| 0.163→0.107
+[PASS] 裁剪保覆盖　| 15/20 帧，200/200 点
+[PASS] 三图在盘　| architecture/graph/loop
+[lab] PNG sha256(e109_architecture.png)=56d6bf810d464bb22b4d5497ee013c5e847c1c258f939ae9f252dcb602a15a5b
+[lab] PNG sha256(e109_graph.png)=09992d4b14f293cd6e4040bfce0a5b4ebb2cbd0593175df9855f25ac3dbdc16f
+[lab] PNG sha256(e109_loop.png)=930a6c47e28a12cc0d7a26748540506c52e8958ac8add7cf74481dd18a658934
+[lab] readings → e109_orbslam_readings.json
+[lab] readings sha256=7ff31fb77af159e81d7d21965b0fe6b32790006ad4b9ecab5b6c8ea1f8ceacaa
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T03:58:28

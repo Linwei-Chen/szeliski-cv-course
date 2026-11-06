@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>卷积神经网络：为图像而生的归纳偏置</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">开场 · 从全连接到卷积</div>
+  <h2>全连接的尽头：为图像而生的卷积</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>全连接把每个像素当独立输入，参数太多。</li><li>图像规律：邻近像素相关，模式平移还是它。</li><li>卷积层把这两条规律提前设计进结构。</li><li>这就是“归纳偏置”的意思。</li></ul>
+      <div class="src">依据：原书第 291 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两条归纳偏置</div><div class="kline">局部性：每个输出只看一小块</div><div class="kline">权值共享：同一套权重扫全图</div><div class="kline">训练时只学这一小套权重</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十八集</span><span>01 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">特征图与多通道</div>
+  <h2>特征图：同一套权重扫全图</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每层组织成一张张特征图，即平行的通道。</li><li>加权和只在小的局部窗口里做。</li><li>所有像素共用同一套权重，平移不变。</li><li>多通道卷积：输入通道线性组合，每个输出一套核。</li></ul>
+      <div class="src">依据：原书第 291–292 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e046_fig1_conv_diagram.png" style="max-height:520px" alt="多通道卷积示意：三张输入通道、两套卷积核、两张输出特征图｜程序生成，未用教材或论文原图"><figcaption>多通道卷积示意：三张输入通道、两套卷积核、两张输出特征图｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十八集</span><span>02 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">参数账与计算量</div>
+  <h2>参数与乘加：一笔能复算的账</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每个输出通道配一套窗口×输入通道的核。</li><li>参数总量＝窗口格数×输入通道×输出通道。</li><li>原书例子：9×6×4，共 216 个可学权重。</li><li>乘加次数＝宽×高×9×6×4。</li></ul>
+      <div class="src">依据：原书第 292 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集实验复算</div><div class="kline">9×6×4＝216，对上了</div><div class="kline">10×10 输入卷到 8×8</div><div class="kline">乘加 13824 次，与公式一致</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十八集</span><span>03 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">局部特征</div>
+  <h2>卷积层在学局部特征</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>卷积层的主要任务是构造局部特征。</li><li>再把这些特征用不同方式组合。</li><li>第一层学出的常是边缘检测器这类东西。</li><li>滤波器的系数不再手写，而是训练出来。</li></ul>
+      <div class="src">依据：原书第 292 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">逐层组合</div><div class="kline">底层：边缘和色块</div><div class="kline">中层：纹理和部件</div><div class="kline">高层：整块物体的部件</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十八集</span><span>04 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">式 5.76 与互相关</div>
+  <h2>把加权和写成式子</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>输出值＝输入通道、窗口偏移各自乘权重再求和。</li><li>最后加上这个输出通道自己的偏置。</li><li>偏移加在坐标上，严格说是互相关。</li><li>权重是学出来的，翻转不要紧。</li></ul>
+      <div class="src">依据：原书第 292–293 页；脚注 37</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">s(i,j,c₂)=Σ Σ w(k,l,c₁,c₂)·x(i+k,j+l,c₁)+b(c₂)</div><div class="mnote">Σ 读“加起来”；c₁ 是输入通道，c₂ 是输出通道；w 是可学权重</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十八集</span><span>05 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">1×1 卷积与权值共享</div>
+  <h2>一乘一卷积与权值共享</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>1×1 卷积不做卷积，只混通道。</li><li>每个像素位置上混合各通道，常用来降维。</li><li>同一套核权重在这一层所有像素上共享。</li><li>反传时，核权重更新量要把所有像素加起来。</li></ul>
+      <div class="src">依据：原书第 293 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集实验对照</div><div class="kline">同一任务全连接 153600 根连线</div><div class="kline">卷积只要 216 个权重</div><div class="kline">相差 711.1 倍</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十八集</span><span>06 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Padding 与 Stride</div>
+  <h2>补边与步长：尺寸怎么变</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>早期网络不补边，图像卷一次就缩小一圈。</li><li>现代网络可选补零，或复制边缘像素。</li><li>步长缺省 1，也可以每隔几行几列算一次。</li><li>AlexNet 第一层步长 4；图像金字塔步长 2。</li></ul>
+      <div class="src">依据：原书第 293–294 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">不补边会缩多少</div><div class="kline">3×3 窗口，宽和高各缩两格</div><div class="kline">卷得越深，图越小</div><div class="kline">补上一圈，尺寸就能保住</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十八集</span><span>07 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">Dilation 与 Grouping</div>
+  <h2>膨胀与分组：控制算力和参数</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>膨胀在采样点之间插空隙，跳过一些行列。</li><li>用更少运算覆盖更大区域，但可能混叠。</li><li>分组把输入输出分成 G 组各自卷。</li><li>G=1 是常规卷积；G=C₁ 是逐通道卷积。</li></ul>
+      <div class="src">依据：原书第 294 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个旋钮</div><div class="kline">膨胀：3×3 隔点采，视野撑到 5</div><div class="kline">分组：各干各的，省算力</div><div class="kline">两者都改运算量和参数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十八集</span><span>08 / 9</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">资源、部分卷积与作业</div>
+  <h2>机制收束：下一站池化</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Dumoulin 的卷积动图能直观看到参数效果。</li><li>部分卷积：输入乘掩码，再按有效个数归一化。</li><li>作业一：5×5 窗口、3 输入、8 输出，算权重。</li><li>作业二：权值共享为什么适合平移？说直觉。</li></ul>
+      <div class="src">依据：原书第 294 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">下一集与框架</div><div class="kline">下一集：池化，把图缩小还保住信息</div><div class="kline">5.4.1 从 p.295 开始</div><div class="kline">PyTorch 的二维卷积叫 Conv2d</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第三十八集</span><span>09 / 9</span></div>
+</section>
+<div id="subbar"></div></body></html>

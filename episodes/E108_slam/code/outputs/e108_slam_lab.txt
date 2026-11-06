@@ -1,0 +1,20 @@
+[lab] E108 SLAM 开始 2026-11-03T03:43:13
+[lab] 源码 sha256=0a5cdbaa8e751f3de8e88213e2e886e697afca9497c9603a5865bafb944b3974
+[PASS] 纯里程计会漂　| 终点 0.395
+[PASS] 无回环不修正　| 0.395 vs 0.395
+[PASS] 回环终点误差小　| 0.0223
+[PASS] 回环显著降终点　| 0.395→0.0223
+[PASS] 回环降 ATE　| 0.330→0.195
+[PASS] 回环降地图误差　| 0.259→0.188
+[PASS] 回环残差小　| 0.00096
+[PASS] 全轨迹有界　| max 12.8
+[PASS] 地标全建图　| 120 观测/12 地标
+[PASS] 三图在盘　| pipeline/traj/error
+[lab] PNG sha256(e108_error.png)=03633e486fb38c4d6d5d90200252696b80f4837b65666ffc95ca9ac7a5c314ce
+[lab] PNG sha256(e108_pipeline.png)=25333f2f37a64237d726d0353e8f23acde5e31c93f259120d35621ffd51e8198
+[lab] PNG sha256(e108_traj.png)=bb5c16bf8917cf8dd38844fbe03fa8c6d7cabcabe16e7327d3cb2f3761bdde37
+[lab] readings → e108_slam_readings.json
+[lab] readings sha256=80b53781682ae52770fa166c77370c4f3b9d9c7d4884a7cbbad121189b3bb0fc
+[lab] LEDGER：断言 10 条，PASS 10
+[lab] 汇总 PASS 10 / FAIL 0 / 共 10
+[lab] 结束 2026-11-03T03:43:13

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E016 · 内参与外参：一台相机的「身份证」</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  figure.shot img { max-height: 470px; }
+  .s7-grid { display: grid; grid-template-columns: 1.08fr 1fr; gap: 56px; align-items: center; margin-top: 10px; }
+  .s7-grid figure.shot img { max-height: 560px; }
+  .s7-grid figure.shot { margin-top: 0; }
+  .s7-grid .formula { font-size: 40px; padding: 28px 44px; margin-top: 0; }
+  .s7-grid .formula + .formula { margin-top: 26px; }
+  .s7-grid p.note { margin-top: 20px; }
+  .dof3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-top: 24px; }
+  .dof3 .card .big { font-size: 34px; }
+  .kr { font-size: 27px; line-height: 1.55; background:#fff; border:1px solid #e6dcc8; border-radius:12px; padding:14px 20px; margin-top:16px; }
+  .kr b { color: var(--blue); } .kr .o { color: var(--orange); font-weight: 800; }
+  .vocab .cards { gap: 18px; margin-top: 22px; }
+  .vocab .card { padding: 18px 28px; }
+  .vocab .card .big { font-size: 36px; }
+  .vocab .card .cap { font-size: 25px; margin-top: 10px; line-height: 1.42; }
+  .vocab .card .cap small { font-size: 20px; margin-top: 6px; }
+  .vocab p.lead { font-size: 27px; margin-top: 20px; }
+  .s14 .formula { font-size: 40px; padding: 30px 46px; }
+  .dense .formula { font-size: 36px; padding: 24px 40px; margin-top: 26px; }
+  .dense .formula + .formula { margin-top: 22px; }
+</style>
+</head>
+<body>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">正课 · 08 · 第 2 章 图像形成</div>
+  <h2>内参与外参：<span class="hl">一台相机的「身份证」</span></h2>
+  <p class="lead">三段路线（讲者安排）：① 像素怎么变成 3D 射线——传感器单应 M<sub>s</sub> ② M<sub>s</sub> 翻成标定矩阵 K，再合体成相机矩阵 P=K[R|t] ③ 焦距的三种单位 · 双视图映射 · 物体中心投影</p>
+  <p class="note step" data-step="2">讲者按：本集对应 §2.1.4「3D to 2D projections」后半（原书第 55–63 页，至 §2.1.5 之前）；上一集讲完「点投到像上哪儿」，这一集讲「像上坐标怎么变成像素」——内参是相机的「身份证」——固定焦距、固定对焦时出厂定死（变焦会改 K，本集第 62 页就会见到；调焦同理——讲者补充），外参是相机此刻的「摆位」</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>01 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">导览 · 兑现承诺</div>
+  <h2>上集接过来的<span class="hl">两件事</span>，今天都办</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">E015 的切分</div>
+      <div class="cap">「讲者安排切分：内参矩阵留给 E016，镜头畸变留给 E017」<small>今天吃到 §2.1.4 后半（第 55–63 页）；§2.1.5 Lens distortions（第 63 页起）留给 E017</small></div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big">视差的后续</div>
+      <div class="cap">已知深度/视差时，可用满秩 4×4 的逆直接映回 3D——式(2.64)<small>上集推过 1−1/z 的视差换算（E015 f036 讲者推演）；今天补上可逆 4×4</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="1">讲者按：E016/E017 的切点在原书第 63 页内部（§2.1.5 小节标题起始处），不是原书小节边界——切分为讲者安排</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>02 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">内参 ① · 传感器几何</div>
+  <h2>像素格子，<span class="hl">怎么躺进 3D</span></h2>
+  <figure class="shot step" data-step="1"><img src="figures/e016_fig2_8.png"><figcaption>讲者重绘 · 据原书 Figure 2.8（第 55 页）· 原书图未使用</figcaption></figure>
+  <p class="note step" data-step="2">图 2.8 三要素：光心 O<sub>c</sub>（节点）、传感器平面原点 c<sub>s</sub>、像素间距 (s<sub>x</sub>, s<sub>y</sub>)（固态传感器有时以微米 micron 计）——像素索引从左上角开始、往右往下（多数成像库的约定；原书提醒并非所有库都遵守，换坐标系调整直接，第 55 页）</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>03 / 20</span></div>
+</section>
+
+<section class="slide dense" data-steps="2">
+  <div class="kicker">内参 ① · 传感器单应</div>
+  <h2>从像素到 3D：<span class="hl">M<sub>s</sub></span></h2>
+  <div class="formula step" data-step="1">p = [R<sub>s</sub> c<sub>s</sub>]·[s<sub>x</sub> 0 0; 0 s<sub>y</sub> 0; 0 0 0; 0 0 1]·(x<sub>s</sub>, y<sub>s</sub>, 1)<sup>T</sup> = M<sub>s</sub>·x̄<sub>s</sub>（3×4 · 4×3）—— 式(2.53)，原书第 55 页</div>
+  <p class="note step" data-step="1">讲者按：4×3 矩阵第三行全 0——丢弃 R<sub>s</sub> 第三列；第四行 (0 0 1)——齐次 1 原样乘到 c<sub>s</sub>，故 M<sub>s</sub> 第三列 = c<sub>s</sub></p>
+  <div class="formula step" data-step="2">M<sub>s</sub> 列解释（第 55–56 页原文）：前两列 = 沿 x<sub>s</sub>/y<sub>s</sub> 方向单位步进对应的 3D 向量；第三列 = 图像阵列原点 c<sub>s</sub></div>
+  <p class="note step" data-step="2">8 个未知数：R<sub>s</sub> 三个 + c<sub>s</sub> 三个 + (s<sub>x</sub>, s<sub>y</sub>) 两个——两轴间 skew 忽略（固态工艺可忽略，第 56 页）；实操只剩 7 个自由度：传感器距离与像素间距无法凭外部测量分开（第 56 页）</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>04 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">内参 ② · 标定矩阵</div>
+  <h2>K 登场：相机的<span class="hl">「身份证」</span></h2>
+  <div class="formula step" data-step="1">p = s·p<sub>c</sub>（同一射线，差一个未知缩放 s，原书第 56 页）；x̃<sub>s</sub> = α·M<sub>s</sub><sup>−1</sup>·p<sub>c</sub> = K·p<sub>c</sub> —— 式(2.54)，原书第 56 页</div>
+  <div class="cards c2">
+    <div class="card step" data-step="2"><div class="big">内参 intrinsics</div><div class="cap">标定矩阵 K 描述相机内参<small>原书第 56 页：describes the camera intrinsics；「像素间距、传感器位姿、焦距与主点」为讲者归纳（下页起）</small></div></div>
+    <div class="card step" data-step="2"><div class="big">外参 extrinsics</div><div class="cap">相机在空间中的朝向与位置——就是 E015 讲的三维刚体变换 R, t<small>原书第 56 页：the camera's orientation in space；「位置」对应式(2.55) 的平移 t（讲者补）</small></div></div>
+  </div>
+  <p class="note step" data-step="2">讲者比喻：内参是「机身出厂设定」，外参是「今天怎么摆」——固定焦距、固定对焦时，身份证不变、摆位天天变；变焦会改 K（见本集第 62 页；调焦同理——讲者补充）</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>05 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">内参 ② · 自由度谜题</div>
+  <h2>7、8、5——K 的<span class="hl">自由度之谜</span></h2>
+  <div class="dof3">
+    <div class="card step" data-step="1"><div class="big">理论上 7</div><div class="cap">M<sub>s</sub> 的 8 参数减去「距离与间距不可分」<small>原书第 56 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big">实践中 8</div><div class="cap">直接假设一般 3×3 齐次矩阵（满维）<small>原书第 56 页：most practitioners assume a general form</small></div></div>
+    <div class="card step" data-step="1"><div class="big warn">教科书 5</div><div class="cap">上三角形式——多视图几何标准做法<small>Faugeras 1993; Hartley &amp; Zisserman 2004; Faugeras &amp; Luong 2001，原书第 56 页</small></div></div>
+  </div>
+  <div class="kr step" data-step="1">为什么能砍到 5？——仅凭外部测量<b>无法恢复完整 K</b>：标定时内外参一起估，x̃<sub>s</sub> = K[R t]p<sub>w</sub> = P·p<sub>w</sub> —— 式(2.55)；<span class="o">P = K[R|t]</span> —— 式(2.56)（原书第 56 页）。K 右乘 R₁、[R|t] 左乘 R₁<sup>T</sup>，仍是合法标定——传感器真实朝向与真实内参不可分</div>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>06 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">内参 ③ · 上三角形式</div>
+  <h2>上三角 K：<span class="hl">惯例的由来</span></h2>
+  <div class="formula step" data-step="1">从 P = K[R|t] 用 QR factorization 提取上三角 K（Golub &amp; Van Loan 1996，原书第 57 页）；式(2.57)：K = [f<sub>x</sub> s c<sub>x</sub>; 0 f<sub>y</sub> c<sub>y</sub>; 0 0 1]（第 57 页）——f<sub>x</sub>/f<sub>y</sub> 独立焦距、s 轴间 skew、(c<sub>x</sub>, c<sub>y</sub>) 图像中心</div>
+  <p class="note step" data-step="1">讲者按：原书写 QR factorization；这里要的是上三角 K 在左的形式，实务中通常称 RQ 分解——QR 的变体</p>
+  <div class="formula step" data-step="2">式(2.58)：K = [f s c<sub>x</sub>; 0 a·f c<sub>y</sub>; 0 0 1]（第 57 页）——宽高比 a 显式、公共焦距 f</div>
+  <p class="note step" data-step="2">术语撞车（第 57 页原文注）：矩阵代数里 R 是上三角阵（对角右侧），计算机视觉里 R 是正交旋转——读文献当心。主点辨析：CV 文献（Hartley &amp; Zisserman 2004）把图像中心叫 principal point；光学里（Hecht 2015）principal points 是透镜内主平面与主光轴相交的 3D 点——同名不同物（第 57 页）</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>07 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">内参 ③ · 最简形式</div>
+  <h2>再砍三刀：<span class="hl">单参数模型</span></h2>
+  <div class="s7-grid">
+    <div>
+      <div class="formula step" data-step="1">a = 1、s = 0 → K = [f 0 c<sub>x</sub>; 0 f c<sub>y</sub>; 0 0 1] —— 式(2.59)，原书第 58 页；取 (c<sub>x</sub>, c<sub>y</sub>) = (W/2, H/2) → 整个模型只剩一个未知数 f</div>
+      <p class="note step" data-step="2">图 2.9 两处约定（第 58 页）：像平面放在节点（透镜投影中心）<b>之前</b>；y 轴翻转——与多数成像库的垂直（行）坐标约定兼容。讲者按：y 向下正是 E002 作业验证过的图像坐标约定（E002 f021）</p>
+    </div>
+    <figure class="shot step" data-step="2"><img src="figures/e016_fig2_9.png"><figcaption>讲者重绘 · 据原书 Figure 2.9（第 57 页）· 原书图未使用</figcaption></figure>
+  </div>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>08 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">内参 ④ · 焦距单位</div>
+  <h2>焦距到底<span class="hl">用什么单位</span></h2>
+  <div class="s7-grid">
+    <figure class="shot step" data-step="1" style="margin-top:0"><img src="figures/e016_fig2_10.png"><figcaption>讲者重绘 · 据原书 Figure 2.10（第 58 页）· 原书图未使用</figcaption></figure>
+    <div>
+      <div class="formula step" data-step="1" style="margin-top:0">tan(θ<sub>H</sub>/2) = W/(2f)　或　f = (W/2)·[tan(θ<sub>H</sub>/2)]<sup>−1</sup> —— 式(2.60)，原书第 58 页</div>
+      <div class="formula step" data-step="2">35mm 胶片：曝光区 24×36mm，W = 36mm，f 以毫米计——50mm 常见标配、85mm 人像标准（第 59 页）</div>
+      <p class="note step" data-step="2">脚注 4（第 59 页）：35mm 指<b>胶片条宽</b>——24mm 曝光 + 11mm 齿孔与帧编号。数码图像 W 用像素表达，f 可直接进 K（第 59 页）。讲者按：同一颗镜头，换传感器尺寸，「等效焦距」就变（换算演示见第 18 页实验 #8）</p>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>09 / 20</span></div>
+</section>
+
+<section class="slide dense" data-steps="2">
+  <div class="kicker">内参 ④ · 归一化坐标</div>
+  <h2>分辨率无关的<span class="hl">焦距写法</span></h2>
+  <div class="formula step" data-step="1">x′<sub>s</sub> = (2x<sub>s</sub>−W)/S，y′<sub>s</sub> = (2y<sub>s</sub>−H)/S，S = max(W, H) —— 式(2.61)，原书第 59 页</div>
+      <p class="note step" data-step="1">好处：f 分辨率无关——图像金字塔（§3.5）缩放后参数直接复用。原书脚注 5（第 59 页）：要真正做到准确，下采样后 W、H 需保留浮点值（奇数尺寸会变非整数）</p>
+      <div class="formula step" data-step="2">S = W = 2 → f<sup>−1</sup> = tan(θ<sub>H</sub>/2) —— 式(2.62)，原书第 59 页</div>
+      <p class="note step" data-step="2">换算（第 59 页原文）：unitless f ×W/2 → 像素；像素 f ×18mm → 35mm。讲者推演：×18mm 只对 unitless f 严格成立；像素 f 先 ÷(W<sub>px</sub>/2)——f₃₅ = f<sub>px</sub>×36mm/W<sub>px</sub>（实验 #8：1000×18=18000mm≠50mm）。S 取 max 让横拍竖拍焦距一致（第 59 页）</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>10 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">相机矩阵 · 合体</div>
+  <h2>内外参合体 + <span class="hl">4×4 可逆版</span></h2>
+  <div class="formula step" data-step="1">P = K[R|t] —— 式(2.63)，原书第 59 页（外参 R, t：E015 的三维刚体；投影中心 C：式(2.25)，第 44 页）</div>
+  <div class="formula step" data-step="2">P̃ = [K 0; 0<sup>T</sup> 1]·[R t; 0<sup>T</sup> 1] = K̃·E —— 式(2.64)，原书第 60 页：不扔末行 → 可逆 4×4；E=3D 刚体（欧氏）、K̃=满秩标定矩阵</div>
+  <p class="note step" data-step="2">从上集的视差话题接过来（E015 f036 讲者推演过 1−1/z 换算）——讲者按：E014 f004 埋过「相机摆放是三维刚体变换」，今天 R,t 正式落进相机矩阵</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>11 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">相机矩阵 · 视差</div>
+  <h2>屏幕坐标 + <span class="hl">视差 d</span></h2>
+  <div class="s7-grid">
+    <div>
+      <div class="formula step" data-step="1" style="margin-top:0"><b>x</b><sub>s</sub> ∼ P̃·p̄<sub>w</sub> —— 式(2.65)，原书第 60 页（粗体四维 x<sub>s</sub>，无波浪号）；除以第三个分量 → (x<sub>s</sub>, y<sub>s</sub>, 1, d)——屏幕坐标加视差</div>
+      <p class="note step" data-step="2">图 2.11：左 = regular disparity（逆深度）；右 = projective depth（相对参考平面，d=0.5/0/−0.25）——d 即 projective depth / plane plus parallax（第 60–61 页）</p>
+      <div class="formula step" data-step="2">末行重写 p₃ = s₃[n̂₀|c₀]（‖n̂₀‖=1）→ d = (s₃/z)·(n̂₀·p<sub>w</sub> + c₀) —— 式(2.66)，原书第 60 页（z 沿光轴距离，回指式(2.25)）</div>
+    </div>
+    <figure class="shot step" data-step="2" style="margin-top:0"><img src="figures/e016_fig2_11.png"><figcaption>讲者重绘 · 据原书 Figure 2.11（第 60 页）· 原书图未使用</figcaption></figure>
+  </div>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>12 / 20</span></div>
+</section>
+
+<section class="slide dense" data-steps="2">
+  <div class="kicker">相机矩阵 · 两个特例</div>
+  <h2>参考平面推到<span class="hl">无穷远</span></h2>
+  <div class="formula step" data-step="1">n̂₀ = 0、c₀ = 1（参考平面在无穷远）→ d = 1/z —— 标准 disparity（Okutomi &amp; Kanade 1993，原书第 61 页）</div>
+  <p class="note step" data-step="1">兑现 E015 f036 讲者推演：「归一化第三元变成 1−1/z，是 disparity 的仿射函数」——原书在此正式给出 d=1/z（讲者按：1−1/z 与 1/z 只差仿射换算，相容）</p>
+  <div class="formula step" data-step="2">p̃<sub>w</sub> = P̃<sup>−1</sup>·<b>x</b><sub>s</sub> —— 式(2.67)，原书第 61 页：像素+视差直接映回 3D（讲者按：p̃ 除以第四分量才得 p̄<sub>w</sub>）；P̃ 形式随意选——任意投影采样空间，多视立体扫平面（§12.1.2；Collins 1996，第 61 页）</div>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>13 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">跨相机映射</div>
+  <h2>两台相机看<span class="hl">同一场景</span></h2>
+  <div class="s7-grid">
+    <div>
+      <div class="formula step" data-step="1" style="margin-top:0">x̃₀ ∼ K̃₀E₀p = P̃₀p —— 式(2.68)；p ∼ E₀⁻¹K̃₀⁻¹x̃₀ —— 式(2.69)；x̃₁ ∼ K̃₁E₁p = K̃₁E₁E₀⁻¹K̃₀⁻¹x̃₀ = P̃₁P̃₀⁻¹x̃₀ = M₁₀x̃₀ —— 式(2.70)，原书第 61 页</div>
+      <p class="note step" data-step="2">图 2.12：(a) 3D 点 (X,Y,Z,1) 投进两图，得 (x,y,1,d)；(b) 所有点共面 n̂₀·p+c₀=0 时诱导平面单应。M₁₀ 是 4×4——第 61 页原文：普通照片没有深度 d₀，式(2.70) 用不上——下一页是两个「免深度」特例</p>
+    </div>
+    <figure class="shot step" data-step="2"><img src="figures/e016_fig2_12.png"><figcaption>讲者重绘 · 据原书 Figure 2.12（第 62 页）· 原书图未使用</figcaption></figure>
+  </div>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>14 / 20</span></div>
+</section>
+
+<section class="slide s14" data-steps="2">
+  <div class="kicker">跨相机映射 · 免深度特例</div>
+  <h2>不用深度，<span class="hl">也能跨相机</span></h2>
+  <div class="formula step" data-step="1">平面场景：末行换平面方程、d₀=0 → x̃₁ ∼ H̃₁₀x̃₀ —— 式(2.71)，原书第 61–62 页：3×3 单应（8 参数），平面拼贴对齐的一般模型（第 62 页）</div>
+  <p class="note step" data-step="1">讲者按：H̃ 回指 E014 式(2.21) 与 E015 的 H̃——同一 3×3 家族</p>
+  <div class="formula step" data-step="2">纯旋转 t₀=t₁：x̃₁ ∼ K₁R₁R₀⁻¹K₀⁻¹x̃₀ = K₁R₁₀K₀⁻¹x̃₀ —— 式(2.72)，原书第 62 页：也是 3×3 单应</div>
+  <p class="note step" data-step="2">式(2.72) 已知宽高比与中心时由旋转量+两焦距参数化——拼接标准配方（§8.2.3，第 62 页）。讲者按（适用条件）：原书写「i.e., when t₀=t₁」；在 [R|t] 约定下严格成立要求光心重合（−R₀<sup>T</sup>t₀ = −R₁<sup>T</sup>t₁），t₀=t₁=0 是特例——实验取 t₀=t₁=0，并验证 t₀=t₁≠0 时失效（第 18 页实验 #17 反例）</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>15 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">物体中心投影</div>
+  <h2>长焦之困：<span class="hl">变焦还是靠近？</span></h2>
+  <div class="formula step" data-step="2">展开式(2.59)：x<sub>s</sub> = f(r<sub>x</sub>·p+t<sub>x</sub>)/(r<sub>z</sub>·p+t<sub>z</sub>) + c<sub>x</sub> —— 式(2.73)；y<sub>s</sub> 同理 —— 式(2.74)，原书第 63 页（r<sub>x</sub>/r<sub>y</sub>/r<sub>z</sub> 是 R 的三行）</div>
+  <div class="kr step" data-step="1">物距 t<sub>z</sub> ≫ ‖p‖（物体尺寸）时，分母 ≈ t<sub>z</sub>，投影物体的整体尺度取决于 <span class="o">f 与 t<sub>z</sub> 之比</span>——两者难以分开（原书第 63 页）</div>
+  <p class="note step" data-step="1">彩蛋（第 62 页原文）：Hitchcock《迷魂记》Vertigo 以「同步变焦 + 相机运动」制造不安效果——正是利用 f 与物距高度相关这一歧义。讲者按：变焦与相机运动造成的画面尺度变化可能难以区分；但第 63 页指出 η<sub>z</sub> 可从透视缩短估出，并非完全不可分——数值演示见第 18 页实验 #19</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>16 / 20</span></div>
+</section>
+
+<section class="slide dense" data-steps="2">
+  <div class="kicker">物体中心投影 · 重参数化</div>
+  <h2>把 f/t<sub>z</sub> 拆成<span class="hl">两个可估的量</span></h2>
+  <div class="formula step" data-step="1">η<sub>z</sub> = t<sub>z</sub><sup>−1</sup>、s = η<sub>z</sub>f → x<sub>s</sub> = s(r<sub>x</sub>·p+t<sub>x</sub>)/(1+η<sub>z</sub>r<sub>z</sub>·p) + c<sub>x</sub> —— 式(2.75)；y<sub>s</sub> 同理 —— 式(2.76)，原书第 63 页（Szeliski &amp; Kang 1994; Pighin, Hecker et al. 1998）</div>
+  <p class="note step" data-step="1">第 63 页原文三点：看已知物体（3D 坐标 p 已知）时 s 可可靠估计；η<sub>z</sub> 从物体旋转产生的透视缩短（foreshortening）估计，且与 s 基本解耦；η<sub>z</sub>→0 桥接正交重建技术（因式分解）与透视对应版（§11.4.1）</p>
+  <div class="formula step" data-step="2">长焦极限 η<sub>z</sub>→0：同一公式自然过渡到正交投影——<b>无需换模型</b>（原书第 63 页：不必把透视模型换成正交模型）</div>
+  <p class="note step" data-step="2">讲者按：「η<sub>z</sub> 与 s 基本解耦」的数值佐证见实验 #22——对照检验：(f, t<sub>z</sub>) 的雅可比夹角余弦 ≈ −1（第 62 页原文 highly correlated），(s, η<sub>z</sub>) 仅 −0.17（第 63 页原文 mostly decoupled）——相对 (f,t<sub>z</sub>) 显著解耦</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>17 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">实验 · 讲者设计</div>
+  <h2>数值实验：<span class="hl">把身份证验一遍</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">22 项数据断言</div>
+      <div class="cap">式(2.53) 原式结构+列解释 · 8 参数重构+Gram 反解 · 8→7 耦合 · K[R|t] 规范自由 · RQ 分解 · 三档 K 独立互证 · FOV 换算一致性+×18mm 换算链 · 归一化端点 · 4×4 投影 d=1/z · 平面视差 · P̃⁻¹ 回投 · 双视图 M₁₀/H₁₀/纯旋转+反例 · 式(2.73) · f/t<sub>z</sub> 歧义 · (s, η<sub>z</sub>) 重参数 · η<sub>z</sub>→0 极限 · 解耦对照 (f,t<sub>z</sub>)vs(s,η<sub>z</sub>)</div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big">1 项同步检查</div>
+      <div class="cap">五张重绘图（Figure 2.8/2.9/2.10/2.11/2.12）与 slides/figures/ 逐文件 md5 比对<small>stdout 的 md5 供门C 冷启动比对</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="2">讲者归纳三句话：① 内参=身份证 K（固定焦距对焦时定死）、外参=当天摆位 R,t——P=K[R|t] 一矩阵全包；② 外部测量分不出「完整 K+真实朝向」——教科书砍成上三角 5 参数；③ 焦距是单位制的产物——三套写法靠 FOV 公式互换</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>18 / 20</span></div>
+</section>
+
+<section class="slide vocab" data-steps="2">
+  <div class="kicker">词汇 · 本集新词</div>
+  <h2>今天入册的<span class="hl">词汇卡</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1"><div class="big">内参 / 外参</div><div class="cap">intrinsics / extrinsics：K 描述机身，R,t 描述摆位<small>原书第 56 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big">标定矩阵 K</div><div class="cap">calibration matrix——M<sub>s</sub> 之逆（差一个尺度）：3×3，理论 7 / 实践 8 / 上三角 5 DoF<small>式(2.54)，原书第 56 页</small></div></div>
+    <div class="card step" data-step="1"><div class="big">相机矩阵 P</div><div class="cap">P = K[R|t]：内外参合体的 3×4 投影矩阵<small>式(2.56)/(2.63)，原书第 56/59 页</small></div></div>
+    <div class="card step" data-step="2"><div class="big">主点 principal point</div><div class="cap">CV 里指图像中心 (c<sub>x</sub>,c<sub>y</sub>)；光学里是透镜内的 3D 点——同名不同物<small>原书第 57 页，Hartley &amp; Zisserman 2004 / Hecht 2015</small></div></div>
+    <div class="card step" data-step="2"><div class="big">归一化设备坐标</div><div class="cap">x′<sub>s</sub>=(2x<sub>s</sub>−W)/S，S=max(W,H)——分辨率无关的焦距<small>式(2.61)，原书第 59 页</small></div></div>
+    <div class="card step" data-step="2"><div class="big">投影视差</div><div class="cap">projective depth / plane plus parallax：相对参考平面的 d<small>式(2.66)，原书第 60–61 页</small></div></div>
+  </div>
+  <p class="lead dim step" data-step="2">讲者归纳：本集把「点投到像上哪儿」补成「像素从哪儿来」——下一集补最后一丢丢：镜头不完美怎么办（畸变在 E017）。</p>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>19 / 20</span></div>
+</section>
+
+<section class="slide endcard" data-steps="2">
+  <div class="kicker">NEXT · 镜头不完美</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§2.1.4 后半（原书第 55–63 页），对照 Figure 2.8/2.9/2.10/2.11/2.12（第 55/57/58/60/62 页）与式(2.53)–(2.76)</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>① 用式(2.60) 算 W=36mm、f=50mm 的水平视场角 θ<sub>H</sub>，再用式(2.62) 与换算句交叉验证：unitless f×18mm 应回到 50mm；若是像素焦距 f<sub>px</sub>，先 ÷(W<sub>px</sub>/2) 再×18mm（实验 #8：直接×18 得 18000mm）；② 用式(2.75) 验证 η<sub>z</sub>→0 时退化为正交投影</div>
+  <div class="row step" data-step="2"><span class="tag">下一集</span>E017 镜头的谎言：径向畸变与去畸变——桶形/枕形、κ₁ κ₂ 多项式模型、去畸变流程（§2.1.5 Lens distortions，原书第 63 页起）</div>
+  <div class="pagefoot"><span>E016 · 正课第八集</span><span>20 / 20</span></div>
+</section>
+
+<div id="subbar"></div>
+
+</body>
+</html>

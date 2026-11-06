@@ -1,0 +1,90 @@
+== 1. figcaption class 分布（deck.html 全文件）==
+   7 <figcaption class="figcap">
+
+== 2. 死 CSS 检查 ==
+figcaption.speak 命中数: 0
+figcap 内 <small> 命中数: 0
+
+== 3. run9 读数完整性（脚本检查：detail 区含数值/等式）==
+PASS 行共 26 条：detail 读数区带数值 24 条；detail 空但断言标题自带数值（恒等式核对）2 条：
+    C2 d1(3,4)=|3|+|4|=7
+    C3 d2(3,4)=√(3²+4²)=5（勾股数）
+完全无数值 0 条
+
+== 4. 字符计数（shots.json 全帧口播）==
+帧数 28，口播总 2397 字符（含标点），单帧最大 124（f020）
+超 130 字符帧：无
+f009 = 93 字符
+f010 = 121 字符
+f011 = 81 字符
+f020 = 124 字符
+
+== 5. deck 与口播 diff 漂移清单（定位 key=slide 序号+data-step；slide 序号为 0 基，即 slide#3=deck 页4、slide#6=deck 页7；deck 侧剥 HTML 标签+空白规范化；输出为 diff 工具原文，不做人工摘要）==
+--- f009 口播 vs deck slide#3 data-step=1 ---
+  insert: 口播[''] vs deck['原书']
+  replace: 口播['专门交代了两句。第一句'] vs deck['说']
+  insert: 口播[''] vs deck['地']
+  replace: 口播['第二'] vs deck['还有一']
+  replace: 口播['更有意思：'] vs deck['——']
+  replace: 口播['，也就是'] vs deck['（即']
+  replace: 口播['里'] vs deck['中']
+  insert: 口播[''] vs deck['）']
+  replace: 口播['为什么去不掉，下句细说。'] vs deck['原书第 138 页·图 3.22 图注']
+
+--- f010 口播 vs deck slide#3 data-step=2 ---
+  replace: 口播['：'] vs deck[' ']
+  insert: 口播[''] vs deck['「去不掉」正说到了点子上：']
+  insert: 口播[''] vs deck['但']
+  insert: 口播[''] vs deck['它']
+  replace: 口播['看'] vs deck['取决于']
+  delete: 口播['。'] vs deck['']
+
+--- f011 口播 vs deck slide#3 data-step=3 ---
+  delete: 口播['讲者按：配对地记——开运算去亮的小点、闭运算填暗的小孔，实验里 2×2 的暗孔一闭就平。'] vs deck['']
+  insert: 口播[''] vs deck['原书第 139 页 讲者按 配对地记：开运算去亮的小点、闭运算填暗的小孔——我们的对照实验里，2×2 的暗孔一闭运算就填平了']
+
+--- f020 口播 vs deck slide#6 data-step=3 ---
+  replace: 口播['：'] vs deck[' ']
+  replace: 口播['。'] vs deck['：']
+  replace: 口播['根号二'] vs deck[' √2 ']
+  delete: 口播['到 '] vs deck['']
+  replace: 口播['也会'] vs deck['处仍']
+  delete: 口播['出'] vs deck['']
+  delete: 口播['的'] vs deck['']
+  delete: 口播['的'] vs deck['']
+  delete: 口播['根号'] vs deck['']
+  insert: 口播[''] vs deck['√']
+  replace: 口播['，约 '] vs deck['≈']
+  replace: 口播['与'] vs deck['跟']
+  delete: 口播['。'] vs deck['']
+
+
+== 6. f013 式 3.48 残片下界取证：清洗后文本 L81–102 带行号原文 ==
+L81: The distance transform D(i, j) of a binary image b(i, j) is defined as follows. Let d(k, l)
+L82: be some distance metric between pixel offsets. Two commonly used metrics include the city
+L83: block or Manhattan distance
+L84: d1 (k, l) = |k| + |l|
+L85: (3.46)
+L86: and the Euclidean distance
+L87: d2 (k, l) =
+L88: The distance transform is then defined as
+L89: D(i, j) =
+L90: 
+L91: min
+L92: 
+L93: p
+L94: k 2 + l2 .
+L95: 
+L96: k,l:b(k,l)=0
+L97: 
+L98: d(i − k, j − l),
+L99: 
+L100: (3.47)
+L101: 
+L102: (3.48)
+
+== 7. 四个式号行验证 ==
+L32: '(3.44)'
+L100: '(3.47)'
+L102: '(3.48)'
+L531: '(3.49)'

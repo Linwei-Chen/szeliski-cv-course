@@ -1,0 +1,19 @@
+{
+ "n_pass": 10,
+ "n_total": 10,
+ "n_consumers": 3,
+ "sigma_stereo_20": 0.2,
+ "sigma_stereo_50": 1.25,
+ "sigma_lidar": 0.05,
+ "sigma_radar": 0.1,
+ "fused_50": 0.04469276532741131,
+ "fused_50_3": 0.045,
+ "fused_camdrop": 0.0447213595499958,
+ "fused_lidardrop": 0.0996815278536125,
+ "fp_stereo": 0.21185539858339664,
+ "fp_stereo_pct": 21.2,
+ "fp_lidar": 0.0,
+ "lat_total": 100,
+ "travel_100ms": 1.5,
+ "speed": 15.0
+}

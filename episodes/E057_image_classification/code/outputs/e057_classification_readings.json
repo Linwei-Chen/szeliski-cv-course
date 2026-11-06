@@ -1,0 +1,22 @@
+{
+ "generated_at": "2026-11-01T19:08:39",
+ "src_sha16": "f9f4f9cd9ebf07cd",
+ "fig1": {
+  "bow_cells": 3,
+  "pyr_cells": 3,
+  "bars": 8,
+  "tower_levels": 3,
+  "min_fs": 10.5,
+  "max_fs": 11.5
+ },
+ "fig2": {
+  "stages": 5,
+  "arrows": 1,
+  "main_fs_min": 10.5,
+  "max_fs": 11.5
+ },
+ "texts": {
+  "collected": 20,
+  "leaked": 0
+ }
+}

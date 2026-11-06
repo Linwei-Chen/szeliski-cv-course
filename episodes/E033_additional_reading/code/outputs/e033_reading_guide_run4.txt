@@ -1,0 +1,147 @@
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+findfont: Failed to find font weight bold for Arial Unicode MS, now using 400.
+口径注记（九项，与 refs 逐字同步；权威存档=本 stdout 标头）：
+· 引文提取口径：正文中成对括号、括号内含四位数年份才计一条；分号隔开的引文拆开各计一条；
+  内嵌节号（如 1992, Section 5.2）计一条；1983a/b 类字母后缀不拆分（同条）；教材书单段的
+  五本教材同按括号年份提取计条；全部由 evidence 文件现场解析（不从记忆计数）。
+· 主题段划分：以 evidence 头注实测锚为准分八段（教材与顶会刊/合成算子/线性滤波/非线性
+  滤波/形态学/金字塔与小波/非线性金字塔/warping 与 morphing），段界=正文自然段
+  （线性滤波=L39–40+L43 跨页，L41 为 p.179 页眉、L42 空行；金字塔与小波=L56–65，
+  L66 起归非线性金字塔段）。
+· 分项口径（非线性滤波段 L44–52）：按类别关键词切片计数——bilateral filtering（双边）/
+  related iterative algorithms（迭代）/ variational approaches（变分）/ guided filtering
+  （引导）——分项之和=段总数（断言 1-4b）。
+· 集号映射口径：主题→课程集号映射为制作侧归纳（MAP 随存档打印；映射合法性断言=集号
+  目录真实存在）；「本课程未展开」的主题如实标注，不强行归集。
+· 年份口径：引文内四位数 19xx/20xx 视为年份；同一引文多个年份取首个；合法性断言
+  1982–2017（本节最早 Serra 1982、最晚 Gonzalez and Woods 2017）。
+· 图件口径：图 A（文献主题图谱）/图 B（第 3 章知识地图）均为程序生成，本节原书无图表；
+  全部渲染文字串（标题/轴标签/柱标/行标签）随存档打印（P1-8），并断言无 E0XX/§/run/路径。
+· 回指与核改证据口径：跨集回指（E021 合成与玻璃反射/E024 可分离/E025 双边滤波/E030
+  金字塔/E031 小波+可导向/E032 MIP-map+Beier–Neely）与 MAP 三处核改的证据行
+  （GLOSSARY 原行/episodes slug 清单/E032 口播原文/grep 输出）随存档打印（#5 节）。
+· 去重口径：条数=括号引文出现次数（73）；按条目全名去重=72 篇不同文献
+  （Gomes, Darsa et al. 1999 在 L72 warping 段与 L77 morphing 收尾各出现一次，断言 1-9b）；
+  1983a/b 类字母后缀同条不拆（断言见 1-2/1-7：若 a、b 分计则合成算子 4→5、非线性金字塔 5→6）。
+· 边界口径：p.180 §3.8 Exercises 起的内容不进统计（切点外，仅作切点证据留档）；
+  断言性质：全部为数据溯源/一致性断言，无数值算法实验（复盘型实证）。
+
+
+#1 §3.7 主题段解析与引文计数（数据溯源）
+  [PASS] 1-1 教材与顶会刊 段锚在 L30（关键词「some popular」）且引文 5 条  L30–34
+  [PASS] 1-2 合成算子 段锚在 L35（关键词「compositing operators」）且引文 4 条  L35–38
+  [PASS] 1-3 线性滤波 段锚在 L39（关键词「linear filtering」）且引文 2 条  L39–43
+  [PASS] 1-4 非线性滤波 段锚在 L44（关键词「non-linear filtering」）且引文 20 条  L44–52
+  [PASS] 1-5 形态学 段锚在 L53（关键词「morphology」）且引文 7 条  L53–55
+  [PASS] 1-6 金字塔与小波 段锚在 L56（关键词「image pyramids and pyramid blending」）且引文 19 条  L56–65
+  [PASS] 1-7 非线性金字塔 段锚在 L66（关键词「non-linear filters」）且引文 5 条  L66–70
+  [PASS] 1-8 warping 与 morphing 段锚在 L71（关键词「image warping and resampling」）且引文 11 条  L71–77
+  [读数] 非线性滤波分项: {'双边': 5, '迭代': 8, '变分': 4, '引导': 3}
+  [PASS] 1-4b 非线性滤波分项之和=段总数且为 5/8/4/3  [5, 8, 4, 3] vs 20
+  [读数] 各主题引文数: {"教材与顶会刊": 5, "合成算子": 4, "线性滤波": 2, "非线性滤波": 20, "形态学": 7, "金字塔与小波": 19, "非线性金字塔": 5, "warping 与 morphing": 11}
+  [读数] 总引文条数: 73
+  [读数] 年份范围: 1982–2017（n=73）
+  [PASS] 1-9 年份全部在 1982–2017（Serra 1982–Gonzalez and Woods 2017）  1982–2017
+  [读数] 去重篇数: 72 篇（重复键: ['Gomes, Darsa et al. 1999']）
+  [PASS] 1-9b 去重：73 条=72 篇（Gomes, Darsa et al. 1999 两段各现一次）  73 条/72 篇
+  [读数] a,b 同条键: ['and pyramid blending are by Burt and Adelson|1983a,b', 'e computer vision literature are by Gluckman|2006a,b', 'while Blinn|1994a,b']
+  [PASS] 1-9c a,b 字母后缀同条共 3 处未拆（若分计 73→76）
+
+#2 主题→课程集号映射核对
+  [读数] MAP 核改③ v2 记录: v1 表述「第 22 集金字塔为线性搭法」不实——E030 f012 实讲过局部拉普拉斯滤波（原书第 158–159 页，非线性塔构造）；修正为「本段 5 条文献未讲、主题第 22 集沾边」。v1 的 grep 基础（E030/E031 无局部拉普拉斯）为错误结论，本轮 rglob 全文件 grep 已纠正（5-5b）。
+  [PASS] 2-1 教材与顶会刊 → 课程整体（无单集对应——本集即导读）（集号目录真实存在）
+  [PASS] 2-2 合成算子 → E021（集号目录真实存在）
+  [PASS] 2-3 线性滤波 → E023/E024（集号目录真实存在）
+  [PASS] 2-4 非线性滤波 → E025（集号目录真实存在）
+  [PASS] 2-5 形态学 → E026（集号目录真实存在）
+  [PASS] 2-6 金字塔与小波 → E030/E031（集号目录真实存在）
+  [PASS] 2-7 非线性金字塔 → 本段 5 条文献未讲（非线性塔构造主题第 22 集沾边——原书第 158–159 页局部拉普拉斯滤波，E030 f012）（集号目录真实存在）
+  [PASS] 2-8 warping 与 morphing → E032（集号目录真实存在）
+
+#3 图 A 文献主题图谱（程序生成，本节原书无图表）
+  [PASS] 3-1 图 A 生成且总条数与 #1 一致  73=73
+
+#4 图 B 第 3 章知识地图（程序生成）
+  [PASS] 4-1 图 B 映射 §3.1 点运算 → E021/E022（集号目录真实存在）
+  [PASS] 4-2 图 B 映射 §3.2 线性滤波 → E023/E024（集号目录真实存在）
+  [PASS] 4-3 图 B 映射 §3.3 非线性与二值形态学 → E025/E026（集号目录真实存在）
+  [PASS] 4-4 图 B 映射 §3.4 傅里叶变换 → E027/E028（集号目录真实存在）
+  [PASS] 4-5 图 B 映射 §3.5 插值/金字塔/小波/融合 → E029/E030/E031（集号目录真实存在）
+  [PASS] 4-6 图 B 映射 §3.6 几何变换 → E032（集号目录真实存在）
+  [PASS] 4-7 图 B 映射 §3.7 阅读指南 → E033（本集）（集号目录真实存在）
+
+#4b 图件渲染文字串（P1-8：全部进入 PNG 像素的文字）
+  [读数] 图A: 阅读指南文献主题图谱：各主题段引文数与正课对应（程序生成；数据=原书第 178–179 页现场解析）
+  [读数] 图A: 括号引文条数（原书第 178–179 页实测）
+  [读数] 图A: 教材与顶会刊
+（本集导读）
+  [读数] 图A: 合成算子
+（正课第 13 集）
+  [读数] 图A: 线性滤波
+（正课第 15、16 集）
+  [读数] 图A: 非线性滤波
+（正课第 17 集）
+  [读数] 图A: 形态学
+（正课第 18 集）
+  [读数] 图A: 金字塔与小波
+（正课第 22、23 集）
+  [读数] 图A: 非线性金字塔
+（第 22 集沾边·文献未讲）
+  [读数] 图A: warping 与 morphing
+（正课第 24 集）
+  [读数] 图A: 5
+  [读数] 图A: 4
+  [读数] 图A: 2
+  [读数] 图A: 20
+  [读数] 图A: 7
+  [读数] 图A: 19
+  [读数] 图A: 5
+  [读数] 图A: 11
+  [读数] 图B: 第 3 章知识地图：主题 → 正课对应（程序生成；映射=本课程实际进度）
+  [读数] 图B: 点运算
+  [读数] 图B: 线性滤波
+  [读数] 图B: 非线性与二值形态学
+  [读数] 图B: 傅里叶变换
+  [读数] 图B: 插值/金字塔/小波/融合
+  [读数] 图B: 几何变换
+  [读数] 图B: 阅读指南
+  [读数] 图B: 正课第 13、14 集
+  [读数] 图B: 正课第 15、16 集
+  [读数] 图B: 正课第 17、18 集
+  [读数] 图B: 正课第 19、20 集
+  [读数] 图B: 正课第 21、22、23 集
+  [读数] 图B: 正课第 24 集
+  [读数] 图B: 正课第 25 集（本集）
+  [PASS] 4b 图件渲染文字无内部记号（无 E0XX/§/run/路径/「门」）  共 33 条已打印
+
+#5 跨集回指与 MAP 核改证据（GLOSSARY 原行/episodes 清单/E032 口播/grep 实测）
+  [读数] GLOSSARY[compositing]: | compositing | 合成 | 合成 | E021 | 用 α 贴进另一幅图 |
+  [PASS] 5-1 GLOSSARY 含 compositing 条目且挂 E021（首现集）  1 行
+  [读数] GLOSSARY[glass reflection]: | glass reflection | 玻璃反射 | 玻璃反射 | E021 | 直接相加的合成，Figure 3.6 |
+  [PASS] 5-1 GLOSSARY 含 glass reflection 条目且挂 E021（首现集）  1 行
+  [读数] GLOSSARY[steerable]: | steerable pyramid | 可导向金字塔 | 可导向金字塔 | E031 | 方向可控的过完备变换，提出者给它起了个长名字（p.164–165）；过完备表示消除了混叠问题、分析基与合成基相同=自逆（p.165）；本集只示意频带划分方式、不实现完整滤波器组（口径申报在案） |
+  [PASS] 5-2 GLOSSARY steerable 条目挂 E031
+  [读数] GLOSSARY[MIP-map]: | image pyramid | 图像金字塔 | 图像金字塔 | E030 | E028 f029 移交首提；多分辨率表示总纲：底层原图、往上一层比一层小（p.155）；用途=由粗到细搜索、多分辨率融合、图形软硬件分数级缩小（MIP-map）（pp.154–155） |
+  [读数] GLOSSARY[MIP-map]: | MIP-map | MIP 贴图 | M-I-P-贴图 | E030 | 图形软硬件用金字塔做分数级缩小的那套东西（p.155 开篇提及）；E032 展开：Williams 1983 纹理映射预滤波（p.172）、脚注 16「multi in parvo=很多放进一个里」、r 估计与 trilinear（p.173，词条另列） |
+  [读数] GLOSSARY[MIP-map]: | trilinear MIP-mapping | 三线性 MIP-map | 三线性M-I-P-贴图 | E032 | 先按层数小数部分线性混合上下两层、层内再双线性（p.173）；层号 l=log2 r，r 取矩阵 A 元素绝对值的最大值（抑走样）或最小值（减模糊）；MIP-map 词条（E030 预告「后面再讲」）在本集展开 |
+  [PASS] 5-2 GLOSSARY MIP-map 条目挂 E030
+  [读数] GLOSSARY[bilateral]: | bilateral filter | 双边滤波 | 双边滤波 | E024 | 边缘保持平滑；对 shot noise 有失手处（p.131 首现预告，Figure 3.18 图注；E025 展开承诺兑现：式 3.34–3.37 双核乘积+失手程序对照，pp.133–137） |
+  [读数] GLOSSARY[bilateral]: | bilateral grid | 双边网格 | 双边网格 | E025 | 双边加速：高维 color/position 空间均匀网格降采样（p.134；Chen, Paris, and Durand 2007；E025 口播仅指向，细节原书为纲） |
+  [PASS] 5-2 GLOSSARY bilateral 条目挂 E025
+  [读数] episodes slug 清单: {"E021": "E021_pointops", "E023": "E023_linfilter", "E024": "E024_separable", "E025": "E025_nonlinear", "E026": "E026_binary", "E030": "E030_pyramid", "E031": "E031_wavelets_blending", "E032": "E032_geometric_transform", "E033": "E033_additional_reading"}
+  [PASS] 5-3 映射涉及的 9 个集号目录全部真实存在
+  [读数] E032 f011 口播: 先讲 MIP-map。原书第 172 到 173 页说，Williams 一九八三年为图形学纹理映射提出它：一座标准图像金字塔，但每层用高质量滤波器预滤波，而不是粗糙的近似。原书第 172 页脚注给名字来历：MIP 是拉丁文 multi in parvo——「很多放进一个里」。原书第 173 页接着说，用之前先估采样率 r：取矩阵 A 元素绝对值的最大值——抑走样；或最小值——减模糊。再用以二为底的对数换算层号；更好的做法是上下两层都采样、按层数的小数部分线性混合——层内再双线性，合称三线性 MIP-map——原书把各种变体的权衡细节留成习题。讲者实测：r 等于六，层号二点五八五——第二层权重零点四一五、第三层零点五八五。
+  [PASS] 5-4 E032 f011 口播含 MIP-map/Williams（跨集回指锚真实）
+  [读数] E032 f016 口播: 第二种做法，原书第 176 到 177 页：用对应的有向线段——Beier 和 Neely 一九九二年提出。线段上的像素按指定精确迁移，其余像素平滑插值；每对线段为附近像素指定平移加旋转加缩放——正是相似变换；权重依赖到线段的最小距离——线段之间取垂距，出了线段取到两端点的较短距离。讲者实测：单线段的距离场，线上下方完全对称；段内距离恒等于垂距、与沿线位置无关——错用到端点距离，中点会算出三十六点九而不是二十四；延长线上的点取端点距离十、而非垂距零。原书第 177 页说，最后还有一种：用贴合图像内容的网格——手工定它工作量不小，原书提到一个交互系统；网格定好后，中间扭曲用线性插值生成，节点位移用样条插值。
+  [PASS] 5-4 E032 f016 口播含 Beier/Neely（跨集回指锚真实）
+  [读数] grep[Gluckman]: E030/E031 命中 0 处（期望 0）
+  [读数] grep[Farbman]: E030/E031 命中 0 处（期望 0）
+  [读数] grep[Bae, Paris]: E030/E031 命中 0 处（期望 0）
+  [PASS] 5-5 Gluckman/Farbman/Bae, Paris 在 E030/E031 全文件无命中（该段文献未讲）
+  [读数] grep[局部拉普拉斯] E030: 命中 6 处: ['/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E030_pyramid/README.md', '/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E030_pyramid/production/build_shots.py', '/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E030_pyramid/production/shots.json', '/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E030_pyramid/production/timeline.json', '/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E030_pyramid/script/script.md', '/Users/chenlinwei/Movies/AI视频制作/szeliski-cv-course/episodes/E030_pyramid/slides/deck.html']
+  [PASS] 5-5b E030 f012 含局部拉普拉斯（第 22 集沾边证据——v1 grep 结论纠正）
+  [PASS] 5-5c §3.7 的 Lyu and Simoncelli (2008) 未讲（E031 引文列为 2009 另一篇）  E031 口播未点名 Lyu（f011 白话只说『图像去噪』应用）
+  [PASS] 5-5d Fattal (2009) 未讲（E031 f009 引文列出现该名、口播只白话转述自适应小波句未点名）  口径：引文列出现≠讲过——五条文献课程均未按名讲过
+
+汇总：41 条 PASS / 0 条 FAIL
+DONE

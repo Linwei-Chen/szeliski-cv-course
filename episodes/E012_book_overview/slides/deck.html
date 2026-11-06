@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>E012 · 本书地图与学习法</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css">
+<script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  figure.shot img { max-height: 560px; }
+</style>
+</head>
+<body>
+
+<section class="slide title-slide" data-steps="2">
+  <div class="course step" data-step="1">正课 · 04 · 第 1 章 绪论</div>
+  <h1 class="step" data-step="1">本书地图<span class="hl">与学习法</span></h1>
+  <p class="ep step" data-step="1">从依赖图到符号约定 · 第 1 章收官</p>
+  <p class="lead dim step" data-step="2">四段：① 一张依赖图，两个基座 ② 十三章逐个点名 ③ 课表、工具与延伸阅读 ④ 符号约定 + 第 1 部复盘</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>01 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">导览 · BOOK OVERVIEW</div>
+  <h2>这本书，可以<span class="hl">跳着读</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">松耦合</div>
+      <div class="cap">有些章节只松散耦合，不必顺序通读<small>几何与三维重建，无须先啃反射与着色（原书第 22 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big warn">讲者按</div>
+      <div class="cap">地图的意义：不是规定路线，是让你敢跳<small>本条为讲者归纳，非原书内容</small></div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>02 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">地图 · FIGURE 1.12</div>
+  <h2>十三章，<span class="hl">一张依赖图</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/overview_fig1_12.png" alt="重绘的本书章节依赖图">
+    <figcaption>据原书 Figure 1.12（第 23 页）重绘 · 横位与箭头为讲者读图估计 · 深色盒为讲者着色 · 代码实跑输出</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>03 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">地图 · WHAT &amp; WHERE</div>
+  <h2>横轴：2D 管「是什么」，3D 管「在哪里」</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">2D（what?）</div>
+      <div class="cap">偏图像一侧：图像处理、深度学习、识别<small>讲者读图（据第 23 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">3D（where?）</div>
+      <div class="cap">偏几何一侧：运动估计、SfM 与 SLAM、深度、3D 重建<small>讲者读图（据第 23 页）</small></div>
+    </div>
+  </div>
+  <p class="note step" data-step="1">中间带：成像 · 模型拟合 · 特征 · 对齐 · 计算摄影 · 渲染<small>（讲者读图，据第 23 页）</small></p>
+  <p class="lead dim step" data-step="2">what–where 借自人类视觉双通路（Goodale and Milner 1992）——原书图注自己补了一句：不应太当真（第 23 页）</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>04 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">地图 · FOUNDATIONS</div>
+  <h2>两个<span class="hl">基座</span>，三大模块</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">4 · 模型拟合与优化</div>
+      <div class="cap">正则化与 MRF 的源头；经典正则化在移动 AR 等时效敏感应用仍常是首选（第 26 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">5 · 深度学习</div>
+      <div class="cap">第二版全新章节：监督学习 → 前馈网络 → 卷积 → 生成网络（第 26 页）</div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">原书图注：基础技术被后续章广泛使用（第 23 页）——讲者归纳（按内容分，与上页横轴分法是两套视角）：① 基座 Ch4–5 ② 2D 主线 Ch3、7、8、10 ③ 3D 主线 Ch9、11–13；出口 Ch6、Ch14，入口 Ch2（读图第 23 页）</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>05 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">变化 · CH6 MOVES UP</div>
+  <h2>识别章，为什么<span class="hl">搬家</span>了</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">第一版</div>
+      <div class="cap">排在全书最后<small>它依赖分割与特征匹配等中间表示（第 26 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big warn">第二版</div>
+      <div class="cap">提前到第 6 章<small>深度网络能直接学出中间表示；识别已成研究重心，作者把它提前让学生早接触（第 26 页）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">讲者按：地图随范式重画——上一集的时间线刚演示过一次，这里是第二回</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>06 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">巡览 · CH2–3</div>
+  <h2>逐章点名（一）：成像与图像处理</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">2 · 图像形成</div>
+      <div class="cap">几何投影、光度与光学、传感器，三组件拆解（第 24 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">3 · 图像处理</div>
+      <div class="cap">滤波、傅里叶、金字塔与小波、几何扭曲（第 24 页）</div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>07 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">巡览 · CH4–6</div>
+  <h2>逐章点名（二）：基座与识别</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">4 · 模型拟合与优化</div>
+      <div class="cap">变分与正则化 + MRF，顺路引出贝叶斯推断（第 26 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">5 · 深度学习</div>
+      <div class="cap">从经典监督学习、卷积网络，到 3D、时序与生成网络（第 26 页）</div>
+    </div>
+  </div>
+  <div class="cards c2">
+    <div class="card step" data-step="2">
+      <div class="big">6 · 识别</div>
+      <div class="cap">实例识别 → 分类 → 检测 → 语义/全景分割 → 视频理解 → 图文问答（§6.1–6.6，第 26 页）</div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>08 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">巡览 · CH7–10</div>
+  <h2>逐章点名（三）：从特征到计算摄影</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">7 · 特征检测与匹配</div>
+      <div class="cap">第 8、11 章和实例识别的地基<small>据第 27 页正文；图中无直连箭头（讲者读图）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">8 · 对齐与拼接</div>
+      <div class="cap">特征配准 + 全景拼接，期中项目好题材（第 27 页）</div>
+    </div>
+  </div>
+  <div class="cards c2">
+    <div class="card step" data-step="2">
+      <div class="big">9 · 运动估计</div>
+      <div class="cap">平移 → 参数 → 样条 → 逐像素光流，分层与学习模型收尾（第 27–28 页）</div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big">10 · 计算摄影</div>
+      <div class="cap">HDR、超分、编辑合成、纹理修补与风格迁移（第 28 页）</div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>09 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">巡览 · CH11–14</div>
+  <h2>逐章点名（四）：三维与渲染</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">11 · SfM 与 SLAM</div>
+      <div class="cap">两帧 → 多帧 → SLAM，直通 AR 与自主导航（第 28 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">12 · 深度估计</div>
+      <div class="cap">立体 = 已知相机的运动估计；另有单目深度推断（第 28–29 页）</div>
+    </div>
+  </div>
+  <div class="cards c2">
+    <div class="card step" data-step="2">
+      <div class="big">13 · 3D 重建</div>
+      <div class="cap">shape-from-X、主动测距、建筑/人脸/人体，加外观建模（第 29 页）</div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="big">14 · 基于图像的渲染</div>
+      <div class="cap">视图插值、光场、视频纹理，收官于神经渲染（第 29 页）</div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="2">附录 A 线代与数值、B 贝叶斯估计、C 补充材料——数学与数据集的补给站（第 29 页）</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>10 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">学习法 · EXERCISES</div>
+  <h2>习题三类，攒一座<span class="hl">自己的库</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">三类习题</div>
+      <div class="cap">书面作业 / 一周小项目 / 开放研究题——可拿来做期末项目（第 22–24 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">个人视觉库</div>
+      <div class="cap">自己实现并验证，长期胜过调用不理解的黑盒（第 24 页）</div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="2">讲者按：本课每集的「亲手做实验」走的就是这条路</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>11 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">学习法 · TOOLCHAIN</div>
+  <h2>Python + NumPy + OpenCV</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">地基</div>
+      <div class="cap">数组/张量记号 + 线性代数，直通 PyTorch<small>推荐前提：对编程语言无强烈偏好（第 24 页）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">Jupyter</div>
+      <div class="cap">教程、示例、待补代码放一处；Colab 可云端跑笔记与训练（第 24 页脚注 10）</div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">讲者按：本课实验仅依赖 Matplotlib 与系统中文字体，脚本可复现</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>12 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">学习法 · SYLLABUS</div>
+  <h2>一学期装不下，<span class="hl">挑着教</span></h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">Table 1.1</div>
+      <div class="cap">13 周样例课表：第 1 周合讲 Ch1–2，Ch4–5 占第 3–4 周，其余约一周一章（第 30 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">拆成两门</div>
+      <div class="cap">斯坦福 CS231A/231N、伯克利、密歇根都这么办（第 30 页脚注 11）</div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="2">作者与 Seitz 的十周课：本科轻数学重复习，研究生深挖技术（第 30 页）——讲者按：挑内容不丢覆盖，跳读地图在此派上用场</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>13 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">讲者对照 · OUR MAP</div>
+  <h2>本课课表，与作者大纲<span class="hl">同构</span></h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1">
+      <div class="big">作者 13 周</div>
+      <div class="cap">第 1 周合讲 Ch1–2，Ch4–5 占第 3–4 周（Ch5 独占一周），其余约一周一章（第 30 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">本课</div>
+      <div class="cap">数学工具箱 8 集（E001–E008）→ 第 1 部 4 集（E009–E012）→ 正篇逐章</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">同构点</div>
+      <div class="cap">都是先打基础、再进专题：原书 Week 1–4 是 Ch1–2 → Ch3 → Ch4–5<small>讲者归纳（对照第 30 页）</small></div>
+    </div>
+  </div>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>14 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">工具 · NOTATION</div>
+  <h2>全书符号，讲者归纳<span class="hl">五条</span></h2>
+  <div class="formula step" data-step="1">向量 v 小写粗体 · 矩阵 M 大写粗体 · 标量斜体；列向量默认右乘 Mv（第 31 页）</div>
+  <div class="cards c2">
+    <div class="card step" data-step="2">
+      <div class="cap"><b>常用矩阵</b>：R 旋转 · K 标定 · I 单位阵（第 31 页）</div>
+    </div>
+    <div class="card step" data-step="2">
+      <div class="cap"><b>齐次坐标</b>加波浪号 x̃；叉积矩阵 [ ]×（第 31 页）</div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="2">原书吐槽：各教材记号「五花八门」（原文俚语 all over the map）——讲者按：下一集起照这套写</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>15 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">延伸 · FURTHER READING</div>
+  <h2>想读更深，<span class="hl">书单</span>在这</h2>
+  <div class="cards c3">
+    <div class="card step" data-step="1">
+      <div class="big">数学</div>
+      <div class="cap">矩阵代数 Golub &amp; Van Loan；线代 Strang（第 32 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">机器学习</div>
+      <div class="cap">Bishop 2006（原书评：wonderful）、Murphy 2012；深度学习入门 Glassner 2018（第 32 页）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">视觉</div>
+      <div class="cap">Hartley &amp; Zisserman、Forsyth &amp; Ponce 等，可作他山之石（第 32 页）</div>
+    </div>
+  </div>
+  <p class="note">原书自称 self-contained，但预设线代、数值与图像处理基础（第 31–32 页）</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>16 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="2">
+  <div class="kicker">讲者归纳 · PART 1 RECAP</div>
+  <h2>第 1 章，四集走完</h2>
+  <div class="cards c4">
+    <div class="card step" data-step="1">
+      <div class="big">E009</div>
+      <div class="cap">视觉是逆问题<small>（§1.1 概念，第 3–5 页 · E009）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">E010</div>
+      <div class="cap">19 个应用，从问题倒推技术<small>（§1.1 清单，第 5–9 页 · E010）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">E011</div>
+      <div class="cap">五十年历史与时间线<small>（§1.2 · E011）</small></div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">E012</div>
+      <div class="cap">依赖图、课表与符号<small>（§1.3–1.6，第 22–32 页 · 本集）</small></div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="2">数学工具箱八集（E001–E008）已在前就位，正篇自第 2 章开始——讲者按：第 1 部完结</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>17 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验 · REDRAW FIG 1.12</div>
+  <h2>把依赖图变成<span class="hl">可验证</span>的图</h2>
+  <div class="cards c2">
+    <div class="card step" data-step="1">
+      <div class="big">誊录</div>
+      <div class="cap">13 个盒子标签人工誊录自第 23 页（图内折行合并为空格）</div>
+    </div>
+    <div class="card step" data-step="1">
+      <div class="big">断言 15 项</div>
+      <div class="cap">编号 2–14 各一次 · 无环可拓扑排序 · 唯一起点=第 2 章 · 终点={6, 14} · 基座各有出边 · 横位 2D 侧<中间带<3D 侧等</div>
+    </div>
+  </div>
+  <p class="lead dim step" data-step="1">横位与箭头为讲者读图估计——原书未提供坐标与边表（图注已标）</p>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>18 / 20</span></div>
+</section>
+
+<section class="slide" data-steps="1">
+  <div class="kicker">实验结果 · OUTPUT</div>
+  <h2>依赖图，<span class="hl">实跑验证</span></h2>
+  <figure class="shot step" data-step="1">
+    <img src="figures/overview_fig1_12.png" alt="重绘的本书章节依赖图（断言通过版）">
+    <figcaption>据原书 Figure 1.12（第 23 页）重绘 · 箭头为讲者读图估计 · 深色盒为讲者着色 · 断言 15/15 全过</figcaption>
+  </figure>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>19 / 20</span></div>
+</section>
+
+<section class="slide endcard" data-steps="2">
+  <div class="kicker">NEXT · 进正题</div>
+  <div class="row step" data-step="1"><span class="tag">读原书</span>§1.3–1.6（原书第 22–32 页），对照 Figure 1.12（第 23 页）读</div>
+  <div class="row step" data-step="1"><span class="tag">作业</span>在依赖图上画出你自己的学习路径：先 2D 侧还是先 3D 侧？给出依赖依据</div>
+  <div class="row step" data-step="2"><span class="tag">下一集</span>E013 三维世界如何压进二维平面：点、线、面与投影（§2.1）</div>
+  <div class="pagefoot"><span>E012 · 正课第四集</span><span>20 / 20</span></div>
+</section>
+
+<div id="subbar"></div>
+</body>
+</html>

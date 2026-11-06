@@ -1,0 +1,21 @@
+[lab] E125 3DGS 开始 2026-11-03T09:52:19
+[lab] 源码 sha256=fe63dfe721aa081d74431005843a7409a4ccb5a315ef57a5cd054518c434f874
+[lab] 边界：二维高斯泼溅玩具；不是完整 3DGS CUDA 光栅化；三图程序生成
+[PASS] 3D 协方差投影保持各向异性 | 特征值比 11.11
+[PASS] 投影主轴角度与旋转一致 | 30.00° vs 30°
+[PASS] 各向异性重建与目标一致 | MSE=0.00e+00
+[PASS] 各向同性近似明显变差 | MSE=0.0058
+[PASS] 正确深度排序等于手算 alpha | 像素误差 0.00e+00
+[PASS] 颠倒排序改变合成结果 | 图像 MSE=0.0149
+[PASS] 单个大高斯盖不住两个小目标 | MSE=0.0030
+[PASS] 克隆成两个高斯后误差归零 | MSE=0.00e+00, 单高斯 MSE=0.0030
+[PASS] tile 裁剪只处理局部高斯 | 140/384 = 36.5%
+[PASS] tile 覆盖全部目标区域 | 非空 tile 44/64
+[PASS] 显式高斯参数远少于像素 | 60/16384 = 0.37%
+[lab] LEDGER：断言 11 条，PASS 11
+[lab] PNG sha256(e125_anisotropy.png)=29b4b560fcf2b1bc91f11b1cdc2e692bf64e9c3643c501b189dbc6376a78eed9
+[lab] PNG sha256(e125_projection.png)=b657be649a1e2b826cc3b3cba7bd71acf7dde57d241a12041b5fabf9d25d0100
+[lab] PNG sha256(e125_density.png)=2de948629321d39753260ffe3042fb03c6f4468ab59996b29e1d5fce039ac6b3
+[lab] readings sha256=16482f3ce5dfb118432ccae79b6b9dc025323ccae7c488be5b0484bdd33db13c
+[lab] 汇总 PASS 11 / FAIL 0 / 共 11
+[lab] 结束 2026-11-03T09:52:20

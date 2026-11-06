@@ -1,0 +1,14 @@
+[lab] 开始 2026-11-01T03:08:03
+[lab] 输入 锚证据 sha256=d878161df60442fdff94e3485a1220d702bc07b0…
+[lab] 源码 sha256=16a0d6a45460b6f693294c716baff704cef09e225a3ba8f1826b2aae0566b197（哨兵版本绑定数据源——E043 r5 P2-5 口径）
+[PASS] E1 核权重=9×6×4=216（Figure 5.34 caption S²×C1×C2 口径；偏置 4 另计）　| conv_weights=216 conv_bias=4
+[PASS] E1 乘加计数=8×8×9×6×4=13824（嵌套循环真卷积逐次计数=公式宽×高×九乘六乘四）　| macs=13824 macs_formula=13824
+[PASS] E1 嵌套循环 vs 向量化参考 allclose（atol=1e-9——计数实验系真卷积）　| allclose=True
+[PASS] E0 同任务全连接权重=600×256=153600（口播量级白话「十几万根连线」的实算档）　| fc_weights=153600
+[PASS] E0 同任务对照倍数=153600/216=711.1（>100 量级——far fewer weights 实证）　| fc=153600 conv=216 ratio=711.1
+[PASS] E10 作业档核权重=25×3×8=600（f014 第一道口算答案——口播不出答案，只在此档兑现）　| weights=600 bias=8（偏置另计申报）
+[PASS] FG 图内文字收割（对象遍历）+内部记号零命中　| 收割 7 条 Text 对象、内部记号命中 0（不可见对象 44 条实测计数）
+[lab] readings sha256=1e5afec04e6522fb2860c04b5e1b9674d8a022d130aff0da2317ca2a90f63064
+[lab] LEDGER：断言 7 条，PASS 7
+[lab] PNG sha256(e046_fig1_conv_diagram.png)=cbee8c4c466adf4c2dc39f182f7160ff22d1deb36ac1c7db36a591ff5a5bb4df
+[lab] 结束 2026-11-01T03:08:03（起 2026-11-01T03:08:03）

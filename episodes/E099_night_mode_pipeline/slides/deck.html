@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>王牌案例复盘：手机夜景模式的十八道工序</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 10 章应用综合 · 开场</div>
+  <h2>夜景难在哪：两个矛盾</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>亮部太亮、暗部太暗，单张拍不全。</li><li>低光噪声接近信号，暗部尤其脏。</li><li>单张长曝光，高光先饱和。</li><li>单张短曝光，暗部全是噪点。</li></ul>
+      <div class="src">依据：原书第 620/645 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两个矛盾</div><div class="kline">动态范围不够：亮暗差太大</div><div class="kline">暗部光子太少：噪声压不住</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">复盘图 · 十八步四阶段</div>
+  <h2>十八道工序，分成四段</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>十八步是本课按工程顺序整理的。</li><li>四段：采集、合成、重建、渲染。</li><li>每一步都标了对应的原书页。</li><li>这不是厂商的官方流程图。</li></ul>
+      <div class="src">依据：原书第 623–646 页</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e099_pipeline.png" style="max-height:460px" alt="十八步：采集/合成/重建/渲染，每步标原书页｜程序生成，未用教材或论文原图"><figcaption>十八步：采集/合成/重建/渲染，每步标原书页｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">采集 · 运动测光</div>
+  <h2>采集：先决定拍几帧</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>低光用低 ISO 快速连拍。</li><li>多帧合并成一张降噪图。</li><li>运动测光定帧数和曝光时间。</li><li>先选参考帧，其余帧向它对。</li></ul>
+      <div class="src">依据：原书第 645/637 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">采集要点</div><div class="kline">低 ISO 连拍，缩短单帧曝光</div><div class="kline">对齐并合并不停运动的区域</div><div class="kline">陀螺仪等运动信息辅助估抖</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">对齐 · 配准</div>
+  <h2>对齐：鬼影从这里来</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Ward 用全局参数变换对齐输入图。</li><li>Kang 加上局部光流，做精确对齐。</li><li>融合辐亮度前要检查运动一致性。</li><li>差一个像素，亮边就出双层重影。</li></ul>
+      <div class="src">依据：原书第 625/637 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两种对齐</div><div class="kline">三脚架：全局平移/旋转就够</div><div class="kline">手持：全局配准＋局部光流</div><div class="kline">对齐后再融合辐亮度</div><div class="kline">运动物体对不齐会变鬼影</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">合并 · 权重与共识拼接</div>
+  <h2>合并：不是简单平均</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>每帧每个像素的可靠度不同。</li><li>过曝、欠曝、噪声大的样本降权。</li><li>两端衰减的帽子权重。</li><li>共识拼接先定一张无鬼影底图。</li></ul>
+      <div class="src">依据：原书第 623–626 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">顺序与做法</div><div class="kline">先对齐再合并，运动才不糊</div><div class="kline">先合并 RAW 再去马赛克</div><div class="kline">共识拼接再补高光和暗部</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">重建 · 去马赛克</div>
+  <h2>去马赛克：绿色带队</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>去马赛克是超分的一个特例。</li><li>Bayer 绿色传感器是红蓝的两倍。</li><li>做不好会出现伪彩和拉链纹。</li><li>多数方法用绿色梯度推断红蓝。</li></ul>
+      <div class="src">依据：原书第 646/611 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">夜景里的注意点</div><div class="kline">噪声大，伪彩比白天更明显</div><div class="kline">先合并再插值，样本更干净</div><div class="kline">ISP 还会锐化、白平衡、伽马</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">同源 · 一条观测链</div>
+  <h2>同源：超分、去模糊、去噪</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>超分靠对齐并合并多张输入图。</li><li>去模糊和超分关系很近。</li><li>去模糊的核更大，而且未知。</li><li>它们和去马赛克共享观测模型。</li></ul>
+      <div class="src">依据：原书第 637/645/673 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">一条观测链</div><div class="kline">多帧亚像素对齐提供额外采样</div><div class="kline">合并抑制噪声</div><div class="kline">去模糊恢复被抖动的边缘</div><div class="kline">去马赛克补颜色</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">渲染 · 色调映射</div>
+  <h2>色调映射：把 HDR 压回屏幕</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>全局传递曲线简单，但保不住宽曝光。</li><li>逐通道套 gamma 会让颜色变淡。</li><li>先取亮度通道再映射更好。</li><li>双边滤波保边，减少晕轮。</li></ul>
+      <div class="src">依据：原书第 627/630 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">夜景的高光与暗部</div><div class="kline">窗、灯、霓虹是高光</div><div class="kline">天空、巷子是暗部</div><div class="kline">局部映射参数重了会出黑边光晕</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 合成夜景</div>
+  <h2>实验：整体 +1.07，暗部 +8.17 dB</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>八帧短曝光，加泊松噪声和读出噪声。</li><li>整体 PSNR 从 22.04 升到 24.73 dB。</li><li>暗部 PSNR 从 27.33 升到 35.50 dB。</li><li>八帧不对齐 20.68 dB，比单帧还差。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e099_stages.png" style="max-height:430px" alt="各阶段 PSNR：整体 22.0→24.7 dB，暗部 27.3→35.5 dB｜程序生成，未用教材或论文原图"><figcaption>各阶段 PSNR：整体 22.0→24.7 dB，暗部 27.3→35.5 dB｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 长曝光与帧数</div>
+  <h2>长曝光 vs 短连拍</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>长曝光八倍，4.8% 的像素饱和。</li><li>八帧短曝光对齐合并，饱和 0.0%。</li><li>帧数 1→8，PSNR 22.04→23.13 dB。</li><li>暗部噪声 0.0414→0.0205，约减半。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e099_crops.png" style="max-height:460px" alt="真值/单帧/长曝光；裁切 4.8% vs 0.0%｜程序生成，未用教材或论文原图"><figcaption>真值/单帧/长曝光；裁切 4.8% vs 0.0%｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">工程复盘 · 失败边界</div>
+  <h2>失败边界：每道都有代价</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>对齐错：亮边双层、运动鬼影。</li><li>长曝光：高光裁切救不回。</li><li>去马赛克差：伪彩和拉链纹。</li><li>降噪过头：皮肤砖墙变塑料。</li></ul>
+      <div class="src">依据：原书第 625/646 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">输出前检查</div><div class="kline">高光边缘与暗部平场</div><div class="kline">运动物体与细纹理</div><div class="kline">滚动快门、暗角、色差、频闪</div><div class="kline">取证场景保留原始 RAW 和参数</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>夜景收束：一条管线</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>夜景模式是一条多帧管线。</li><li>多帧降噪的前提是对齐正确。</li><li>整体、暗部、高光、纹理分开看。</li><li>下一集：第 10 章复盘。</li></ul>
+      <div class="src">依据：本集实验；原书第 620–673 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">按症状排查</div><div class="kline">暗部脏：看采集和合并</div><div class="kline">边缘重影：看对齐和鬼影</div><div class="kline">颜色花：看去马赛克和色度降噪</div><div class="kline">高光死白：看曝光和色调映射</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第九十一集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

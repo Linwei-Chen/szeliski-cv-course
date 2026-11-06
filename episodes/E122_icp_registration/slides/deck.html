@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>点云配准 ICP：最近点、绝对定向与变体</title>
+<link rel="stylesheet" href="../../../assets/shared/deck.css"><script defer src="../../../assets/shared/deck.js"></script>
+<style>
+  .slide { padding: 76px 120px 120px; }
+  .kicker { font-size: 25px; margin-bottom: 14px; }
+  h2 { font-size: 54px; margin-bottom: 26px; line-height: 1.14; }
+  .g2 { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; align-items: start; margin-top: 8px; }
+  .points { margin: 4px 0 0; padding-left: 1.1em; }
+  .points li { font-size: 29px; line-height: 1.55; margin: 0 0 16px; color: #2b2b2b; }
+  .points li::marker { color: #e8590c; }
+  .keybox { background: #fffaf0; border: 1px solid #e7d9bf; border-left: 7px solid #e8590c;
+             border-radius: 12px; padding: 24px 28px; margin-top: 8px; }
+  .ktitle { font-size: 24px; font-weight: 800; color: #8a4b12; margin-bottom: 14px; }
+  .kline { font-size: 25px; line-height: 1.5; margin: 10px 0; color: #2b2b2b; }
+  .mathbox { background: #fff; border: 1px solid #dfd7c8; border-left: 7px solid #1e3a5f;
+              border-radius: 12px; padding: 28px 30px; margin-top: 8px; }
+  .mform { font-size: 40px; font-weight: 700; color: #1e3a5f; text-align: center; line-height: 1.3; }
+  .mnote { font-size: 21px; line-height: 1.5; color: #5c554a; margin-top: 16px; }
+  figure.shot { margin: 0; }
+  figure.shot img { width: 100%; object-fit: contain; }
+  figure.shot figcaption { font-size: 20px; line-height: 1.4; color: #6b6258; margin-top: 10px; }
+  .src { font-size: 18px; color: #8a8377; margin-top: 20px; }
+</style></head><body>
+<section class="slide" data-steps="1">
+  <div class="kicker">第 13 章 · 配准开场</div>
+  <h2>两片点云错开了，怎么对齐</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>点云配准：把两片错开的点云对齐。</li><li>对齐就是找旋转 R 和平移 t。</li><li>变换之后，源点云要离目标最近。</li><li>ICP 先猜对应，再解变换，循环。</li></ul>
+      <div class="src">依据：原书第 821 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">本集三件事</div><div class="kline">找对应：最近点</div><div class="kline">解变换：R 和 t</div><div class="kline">循环到 RMSE 稳定</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>01 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">ICP 骨架</div>
+  <h2>ICP 两个动作：找点、解变换</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>先找两片表面的最近点匹配。</li><li>再解一个三维绝对定向问题。</li><li>对应变了，变换要重算。</li><li>变换变了，最近点又会变。</li></ul>
+      <div class="src">依据：原书第 821 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">循环的两步</div><div class="kline">最近点：谁和谁配</div><div class="kline">绝对定向：怎么转、怎么平移</div><div class="kline">两步互相依赖，所以要循环</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>02 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">绝对定向 · SVD</div>
+  <h2>给定对应，R 和 t 有闭式解</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>误差：x' 减 R x 减 t 的平方和。</li><li>先对齐质心，t = c' − R c。</li><li>减去质心，就只剩旋转。</li><li>Procrustes：C = U Σ Vᵀ，R = U Vᵀ。</li></ul>
+      <div class="src">依据：原书第 513 页</div>
+  </div><div>
+      <div class="mathbox"><div class="mform">t = c' − R c，R = U Vᵀ</div><div class="mnote">C = U Σ Vᵀ：对相关矩阵做 SVD；式 8.31 是平方和</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>03 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">一轮迭代 · 实验设置</div>
+  <h2>一轮迭代：找点、解变换、更新</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>按当前变换找每个源点的最近点。</li><li>用临时对应解 R 和 t，更新源点云。</li><li>实验：498 内点，加 10% 离群点。</li><li>共 547 点；初始 10°，真值 25°。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">实验设置</div><div class="kline">目标旋转 25°、平移 (0.25, −0.15)</div><div class="kline">源点噪声 0.004，阈值 0.35</div><div class="kline">最多 50 次迭代</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>04 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验一 · 点到点</div>
+  <h2>看图：从错开到贴合</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>左图配准前：源 10°，目标 25°。</li><li>右图配准后，两片基本贴合。</li><li>RMSE 从 0.1938 降到 0.0495。</li><li>旋转误差 0.209°，平移 0.0053。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e122_icp_align.png" style="max-height:440px" alt="配准前差 15°，配准后贴合｜程序生成，未用教材或论文原图"><figcaption>配准前差 15°，配准后贴合｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>05 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验二 · 三个变体</div>
+  <h2>三个变体：更准、更快</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>点到点：24 次迭代，最终 0.209°。</li><li>鲁棒权重：最终 0.0001°。</li><li>点到面：7 次迭代，最终 0.156°。</li><li>右图对数轴，跨好几个数量级。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e122_variants.png" style="max-height:440px" alt="三个变体：点到点、鲁棒、点到面的最终误差｜程序生成，未用教材或论文原图"><figcaption>三个变体：点到点、鲁棒、点到面的最终误差｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>06 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">点到面 · 切平面</div>
+  <h2>点到面：切平面比点更稳</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>Chen 和 Medioni 用局部切平面。</li><li>只要求源点到切平面的距离小。</li><li>沿表面滑动，不易被点稀疏误导。</li><li>法向估错，点到面也会被带偏。</li></ul>
+      <div class="src">依据：原书第 821 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">代价与前提</div><div class="kline">平面多的场景收敛快</div><div class="kline">真实扫描要先估法向</div><div class="kline">邻域点做主成分分析</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>07 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">鲁棒匹配 · 阈值与权重</div>
+  <h2>鲁棒：阈值粗筛，权重细降</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>两片表面常常只有部分重叠。</li><li>距离阈值先扔掉太远的点。</li><li>本实验 63.3% 离群点仍在阈值内。</li><li>鲁棒权重把 0.209° 降到 0.0001°。</li></ul>
+      <div class="src">依据：原书第 821 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">Huber 权重</div><div class="kline">残差小：按平方算</div><div class="kline">残差大：改成线性</div><div class="kline">避免一个离群点拉偏整个解</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>08 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">实验三 · 初值盆地</div>
+  <h2>看图：好初值才收敛对</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>横轴初始旋转，纵轴最终 RMSE。</li><li>−20° 到 70° 都收敛到 0.0495。</li><li>180° 初值最后是 0.1310。</li><li>收敛带只对这个 L 形负责。</li></ul>
+      <div class="src">依据：本集实验</div>
+  </div><div>
+      <figure class="shot"><img src="../code/outputs/figures/e122_basin.png" style="max-height:440px" alt="初值盆地：初始旋转 vs 最终 RMSE，180° 落入局部极小｜程序生成，未用教材或论文原图"><figcaption>初值盆地：初始旋转 vs 最终 RMSE，180° 落入局部极小｜程序生成，未用教材或论文原图</figcaption></figure>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>09 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">全局初值 · 描述子</div>
+  <h2>全局初值：先粗后细</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>ICP 和变体只能找到局部最优。</li><li>自旋图像：表面圆投影成二维签名。</li><li>描述子找粗对应，ICP 再细对齐。</li><li>更早的例子：splash 表示。</li></ul>
+      <div class="src">依据：原书第 821 页</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">先粗后细</div><div class="kline">描述子把搜索缩到正确盆地</div><div class="kline">ICP 再细对齐</div><div class="kline">顺序反了会越陷越深</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>10 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">加速与扩展</div>
+  <h2>工程变体：SDF、颜色、非刚性</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>点集转符号距离函数，用八叉树存。</li><li>颜色参与配准；非刚性也有变体。</li><li>本实验 KD-tree 与暴力搜索 100 点一致。</li><li>先选对距离和初值，再谈加速。</li></ul>
+      <div class="src">依据：原书第 821 页；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">两类查询</div><div class="kline">SDF：适合稠密体素</div><div class="kline">KD-tree：适合稀疏点云</div><div class="kline">颜色项：把亮度差加进误差</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>11 / 12</span></div>
+</section>
+<section class="slide" data-steps="1">
+  <div class="kicker">收束 · 下一集</div>
+  <h2>最近点给对应，SVD 给变换</h2>
+  <div class="g2"><div>
+      <ul class="points"><li>ICP：最近点猜对应，绝对定向解 R/t。</li><li>点到面、鲁棒权重、阈值都在这套流程上。</li><li>初值不对，循环也救不回来。</li><li>三维用 3×3 SVD 或 Horn 四元数。</li></ul>
+      <div class="src">依据：第 13 章；本集实验</div>
+  </div><div>
+      <div class="keybox"><div class="ktitle">收束</div><div class="kline">最近点给对应</div><div class="kline">SVD 给变换</div><div class="kline">循环给收敛</div></div>
+  </div></div>
+  <div class="pagefoot"><span>正课第一百一十四集</span><span>12 / 12</span></div>
+</section>
+<div id="subbar"></div></body></html>

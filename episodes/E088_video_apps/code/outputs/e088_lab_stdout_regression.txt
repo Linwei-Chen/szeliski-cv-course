@@ -1,0 +1,16 @@
+[lab-stdout-regression] 开始 2026-11-02T19:57:25
+[lab-stdout-regression] regression=fb90a8d03180fd3476caa3d0c4cdcbe17fb48861aa57bebe9d722254fa334497 make_script=25968a3096ec52abd2309aa981ec78db3ce724743f4e3cf3b98e228d165d2d7d display_check=8e9fac6f8730b56b2a7d60c0718ee8475907a4f808e923c6e8038f54695420ee
+[lab-stdout-regression] 输入 lab.txt sha256=1bcd0c81b8e4809d76f9a608067b6c69bba6f312ec426b56f0a8a765b11b15a5
+[lab-stdout-regression] 输入 readings sha256=59f6c3c2834b3eb40d331a7a4bd76989274986a0c2766327c5dfc2b727cfc100
+[lab-stdout-regression] 输入 status.json sha256=a0c4b2058fb8d933bb76a3ecf479b0dc049b693ee290d740e1bd05d3527d5c26
+[lab-stdout-regression] 输入 README.md sha256=b61bc4ae6b1da93d1ee62df0beb483e7af61e307510f2976aee36d147918ef6f
+[PASS] 基线：lab↔readings↔shots↔deck 一致
+  [PASS] M1 lab PASS 行 10→9 被拦截
+  [PASS] M2 readings n_pass→8 被拦截
+  [PASS] M3 删帧 被拦截
+  [PASS] M4 deck 镜像改字 被拦截
+  [PASS] M5 删 PASS 行 被拦截
+  [PASS] M6 申报层字数改数 被拦截
+  [PASS] M7 缺图注入 被拦截
+[lab-stdout-regression] 汇总：全部通过（7/7 变异被拦截）
+[lab-stdout-regression] 结束 2026-11-02T19:57:25
